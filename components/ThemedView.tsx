@@ -1,14 +1,29 @@
 import { View, type ViewProps } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedViewProps = ViewProps & {
-  lightColor?: string;
-  darkColor?: string;
+	lightColor?: string;
+	darkColor?: string;
+	withHorizontalPadding?: boolean;
 };
 
-export function ThemedView({ style, lightColor, darkColor, ...otherProps }: ThemedViewProps) {
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
-
-  return <View style={[{ backgroundColor }, style]} {...otherProps} />;
+export function ThemedView({
+	style,
+	lightColor,
+	darkColor,
+	withHorizontalPadding = true,
+	...otherProps
+}: ThemedViewProps) {
+	return (
+		<View
+			style={[
+				{
+					backgroundColor: "#61687E",
+					paddingHorizontal: withHorizontalPadding ? 20 : 0,
+				},
+				style,
+			]}
+			{...otherProps}
+		/>
+	);
 }
