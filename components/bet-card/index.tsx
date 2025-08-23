@@ -1,11 +1,14 @@
+import { router } from "expo-router";
 import React from "react";
 import {
 	Image,
 	StyleSheet,
+	TouchableOpacity,
 	View,
 	Text as _Text,
 	TextProps as _TextProps,
 } from "react-native";
+import { OddButton } from "../odd-button";
 
 const Text = ({ children, style, ...props }: _TextProps) => {
 	return (
@@ -26,7 +29,7 @@ const Team = () => {
 				<Text className="team-name">Flamengo</Text>
 			</View>
 
-			<Text style={{color: "#C7D1E7"}}>2</Text>
+			<Text style={{ color: "#C7D1E7" }}>2</Text>
 		</View>
 	);
 };
@@ -45,33 +48,12 @@ const teamStyles = StyleSheet.create({
 	},
 });
 
-const OddButton = () => {
-	return (
-		<View style={oddsStyles.oddButton}>
-			<Text style={oddsStyles.oddText}>1.00</Text>
-		</View>
-	);
-};
-
-const oddsStyles = StyleSheet.create({
-	oddButton: {
-		backgroundColor: "transparent",
-		borderWidth: 2,
-		borderColor: "#F3C942",
-		borderRadius: 100,
-		paddingVertical: 5,
-		paddingHorizontal: 20,
-	},
-	oddText: {
-		color: "#F3C942",
-		fontSize: 16,
-		fontWeight: "bold",
-	},
-});
-
 export default function BetCard() {
 	return (
-		<View style={styles.container}>
+		<TouchableOpacity
+			onPress={() => router.push("/bets/1")}
+			style={styles.container}
+		>
 			<Text style={styles.cardTitle}>Futebol 100%</Text>
 
 			<View style={styles.content}>
@@ -83,7 +65,7 @@ export default function BetCard() {
 
 					<View style={styles.betInfo}>
 						<View style={styles.divider} />
-						<Text style={{color: "#C7D1E7"}}>100</Text>
+						<Text style={{ color: "#C7D1E7" }}>100</Text>
 					</View>
 				</View>
 
@@ -93,7 +75,7 @@ export default function BetCard() {
 					<OddButton />
 				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
 
@@ -125,7 +107,7 @@ const styles = StyleSheet.create({
 		height: 100,
 		flexDirection: "row",
 		alignItems: "center",
-    justifyContent: "center",
+		justifyContent: "center",
 	},
 	divider: {
 		width: 0.3,
@@ -133,8 +115,8 @@ const styles = StyleSheet.create({
 		height: "90%",
 		backgroundColor: "#C7D1E7",
 	},
-  oddsWrapper: {
-    marginLeft: 50,
+	oddsWrapper: {
+		marginLeft: 50,
 		flexDirection: "column",
 		gap: 10,
 	},

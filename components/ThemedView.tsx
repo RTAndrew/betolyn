@@ -19,7 +19,7 @@ export function ThemedView({
 			style={[
 				{
 					backgroundColor: "#61687E",
-					paddingHorizontal: withHorizontalPadding ? 20 : 0,
+					paddingHorizontal: withHorizontalPadding ? 10 : 0,
 				},
 				style,
 			]}

@@ -1,19 +1,15 @@
-import { Link, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import React from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform } from "react-native";
 
+import AppHeader from "@/components/app-header";
 import { HapticTab } from "@/components/HapticTab";
-import { ThemedText } from "@/components/ThemedText";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function TabLayout() {
 	return (
 		<>
-			<View style={styles.header}>
-				<Link href="/">Logo</Link>
-				<ThemedText style={{ color: "black" }}>Kart</ThemedText>
-			</View>
-
+			<AppHeader />
 			<Tabs
 				screenOptions={{
 					tabBarActiveTintColor: "#F3CA41",
@@ -53,14 +49,3 @@ export default function TabLayout() {
 		</>
 	);
 }
-
-const styles = StyleSheet.create({
-	header: {
-		marginTop: 40,
-		paddingHorizontal: 20,
-		paddingVertical: 10,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-});
