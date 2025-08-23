@@ -1,9 +1,13 @@
+import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const ChannelCard = () => {
 	return (
-		<View style={styles.container}>
+		<TouchableOpacity
+			style={styles.container}
+			onPress={() => router.push("/(tabs)/channels/1")}
+		>
 			<View style={styles.image}>
 				<Image
 					resizeMode="contain"
@@ -24,7 +28,7 @@ const ChannelCard = () => {
 					<Text style={styles.remainingUsers}>100</Text>
 				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 };
 
@@ -37,7 +41,7 @@ const styles = StyleSheet.create({
 	},
 
 	body: {
-    paddingVertical: 20,
+		paddingVertical: 20,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
