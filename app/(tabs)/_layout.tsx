@@ -41,7 +41,7 @@ export default function TabLayout() {
 					}}
 				/>
 				<Tabs.Screen
-					name="explore"
+					name="channels"
 					options={{
 						title: "Canais",
 						tabBarIcon: ({ color }) => (
