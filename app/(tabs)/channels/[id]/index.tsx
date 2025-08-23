@@ -28,9 +28,13 @@ const ChannelId = () => {
 								style={{ width: 100, height: 100 }}
 							/>
 						</View>
+
+						<TouchableOpacity onPress={() => router.push("/channels/1/info")}>
+
 						<Text style={styles.headerTitle}>
 							Campeonato Futebol de Praia (Samba)...
 						</Text>
+						</TouchableOpacity>
 					</View>
 
 					<View style={styles.headerRight}>

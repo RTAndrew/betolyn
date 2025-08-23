@@ -4,16 +4,15 @@ import { ThemedView } from "@/components/ThemedView";
 import ChannelCard from "@/components/channel-card";
 
 
-export default function TabTwoScreen() {
-  return (
-    <ScrollView>
-
-		<ThemedView style={{ flex: 1 }}>
-			{Array.from({ length: 20 }, (_, index) => (
-				<ChannelCard key={index} />
-			))}
-		</ThemedView>
-    </ScrollView>
+export default function Chanells() {
+	return (
+		<ScrollView>
+			<ThemedView style={{ flex: 1 }}>
+				{Array.from({ length: 20 }, (_, index) => (
+					<ChannelCard key={index} />
+				))}
+			</ThemedView>
+		</ScrollView>
 	);
 }
 

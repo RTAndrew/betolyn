@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  Image,
-  StyleSheet,
-  View,
-  Text as _Text,
-  TextProps as _TextProps,
+	Image,
+	StyleSheet,
+	View,
+	Text as _Text,
+	TextProps as _TextProps,
 } from "react-native";
 
 const Text = ({ children, style, ...props }: _TextProps) => {
