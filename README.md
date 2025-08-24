@@ -7,22 +7,17 @@
 
 ## 📱 Prototype Showcase
 
-<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: flex-start;">
+<div align="center">
   <img src="assets/prototypes/home_screen.png" alt="Home Screen" width="150" />
   <img src="assets/prototypes/chatroom_groups.png" alt="Chatroom Groups" width="182" />
   <img src="assets/prototypes/match_day_admin.png" alt="Match Day Admin" width="150" />
   <img src="assets/prototypes/category_drawer_sports.png" alt="Category Drawer Sports" width="150" />
   <img src="assets/prototypes/chatroom_add_bet_admin.png" alt="Chatroom Add Bet Admin" width="150" />
-
-
-  <br />
-
-
 </div>
 
 <br />
 
-`This work is still progress...`
+> **Note:** This work is still in progress...
 
 A social betting platform that brings friends together through friendly wagers and competitive fun. Built during the COVID pandemic as a way for friends to interact and collect points (or money) as entertainment, this platform has evolved into a comprehensive betting ecosystem.
 
