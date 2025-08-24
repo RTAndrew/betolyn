@@ -8,8 +8,8 @@ const Layout = () => {
       <Stack screenOptions={{ headerShown: false }} />
     </>
   );
-}
+};
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
 
 export default Layout;
