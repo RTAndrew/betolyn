@@ -1,50 +1,50 @@
-# Welcome to your Expo app 👋
+# React Native Example Monorepo
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a monorepo containing a React Native Expo mobile application and a backend service.
 
-## Get started
+## Project Structure
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+/
+├── mobile/          # React Native Expo application
+├── backend/         # Backend service (FastAPI)
+├── README.md        # This file
+├── .gitignore       # Root gitignore
+└── Makefile         # Build and development scripts
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Getting Started
 
-## Learn more
+### Prerequisites
 
-To learn more about developing your project with Expo, look at the following resources:
+- Node.js (for mobile app)
+- Python 3.8+ (for backend)
+- Expo CLI
+- FastAPI (for backend)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Development
 
-## Join the community
+#### Mobile App
+```bash
+make dev-mobile
+# or
+cd mobile && npm start
+```
 
-Join our community of developers creating universal apps.
+#### Backend
+```bash
+make dev-backend
+# or
+cd backend && uvicorn main:app --reload
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Available Commands
+
+- `make dev-mobile` - Start the Expo development server
+- `make dev-backend` - Start the FastAPI development server
+- `make install-mobile` - Install mobile app dependencies
+- `make install-backend` - Install backend dependencies
+
+## Contributing
+
+Each project maintains its own dependencies and configuration. Changes to the mobile app should be made in the `mobile/` directory, and backend changes in the `backend/` directory.
