@@ -18,7 +18,7 @@ dev-backend: ## Start the FastAPI development server
 	fi
 	@if [ ! -d "backend/.venv" ]; then \
 		echo "Creating Python virtual environment..."; \
-		cd backend && python3 -m venv .venv; \
+		cd backend && python3 -m PYTHONDONTWRITEBYTECODE=1 venv .venv; \
 	fi
 	cd backend && source .venv/bin/activate && PYTHONDONTWRITEBYTECODE=1 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 

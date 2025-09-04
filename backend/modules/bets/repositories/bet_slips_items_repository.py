@@ -23,6 +23,6 @@ class BetSlipItemsRepository(SQLModel, table=True):
     status: EBetSlipItemsStatus = Field(
         default=EBetSlipItemsStatus.PENDING, sa_column=Column(Enum(EBetSlipItemsStatus))
     )
-    # status: str  # "WIN", "LOSS", "PENDING", "CANCELLED"
-    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+
+    created_at: datetime.datetime | None = Field(default_factory=datetime.datetime.now)
+    updated_at: datetime.datetime | None = Field(default_factory=datetime.datetime.now)

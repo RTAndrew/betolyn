@@ -21,5 +21,5 @@ class BetSlipsRepository(SQLModel, table=True):
     status: EBetSlipsStatus = Field(
         default=EBetSlipsStatus.PENDING, sa_column=Column(Enum(EBetSlipsStatus))
     )
-    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
-    updated_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    created_at: datetime.datetime | None = Field(default_factory=datetime.datetime.now)
+    updated_at: datetime.datetime | None = Field(default_factory=datetime.datetime.now)

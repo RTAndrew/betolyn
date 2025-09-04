@@ -7,9 +7,8 @@ from modules.auth.repositories.user_repository import UserRepository  # noqa: F4
 from modules.bets.repositories import (  # noqa: F401
     bet_slips_items_repository as BetSlipItemsRepository,
     bet_slips_repository as BetSlipsRepository,
-    criteria_repository as CriteriaRepository,
     criteria_odds_repository as CriteriaOddsRepository,
-    match_repository as MatchRepository,
+    match_criteria_repository,
 )
 
 

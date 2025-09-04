@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from modules.bets.controllers import router as bets_router
 from modules.auth.controllers import router as auth_router
+from modules.bets.controllers.matches_controllers import router as matches_router
 from utils.database import create_db_and_tables
 
 app = FastAPI(
@@ -27,6 +28,7 @@ def on_startup():
 # Include the bets router
 app.include_router(bets_router)
 app.include_router(auth_router)
+app.include_router(matches_router)
 
 @app.get("/")
 def read_root():
