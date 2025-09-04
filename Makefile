@@ -1,4 +1,4 @@
-.PHONY: help dev-mobile dev-backend install-mobile install-backend clean
+.PHONY: help dev-mobile dev-backend install-mobile install-backend clean reset-db
 
 help: ## Show this help message
 	@echo "Available commands:"
@@ -16,11 +16,11 @@ dev-backend: ## Start the FastAPI development server
 		echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get("/")\ndef read_root():\n    return {"Hello": "World"}' > backend/main.py; \
 		echo 'fastapi\nuvicorn[standard]' > backend/requirements.txt; \
 	fi
-	@if [ ! -d "backend/venv" ]; then \
+	@if [ ! -d "backend/.venv" ]; then \
 		echo "Creating Python virtual environment..."; \
-		cd backend && python3 -m venv venv; \
+		cd backend && python3 -m venv .venv; \
 	fi
-	cd backend && source venv/bin/activate && uvicorn main:app --reload --host 0.0.0.0 --port 8000
+	cd backend && source .venv/bin/activate && PYTHONDONTWRITEBYTECODE=1 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 install-mobile: ## Install mobile app dependencies
 	@echo "Installing mobile app dependencies..."
@@ -34,11 +34,12 @@ install-backend: ## Install backend dependencies
 		echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get("/")\ndef read_root():\n    return {"Hello": "World"}' > backend/main.py; \
 		echo 'fastapi\nuvicorn[standard]' > backend/requirements.txt; \
 	fi
-	@if [ ! -d "backend/venv" ]; then \
+	@if [ ! -d "backend/.venv" ]; then \
 		echo "Creating Python virtual environment..."; \
-		cd backend && python3 -m venv venv; \
+		cd backend && python3 -m venv .venv; \
 	fi
-	cd backend && source venv/bin/activate && pip install -r requirements.txt
+
+	cd backend && source .venv/bin/activate && pip install -r requirements.txt
 
 clean: ## Clean build artifacts and dependencies
 	@echo "Cleaning build artifacts..."
@@ -50,3 +51,7 @@ setup: install-mobile install-backend ## Setup the entire project (install all d
 	@echo "Project setup complete!"
 
 dev: dev-mobile ## Alias for dev-mobile (default development command)
+
+reset-db: ## Reset the database (drop all tables and recreate schema)
+	@echo "Resetting database..."
+	cd backend && python reset_db.py
