@@ -54,4 +54,4 @@ dev: dev-mobile ## Alias for dev-mobile (default development command)
 
 reset-db: ## Reset the database (drop all tables and recreate schema)
 	@echo "Resetting database..."
-	cd backend && python reset_db.py
+	cd backend && python -m scripts.reset_db

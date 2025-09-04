@@ -1,10 +1,16 @@
 import os
-from sqlmodel import create_engine, SQLModel, Session, text
+from sqlmodel import create_engine, SQLModel, Session
 from typing import Generator
 
 # Import all models to ensure they are registered with SQLModel
-from modules.bets.bets_repo import BetsRepository
-from modules.auth.repositories.user_repository import UserRepositoy
+from modules.auth.repositories.user_repository import UserRepository  # noqa: F401
+from modules.bets.repositories import (  # noqa: F401
+    bet_slips_items_repository as BetSlipItemsRepository,
+    bet_slips_repository as BetSlipsRepository,
+    criteria_repository as CriteriaRepository,
+    criteria_odds_repository as CriteriaOddsRepository,
+    match_repository as MatchRepository,
+)
 
 
 # Database configuration

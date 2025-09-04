@@ -2,7 +2,7 @@
 from sqlmodel import Field, SQLModel
 
 
-class UserRepositoy(SQLModel, table=True):
+class UserRepository(SQLModel, table=True):
     __tablename__ = "users"  # pyright: ignore[reportAssignmentType]
 
     id: int | None = Field(default=None, primary_key=True,)

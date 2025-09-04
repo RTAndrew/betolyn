@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlmodel import Session, select
 
-from modules.auth.repositories.user_repository import UserRepositoy
+from modules.auth.repositories.user_repository import UserRepository
 from modules.auth.auth_schemas import SignUpRequest, SignUpResponse
 from utils.database import get_session
 
@@ -25,16 +25,16 @@ def sign_up(
 
     try:
         exists_user = session.exec(
-            select(UserRepositoy).where(
-                UserRepositoy.email == data.email,
-                UserRepositoy.username == data.username,
+            select(UserRepository).where(
+                UserRepository.email == data.email,
+                UserRepository.username == data.username,
             )
         ).first()
 
         if exists_user:
             raise HTTPException(status_code=400, detail="User already exists")
 
-        new_user = UserRepositoy(**data.model_dump())
+        new_user = UserRepository(**data.model_dump())
         session.add(new_user)
         session.commit()
         session.refresh(new_user)
