@@ -8,7 +8,9 @@ class MatchRepository(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     home_team: str
+    home_team_image_url: str | None = Field(default=None)
     away_team: str
+    away_team_image_url: str | None = Field(default=None)
     home_team_score: int
     away_team_score: int
 
