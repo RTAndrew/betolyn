@@ -5,6 +5,7 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import BetCard from '@/components/bet-card';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router } from 'expo-router';
+import { mockAPI } from '@/mock';
 
 const ChannelId = () => {
   return (
@@ -34,8 +35,8 @@ const ChannelId = () => {
       </View>
 
       <ThemedView style={{ flex: 1 }}>
-        {Array.from({ length: 10 }).map((_, index) => (
-          <BetCard key={index} />
+        {mockAPI.getMatches().map((match, index) => (
+          <BetCard key={index} match={match} />
         ))}
       </ThemedView>
     </ScrollView>

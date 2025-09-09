@@ -9,6 +9,7 @@ import {
   TextProps as _TextProps,
 } from 'react-native';
 import { OddButton } from '../odd-button';
+import { IMatch } from '@/mock/matches';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
   return (
@@ -52,18 +53,7 @@ const teamStyles = StyleSheet.create({
 });
 
 interface BetCardProps {
-  match: {
-    id: number;
-    home_team: string;
-    home_team_image_url: string;
-    away_team: string;
-    away_team_image_url: string;
-    home_team_score: number;
-    away_team_score: number;
-    criteria: any[];
-    start_time: string;
-    end_time: string;
-  };
+  match: IMatch;
 }
 
 export default function BetCard({ match }: BetCardProps) {
@@ -93,9 +83,9 @@ export default function BetCard({ match }: BetCardProps) {
         </View>
 
         <View style={styles.oddsWrapper}>
-          <OddButton />
-          <OddButton />
-          <OddButton />
+          {match.main_criteria.odds.map((odd) => (
+            <OddButton key={odd.id} odd={odd} />
+          ))}
         </View>
       </View>
     </TouchableOpacity>

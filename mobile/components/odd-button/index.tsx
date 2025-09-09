@@ -1,9 +1,14 @@
+import { IOdd } from '@/mock/matches';
 import { StyleSheet, Text, View, ViewProps } from 'react-native';
 
-export const OddButton = ({ style, ...props }: ViewProps) => {
+interface OddButtonProps extends ViewProps {
+  odd: IOdd;
+}
+
+export const OddButton = ({ odd, style, ...props }: OddButtonProps) => {
   return (
     <View style={[oddsStyles.oddButton, style]} {...props}>
-      <Text style={oddsStyles.oddText}>1.00</Text>
+      <Text style={oddsStyles.oddText}>{odd.value}</Text>
     </View>
   );
 };
