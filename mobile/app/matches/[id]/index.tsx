@@ -1,9 +1,15 @@
 import { OddButton } from '@/components/odd-button';
 import { ThemedView } from '@/components/ThemedView';
+import { useQuery } from '@/utils/http/use-query';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Image, Text, View, ViewProps } from 'react-native';
+interface MatchTeamProps {
+  name: string;
+  imageUrl: string;
+}
 
-const BetOdd = () => {
+const MatchTeam = ({ name, imageUrl }: MatchTeamProps) => {
   return (
     <View
       style={{
@@ -14,15 +20,15 @@ const BetOdd = () => {
         flex: 1,
       }}
     >
-      <View style={{ width: 80, height: 80, borderRadius: 100, overflow: 'hidden' }}>
+      <View style={{ width: 80, height: 80, borderRadius: 0, overflow: 'hidden' }}>
         <Image
-          source={require('@/assets/images/beach_soccer_cup.png')}
+          source={{ uri: imageUrl }}
           style={{ width: '100%', height: '100%' }}
           resizeMode="cover"
         />
       </View>
 
-      <Text style={{ color: 'white', maxWidth: '70%', textAlign: 'center' }}>Conor McGregor</Text>
+      <Text style={{ color: 'white', maxWidth: '70%', textAlign: 'center' }}>{name}</Text>
     </View>
   );
 };
@@ -44,7 +50,19 @@ const Section = ({ children, style }: ViewProps) => {
   );
 };
 
-const BetPageId = () => {
+const MatchPage = () => {
+  const { id } = useLocalSearchParams();
+  const { loading, error, data } = useQuery(`/matches/${id}`);
+  const match = data?.match;
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error: {error}</Text>;
+  }
+
   return (
     <ThemedView style={{ flex: 1, backgroundColor: '#495064' }}>
       {/* Highlight */}
@@ -64,9 +82,9 @@ const BetPageId = () => {
             justifyContent: 'space-between',
           }}
         >
-          <BetOdd />
+          <MatchTeam name={match.home_team} imageUrl={match.home_team_image_url} />
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>vs</Text>
-          <BetOdd />
+          <MatchTeam name={match.away_team} imageUrl={match.away_team_image_url} />
         </View>
       </View>
 
@@ -107,4 +125,4 @@ const BetPageId = () => {
   );
 };
 
-export default BetPageId;
+export default MatchPage;

@@ -18,18 +18,21 @@ const Text = ({ children, style, ...props }: _TextProps) => {
   );
 };
 
-const Team = () => {
+interface TeamProps {
+  name: string;
+  imageUrl: string;
+  score: number;
+}
+
+const Team = ({ name, imageUrl, score }: TeamProps) => {
   return (
     <View style={teamStyles.teamContent}>
       <View style={teamStyles.teamInfo}>
-        <Image
-          source={require('../../assets/images/badges/newcastle_united.png')}
-          style={{ width: 24, height: 24 }}
-        />
-        <Text className="team-name">Flamengo</Text>
+        <Image source={{ uri: imageUrl }} style={{ width: 30, height: 30 }} />
+        <Text className="team-name">{name}</Text>
       </View>
 
-      <Text style={{ color: '#C7D1E7' }}>2</Text>
+      <Text style={{ color: '#C7D1E7' }}>{score}</Text>
     </View>
   );
 };
@@ -48,16 +51,39 @@ const teamStyles = StyleSheet.create({
   },
 });
 
-export default function BetCard() {
+interface BetCardProps {
+  match: {
+    id: number;
+    home_team: string;
+    home_team_image_url: string;
+    away_team: string;
+    away_team_image_url: string;
+    home_team_score: number;
+    away_team_score: number;
+    criteria: any[];
+    start_time: string;
+    end_time: string;
+  };
+}
+
+export default function BetCard({ match }: BetCardProps) {
   return (
-    <TouchableOpacity onPress={() => router.push('/bets/1')} style={styles.container}>
+    <TouchableOpacity onPress={() => router.push(`/matches/${match.id}`)} style={styles.container}>
       <Text style={styles.cardTitle}>Futebol 100%</Text>
 
       <View style={styles.content}>
         <View style={styles.teamBody}>
           <View style={styles.teamWrapper}>
-            <Team />
-            <Team />
+            <Team
+              name={match.home_team}
+              imageUrl={match.home_team_image_url}
+              score={match.home_team_score}
+            />
+            <Team
+              name={match.away_team}
+              imageUrl={match.away_team_image_url}
+              score={match.away_team_score}
+            />
           </View>
 
           <View style={styles.betInfo}>

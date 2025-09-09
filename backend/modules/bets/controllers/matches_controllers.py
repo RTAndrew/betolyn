@@ -38,7 +38,9 @@ class CreateCriteriaResponse(BaseModel):
 @router.get("/", response_model=GetAllMatchesResponse)
 def get_all_matches(session: Annotated[Session, Depends(get_session)]):
     try:
-        matches = session.exec(select(MatchRepository)).all()
+        # statement = select(MatchRepository).join(CriteriaRepository.id == MatchRepository.criteria_id)
+        statement = select(MatchRepository)
+        matches = session.exec(statement).all()
         return GetAllMatchesResponse(matches=matches)
     except Exception as e:
         raise HTTPException(

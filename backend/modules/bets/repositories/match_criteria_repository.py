@@ -15,6 +15,8 @@ class MatchRepository(SQLModel, table=True):
     away_team_score: int
 
     criteria: list["CriteriaRepository"] = Relationship(back_populates="match")
+    # main_criteria_id: int
+    # main_criteria: "CriteriaRepository" | None = Relationship(back_populates="match")
 
     start_time: datetime.datetime | None = Field(default=None)
     end_time: datetime.datetime | None = Field(default=None)

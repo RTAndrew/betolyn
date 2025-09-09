@@ -17,7 +17,7 @@ export default function RootLayout() {
     <>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="bets" options={{ headerShown: false }} />
+        <Stack.Screen name="matches" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="dark" />

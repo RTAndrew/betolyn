@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from modules.bets.controllers import router as bets_router
 from modules.auth.controllers import router as auth_router
+from modules.bets.controllers.criteria_controllers import router as criteria_router
 from modules.bets.controllers.matches_controllers import router as matches_router
 from modules.bets.repositories.match_criteria_repository import MatchRepository
 from utils.database import create_db_and_tables, get_session
@@ -32,15 +33,14 @@ def on_startup():
 app.include_router(bets_router)
 app.include_router(auth_router)
 app.include_router(matches_router)
-
+app.include_router(criteria_router)
 @app.get("/")
 def read_root():
     return {"message": "Welcome to React Native Example Backend API"}
 
-@app.get("/seed")
+@app.get("/seeds")
 def seed_matches(
     session: Annotated[Session, Depends(get_session)],
-    response_model: list[MatchRepository],
 ):
     print("Saving matches")
 
@@ -80,9 +80,9 @@ def seed_matches(
             },
             {
                 "home_team": "Lille OSC",
-                "home_team_image_url": "https://a.espncdn.com/i/teamlogos/soccer/500/366.png",
+                "home_team_image_url": "https://a.espncdn.com/i/teamlogos/soccer/500/166.png",
                 "away_team": "Olympique Lyonnais",
-                "away_team_image_url": "https://a.espncdn.com/i/teamlogos/soccer/500/150.png",
+                "away_team_image_url": "https://a.espncdn.com/i/teamlogos/soccer/500/167.png",
                 "home_team_score": 0,
                 "away_team_score": 0,
             },
