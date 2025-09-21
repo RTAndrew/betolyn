@@ -14,12 +14,14 @@ const HEADER_HEIGHT = 250;
 type Props = PropsWithChildren<{
   headerImage: ReactElement;
   headerBackgroundColor: { dark: string; light: string };
+  backgroundColor?: string;
 }>;
 
 export default function ParallaxScrollView({
   children,
   headerImage,
   headerBackgroundColor,
+  backgroundColor,
 }: Props) {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
@@ -43,7 +45,7 @@ export default function ParallaxScrollView({
   });
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <Animated.ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}

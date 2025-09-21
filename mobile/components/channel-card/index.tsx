@@ -1,20 +1,25 @@
+import { IChannel } from '@/mock/matches';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const ChannelCard = () => {
+const ChannelCard = ({ channel }: { channel: IChannel }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={() => router.push('/(tabs)/channels/1')}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => router.push(`/(tabs)/channels/${channel.id}`)}
+    >
       <View style={styles.image}>
         <Image
           resizeMode="contain"
-          source={require('../../assets/images/badges/newcastle_united.png')}
+          source={{ uri: channel.image_url }}
+          style={{ width: '100%', height: '100%' }}
         />
       </View>
 
       <View style={styles.body}>
         <View style={styles.descriptionAndTime}>
-          <Text style={styles.name}>Amantes Convictos de Luta Livre</Text>
+          <Text style={styles.name}>{channel.name}</Text>
           <Text style={styles.description}>Conor McGregor vs Khabib Nurmagomedov</Text>
         </View>
 
@@ -50,6 +55,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 100,
+    overflow: 'hidden',
     // transform: [{ scale: 0.8 }],
   },
   name: {

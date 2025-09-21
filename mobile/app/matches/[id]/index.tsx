@@ -89,7 +89,9 @@ const MatchPage = () => {
                 transform: [{ translateY: 35 }],
               }}
             >
-              vs
+              {match.home_team_score !== undefined || match.home_team_score !== null
+                ? `${match.home_team_score} - ${match.away_team_score}`
+                : 'vs'}
             </Text>
             <MatchTeam name={match.away_team} imageUrl={match.away_team_image_url} />
           </View>

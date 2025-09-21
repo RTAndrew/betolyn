@@ -1,29 +1,18 @@
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import ChannelCard from '@/components/channel-card';
+import { mockAPI } from '@/mock';
 
 export default function Chanells() {
+  const channels = mockAPI.getChannels();
   return (
-    <ScrollView>
+    <ScrollView style={{ flex: 1, backgroundColor: '#61687E' }}>
       <ThemedView style={{ flex: 1 }}>
-        {Array.from({ length: 20 }, (_, index) => (
-          <ChannelCard key={index} />
+        {channels.map((channel, index) => (
+          <ChannelCard key={index} channel={channel} />
         ))}
       </ThemedView>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});

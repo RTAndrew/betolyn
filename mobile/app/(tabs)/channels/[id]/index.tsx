@@ -4,32 +4,40 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 
 import BetCard from '@/components/bet-card';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { mockAPI } from '@/mock';
 
 const ChannelId = () => {
+  const { id } = useLocalSearchParams();
+  const channel = mockAPI.getChannelById(Number(id));
+
+  if (!channel) {
+    return <Text>Channel not found</Text>;
+  }
+
   return (
     <ScrollView>
       <View style={styles.headerContainer}>
         <ThemedView style={styles.header}>
           <View style={styles.headerLeft}>
             <TouchableOpacity onPress={() => router.back()}>
-              <AntDesign name="arrowleft" size={24} color="white" />
+              <AntDesign name="arrow-left" size={24} color="white" />
             </TouchableOpacity>
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: 'https://picsum.photos/200/300' }}
-                style={{ width: 100, height: 100 }}
+                resizeMode="contain"
+                source={{ uri: channel.image_url }}
+                style={{ width: '100%', height: '100%' }}
               />
             </View>
 
-            <TouchableOpacity onPress={() => router.push('/channels/1/info')}>
-              <Text style={styles.headerTitle}>Campeonato Futebol de Praia (Samba)...</Text>
+            <TouchableOpacity onPress={() => router.push(`/(tabs)/channels/${id}/info`)}>
+              <Text style={styles.headerTitle}>{channel.name}</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.headerRight}>
-            <AntDesign name="message1" size={24} color="white" />
+            <AntDesign name="message" size={24} color="white" />
           </View>
         </ThemedView>
       </View>
@@ -67,7 +75,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 100,
-    overflow: 'hidden',
+    // overflow: 'hidden',
   },
   headerTitle: {
     color: 'white',

@@ -31,8 +31,22 @@ export interface IOdd {
   created_by: string;
 }
 
+export interface IChannel {
+  id: number;
+  name: string;
+  image_url: string;
+  created_by: string;
+  created_at: string;
+  members: IChannelMember[];
+}
 
-export const mockData: { matches: IMatch[]; criterias: IMainCriteria[] } = {
+export interface IChannelMember {
+  id: number;
+  name: string;
+  role: 'admin' | 'member';
+}
+
+export const mockData: { matches: IMatch[]; criterias: IMainCriteria[]; channels: IChannel[] } = {
   matches: [
     {
       id: 1,
@@ -427,4 +441,101 @@ export const mockData: { matches: IMatch[]; criterias: IMainCriteria[] } = {
       ],
     },
   ],
-} as const;
+  channels: [
+    {
+      id: 1,
+      name: 'Amantes Convictos de Luta Livre',
+      image_url:
+        'https://res.cloudinary.com/db9ha9ox6/image/upload/v1758451911/betolyn/channels/ufc.png',
+      created_by: 'Divaldo Ghost',
+      created_at: '2025-09-09T20:47:16.589062Z',
+      members: [
+        {
+          id: 1,
+          name: 'Divaldo Ghost',
+          role: 'admin',
+        },
+        {
+          id: 2,
+          name: 'Edvan Magalhães',
+          role: 'member',
+        },
+        {
+          id: 3,
+          name: 'Carlos Silva',
+          role: 'member',
+        },
+        {
+          id: 4,
+          name: 'Ana Santos',
+          role: 'member',
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: 'Campeonato Futebol de Praia (Samba) 19/20',
+      image_url:
+        'https://res.cloudinary.com/db9ha9ox6/image/upload/v1758451959/betolyn/channels/soccer.png',
+      created_by: 'Maria Oliveira',
+      created_at: '2025-09-09T20:47:16.591156Z',
+      members: [
+        {
+          id: 5,
+          name: 'Maria Oliveira',
+          role: 'admin',
+        },
+        {
+          id: 6,
+          name: 'João Pereira',
+          role: 'member',
+        },
+        {
+          id: 7,
+          name: 'Sofia Costa',
+          role: 'member',
+        },
+        {
+          id: 8,
+          name: 'Pedro Fernandes',
+          role: 'member',
+        },
+        {
+          id: 9,
+          name: 'Isabel Rodrigues',
+          role: 'member',
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: 'Amantes de Ciclismo Angola',
+      image_url:
+        'https://res.cloudinary.com/db9ha9ox6/image/upload/v1758451964/betolyn/channels/tourfrance.png',
+      created_by: 'Rui Almeida',
+      created_at: '2025-09-09T20:47:16.591156Z',
+      members: [
+        {
+          id: 10,
+          name: 'Rui Almeida',
+          role: 'admin',
+        },
+        {
+          id: 11,
+          name: 'Carla Mendes',
+          role: 'member',
+        },
+        {
+          id: 12,
+          name: 'Miguel Sousa',
+          role: 'member',
+        },
+        {
+          id: 13,
+          name: 'Teresa Lopes',
+          role: 'member',
+        },
+      ],
+    },
+  ],
+};
