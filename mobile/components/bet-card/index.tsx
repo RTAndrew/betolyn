@@ -58,7 +58,11 @@ interface BetCardProps {
 
 export default function BetCard({ match }: BetCardProps) {
   return (
-    <TouchableOpacity onPress={() => router.push(`/matches/${match.id}`)} style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => router.push(`/matches/${match.id}`)}
+      style={styles.container}
+    >
       <Text style={styles.cardTitle}>Futebol 100%</Text>
 
       <View style={styles.content}>

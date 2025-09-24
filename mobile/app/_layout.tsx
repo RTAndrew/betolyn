@@ -1,6 +1,7 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { Platform } from 'react-native';
 import 'react-native-reanimated';
 
 export default function RootLayout() {
@@ -20,7 +21,7 @@ export default function RootLayout() {
         <Stack.Screen name="matches" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar style={Platform.OS === 'ios' ? 'dark' : 'light'} backgroundColor="#262F3D" />
     </>
   );
 }
