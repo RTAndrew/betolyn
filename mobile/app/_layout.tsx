@@ -18,7 +18,31 @@ export default function RootLayout() {
     <>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="matches" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="modal/match/[id]"
+          options={{
+            headerShown: false,
+            presentation: 'formSheet',
+            animation: 'slide_from_bottom',
+            sheetElevation: 24,
+            sheetGrabberVisible: true,
+            gestureDirection: 'vertical',
+            sheetAllowedDetents: [1],
+          }}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            presentation: 'containedModal',
+            animation: 'slide_from_bottom',
+            sheetElevation: 24,
+            sheetGrabberVisible: true,
+            gestureDirection: 'vertical',
+            sheetAllowedDetents: [50],
+          }}
+          name="modal/channels/[id]/create-event/index"
+        />
+
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style={Platform.OS === 'ios' ? 'dark' : 'light'} backgroundColor="#262F3D" />

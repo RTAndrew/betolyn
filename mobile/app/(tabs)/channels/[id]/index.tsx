@@ -38,11 +38,14 @@ const ChannelId = () => {
 
           <View style={styles.headerRight}>
             <AntDesign name="message" size={24} color="white" />
+            <TouchableOpacity onPress={() => router.push(`/modal/channels/${id}/create-event`)}>
+              <AntDesign name="plus" size={24} color="white" />
+            </TouchableOpacity>
           </View>
         </ThemedView>
       </View>
 
-      <ThemedView style={{ flex: 1 }}>
+      <ThemedView style={{ flex: 1, backgroundColor: '#61687E' }}>
         {mockAPI.getMatches().map((match, index) => (
           <BetCard key={index} match={match} />
         ))}
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
+    padding: 16,
     backgroundColor: 'transparent',
   },
   headerLeft: {
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 16,
   },
   imageContainer: {
     width: 24,

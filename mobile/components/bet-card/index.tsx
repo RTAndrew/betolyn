@@ -54,15 +54,20 @@ const teamStyles = StyleSheet.create({
 
 interface BetCardProps {
   match: IMatch;
+  onPress?: (match: IMatch) => void;
 }
 
-export default function BetCard({ match }: BetCardProps) {
+export default function BetCard({ match, onPress }: BetCardProps) {
+  const handlePress = () => {
+    if (onPress) {
+      onPress(match);
+    } else {
+      router.push(`/modal/match/${match.id}`);
+    }
+  };
+
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => router.push(`/matches/${match.id}`)}
-      style={styles.container}
-    >
+    <TouchableOpacity activeOpacity={1} onPress={handlePress} style={styles.container}>
       <Text style={styles.cardTitle}>Futebol 100%</Text>
 
       <View style={styles.content}>

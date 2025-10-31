@@ -1,15 +1,30 @@
 import { IOdd } from '@/mock/matches';
-import { StyleSheet, Text, View, ViewProps } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewProps,
+} from 'react-native';
 
-interface OddButtonProps extends ViewProps {
+interface OddButtonProps extends TouchableOpacityProps {
   odd: IOdd;
+  variant?: 'primary' | 'secondary';
 }
 
-export const OddButton = ({ odd, style, ...props }: OddButtonProps) => {
+export const OddButton = ({ odd, style, variant = 'primary', ...props }: OddButtonProps) => {
   return (
-    <View style={[oddsStyles.oddButton, style]} {...props}>
+    <TouchableOpacity
+      style={[
+        oddsStyles.oddButton,
+        variant === 'primary' ? oddsStyles.primaryVariant : oddsStyles.secondaryVariant,
+        style,
+      ]}
+      {...props}
+    >
       <Text style={oddsStyles.oddText}>{odd.value}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -21,6 +36,12 @@ const oddsStyles = StyleSheet.create({
     borderRadius: 100,
     paddingVertical: 5,
     paddingHorizontal: 20,
+  },
+  primaryVariant: {
+    borderStyle: 'solid',
+  },
+  secondaryVariant: {
+    borderStyle: 'dashed',
   },
   oddText: {
     color: '#F3C942',

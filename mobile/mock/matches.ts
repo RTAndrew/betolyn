@@ -25,7 +25,7 @@ export interface IMainCriteria {
 export interface IOdd {
   id: number;
   name: string;
-  value: number;
+  value: number | string;
   minimum_amount: number;
   maximum_amount: number;
   created_by: string;
