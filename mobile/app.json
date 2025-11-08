@@ -1,23 +1,25 @@
 {
   "expo": {
-    "name": "react-native-example",
-    "slug": "react-native-example",
+    "name": "Bet Olyn",
+    "slug": "bet-olyn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "reactnativeexample",
+    "scheme": "betolyn",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#495064",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.betolyn"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.betolyn"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +40,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "04159b3e-2ebe-4779-ad85-f983f937dcc6"
+      }
     }
   }
 }
