@@ -1,0 +1,27 @@
+package com.betolyn.features.auth;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import lombok.Data;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class UserService implements IUserService{
+    private final UserRepository userRepository;
+
+    @Override
+    public UserEntity getUserById(String id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public UserEntity getUserByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public List<UserEntity> getUsers() {
+        return List.of();
+    }
+}
