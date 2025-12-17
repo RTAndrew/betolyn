@@ -8,19 +8,13 @@ dev-mobile: ## Start the Expo development server
 	@echo "Starting Expo development server..."
 	cd mobile && npm start
 
-dev-backend: ## Start the FastAPI development server
-	@echo "Starting FastAPI development server..."
-	@if [ ! -d "backend" ]; then \
-		echo "Backend directory does not exist. Creating basic FastAPI structure..."; \
-		mkdir -p backend; \
-		echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get("/")\ndef read_root():\n    return {"Hello": "World"}' > backend/main.py; \
-		echo 'fastapi\nuvicorn[standard]' > backend/requirements.txt; \
+dev-backend: ## Start the Spring Boot development server
+	@echo "Starting Spring Boot development server..."
+	@if [ ! -f "backend/pom.xml" ]; then \
+		echo "Error: backend/pom.xml not found. Please ensure the Spring Boot project is properly set up."; \
+		exit 1; \
 	fi
-	@if [ ! -d "backend/.venv" ]; then \
-		echo "Creating Python virtual environment..."; \
-		cd backend && python3 -m PYTHONDONTWRITEBYTECODE=1 venv .venv; \
-	fi
-	cd backend && source .venv/bin/activate && PYTHONDONTWRITEBYTECODE=1 uvicorn main:app --reload --host 0.0.0.0 --port 8000
+	cd backend && ./mvnw spring-boot:run
 
 install-mobile: ## Install mobile app dependencies
 	@echo "Installing mobile app dependencies..."
@@ -28,23 +22,16 @@ install-mobile: ## Install mobile app dependencies
 
 install-backend: ## Install backend dependencies
 	@echo "Installing backend dependencies..."
-	@if [ ! -d "backend" ]; then \
-		echo "Backend directory does not exist. Creating basic FastAPI structure..."; \
-		mkdir -p backend; \
-		echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get("/")\ndef read_root():\n    return {"Hello": "World"}' > backend/main.py; \
-		echo 'fastapi\nuvicorn[standard]' > backend/requirements.txt; \
+	@if [ ! -f "backend/pom.xml" ]; then \
+		echo "Error: backend/pom.xml not found. Please ensure the Spring Boot project is properly set up."; \
+		exit 1; \
 	fi
-	@if [ ! -d "backend/.venv" ]; then \
-		echo "Creating Python virtual environment..."; \
-		cd backend && python3 -m venv .venv; \
-	fi
-
-	cd backend && source .venv/bin/activate && pip install -r requirements.txt
+	cd backend && ./mvnw clean install -DskipTests
 
 clean: ## Clean build artifacts and dependencies
 	@echo "Cleaning build artifacts..."
 	cd mobile && rm -rf node_modules
-	cd backend && rm -rf __pycache__ *.pyc
+	cd backend && ./mvnw clean && rm -rf target
 	@echo "Clean complete. Run 'make install-mobile' and 'make install-backend' to reinstall dependencies."
 
 setup: install-mobile install-backend ## Setup the entire project (install all dependencies)
@@ -54,4 +41,5 @@ dev: dev-mobile ## Alias for dev-mobile (default development command)
 
 reset-db: ## Reset the database (drop all tables and recreate schema)
 	@echo "Resetting database..."
-	cd backend && python -m scripts.reset_db
+	@echo "Note: Database reset functionality should be implemented via Spring Boot Flyway/Liquibase migrations or SQL scripts."
+	@echo "Please check backend/src/main/resources/db/migration for migration scripts."

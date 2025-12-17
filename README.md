@@ -1,6 +1,6 @@
 <center>
   <h2>Bet Olyn - Betting Platform</h2>
-  <b>React Native + Python</b>
+  <b>React Native + Spring Boot</b>
 </center>
 
 <br>
@@ -41,7 +41,7 @@ The platform's design and user experience were carefully crafted in Figma:
 ```
 /
 ├── mobile/          # React Native Expo application
-├── backend/         # Backend service (FastAPI)
+├── backend/         # Backend service (Spring Boot)
 ├── README.md        # This file
 ├── .gitignore       # Root gitignore
 └── Makefile         # Build and development scripts
@@ -52,9 +52,9 @@ The platform's design and user experience were carefully crafted in Figma:
 ### Prerequisites
 
 - Node.js (for mobile app)
-- Python 3.8+ (for backend)
+- Java 17+ (for backend)
+- Maven 3.6+ (or use Maven Wrapper included in project)
 - Expo CLI
-- FastAPI (for backend)
 
 ### Development
 
@@ -69,13 +69,13 @@ cd mobile && npm start
 ```bash
 make dev-backend
 # or
-cd backend && uvicorn main:app --reload
+cd backend && ./mvnw spring-boot:run
 ```
 
 ## 🛠️ Available Commands
 
 - `make dev-mobile` - Start the Expo development server
-- `make dev-backend` - Start the FastAPI development server
+- `make dev-backend` - Start the Spring Boot development server
 - `make install-mobile` - Install mobile app dependencies
 - `make install-backend` - Install backend dependencies
 
@@ -93,7 +93,7 @@ The React Native mobile application provides an intuitive interface for:
 
 ## 🔧 Backend Services
 
-The FastAPI backend handles:
+The Spring Boot backend handles:
 - User authentication and management
 - Bet creation and validation
 - Event registration and management
