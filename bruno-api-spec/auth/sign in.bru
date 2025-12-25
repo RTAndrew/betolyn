@@ -1,0 +1,23 @@
+meta {
+  name: sign in
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/signin
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "anderson@gmaiul.com",
+    "password": "mestre"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

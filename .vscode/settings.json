@@ -29,7 +29,9 @@
 		"**/**/index.ts": "${dirname} → index.ts",
 		"**/**/index.tsx": "${dirname} → index.tsx",
 		"**/**/styles.tsx": "${dirname} → styles.tsx"
-	}
+	},
+	"java.configuration.updateBuildConfiguration": "automatic",
+	"java.compile.nullAnalysis.mode": "automatic"
 }
 
 

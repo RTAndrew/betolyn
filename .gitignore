@@ -136,3 +136,7 @@ public
 # Temporary folders
 tmp/
 temp/
+
+
+# Java
+*.hprof

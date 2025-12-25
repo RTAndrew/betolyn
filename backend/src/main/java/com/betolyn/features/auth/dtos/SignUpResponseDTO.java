@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SignUpRequestDTO {
+public class SignUpResponseDTO {
+    private String id;
     private String email;
     private String username;
-    private String password;
 }
