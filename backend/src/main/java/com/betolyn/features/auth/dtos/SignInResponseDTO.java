@@ -8,4 +8,5 @@ import lombok.Data;
 public class SignInResponseDTO {
     private SignUpResponseDTO user;
     private String token;
+    private String sessionId;
 }

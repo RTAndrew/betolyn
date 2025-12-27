@@ -8,8 +8,9 @@ import com.betolyn.features.auth.dtos.SignInResponseDTO;
 import com.betolyn.features.auth.dtos.SignUpRequestDTO;
 import com.betolyn.features.auth.dtos.SignUpResponseDTO;
 import com.betolyn.utils.responses.ApiResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,17 +51,22 @@ public class AuthController {
                 savedUser.get().getEmail(),
                 savedUser.get().getUsername()
         );
-        return ResponseEntity.ok(new ApiResponse("User account created", responseDTO));
+        return ResponseEntity.ok(new ApiResponse<SignUpResponseDTO>("User account created", responseDTO));
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse> signIn(@RequestBody SignInRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponse> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
         var user = authService.signIn(requestDTO);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("token",
-                user.getToken());
 
+        // TODO: set the MAX_AGE from the constants, and set it also in JwT.expiresAt
+        Cookie cookie = new Cookie("token", user.getToken());
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
 
-        return ResponseEntity.ok().headers(responseHeaders).body(new ApiResponse("user authenticated", user));
+        response.addCookie(cookie);
+        response.addHeader("token", user.getToken());
+
+        return ResponseEntity.ok().body(new ApiResponse<SignInResponseDTO>("user authenticated", user));
     }
 }

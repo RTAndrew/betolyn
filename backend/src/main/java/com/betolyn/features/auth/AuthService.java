@@ -4,16 +4,20 @@ import com.betolyn.features.auth.dtos.SignInRequestDTO;
 import com.betolyn.features.auth.dtos.SignInResponseDTO;
 import com.betolyn.features.auth.dtos.SignUpRequestDTO;
 import com.betolyn.features.auth.dtos.SignUpResponseDTO;
+import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
     private final UserRepository userRepository;
+    private final AuthSessionRepository authSessionRepository;
     private final JwtTokenService jwtTokenService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -38,13 +42,20 @@ public class AuthService implements IAuthService {
             throw new RuntimeException("The credentials are invalid");
         }
 
-
         boolean passwordMatches = passwordEncoder.matches(requestDTO.getPassword(), foundUser.getPassword());
         if (!passwordMatches) throw new RuntimeException("The credentials are invalid");
 
-        String token = jwtTokenService.generateToken(requestDTO.getEmail(), requestDTO.getPassword());
+        String sessionId = new GenerateId(8,"sess").generate();
+        String token = jwtTokenService.generateToken(requestDTO.getEmail(), sessionId, foundUser.getUsername(), foundUser.getId());
+
+        Map<String, String> session = new HashMap<>();
+        session.put("email", foundUser.getEmail());
+        session.put("username", foundUser.getUsername());
+        session.put("id", foundUser.getId());
+        authSessionRepository.saveSession(sessionId, session);
+
         return new SignInResponseDTO(
-                (new SignUpResponseDTO(foundUser.getId(), foundUser.getEmail(), foundUser.getEmail())),
-                token);
+                (new SignUpResponseDTO(foundUser.getId(), foundUser.getEmail(), foundUser.getUsername())),
+                token, sessionId);
     }
 }

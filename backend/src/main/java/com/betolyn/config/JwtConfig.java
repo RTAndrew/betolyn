@@ -1,4 +1,4 @@
-package com.betolyn.utils;
+package com.betolyn.config;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
-public class JwTConfig {
+public class JwtConfig {
 
     @Value("${app.security.secret}")
     private String jwtKey;

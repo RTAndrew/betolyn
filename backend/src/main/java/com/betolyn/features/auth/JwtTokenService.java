@@ -15,7 +15,7 @@ public class JwtTokenService {
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
 
-    public String generateToken(String email, String password) {
+    public String generateToken(String email, String sessionId, String username, String userId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -23,6 +23,9 @@ public class JwtTokenService {
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject("user")
                 .claim("email", email)
+                .claim("user_id", userId)
+                .claim("username", username)
+                .claim("session_id", sessionId)
                 .build();
         var encoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
         return this.encoder.encode(encoderParameters).getTokenValue();
