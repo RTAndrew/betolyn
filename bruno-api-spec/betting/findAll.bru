@@ -1,0 +1,16 @@
+meta {
+  name: findAll
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/odds
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

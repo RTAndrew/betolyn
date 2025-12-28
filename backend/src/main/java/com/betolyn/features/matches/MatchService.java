@@ -22,8 +22,13 @@ public class MatchService implements IMatchService {
     }
 
     @Override
+    public MatchEntity findById(String id) {
+        return matchRepository.findById(id).orElseThrow();
+    }
+
+    @Override
     public MatchEntity createMatch(CreateMatchRequestDTO requestDTO) {
-        UserEntity user = userService.getUserById("u_1EEnlHt38iE4");
+        UserEntity user = userService.getUserById("u_KgONWiLNaUGR");
         var homeTeam = teamService.findById(requestDTO.getHomeTeamId());
         var awayTeam = teamService.findById(requestDTO.getAwayTeamId());
 

@@ -1,0 +1,26 @@
+meta {
+  name: create odd
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/odds
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Real Madrid",
+    "value": 8,
+    "minimumAmount": 760,
+    "maximumAmount": 15000,
+    "criterionId": "crit_JLTJj4Lb7mg7"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
