@@ -94,6 +94,12 @@
             <artifactId>jedis</artifactId>
             <version>7.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <repositories>

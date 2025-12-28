@@ -3,10 +3,10 @@ package com.betolyn.features.auth.controllers;
 import com.betolyn.features.auth.AuthService;
 import com.betolyn.features.auth.UserEntity;
 import com.betolyn.features.auth.UserService;
-import com.betolyn.features.auth.dtos.SignInRequestDTO;
-import com.betolyn.features.auth.dtos.SignInResponseDTO;
-import com.betolyn.features.auth.dtos.SignUpRequestDTO;
-import com.betolyn.features.auth.dtos.SignUpResponseDTO;
+import com.betolyn.features.auth.DTOs.SignInRequestDTO;
+import com.betolyn.features.auth.DTOs.SignInResponseDTO;
+import com.betolyn.features.auth.DTOs.SignUpRequestDTO;
+import com.betolyn.features.auth.DTOs.SignUpResponseDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -55,7 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<SignInResponseDTO>> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
         var user = authService.signIn(requestDTO);
 
         // TODO: set the MAX_AGE from the constants, and set it also in JwT.expiresAt

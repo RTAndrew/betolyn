@@ -1,19 +1,19 @@
 meta {
-  name: get users
+  name: create
   type: http
-  seq: 3
+  seq: 1
 }
 
 post {
-  url: {{baseUrl}}/auth/signin
+  url: {{baseUrl}}/matches
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "email": "mastias@gmaiul.com",
-    "password": "mestre"
+    "homeTeamId": "team_YaARKGLfRN0v",
+    "awayTeamId": "team_wBUhOYSMHrmz"
   }
 }
 

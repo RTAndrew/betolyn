@@ -1,8 +1,8 @@
 package com.betolyn.features.auth;
 
-import com.betolyn.features.auth.dtos.SignInRequestDTO;
-import com.betolyn.features.auth.dtos.SignInResponseDTO;
-import com.betolyn.features.auth.dtos.SignUpRequestDTO;
+import com.betolyn.features.auth.DTOs.SignInRequestDTO;
+import com.betolyn.features.auth.DTOs.SignInResponseDTO;
+import com.betolyn.features.auth.DTOs.SignUpRequestDTO;
 
 import java.util.Optional;
 

@@ -1,20 +1,18 @@
 meta {
-  name: sign up
+  name: create
   type: http
   seq: 1
 }
 
 post {
-  url: {{baseUrl}}/auth/signup
+  url: {{baseUrl}}/teams
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "email": "matiass@gmaiul.com",
-    "password": "mestre",
-    "username": "anderson"
+    "name": "1o da Gosto"
   }
 }
 

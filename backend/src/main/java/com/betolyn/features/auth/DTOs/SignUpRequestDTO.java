@@ -1,4 +1,4 @@
-package com.betolyn.features.auth.dtos;
+package com.betolyn.features.auth.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

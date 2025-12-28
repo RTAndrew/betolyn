@@ -1,9 +1,9 @@
 package com.betolyn.features.auth;
 
+import com.betolyn.shared.BaseEntity;
 import com.betolyn.utils.GenerateId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class UserEntity {
-
-    @Id
-    private String id;
+public class UserEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String password;
@@ -29,14 +26,17 @@ public class UserEntity {
 
 
     public UserEntity(String password, String email, String username) {
-        this.id = this.generateId();
+        super();
+        super.setId(generateId());
         this.email = email;
         this.username = username;
         this.password = password;
+
     }
 
     public UserEntity(String id, String password, String email, String username) {
-        this.id = id;
+        super();
+        super.setId(generateId());
         this.email = email;
         this.username = username;
         this.password = password;

@@ -1,9 +1,9 @@
 package com.betolyn.features.auth;
 
-import com.betolyn.features.auth.dtos.SignInRequestDTO;
-import com.betolyn.features.auth.dtos.SignInResponseDTO;
-import com.betolyn.features.auth.dtos.SignUpRequestDTO;
-import com.betolyn.features.auth.dtos.SignUpResponseDTO;
+import com.betolyn.features.auth.DTOs.SignInRequestDTO;
+import com.betolyn.features.auth.DTOs.SignInResponseDTO;
+import com.betolyn.features.auth.DTOs.SignUpRequestDTO;
+import com.betolyn.features.auth.DTOs.SignUpResponseDTO;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
