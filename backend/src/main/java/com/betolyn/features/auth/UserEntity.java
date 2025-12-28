@@ -36,7 +36,7 @@ public class UserEntity extends BaseEntity {
 
     public UserEntity(String id, String password, String email, String username) {
         super();
-        super.setId(generateId());
+        super.setId(id);
         this.email = email;
         this.username = username;
         this.password = password;

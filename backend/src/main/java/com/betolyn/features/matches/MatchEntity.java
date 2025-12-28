@@ -4,8 +4,6 @@ import com.betolyn.features.auth.UserEntity;
 import com.betolyn.shared.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
 @Setter

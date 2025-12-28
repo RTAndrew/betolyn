@@ -1,6 +1,6 @@
 package com.betolyn.features.matches.controllers;
 
-import com.betolyn.features.matches.DTOs.CreateMatchRequestDTO;
+import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchService;
 import com.betolyn.utils.responses.ApiResponse;

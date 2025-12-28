@@ -1,6 +1,6 @@
 package com.betolyn.features.matches;
 
-import com.betolyn.features.matches.DTOs.CreateTeamRequestDTO;
+import com.betolyn.features.matches.dto.CreateTeamRequestDTO;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

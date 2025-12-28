@@ -1,6 +1,6 @@
 package com.betolyn.features.matches.controllers;
 
-import com.betolyn.features.matches.DTOs.CreateTeamRequestDTO;
+import com.betolyn.features.matches.dto.CreateTeamRequestDTO;
 import com.betolyn.features.matches.TeamEntity;
 import com.betolyn.features.matches.TeamService;
 import com.betolyn.utils.responses.ApiResponse;

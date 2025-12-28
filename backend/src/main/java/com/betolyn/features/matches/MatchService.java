@@ -2,7 +2,7 @@ package com.betolyn.features.matches;
 
 import com.betolyn.features.auth.UserEntity;
 import com.betolyn.features.auth.UserService;
-import com.betolyn.features.matches.DTOs.CreateMatchRequestDTO;
+import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

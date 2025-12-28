@@ -1,7 +1,7 @@
 package com.betolyn.features.matches;
 
 
-import com.betolyn.features.matches.DTOs.CreateTeamRequestDTO;
+import com.betolyn.features.matches.dto.CreateTeamRequestDTO;
 
 import java.util.List;
 

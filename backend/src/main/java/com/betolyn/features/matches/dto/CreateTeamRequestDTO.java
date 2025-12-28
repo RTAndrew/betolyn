@@ -1,4 +1,4 @@
-package com.betolyn.features.matches.DTOs;
+package com.betolyn.features.matches.dto;
 
 import lombok.Data;
 import lombok.NonNull;

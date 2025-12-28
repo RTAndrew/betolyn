@@ -1,6 +1,6 @@
 package com.betolyn.features.matches;
 
-import com.betolyn.features.matches.DTOs.CreateMatchRequestDTO;
+import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 
 import java.util.List;
 
