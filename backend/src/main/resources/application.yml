@@ -20,4 +20,4 @@ services:
     port: 6379
 app:
   security:
-    secret: "jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT"
+    jwtSecret: "jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT"

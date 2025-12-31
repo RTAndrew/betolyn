@@ -20,6 +20,7 @@ public class TeamEntity extends BaseEntity {
     private String name;
     private String badgeUrl;
 
+
     //   Keeping relationships unidirectional (Match -> Team only),
     //   to prevent accidental "Infinite Recursion"
     //   when converting entities to JSON.

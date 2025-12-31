@@ -1,12 +1,10 @@
 package com.betolyn.features.auth;
 
-import com.betolyn.features.auth.dto.SignInRequestDTO;
-import com.betolyn.features.auth.dto.SignInResponseDTO;
-import com.betolyn.features.auth.dto.SignUpRequestDTO;
-import com.betolyn.features.auth.dto.SignUpResponseDTO;
+import com.betolyn.features.auth.dto.*;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,7 +17,7 @@ public class AuthService implements IAuthService {
     private final UserRepository userRepository;
     private final AuthSessionRepository authSessionRepository;
     private final JwtTokenService jwtTokenService;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<UserEntity> signUp(SignUpRequestDTO requestDTO) throws RuntimeException {
@@ -58,4 +56,10 @@ public class AuthService implements IAuthService {
                 (new SignUpResponseDTO(foundUser.getId(), foundUser.getEmail(), foundUser.getUsername())),
                 token, sessionId);
     }
+
+    public boolean isSessionValid(JwtSessionDTO session) throws JwtException {
+        return authSessionRepository.isSessionValid(session);
+    }
+
+
 }

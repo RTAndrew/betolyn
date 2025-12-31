@@ -4,6 +4,7 @@ import com.betolyn.features.auth.UserEntity;
 import com.betolyn.shared.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
 
 @Getter
 @Setter
@@ -35,5 +36,6 @@ public class MatchEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
-    private UserEntity user;
+    @CreatedBy
+    private UserEntity createdBy;
 }

@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MatchService implements IMatchService {
-    private final UserService userService;
     private final TeamService teamService;
     private final MatchRepository matchRepository;
 
@@ -28,14 +27,11 @@ public class MatchService implements IMatchService {
 
     @Override
     public MatchEntity createMatch(CreateMatchRequestDTO requestDTO) {
-        UserEntity user = userService.getUserById("u_KgONWiLNaUGR");
         var homeTeam = teamService.findById(requestDTO.getHomeTeamId());
         var awayTeam = teamService.findById(requestDTO.getAwayTeamId());
 
-
         MatchEntity entity = new MatchEntity();
         entity.setId(new GenerateId(12, "match").generate());
-        entity.setUser(user);
         entity.setHomeTeam(homeTeam);
         entity.setAwayTeam(awayTeam);
 
