@@ -1,5 +1,6 @@
 package com.betolyn.features.auth;
 
+import com.betolyn.features.auth.config.AuthConstants;
 import com.betolyn.features.auth.dto.JwtSessionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -14,15 +15,19 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
+    private final AuthConstants authConstants;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
 
-    public String generateToken(String email, String sessionId, String username, String userId) {
+    public JwtSessionDTO generateToken(String email, String sessionId, String username, String userId) {
         Instant now = Instant.now();
+        var expiresAt = now.plus(authConstants.sessionExpirationInDays(), ChronoUnit.DAYS);
+        var issuer = "betolyn";
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("betolyn")
+                .issuer(issuer)
                 .issuedAt(now)
-                .expiresAt(now.plus(7, ChronoUnit.DAYS))
+                .expiresAt(expiresAt)
                 .subject("user")
                 .claim("email", email)
                 .claim("user_id", userId)
@@ -30,7 +35,17 @@ public class JwtTokenService {
                 .claim("session_id", sessionId)
                 .build();
         var encoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
-        return this.encoder.encode(encoderParameters).getTokenValue();
+        var generatedToken = this.encoder.encode(encoderParameters).getTokenValue();
+
+        JwtSessionDTO session = new JwtSessionDTO();
+        session.setIss(issuer);
+        session.setSessionId(sessionId);
+        session.setEmail(email);
+        session.setUsername(username);
+        session.setUserId(userId);
+        session.setExp(expiresAt);
+        session.setToken(generatedToken);
+        return session;
     }
 
     public boolean isValid(String token) {
@@ -55,11 +70,5 @@ public class JwtTokenService {
         jwtDTO.setIat(decodedToken.getClaim("iat"));
 
         return jwtDTO;
-    }
-
-    public Long extractExpirationTime(String token) {
-        Jwt jwt = decoder.decode(token);
-        var exp = (Instant) jwt.getClaim("exp");
-        return exp.toEpochMilli();
     }
 }

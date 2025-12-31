@@ -4,6 +4,7 @@ import com.betolyn.features.auth.dto.JwtSessionDTO;
 import com.betolyn.features.auth.dto.SignInRequestDTO;
 import com.betolyn.features.auth.dto.SignInResponseDTO;
 import com.betolyn.features.auth.dto.SignUpRequestDTO;
+import com.betolyn.features.user.UserEntity;
 
 import java.util.Optional;
 

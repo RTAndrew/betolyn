@@ -1,6 +1,6 @@
 package com.betolyn.features.matches;
 
-import com.betolyn.features.auth.UserEntity;
+import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.betolyn.features.auth;
+package com.betolyn.features.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

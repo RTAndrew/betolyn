@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import redis.clients.jedis.RedisClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Repository
@@ -28,11 +29,15 @@ public class AuthSessionRepository {
                 session.getUsername().equals(username);
     }
 
-    public void saveSession(String sessionId, Map<String, String> data) {
-        String authSessionKey = getAuthSessionKey(sessionId);
+    public void saveSession(JwtSessionDTO session) {
+        String authSessionKey = getAuthSessionKey(session.getSessionId());
 
-        // TODO: set a default expiration with HSETEX
-        redis.hset(authSessionKey, data);
+        Map<String, String> sessionClaimsMap = new HashMap<>();
+        sessionClaimsMap.put("email", session.getEmail());
+        sessionClaimsMap.put("username", session.getUsername());
+        sessionClaimsMap.put("id", session.getUserId());
 
+        redis.hset(authSessionKey, sessionClaimsMap);
+        redis.expireAt(authSessionKey, session.getExp().getEpochSecond());
     }
 }

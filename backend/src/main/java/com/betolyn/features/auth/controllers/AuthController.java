@@ -1,8 +1,8 @@
 package com.betolyn.features.auth.controllers;
 
 import com.betolyn.features.auth.AuthService;
-import com.betolyn.features.auth.UserEntity;
-import com.betolyn.features.auth.UserService;
+import com.betolyn.features.user.UserEntity;
+import com.betolyn.features.user.UserService;
 import com.betolyn.features.auth.dto.SignInRequestDTO;
 import com.betolyn.features.auth.dto.SignInResponseDTO;
 import com.betolyn.features.auth.dto.SignUpRequestDTO;

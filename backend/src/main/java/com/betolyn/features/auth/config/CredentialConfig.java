@@ -1,7 +1,7 @@
-package com.betolyn.config;
+package com.betolyn.features.auth.config;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,19 +15,19 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
+@RequiredArgsConstructor
 public class CredentialConfig {
 
-    @Value("${app.security.jwtSecret}")
-    private String jwtKey;
+private final AuthConstants authConstants;
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        return new NimbusJwtEncoder(new ImmutableSecret<>(jwtKey.getBytes()));
+        return new NimbusJwtEncoder(new ImmutableSecret<>(authConstants.jwtSecret().getBytes()));
     }
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        byte[] bytes = jwtKey.getBytes();
+        byte[] bytes = authConstants.jwtSecret().getBytes();
         SecretKeySpec originalKey = new SecretKeySpec(bytes, 0, bytes.length, "RSA");
         return NimbusJwtDecoder.withSecretKey(originalKey)
                 .macAlgorithm(MacAlgorithm.HS256)

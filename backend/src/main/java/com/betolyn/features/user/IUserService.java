@@ -1,4 +1,4 @@
-package com.betolyn.features.auth;
+package com.betolyn.features.user;
 
 import java.util.List;
 

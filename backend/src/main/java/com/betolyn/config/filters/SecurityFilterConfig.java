@@ -17,7 +17,7 @@ public class SecurityFilterConfig {
     private final AuthFilter authFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 // 1. Disable CSRF so POST/PUT/DELETE work without tokens
                 .csrf(csrf -> csrf.disable())
@@ -27,9 +27,12 @@ public class SecurityFilterConfig {
                 )
                 .authorizeHttpRequests((authorize) -> authorize
                         // use CRSF token instead of blocking manually
+                        .requestMatchers(HttpMethod.POST, "/auth/signup").not().authenticated()
+                        .requestMatchers(HttpMethod.POST, "/auth/signin").not().authenticated()
                         .requestMatchers(HttpMethod.POST).authenticated()
                         .requestMatchers(HttpMethod.PUT).authenticated()
                         .requestMatchers(HttpMethod.PATCH).authenticated()
+
                         .anyRequest().permitAll()
                 ).addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 

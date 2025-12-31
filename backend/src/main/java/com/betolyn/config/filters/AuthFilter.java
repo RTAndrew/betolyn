@@ -2,8 +2,10 @@ package com.betolyn.config.filters;
 
 import com.betolyn.features.auth.AuthService;
 import com.betolyn.features.auth.JwtTokenService;
+import com.betolyn.features.auth.config.AuthConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 public class AuthFilter extends OncePerRequestFilter {
     private final JwtTokenService tokenService;
     private final AuthService authService;
+    private final AuthConstants authConstants;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -56,7 +59,22 @@ public class AuthFilter extends OncePerRequestFilter {
     @Nullable
     private String recoverTokenFromRequest(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
-        if (authHeader == null) return null;
-        return authHeader.replace("Bearer ", "");
+        if (Boolean.parseBoolean(authHeader)) {
+            return authHeader.replace("Bearer ", "");
+        }
+
+        var cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+
+        String foundCookie = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(authConstants.cookiesTokenNameKey())) {
+                foundCookie = cookie.getValue();
+                break;
+            }
+        }
+        return foundCookie;
     }
 }

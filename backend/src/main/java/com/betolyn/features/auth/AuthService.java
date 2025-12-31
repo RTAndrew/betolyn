@@ -1,14 +1,13 @@
 package com.betolyn.features.auth;
 
 import com.betolyn.features.auth.dto.*;
+import com.betolyn.features.user.UserEntity;
+import com.betolyn.features.user.UserRepository;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,18 +42,19 @@ public class AuthService implements IAuthService {
         boolean passwordMatches = passwordEncoder.matches(requestDTO.getPassword(), foundUser.getPassword());
         if (!passwordMatches) throw new RuntimeException("The credentials are invalid");
 
-        String sessionId = new GenerateId(8,"sess").generate();
-        String token = jwtTokenService.generateToken(requestDTO.getEmail(), sessionId, foundUser.getUsername(), foundUser.getId());
+        String sessionId = new GenerateId(8, "sess").generate();
+        var session = jwtTokenService.generateToken(
+                requestDTO.getEmail(),
+                sessionId,
+                foundUser.getUsername(),
+                foundUser.getId()
+        );
 
-        Map<String, String> session = new HashMap<>();
-        session.put("email", foundUser.getEmail());
-        session.put("username", foundUser.getUsername());
-        session.put("id", foundUser.getId());
-        authSessionRepository.saveSession(sessionId, session);
+        authSessionRepository.saveSession(session);
 
         return new SignInResponseDTO(
                 (new SignUpResponseDTO(foundUser.getId(), foundUser.getEmail(), foundUser.getUsername())),
-                token, sessionId);
+                session.getToken(), sessionId);
     }
 
     public boolean isSessionValid(JwtSessionDTO session) throws JwtException {
