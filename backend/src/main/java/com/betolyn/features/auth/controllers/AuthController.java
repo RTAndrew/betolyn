@@ -1,21 +1,21 @@
 package com.betolyn.features.auth.controllers;
 
 import com.betolyn.features.auth.AuthService;
+import com.betolyn.features.auth.config.AuthConstants;
+import com.betolyn.features.auth.dto.*;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.features.user.UserService;
-import com.betolyn.features.auth.dto.SignInRequestDTO;
-import com.betolyn.features.auth.dto.SignInResponseDTO;
-import com.betolyn.features.auth.dto.SignUpRequestDTO;
-import com.betolyn.features.auth.dto.SignUpResponseDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -24,6 +24,7 @@ import java.util.Optional;
 public class AuthController {
     private final UserService userService;
     private final AuthService authService;
+    private final AuthConstants authConstants;
 
     @GetMapping
     public List<UserEntity> listUsers() {
@@ -56,17 +57,45 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<SignInResponseDTO>> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
-        var user = authService.signIn(requestDTO);
+        var session = authService.signIn(requestDTO);
 
-        // TODO: set the MAX_AGE from the constants, and set it also in JwT.expiresAt
-        Cookie cookie = new Cookie("token", user.getToken());
+        Cookie cookie = new Cookie("token", session.getToken());
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
+        cookie.setMaxAge(((int) session.getExp().getEpochSecond()));
 
         response.addCookie(cookie);
-        response.addHeader("token", user.getToken());
+        response.addHeader("token", session.getToken());
 
-        return ResponseEntity.ok().body(new ApiResponse<SignInResponseDTO>("user authenticated", user));
+        var responseData = new SignInResponseDTO(
+                (new SignUpResponseDTO(session.getSessionId(), session.getEmail(), session.getUsername())),
+                session.getToken(), session.getSessionId());
+
+        return ResponseEntity.ok().body(new ApiResponse<SignInResponseDTO>("user authenticated", responseData));
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) {
+        var authenticationContext = SecurityContextHolder.getContext().getAuthentication();
+        if(Objects.isNull(authenticationContext) || !authenticationContext.isAuthenticated()) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>("You must be logged in to access this resource"));
+        }
+
+        JwtSessionDTO loggedUser = (JwtSessionDTO) authenticationContext.getPrincipal();
+
+        if(loggedUser == null) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>("You must be logged in to access this resource"));
+        }
+
+        authService.logOut(loggedUser.getSessionId());
+
+        Cookie cookie = new Cookie(authConstants.cookiesTokenNameKey(), "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new ApiResponse<>("Session cleared successfully"));
+    }
+
 }

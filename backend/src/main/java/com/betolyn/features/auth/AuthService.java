@@ -33,7 +33,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public SignInResponseDTO signIn(SignInRequestDTO requestDTO) throws RuntimeException {
+    public JwtSessionDTO signIn(SignInRequestDTO requestDTO) throws RuntimeException {
         UserEntity foundUser = userRepository.findByEmail(requestDTO.getEmail());
         if (foundUser == null) {
             throw new RuntimeException("The credentials are invalid");
@@ -52,14 +52,15 @@ public class AuthService implements IAuthService {
 
         authSessionRepository.saveSession(session);
 
-        return new SignInResponseDTO(
-                (new SignUpResponseDTO(foundUser.getId(), foundUser.getEmail(), foundUser.getUsername())),
-                session.getToken(), sessionId);
+        return session;
+    }
+
+    @Override
+    public void logOut(String sessionId) {
+        authSessionRepository.deleteSession(sessionId);
     }
 
     public boolean isSessionValid(JwtSessionDTO session) throws JwtException {
         return authSessionRepository.isSessionValid(session);
     }
-
-
 }

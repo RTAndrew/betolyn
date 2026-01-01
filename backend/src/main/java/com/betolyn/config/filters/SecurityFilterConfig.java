@@ -29,10 +29,10 @@ public class SecurityFilterConfig {
                         // use CRSF token instead of blocking manually
                         .requestMatchers(HttpMethod.POST, "/auth/signup").not().authenticated()
                         .requestMatchers(HttpMethod.POST, "/auth/signin").not().authenticated()
+                        .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.POST).authenticated()
                         .requestMatchers(HttpMethod.PUT).authenticated()
                         .requestMatchers(HttpMethod.PATCH).authenticated()
-
                         .anyRequest().permitAll()
                 ).addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 

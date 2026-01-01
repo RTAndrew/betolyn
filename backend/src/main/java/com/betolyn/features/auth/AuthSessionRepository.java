@@ -18,6 +18,10 @@ public class AuthSessionRepository {
         return AUTH_SESSION_KEY + ":" + sessionId;
     }
 
+    public void deleteSession(String sessionId) {
+        redis.del(getAuthSessionKey(sessionId));
+    }
+
     public boolean isSessionValid(JwtSessionDTO session) {
         var redisSession = redis.hgetAll(getAuthSessionKey(session.getSessionId()));
         var userId = redisSession.get("id");

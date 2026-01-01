@@ -5,7 +5,6 @@ import com.betolyn.features.auth.JwtTokenService;
 import com.betolyn.features.auth.config.AuthConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +28,11 @@ public class AuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverTokenFromRequest(request);
         if (token == null) {
+            // prevents anonymousUser from being set as authenticated
+            setContextToUnauthenticatedUser();
             filterChain.doFilter(request, response);
             return;
         }
-
 
         if (!tokenService.isValid(token)) {
             throw new RuntimeException("Invalid auth token detected");
@@ -47,7 +47,6 @@ public class AuthFilter extends OncePerRequestFilter {
         var securityContext = SecurityContextHolder.createEmptyContext();
         var authentication = new UsernamePasswordAuthenticationToken(decodedToken, null, List.of());
         securityContext.setAuthentication(authentication);
-
         // 2. Set the SecurityContextHolder with context
         // Spring uses this information for authorization
         SecurityContextHolder.setContext(securityContext);
@@ -56,6 +55,7 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
 
+    /** Supports Bearer Token (external clients) and cookies (browser-based clients) */
     @Nullable
     private String recoverTokenFromRequest(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
@@ -69,12 +69,20 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         String foundCookie = null;
-        for (Cookie cookie : cookies) {
+        for (var cookie : cookies) {
             if (cookie.getName().equals(authConstants.cookiesTokenNameKey())) {
                 foundCookie = cookie.getValue();
                 break;
             }
         }
         return foundCookie;
+    }
+
+    private void setContextToUnauthenticatedUser() {
+        var securityContext = SecurityContextHolder.createEmptyContext();
+        var authentication = new UsernamePasswordAuthenticationToken(null, null);
+        authentication.setAuthenticated(false);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }
