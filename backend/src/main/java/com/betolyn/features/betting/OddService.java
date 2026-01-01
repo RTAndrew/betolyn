@@ -4,7 +4,6 @@ import com.betolyn.features.betting.dtos.CreateOddRequestDTO;
 import com.betolyn.features.betting.dtos.OddDTO;
 import com.betolyn.features.betting.mapper.CriterionMapper;
 import com.betolyn.features.betting.mapper.OddMapper;
-import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,6 @@ public class OddService implements IOddService{
         odd.setValue(data.getValue());
         odd.setMinimumAmount(data.getMinimumAmount());
         odd.setMaximumAmount(data.getMaximumAmount());
-        odd.setId(new GenerateId(12, "od").generate());
 
         if(data.getCriterionId() != null) {
             var criterion = criterionService.findById(data.getCriterionId());

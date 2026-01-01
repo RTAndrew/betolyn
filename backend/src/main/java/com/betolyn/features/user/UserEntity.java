@@ -1,7 +1,7 @@
 package com.betolyn.features.user;
 
-import com.betolyn.shared.BaseEntity;
-import com.betolyn.utils.GenerateId;
+import com.betolyn.shared.baseEntity.BaseEntity;
+import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -36,7 +36,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     public UserEntity(String password, String email, String username) {
         super();
-        super.setId(generateId());
         this.email = email;
         this.username = username;
         this.password = password;
@@ -51,13 +50,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
         this.password = password;
     }
 
-    private String generateId() {
-        return new GenerateId(12, "u").generate();
-    }
-
-    public void generateUUID() {
-        setId(generateId());
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -82,5 +74,10 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    @Override
+    protected EntityUUID getUUIDPrefix() {
+        return new EntityUUID(12, "u");
     }
 }

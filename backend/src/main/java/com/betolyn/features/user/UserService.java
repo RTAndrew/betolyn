@@ -8,8 +8,9 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserEntity getUserById(String id) throws NoSuchElementException {
@@ -17,8 +18,9 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public UserEntity getUserByEmail(String email) {
-        return null;
+    public UserDTO findByUsername(String username) {
+        var user = userRepository.findByUsername(username);
+        return userMapper.toDTO(user);
     }
 
     @Override

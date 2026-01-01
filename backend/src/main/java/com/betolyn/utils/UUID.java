@@ -2,7 +2,7 @@ package com.betolyn.utils;
 
 import com.soundicly.jnanoidenhanced.jnanoid.NanoIdUtils;
 
-public class GenerateId {
+public class UUID {
     public static String DEFAULT_ALPHABET ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     public static int DEFAULT_SIZE = 12;
 
@@ -10,25 +10,24 @@ public class GenerateId {
     private int size = DEFAULT_SIZE;
     private String prefix = null;
 
-    public  GenerateId() {
+    public UUID() {
     }
 
-    public GenerateId(int size) {
+    public UUID(int size) {
         this.size = size;
     }
 
-
-    public GenerateId(int size, String prefix) {
+    public UUID(int size, String prefix) {
         this.size = size;
         this.prefix = prefix;
     }
 
-    public GenerateId(String alphabet, int size) {
+    public UUID(String alphabet, int size) {
         this.alphabet = alphabet;
         this.size = size;
     }
 
-    public GenerateId(String alphabet, int size, String prefix) {
+    public UUID(String alphabet, int size, String prefix) {
         this.alphabet = alphabet;
         this.size = size;
         this.prefix = prefix;

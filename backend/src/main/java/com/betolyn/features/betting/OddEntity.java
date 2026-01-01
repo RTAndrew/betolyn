@@ -1,6 +1,7 @@
 package com.betolyn.features.betting;
 
-import com.betolyn.shared.BaseEntity;
+import com.betolyn.shared.baseEntity.BaseEntity;
+import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -28,4 +29,9 @@ public class OddEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "criterion_id")
     private CriterionEntity criterion;
+
+    @Override
+    protected EntityUUID getUUIDPrefix() {
+        return new EntityUUID(12, "od");
+    }
 }

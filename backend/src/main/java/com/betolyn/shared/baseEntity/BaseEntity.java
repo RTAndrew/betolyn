@@ -1,5 +1,6 @@
-package com.betolyn.shared;
+package com.betolyn.shared.baseEntity;
 
+import com.betolyn.utils.UUID;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,26 @@ public abstract class BaseEntity {
     @UpdateTimestamp(source = SourceType.DB)
     private LocalDateTime updatedAt;
 
+    /**
+     * The identifier to which the ID will be prefixed (e.g: cus_a2sIO)
+     */
+    protected abstract EntityUUID getUUIDPrefix();
+
+    protected String generateId() {
+        var uuid = getUUIDPrefix();
+        if (uuid.prefix() == null) {
+            return new UUID(uuid.size()).generate();
+        }
+        return new UUID(uuid.size(), uuid.prefix()).generate();
+    }
+
     @PrePersist
     protected void onCreate() {
         var now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
+
+        this.id = generateId();
     }
 
     @PreUpdate

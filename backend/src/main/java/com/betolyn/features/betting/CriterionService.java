@@ -5,7 +5,6 @@ import com.betolyn.features.betting.dtos.CriterionDTO;
 import com.betolyn.features.betting.mapper.CriterionMapper;
 import com.betolyn.features.matches.MatchService;
 import com.betolyn.features.matches.mapper.MatchMapper;
-import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,6 @@ public class CriterionService implements ICriterionService{
         CriterionEntity criterion = new CriterionEntity();
         criterion.setName(data.getName());
         criterion.setAllowMultipleOdds(data.getAllowMultipleOdds());
-        criterion.setId(new GenerateId(12, "crit").generate());
 
         if(data.getMatchId() != null) {
             var match = matchService.findById(data.getMatchId());

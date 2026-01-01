@@ -3,7 +3,7 @@ package com.betolyn.features.auth;
 import com.betolyn.features.auth.dto.*;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.features.user.UserRepository;
-import com.betolyn.utils.GenerateId;
+import com.betolyn.utils.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -21,9 +21,14 @@ public class AuthService implements IAuthService {
     @Override
     public Optional<UserEntity> signUp(SignUpRequestDTO requestDTO) throws RuntimeException {
         String email = requestDTO.getEmail();
-        Optional<UserEntity> existsUser = Optional.ofNullable(userRepository.findByEmail(email));
-        if (existsUser.isPresent()) {
+        Optional<UserEntity> existsEmail = Optional.ofNullable(userRepository.findByEmail(email));
+        Optional<UserEntity> existsUsername = Optional.ofNullable(userRepository.findByUsername(requestDTO.getUsername()));
+        if (existsEmail.isPresent()) {
             throw new RuntimeException("Email already exists.");
+        }
+
+        if (existsUsername.isPresent()) {
+            throw new RuntimeException("Username already exists.");
         }
 
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
@@ -42,7 +47,7 @@ public class AuthService implements IAuthService {
         boolean passwordMatches = passwordEncoder.matches(requestDTO.getPassword(), foundUser.getPassword());
         if (!passwordMatches) throw new RuntimeException("The credentials are invalid");
 
-        String sessionId = new GenerateId(8, "sess").generate();
+        String sessionId = new UUID(8, "sess").generate();
         var session = jwtTokenService.generateToken(
                 requestDTO.getEmail(),
                 sessionId,

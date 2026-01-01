@@ -1,7 +1,6 @@
 package com.betolyn.features.matches;
 
 import com.betolyn.features.matches.dto.CreateTeamRequestDTO;
-import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class TeamService implements ITeamService {
     @Override
     public TeamEntity createTeam(CreateTeamRequestDTO requestDTO) {
         TeamEntity team = new TeamEntity();
-        team.setId(new GenerateId(12, "team").generate());
         team.setName(requestDTO.getName());
 
         return teamRepository.save(team);

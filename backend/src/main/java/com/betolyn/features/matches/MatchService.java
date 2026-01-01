@@ -3,7 +3,6 @@ package com.betolyn.features.matches;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.mapper.MatchMapper;
-import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,6 @@ public class MatchService implements IMatchService {
         var awayTeam = teamService.findById(requestDTO.getAwayTeamId());
 
         MatchEntity entity = new MatchEntity();
-        entity.setId(new GenerateId(12, "match").generate());
         entity.setHomeTeam(homeTeam);
         entity.setAwayTeam(awayTeam);
 

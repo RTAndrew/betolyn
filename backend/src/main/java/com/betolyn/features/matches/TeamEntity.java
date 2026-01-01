@@ -1,6 +1,7 @@
 package com.betolyn.features.matches;
 
-import com.betolyn.shared.BaseEntity;
+import com.betolyn.shared.baseEntity.BaseEntity;
+import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -19,6 +20,11 @@ public class TeamEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
     private String badgeUrl;
+
+    @Override
+    protected EntityUUID getUUIDPrefix() {
+        return new EntityUUID(12, "team");
+    }
 
 
     //   Keeping relationships unidirectional (Match -> Team only),

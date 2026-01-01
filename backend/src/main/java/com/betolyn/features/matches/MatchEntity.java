@@ -1,7 +1,8 @@
 package com.betolyn.features.matches;
 
 import com.betolyn.features.user.UserEntity;
-import com.betolyn.shared.BaseEntity;
+import com.betolyn.shared.baseEntity.BaseEntity;
+import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -38,4 +39,9 @@ public class MatchEntity extends BaseEntity {
     @JoinColumn(name = "created_by", nullable = false)
     @CreatedBy
     private UserEntity createdBy;
+
+    @Override
+    protected EntityUUID getUUIDPrefix() {
+        return new EntityUUID(12, "match");
+    }
 }
