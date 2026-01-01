@@ -3,6 +3,7 @@ package com.betolyn.features.betting.controllers;
 import com.betolyn.features.betting.OddEntity;
 import com.betolyn.features.betting.OddService;
 import com.betolyn.features.betting.dtos.CreateOddRequestDTO;
+import com.betolyn.features.betting.dtos.OddDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ public class OddController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<OddEntity>> save(@RequestBody CreateOddRequestDTO data) {
+    public ResponseEntity<ApiResponse<OddDTO>> save(@RequestBody CreateOddRequestDTO data) {
         var odds = oddService.save(data);
         return ResponseEntity.ok(new ApiResponse<>("Odd created", odds));
     }

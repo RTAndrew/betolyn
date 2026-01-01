@@ -1,6 +1,9 @@
 package com.betolyn.features.betting;
 
 import com.betolyn.features.betting.dtos.CreateOddRequestDTO;
+import com.betolyn.features.betting.dtos.OddDTO;
+import com.betolyn.features.betting.mapper.CriterionMapper;
+import com.betolyn.features.betting.mapper.OddMapper;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,13 +13,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OddService implements IOddService{
+    private final OddMapper oddMapper;
     private final OddRepository oddRepository;
+    private final CriterionMapper criterionMapper;
     private final CriterionService criterionService;
 
 
     @Override
-    public OddEntity findById(String id) {
-        return oddRepository.findById(id).orElseThrow();
+    public OddDTO findById(String id) {
+        var odd = oddRepository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        return oddMapper.toOddDTO(odd);
     }
 
     @Override
@@ -25,7 +31,7 @@ public class OddService implements IOddService{
     }
 
     @Override
-    public OddEntity save(CreateOddRequestDTO data) {
+    public OddDTO save(CreateOddRequestDTO data) {
         OddEntity odd = new OddEntity();
         odd.setName(data.getName());
         odd.setValue(data.getValue());
@@ -34,10 +40,11 @@ public class OddService implements IOddService{
         odd.setId(new GenerateId(12, "od").generate());
 
         if(data.getCriterionId() != null) {
-            CriterionEntity criterion = criterionService.findById(data.getCriterionId());
-            odd.setCriterion(criterion);
+            var criterion = criterionService.findById(data.getCriterionId());
+            odd.setCriterion(criterionMapper.toCriterionEntity(criterion));
         }
 
-        return oddRepository.save(odd);
+        var savedOdd = oddRepository.save(odd);
+        return oddMapper.toOddDTO(savedOdd);
     }
 }

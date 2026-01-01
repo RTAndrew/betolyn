@@ -51,7 +51,6 @@ public class AuthService implements IAuthService {
         );
 
         authSessionRepository.saveSession(session);
-
         return session;
     }
 

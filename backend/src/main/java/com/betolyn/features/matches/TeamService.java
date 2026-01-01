@@ -20,7 +20,7 @@ public class TeamService implements ITeamService {
 
     @Override
     public TeamEntity findById(String id) {
-        return teamRepository.findById(id).orElseThrow();
+        return teamRepository.findById(id).orElseThrow(()-> new RuntimeException("Entity not found"));
     }
 
     @Override

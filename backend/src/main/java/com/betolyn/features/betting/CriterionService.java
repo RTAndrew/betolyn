@@ -1,8 +1,10 @@
 package com.betolyn.features.betting;
 
 import com.betolyn.features.betting.dtos.CreateCriterionRequestDTO;
-import com.betolyn.features.matches.MatchEntity;
+import com.betolyn.features.betting.dtos.CriterionDTO;
+import com.betolyn.features.betting.mapper.CriterionMapper;
 import com.betolyn.features.matches.MatchService;
+import com.betolyn.features.matches.mapper.MatchMapper;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,8 +14,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CriterionService implements ICriterionService{
-    private final CriterionRepository criterionRepository;
+    private final MatchMapper matchMapper;
     private final MatchService matchService;
+    private final CriterionMapper criterionMapper;
+    private final CriterionRepository criterionRepository;
 
     @Override
     public List<CriterionEntity> findAll() {
@@ -21,22 +25,26 @@ public class CriterionService implements ICriterionService{
     }
 
     @Override
-    public CriterionEntity findById(String id) {
-        return criterionRepository.findById(id).orElseThrow();
+    public CriterionDTO findById(String id) {
+        var criterion = criterionRepository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+
+        return criterionMapper.toCriterionDTO(criterion);
+
     }
 
     @Override
-    public CriterionEntity save(CreateCriterionRequestDTO data) {
+    public CriterionDTO save(CreateCriterionRequestDTO data) {
         CriterionEntity criterion = new CriterionEntity();
         criterion.setName(data.getName());
         criterion.setAllowMultipleOdds(data.getAllowMultipleOdds());
         criterion.setId(new GenerateId(12, "crit").generate());
 
         if(data.getMatchId() != null) {
-            MatchEntity match = matchService.findById(data.getMatchId());
-            criterion.setMatch(match);
+            var match = matchService.findById(data.getMatchId());
+            criterion.setMatch(matchMapper.toEntity(match));
         }
 
-        return criterionRepository.save(criterion);
+        var savedCriterion = criterionRepository.save(criterion);
+        return criterionMapper.toCriterionDTO(savedCriterion);
     }
 }

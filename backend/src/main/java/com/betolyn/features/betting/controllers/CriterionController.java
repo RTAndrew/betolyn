@@ -3,6 +3,7 @@ package com.betolyn.features.betting.controllers;
 import com.betolyn.features.betting.CriterionEntity;
 import com.betolyn.features.betting.CriterionService;
 import com.betolyn.features.betting.dtos.CreateCriterionRequestDTO;
+import com.betolyn.features.betting.dtos.CriterionDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ public class CriterionController {
     }
 
     @PostMapping
-    public ResponseEntity<@NotNull ApiResponse<CriterionEntity>> save(@RequestBody CreateCriterionRequestDTO data) {
+    public ResponseEntity<@NotNull ApiResponse<CriterionDTO>> save(@RequestBody CreateCriterionRequestDTO data) {
         var criterion = criterionService.save(data);
         return ResponseEntity.ok(new ApiResponse<>("Criterion created", criterion));
     }

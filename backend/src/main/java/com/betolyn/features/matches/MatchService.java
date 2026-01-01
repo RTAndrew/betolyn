@@ -1,6 +1,8 @@
 package com.betolyn.features.matches;
 
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
+import com.betolyn.features.matches.dto.MatchDTO;
+import com.betolyn.features.matches.mapper.MatchMapper;
 import com.betolyn.utils.GenerateId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MatchService implements IMatchService {
+    private final MatchMapper matchMapper;
     private final TeamService teamService;
     private final MatchRepository matchRepository;
 
@@ -19,12 +22,13 @@ public class MatchService implements IMatchService {
     }
 
     @Override
-    public MatchEntity findById(String id) {
-        return matchRepository.findById(id).orElseThrow();
+    public MatchDTO findById(String id) {
+        var match = matchRepository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        return matchMapper.toMatchDTO(match);
     }
 
     @Override
-    public MatchEntity createMatch(CreateMatchRequestDTO requestDTO) {
+    public MatchDTO createMatch(CreateMatchRequestDTO requestDTO) {
         var homeTeam = teamService.findById(requestDTO.getHomeTeamId());
         var awayTeam = teamService.findById(requestDTO.getAwayTeamId());
 
@@ -33,6 +37,7 @@ public class MatchService implements IMatchService {
         entity.setHomeTeam(homeTeam);
         entity.setAwayTeam(awayTeam);
 
-        return matchRepository.save(entity);
+        var match =  matchRepository.save(entity);
+        return matchMapper.toMatchDTO(match);
     }
 }

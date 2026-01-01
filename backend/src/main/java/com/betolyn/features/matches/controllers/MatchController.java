@@ -3,6 +3,7 @@ package com.betolyn.features.matches.controllers;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchService;
+import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class MatchController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<MatchEntity>> createMatch(@RequestBody CreateMatchRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponse<MatchDTO>> createMatch(@RequestBody CreateMatchRequestDTO requestDTO) {
         var match = matchService.createMatch(requestDTO);
-        return ResponseEntity.ok(new ApiResponse<MatchEntity>("Match created", match));
+        return ResponseEntity.ok(new ApiResponse<>("Match created", match));
     }
 }

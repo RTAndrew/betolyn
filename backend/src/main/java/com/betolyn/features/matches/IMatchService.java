@@ -1,11 +1,12 @@
 package com.betolyn.features.matches;
 
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
+import com.betolyn.features.matches.dto.MatchDTO;
 
 import java.util.List;
 
 public interface IMatchService {
     List<MatchEntity> findAll();
-    MatchEntity findById(String id);
-    MatchEntity createMatch(CreateMatchRequestDTO data);
+    MatchDTO findById(String id);
+    MatchDTO createMatch(CreateMatchRequestDTO data);
 }

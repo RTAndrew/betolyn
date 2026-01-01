@@ -25,6 +25,6 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<ApiResponse<TeamEntity>> createTeam(@RequestBody CreateTeamRequestDTO requestDTO) {
         var team = teamService.createTeam(requestDTO);
-        return ResponseEntity.ok(new ApiResponse<TeamEntity>("Team created", team));
+        return ResponseEntity.ok(new ApiResponse<>("Team created", team));
     }
 }

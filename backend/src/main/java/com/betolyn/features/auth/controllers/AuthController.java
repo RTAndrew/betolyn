@@ -1,14 +1,17 @@
 package com.betolyn.features.auth.controllers;
 
+import com.betolyn.features.auth.AuthMapper;
 import com.betolyn.features.auth.AuthService;
 import com.betolyn.features.auth.config.AuthConstants;
 import com.betolyn.features.auth.dto.*;
+import com.betolyn.features.user.UserDTO;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.features.user.UserService;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +28,7 @@ public class AuthController {
     private final UserService userService;
     private final AuthService authService;
     private final AuthConstants authConstants;
+    private final AuthMapper authMapper;
 
     @GetMapping
     public List<UserEntity> listUsers() {
@@ -41,22 +45,19 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse> signUp(@RequestBody SignUpRequestDTO requestDTO) {
+    public ResponseEntity<@NotNull ApiResponse<UserDTO>> signUp(@RequestBody SignUpRequestDTO requestDTO) {
         Optional<UserEntity> savedUser = authService.signUp(requestDTO);
 
         if (savedUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("User already exists"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("User already exists"));
         }
 
-        SignUpResponseDTO responseDTO = new SignUpResponseDTO(savedUser.get().getId(),
-                savedUser.get().getEmail(),
-                savedUser.get().getUsername()
-        );
-        return ResponseEntity.ok(new ApiResponse<SignUpResponseDTO>("User account created", responseDTO));
+        var responseDTO = authMapper.toSignUpResponse(savedUser.get());
+        return ResponseEntity.ok(new ApiResponse<>("User account created", responseDTO));
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse<SignInResponseDTO>> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
+    public ResponseEntity<@NotNull ApiResponse<SignInResponseDTO>> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
         var session = authService.signIn(requestDTO);
 
         Cookie cookie = new Cookie("token", session.getToken());
@@ -68,15 +69,12 @@ public class AuthController {
         response.addCookie(cookie);
         response.addHeader("token", session.getToken());
 
-        var responseData = new SignInResponseDTO(
-                (new SignUpResponseDTO(session.getSessionId(), session.getEmail(), session.getUsername())),
-                session.getToken(), session.getSessionId());
-
+        var responseData = authMapper.toSignInResponse(session);
         return ResponseEntity.ok().body(new ApiResponse<SignInResponseDTO>("user authenticated", responseData));
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) {
+    public ResponseEntity<@NotNull ApiResponse<String>> logout(HttpServletResponse response) {
         var authenticationContext = SecurityContextHolder.getContext().getAuthentication();
         if(Objects.isNull(authenticationContext) || !authenticationContext.isAuthenticated()) {
             return ResponseEntity.badRequest().body(new ApiResponse<>("You must be logged in to access this resource"));
