@@ -1,6 +1,9 @@
 package com.betolyn.features.auth;
 
 import com.betolyn.features.auth.dto.*;
+import com.betolyn.features.auth.exceptions.EmailAlreadyInUseException;
+import com.betolyn.features.auth.exceptions.InvalidCredentialsException;
+import com.betolyn.features.auth.exceptions.UsernameAlreadyInUseException;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.features.user.UserRepository;
 import com.betolyn.utils.UUID;
@@ -24,11 +27,11 @@ public class AuthService implements IAuthService {
         Optional<UserEntity> existsEmail = Optional.ofNullable(userRepository.findByEmail(email));
         Optional<UserEntity> existsUsername = Optional.ofNullable(userRepository.findByUsername(requestDTO.getUsername()));
         if (existsEmail.isPresent()) {
-            throw new RuntimeException("Email already exists.");
+            throw new EmailAlreadyInUseException();
         }
 
         if (existsUsername.isPresent()) {
-            throw new RuntimeException("Username already exists.");
+            throw new UsernameAlreadyInUseException();
         }
 
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
@@ -41,11 +44,11 @@ public class AuthService implements IAuthService {
     public JwtSessionDTO signIn(SignInRequestDTO requestDTO) throws RuntimeException {
         UserEntity foundUser = userRepository.findByEmail(requestDTO.getEmail());
         if (foundUser == null) {
-            throw new RuntimeException("The credentials are invalid");
+            throw new InvalidCredentialsException();
         }
 
         boolean passwordMatches = passwordEncoder.matches(requestDTO.getPassword(), foundUser.getPassword());
-        if (!passwordMatches) throw new RuntimeException("The credentials are invalid");
+        if (!passwordMatches) throw new InvalidCredentialsException();
 
         String sessionId = new UUID(8, "sess").generate();
         var session = jwtTokenService.generateToken(

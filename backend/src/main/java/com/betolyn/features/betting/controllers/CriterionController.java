@@ -25,13 +25,13 @@ public class CriterionController {
     @GetMapping
     public ResponseEntity<@NotNull ApiResponse<List<CriterionEntity>>> findAll() {
         var criteria = criterionService.findAll();
-        return ResponseEntity.ok(new ApiResponse<>("Criteria found", criteria));
+        return ResponseEntity.ok(ApiResponse.success("Criteria found", criteria));
     }
 
     @PostMapping
     public ResponseEntity<@NotNull ApiResponse<CriterionDTO>> save(@RequestBody CreateCriterionRequestDTO data) {
         var criterion = criterionService.save(data);
-        return ResponseEntity.ok(new ApiResponse<>("Criterion created", criterion));
+        return ResponseEntity.ok(ApiResponse.success("Criterion created", criterion));
     }
 
 }

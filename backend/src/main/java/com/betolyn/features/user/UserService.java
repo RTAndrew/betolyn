@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,8 +13,8 @@ public class UserService implements IUserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserEntity getUserById(String id) throws NoSuchElementException {
-        return userRepository.findById(id).orElseThrow();
+    public Optional<UserEntity> getUserById(String id) {
+        return userRepository.findById(id);
     }
 
     @Override

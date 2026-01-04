@@ -20,12 +20,12 @@ public class MatchController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<MatchEntity>>> findAll() {
         var matches = matchService.findAll();
-        return ResponseEntity.ok(new ApiResponse<List<MatchEntity>>("Matchers found", matches));
+        return ResponseEntity.ok(ApiResponse.success("Matchers found", matches));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<MatchDTO>> createMatch(@RequestBody CreateMatchRequestDTO requestDTO) {
         var match = matchService.createMatch(requestDTO);
-        return ResponseEntity.ok(new ApiResponse<>("Match created", match));
+        return ResponseEntity.ok(ApiResponse.success("Match created", match));
     }
 }

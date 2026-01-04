@@ -19,12 +19,12 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<TeamEntity>>> findAll() {
         var teams = teamService.findAll();
-        return ResponseEntity.ok(new ApiResponse<List<TeamEntity>>("Teams found", teams));
+        return ResponseEntity.ok(ApiResponse.success("Teams found", teams));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<TeamEntity>> createTeam(@RequestBody CreateTeamRequestDTO requestDTO) {
         var team = teamService.createTeam(requestDTO);
-        return ResponseEntity.ok(new ApiResponse<>("Team created", team));
+        return ResponseEntity.ok(ApiResponse.success("Team created", team));
     }
 }

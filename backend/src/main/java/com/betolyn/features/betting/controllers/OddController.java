@@ -22,13 +22,13 @@ public class OddController {
     @GetMapping
     public ResponseEntity<@NotNull ApiResponse<List<OddEntity>>> findAll() {
         var odds = oddService.findAll();
-        return ResponseEntity.ok(new ApiResponse<>("Odds found", odds));
+        return ResponseEntity.ok(ApiResponse.success("Odds found", odds));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<OddDTO>> save(@RequestBody CreateOddRequestDTO data) {
         var odds = oddService.save(data);
-        return ResponseEntity.ok(new ApiResponse<>("Odd created", odds));
+        return ResponseEntity.ok(ApiResponse.success("Odd created", odds));
     }
 
 }
