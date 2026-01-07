@@ -6,7 +6,7 @@ import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import java.util.List;
 
 public interface ICriterionService {
-    List<CriterionEntity> findAll();
+    List<CriterionDTO> findAll();
     CriterionDTO findById(String id);
     CriterionDTO save(CreateCriterionRequestDTO data);
 }

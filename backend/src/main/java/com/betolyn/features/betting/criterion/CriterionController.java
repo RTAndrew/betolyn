@@ -21,7 +21,7 @@ public class CriterionController {
     private final CriterionService criterionService;
 
     @GetMapping
-    public ResponseEntity<@NotNull ApiResponse<List<CriterionEntity>>> findAll() {
+    public ResponseEntity<@NotNull ApiResponse<List<CriterionDTO>>> findAll() {
         var criteria = criterionService.findAll();
         return ResponseEntity.ok(ApiResponse.success("Criteria found", criteria));
     }

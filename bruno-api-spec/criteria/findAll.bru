@@ -1,0 +1,25 @@
+meta {
+  name: findAll
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/criteria
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Cartões Amarelos",
+    "value": 48,
+    "allowMultipleOdds": false,
+    "matchId": "match_KxQcwT42YXSA"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
