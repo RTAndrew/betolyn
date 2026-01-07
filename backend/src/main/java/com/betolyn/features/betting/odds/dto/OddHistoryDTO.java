@@ -12,7 +12,6 @@ public class OddHistoryDTO {
     private double value;
     private double minimumAmount;
     private double maximumAmount;
-    private CriterionDTO criterion;
     private OddStatusEnum status;
 //    private OddDTO odd; // this is not used in the OddDTO
     private UserDTO createdBy;

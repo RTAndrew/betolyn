@@ -17,8 +17,7 @@ public class CriterionService implements ICriterionService {
     private final MatchService matchService;
     private final CriterionMapper criterionMapper;
     private final CriterionRepository criterionRepository;
-    private final OddRepository oddRepository;
-    private final OddHistoryRepository oddHistoryRepository;
+    private final OddService oddService;
 
     @Override
     public List<CriterionEntity> findAll() {
@@ -49,8 +48,8 @@ public class CriterionService implements ICriterionService {
         }
 
         var savedCriterion = criterionRepository.saveAndFlush(criterion);
-
         if (data.getOdds().isEmpty()) {
+            // no need to save the odds
             return criterionMapper.toCriterionDTO(savedCriterion);
         }
 
@@ -66,18 +65,7 @@ public class CriterionService implements ICriterionService {
             return tempOdd;
         }).toList();
 
-        List<OddHistoryEntity> oddHistoryList = oddRepository.saveAllAndFlush(oddList).stream().map(odd -> {
-            var tempOddHistory = new OddHistoryEntity();
-            tempOddHistory.setOdd(odd);
-            tempOddHistory.setValue(odd.getValue());
-            tempOddHistory.setMinimumAmount(odd.getMinimumAmount());
-            tempOddHistory.setMaximumAmount(odd.getMaximumAmount());
-            tempOddHistory.setStatus(OddStatusEnum.ACTIVE);
-            return tempOddHistory;
-
-        }).toList();
-
-        oddHistoryRepository.saveAllAndFlush(oddHistoryList);
+        oddService.save(oddList);
 
         return criterionMapper.toCriterionDTO(savedCriterion);
     }
