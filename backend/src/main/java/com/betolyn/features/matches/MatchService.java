@@ -3,6 +3,7 @@ package com.betolyn.features.matches;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.mapper.MatchMapper;
+import com.betolyn.shared.exceptions.EntityNotfoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class MatchService implements IMatchService {
 
     @Override
     public MatchDTO findById(String id) {
-        var match = matchRepository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
+        var match = matchRepository.findById(id).orElseThrow(EntityNotfoundException::new);
         return matchMapper.toMatchDTO(match);
     }
 

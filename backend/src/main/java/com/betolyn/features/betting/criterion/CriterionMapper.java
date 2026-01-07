@@ -1,7 +1,6 @@
-package com.betolyn.features.betting.mapper;
+package com.betolyn.features.betting.criterion;
 
-import com.betolyn.features.betting.CriterionEntity;
-import com.betolyn.features.betting.dtos.CriterionDTO;
+import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.shared.BaseMapperConfig;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;

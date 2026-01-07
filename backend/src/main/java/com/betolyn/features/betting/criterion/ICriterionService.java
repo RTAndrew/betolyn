@@ -1,7 +1,7 @@
-package com.betolyn.features.betting;
+package com.betolyn.features.betting.criterion;
 
-import com.betolyn.features.betting.dtos.CreateCriterionRequestDTO;
-import com.betolyn.features.betting.dtos.CriterionDTO;
+import com.betolyn.features.betting.criterion.dto.CreateCriterionRequestDTO;
+import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 
 import java.util.List;
 

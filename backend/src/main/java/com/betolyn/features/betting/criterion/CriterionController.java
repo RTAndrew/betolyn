@@ -1,9 +1,7 @@
-package com.betolyn.features.betting.controllers;
+package com.betolyn.features.betting.criterion;
 
-import com.betolyn.features.betting.CriterionEntity;
-import com.betolyn.features.betting.CriterionService;
-import com.betolyn.features.betting.dtos.CreateCriterionRequestDTO;
-import com.betolyn.features.betting.dtos.CriterionDTO;
+import com.betolyn.features.betting.criterion.dto.CreateCriterionRequestDTO;
+import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

@@ -1,9 +1,8 @@
-package com.betolyn.features.betting;
+package com.betolyn.features.betting.odds;
 
-import com.betolyn.features.betting.dtos.CreateOddRequestDTO;
-import com.betolyn.features.betting.dtos.OddDTO;
-import com.betolyn.features.betting.mapper.CriterionMapper;
-import com.betolyn.features.betting.mapper.OddMapper;
+import com.betolyn.features.betting.criterion.CriterionService;
+import com.betolyn.features.betting.criterion.CriterionMapper;
+import com.betolyn.features.betting.odds.dto.OddDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,8 @@ public class OddService implements IOddService{
     }
 
     @Override
-    public List<OddEntity> findAll() {
-        return oddRepository.findAll();
+    public List<OddDTO> findAll() {
+        return oddRepository.findAll().stream().map(oddMapper::toOddDTO).toList();
     }
 
     @Override

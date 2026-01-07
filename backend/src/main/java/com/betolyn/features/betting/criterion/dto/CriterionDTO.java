@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.dtos;
+package com.betolyn.features.betting.criterion.dto;
 
 import com.betolyn.features.matches.dto.MatchDTO;
 import lombok.Data;

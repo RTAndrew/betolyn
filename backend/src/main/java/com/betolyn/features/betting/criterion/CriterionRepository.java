@@ -1,4 +1,4 @@
-package com.betolyn.features.betting;
+package com.betolyn.features.betting.criterion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

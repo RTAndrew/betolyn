@@ -8,9 +8,9 @@ spring:
     hibernate:
       ddl-auto: "create-only"
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 

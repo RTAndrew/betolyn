@@ -24,7 +24,7 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @CreationTimestamp(source = SourceType.DB)
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)

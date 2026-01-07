@@ -1,11 +1,8 @@
 package com.betolyn.features.matches;
-
-import com.betolyn.features.user.UserEntity;
-import com.betolyn.shared.baseEntity.BaseEntity;
+import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
 
 @Getter
 @Setter
@@ -13,7 +10,7 @@ import org.springframework.data.annotation.CreatedBy;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "matches")
-public class MatchEntity extends BaseEntity {
+public class MatchEntity extends AuditableEntity {
 
     private boolean isOfficial = true;
     private String channelId;
@@ -34,11 +31,6 @@ public class MatchEntity extends BaseEntity {
 
     private String startTime;
     private String endTime;
-
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    @CreatedBy
-    private UserEntity createdBy;
 
     @Override
     protected EntityUUID getUUIDPrefix() {

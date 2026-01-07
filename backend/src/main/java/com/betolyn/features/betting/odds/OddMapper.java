@@ -1,7 +1,6 @@
-package com.betolyn.features.betting.mapper;
+package com.betolyn.features.betting.odds;
 
-import com.betolyn.features.betting.OddEntity;
-import com.betolyn.features.betting.dtos.OddDTO;
+import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.shared.BaseMapperConfig;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;

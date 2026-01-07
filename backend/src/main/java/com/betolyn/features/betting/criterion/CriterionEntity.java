@@ -1,4 +1,4 @@
-package com.betolyn.features.betting;
+package com.betolyn.features.betting.criterion;
 
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.shared.baseEntity.BaseEntity;
