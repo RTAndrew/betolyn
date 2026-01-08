@@ -17,8 +17,8 @@ public class MatchService implements IMatchService {
     private final MatchRepository matchRepository;
 
     @Override
-    public List<MatchEntity> findAll() {
-        return matchRepository.findAll();
+    public List<MatchDTO> findAll() {
+        return matchRepository.findAll().stream().map(matchMapper::toMatchDTO).toList();
     }
 
     @Override

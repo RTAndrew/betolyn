@@ -17,4 +17,5 @@ public class MatchDTO {
     private String startTime;
     private String endTime;
     private UserDTO createdBy;
+    private UserDTO updatedBy;
 }

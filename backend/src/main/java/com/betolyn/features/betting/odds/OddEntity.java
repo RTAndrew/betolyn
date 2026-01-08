@@ -20,19 +20,13 @@ public class OddEntity extends BaseEntity {
     @NotNull
     private String name;
 
-    @OneToOne(mappedBy = "odd")
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "last_odd_history_id")
     @JsonIgnoreProperties("odd") // avoid self reference lastOdd <-> odd
     private OddHistoryEntity lastOddHistory;
 
     @NotNull
     private double value = 0.1;
-
-    @NotNull
-    private double minimumAmount;
-
-    @NotNull
-    private double maximumAmount;
 
     @NotNull
     @Enumerated(EnumType.STRING)

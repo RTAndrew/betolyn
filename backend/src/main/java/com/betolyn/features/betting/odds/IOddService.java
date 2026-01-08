@@ -9,4 +9,5 @@ public interface IOddService {
     List<OddDTO> findAll();
     OddDTO save(CreateOddRequestDTO data);
     List<OddDTO> save(List<OddEntity> odds);
+    List<OddDTO> update(List<OddEntity> odds);
 }

@@ -16,7 +16,7 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 @Entity
 @Table(name = "odds_history")
 public class OddHistoryEntity extends AuditableEntity {
-    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="odd_id")
     private OddEntity odd;
 
@@ -24,12 +24,6 @@ public class OddHistoryEntity extends AuditableEntity {
 
     @NotNull
     private double value = 0.1;
-
-    @NotNull
-    private double minimumAmount;
-
-    @NotNull
-    private double maximumAmount;
 
     @NotNull
     @Enumerated(EnumType.STRING)

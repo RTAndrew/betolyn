@@ -2,6 +2,9 @@ package com.betolyn.features.betting.odds;
 
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.odds.dto.OddDTO;
+import com.betolyn.shared.baseEntity.BaseEntity;
+import com.betolyn.shared.exceptions.BusinessRuleException;
+import com.betolyn.shared.exceptions.InternalServerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +17,7 @@ public class OddService implements IOddService {
     private final OddMapper oddMapper;
     private final OddRepository oddRepository;
     private final CriterionRepository criterionRepository;
-    private final OddHistoryRepository oddHistoryRepository;
+    private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
 
     @Override
     public OddDTO findById(String id) {
@@ -33,25 +36,16 @@ public class OddService implements IOddService {
         OddEntity odd = new OddEntity();
         odd.setName(data.getName());
         odd.setValue(data.getValue());
-        odd.setMinimumAmount(data.getMinimumAmount());
-        odd.setMaximumAmount(data.getMaximumAmount());
 
         if (data.getCriterionId() != null) {
             var criterion = criterionRepository.findById(data.getCriterionId()).orElseThrow();
             odd.setCriterion(criterion);
         }
 
-        var savedOdd = oddRepository.saveAndFlush(odd);
+        var savedOdd = saveAndSyncOddUseCase.execute(List.of(odd)).stream().findFirst();
+        if (savedOdd.isEmpty()) throw new InternalServerException("It was not possible to save the entity");
 
-        var oddHistory = new OddHistoryEntity();
-        oddHistory.setOdd(odd);
-        oddHistory.setValue(odd.getValue());
-        oddHistory.setMinimumAmount(odd.getMinimumAmount());
-        oddHistory.setMaximumAmount(odd.getMaximumAmount());
-        oddHistory.setStatus(OddStatusEnum.ACTIVE);
-        oddHistoryRepository.saveAndFlush(oddHistory);
-
-        return oddMapper.toOddDTO(savedOdd);
+        return oddMapper.toOddDTO(savedOdd.get());
     }
 
 
@@ -60,18 +54,33 @@ public class OddService implements IOddService {
      */
     @Transactional
     public List<OddDTO> save(List<OddEntity> odds) {
-        var savedOdds = oddRepository.saveAllAndFlush(odds);
-        List<OddHistoryEntity> oddHistoryList = savedOdds.stream().map(odd -> {
-            var tempOddHistory = new OddHistoryEntity();
-            tempOddHistory.setOdd(odd);
-            tempOddHistory.setValue(odd.getValue());
-            tempOddHistory.setMinimumAmount(odd.getMinimumAmount());
-            tempOddHistory.setMaximumAmount(odd.getMaximumAmount());
-            tempOddHistory.setStatus(OddStatusEnum.ACTIVE);
-            return tempOddHistory;
-        }).toList();
+        this.checkIfOddsAreActiveOrThrow(odds);
 
-        oddHistoryRepository.saveAllAndFlush(oddHistoryList);
+        var savedOdds = saveAndSyncOddUseCase.execute(odds);
         return savedOdds.stream().map(oddMapper::toOddDTO).toList();
+    }
+
+    @Transactional
+    public List<OddDTO> update(List<OddEntity> odds) {
+
+        // 1. Check if the incoming odds have status.ACTIVE
+        this.checkIfOddsAreActiveOrThrow(odds);
+
+        // 2. Fetch all incoming odds and check if they have status.ACTIVE
+        List<String> oddIdArray = odds.stream().map(BaseEntity::getId).toList();
+        var foundOdds = oddRepository.findAllById(oddIdArray);
+        this.checkIfOddsAreActiveOrThrow(foundOdds);
+
+        // 3. Save
+        var savedOdds = saveAndSyncOddUseCase.execute(odds);
+        return savedOdds.stream().map(oddMapper::toOddDTO).toList();
+    }
+
+    protected void checkIfOddsAreActiveOrThrow(List<OddEntity> odds) {
+        boolean hasInvalid = odds.stream().anyMatch(odd -> odd.getStatus() != OddStatusEnum.ACTIVE);
+
+        if (hasInvalid) {
+            throw new BusinessRuleException("INVALID_ODDS", "Only odds with active state are allowed to be edited");
+        }
     }
 }

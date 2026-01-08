@@ -1,7 +1,6 @@
 package com.betolyn.features.matches.controllers;
 
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
-import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchService;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.utils.responses.ApiResponse;
@@ -18,7 +17,7 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<MatchEntity>>> findAll() {
+    public ResponseEntity<ApiResponse<List<MatchDTO>>> findAll() {
         var matches = matchService.findAll();
         return ResponseEntity.ok(ApiResponse.success("Matchers found", matches));
     }

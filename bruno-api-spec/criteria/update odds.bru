@@ -1,0 +1,31 @@
+meta {
+  name: update odds
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/criteria/crit_QxjFKRbR0uSo
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "odds": [
+      {
+        "id": "od_GuryysB3ibJ7",
+        "value": 100
+      },
+      {
+        "id": "od_N46FdybLEhHk",
+        "value": 200
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

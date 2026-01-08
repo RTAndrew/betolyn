@@ -36,12 +36,12 @@ public abstract class BaseEntity {
      */
     protected abstract EntityUUID getUUIDPrefix();
 
-    protected String generateId() {
+    public void generateId() {
         var uuid = getUUIDPrefix();
         if (uuid.prefix() == null) {
-            return new UUID(uuid.size()).generate();
+            this.id = new UUID(uuid.size()).generate();
         }
-        return new UUID(uuid.size(), uuid.prefix()).generate();
+        this.id = new UUID(uuid.size(), uuid.prefix()).generate();
     }
 
     @PrePersist
@@ -50,7 +50,9 @@ public abstract class BaseEntity {
         this.createdAt = now;
         this.updatedAt = now;
 
-        this.id = generateId();
+        if (this.id == null) {
+            this.generateId();
+        }
     }
 
     @PreUpdate

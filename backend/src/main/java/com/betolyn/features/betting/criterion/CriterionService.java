@@ -1,9 +1,14 @@
 package com.betolyn.features.betting.criterion;
+
 import com.betolyn.features.betting.criterion.dto.CreateCriterionRequestDTO;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
-import com.betolyn.features.betting.odds.*;
+import com.betolyn.features.betting.criterion.dto.UpdateCriterionOddsRequestDTO;
+import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddService;
+import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.matches.MatchService;
 import com.betolyn.features.matches.mapper.MatchMapper;
+import com.betolyn.shared.exceptions.EntityNotfoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +31,7 @@ public class CriterionService implements ICriterionService {
 
     @Override
     public CriterionDTO findById(String id) {
-        var criterion = criterionRepository.findById(id).orElseThrow(() -> new RuntimeException("Entity not found"));
-
+        var criterion = criterionRepository.findById(id).orElseThrow(EntityNotfoundException::new);
         return criterionMapper.toCriterionDTO(criterion);
     }
 
@@ -57,8 +61,6 @@ public class CriterionService implements ICriterionService {
             var tempOdd = new OddEntity();
             tempOdd.setName(odd.getName());
             tempOdd.setValue(odd.getValue());
-            tempOdd.setMinimumAmount(odd.getMinimumAmount());
-            tempOdd.setMaximumAmount(odd.getMaximumAmount());
             tempOdd.setCriterion(savedCriterion);
             tempOdd.setStatus(OddStatusEnum.ACTIVE);
 
@@ -68,5 +70,28 @@ public class CriterionService implements ICriterionService {
         oddService.save(oddList);
 
         return criterionMapper.toCriterionDTO(savedCriterion);
+    }
+
+    @Transactional
+    public CriterionDTO updateOdds(String criterionId, UpdateCriterionOddsRequestDTO requestDTO) {
+        var criterion = this.findById(criterionId);
+
+        List<OddEntity> odds = requestDTO.getOdds().stream().map(odd -> {
+            var status = OddStatusEnum.ACTIVE;
+            if(odd.status() != null) {
+                status = odd.status();
+            }
+
+            var tempOdd = new OddEntity();
+            tempOdd.setCriterion(criterionMapper.toCriterionEntity(criterion));
+            tempOdd.setStatus(status);
+            tempOdd.setValue(odd.value());
+            tempOdd.setId(odd.id());
+
+            return tempOdd;
+        }).toList();
+
+        oddService.update(odds);
+        return criterion;
     }
 }
