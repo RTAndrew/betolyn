@@ -19,7 +19,7 @@ public class SaveAndSyncOddUseCase {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    protected List<OddEntity> execute(List<OddEntity> odds) {
+    public List<OddEntity> execute(List<OddEntity> odds) {
 
         for(var odd: odds) {
             // 1. ensure the ID is available in memory (and not at DB)
@@ -36,10 +36,8 @@ public class SaveAndSyncOddUseCase {
             odd.setLastOddHistory(history);
         }
 
-
-        bettingSystemEvent.publish(this, "oddUpdated", odds);
-//        eventPublisher.publishEvent(odds);
-//        eventPublisher.publishEvent(jsonPayload);
-        return oddRepository.saveAll(odds);
+        oddRepository.saveAll(odds);
+        bettingSystemEvent.publishOddUpdate(this, odds);
+        return odds;
     }
 }

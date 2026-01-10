@@ -6,6 +6,7 @@ import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.features.betting.odds.OddService;
 import com.betolyn.features.betting.systemEvents.BettingSystemEvent;
+import com.betolyn.shared.sse.ServerSentEventEmitter;
 import com.betolyn.utils.UUID;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RequiredArgsConstructor
 public class OddController {
     private final OddService oddService;
-    private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+    private final ServerSentEventEmitter sse;
     private final ObjectMapper objectMapper;
 
     @GetMapping
@@ -48,8 +49,7 @@ public class OddController {
 
     @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        this.emitters.add(emitter);
+        SseEmitter emitter = sse.newEmitter();
 
         try {
             // Send an initial "Connected" event to flush the buffers
@@ -58,29 +58,6 @@ public class OddController {
             emitter.completeWithError(e);
         }
 
-        emitter.onCompletion(() -> this.emitters.remove(emitter));
-        emitter.onTimeout(() -> this.emitters.remove(emitter));
-
         return emitter;
-    }
-
-//    @EventListener
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.eventType.equals('betting')")
-    public void handleOddUpdate(SystemEvent event) {
-        List<SseEmitter> deadEmitters = new ArrayList<>();
-        String jsonPayload = objectMapper.writeValueAsString(event);
-
-        this.emitters.forEach(emitter -> {
-            try {
-                emitter.send(SseEmitter.event()
-                                .id(UUID.random())
-                        .name("odd-update")
-                        .data(jsonPayload, MediaType.APPLICATION_JSON));
-            } catch (Exception e) {
-                deadEmitters.add(emitter);
-            }
-        });
-
-        this.emitters.removeAll(deadEmitters);
     }
 }
