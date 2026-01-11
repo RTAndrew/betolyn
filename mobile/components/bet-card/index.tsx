@@ -62,7 +62,8 @@ export default function BetCard({ match, onPress }: BetCardProps) {
     if (onPress) {
       onPress(match);
     } else {
-      router.push(`/modal/match/${match.id}`);
+      router.push(`/auth/login`);
+      // router.push(`/modal/match/${match.id}`);
     }
   };
 
@@ -74,14 +75,14 @@ export default function BetCard({ match, onPress }: BetCardProps) {
         <View style={styles.teamBody}>
           <View style={styles.teamWrapper}>
             <Team
-              name={match.home_team}
-              imageUrl={match.home_team_image_url}
-              score={match.home_team_score}
+              name={match.homeTeam.name}
+              imageUrl={match.homeTeamImageUrl}
+              score={match.homeTeamScore}
             />
             <Team
-              name={match.away_team}
-              imageUrl={match.away_team_image_url}
-              score={match.away_team_score}
+              name={match.awayTeam.name}
+              imageUrl={match.awayTeamImageUrl}
+              score={match.awayTeamScore}
             />
           </View>
 
@@ -91,11 +92,11 @@ export default function BetCard({ match, onPress }: BetCardProps) {
           </View>
         </View>
 
-        <View style={styles.oddsWrapper}>
-          {match.main_criteria.odds.map((odd) => (
+        {/* <View style={styles.oddsWrapper}>
+          {match.mainCriteria.odds.map((odd) => (
             <OddButton key={odd.id} odd={odd} />
           ))}
-        </View>
+        </View> */}
       </View>
     </TouchableOpacity>
   );

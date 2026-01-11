@@ -37,7 +37,10 @@ const ChannelId = () => {
           </View>
 
           <View style={styles.headerRight}>
-            <AntDesign name="message" size={24} color="white" />
+            <TouchableOpacity onPress={() => router.push(`/auth/login`)}>
+              <AntDesign name="message" size={24} color="white" />
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={() => router.push(`/modal/channels/${id}/create-event`)}>
               <AntDesign name="plus" size={24} color="white" />
             </TouchableOpacity>

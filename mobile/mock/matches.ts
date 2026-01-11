@@ -2,16 +2,20 @@
 
 export interface IMatch {
   id: number;
-  home_team: string;
-  away_team: string;
-  home_team_score: number;
-  away_team_score: number;
-  start_time: string;
-  end_time: string | null;
-  created_by: string;
-  home_team_image_url: string;
-  away_team_image_url: string;
-  main_criteria: IMainCriteria;
+  homeTeam: {
+    name: string;
+  };
+  awayTeam: {
+    name: string;
+  };
+  homeTeamScore: number;
+  awayTeamScore: number;
+  startTime: string;
+  endTime: string | null;
+  createdBy: string;
+  homeTeamImageUrl: string;
+  awayTeamImageUrl: string;
+  mainCriteria: IMainCriteria;
 }
 
 export interface IMainCriteria {

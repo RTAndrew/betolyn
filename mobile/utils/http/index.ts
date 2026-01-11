@@ -1,35 +1,41 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import { IApiResponse } from './types';
+import { ApiError } from './api-error';
+import { SafeStorage } from '../safe-storage';
 
+const TOKEN_KEY = SafeStorage.get('authToken');
 
 const api = axios.create({
-  baseURL: `http://192.168.178.58:8000/api/`,
+  baseURL: `http://192.168.178.110:8080`,
   withCredentials: true,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    ...(TOKEN_KEY ? { Authorization: `Bearer ${TOKEN_KEY}` } : {}),
   },
 });
 
 /** Modify the response to be easier to use within the application  */
-// const onSuccessfulResponseInterception = (data: AxiosResponse) => ({
-//   raw: data,
-//   ...data.data,
-// });
+const onSuccessfulResponseInterception = (data: AxiosResponse) => ({
+  raw: data,
+  ...data.data,
+});
 
-//   // TODO: make the error interface the same as the Response
-/** The error response will be the same structure as the successful one*/
-// const onRejectedResponseInterception = (error: AxiosError) => ({
-//   ...(error.response ? (error.response?.data as IApiResponse) : {}),
-//   raw: error,
-// });
+/** The error response will be the same structure as the successful one
+ * because the backend returns the same structure for both successful and error responses
+ */
+const onRejectedResponseInterception = (error: AxiosError) => {
+  const responseData = error.response ? (error.response?.data as IApiResponse) : {};
+  throw new ApiError(responseData, error);
+};
 
-// api.interceptors.response.use(onSuccessfulResponseInterception);
+api.interceptors.response.use(onSuccessfulResponseInterception, onRejectedResponseInterception);
 
 type TGeneric = Record<string, never>;
 
 export const getRequest = async <TResponse>(endpoint: string, config?: AxiosRequestConfig) => {
-  return await api.get<TGeneric, TResponse>(endpoint, config);
+  return await api.get<TGeneric, IApiResponse<TResponse>>(endpoint, config);
 };
 
 export const postRequest = async <TResponse, TBody = Record<string, unknown>>(
@@ -37,7 +43,7 @@ export const postRequest = async <TResponse, TBody = Record<string, unknown>>(
   data?: TBody,
   config?: AxiosRequestConfig
 ) => {
-  return await api.post<TGeneric, TResponse>(endpoint, data, config);
+  return await api.post<TGeneric, IApiResponse<TResponse>>(endpoint, data, config);
 };
 
 export const putRequest = async <TResponse, TBody = Record<string, unknown>>(
@@ -45,7 +51,7 @@ export const putRequest = async <TResponse, TBody = Record<string, unknown>>(
   data?: TBody,
   config?: AxiosRequestConfig
 ) => {
-  return await api.put<TGeneric, TResponse>(endpoint, data, config);
+  return await api.put<TGeneric, IApiResponse<TResponse>>(endpoint, data, config);
 };
 
 export default api;
