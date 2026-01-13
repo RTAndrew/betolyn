@@ -1,0 +1,146 @@
+[
+	{
+		"id": 201,
+		"matchId": 1,
+		"name": "Match Winner",
+		"odds": [
+			{
+				"id": 301,
+				"name": "Manchester United Win",
+				"value": 2.1
+			},
+			{
+				"id": 302,
+				"name": "Draw",
+				"value": 3.4
+			},
+			{
+				"id": 303,
+				"name": "Newcastle United Win",
+				"value": 3.1
+			}
+		]
+	},
+	{
+		"id": 202,
+		"matchId": 2,
+		"name": "Over/Under 2.5 Goals",
+		"odds": [
+			{
+				"id": 304,
+				"name": "Over 2.5 Goals",
+				"value": 1.5
+			},
+			{
+				"id": 305,
+				"name": "Under 2.5 Goals",
+				"value": 4.0
+			},
+			{
+				"id": 306,
+				"name": "Exactly 2.5 Goals",
+				"value": 5.5
+			}
+		]
+	},
+	{
+		"id": 203,
+		"matchId": 3,
+		"name": "Both Teams to Score",
+		"odds": [
+			{
+				"id": 307,
+				"name": "Yes",
+				"value": 2.5
+			},
+			{
+				"id": 308,
+				"name": "No",
+				"value": 3.2
+			}
+		]
+	},
+	{
+		"id": 204,
+		"matchId": 4,
+		"name": "Double Chance",
+		"odds": [
+			{
+				"id": 310,
+				"name": "Toulouse FC or Draw",
+				"value": 5.0
+			},
+			{
+				"id": 311,
+				"name": "PSG or Draw",
+				"value": 3.8
+			},
+			{
+				"id": 312,
+				"name": "Toulouse FC or PSG",
+				"value": 1.65
+			}
+		]
+	},
+	{
+		"id": 205,
+		"matchId": 5,
+		"name": "Correct Score",
+		"odds": [
+			{
+				"id": 313,
+				"name": "1-0",
+				"value": 2.2
+			},
+			{
+				"id": 314,
+				"name": "1-1",
+				"value": 3.1
+			},
+			{
+				"id": 315,
+				"name": "0-1",
+				"value": 3.0
+			}
+		]
+	},
+	{
+		"id": 206,
+		"matchId": 6,
+		"name": "First Half Winner",
+		"odds": [
+			{
+				"id": 316,
+				"name": "Anderson Silva Win",
+				"value": 1.25
+			},
+			{
+				"id": 318,
+				"name": "Wanderlei Silva Win",
+				"value": 4.5
+			}
+		]
+	},
+	{
+		"id": 207,
+		"matchId": 7,
+		"name": "Total Goals",
+		"odds": [
+			{
+				"id": 319,
+				"name": "0-1 Goals",
+				"value": 2.75
+			},
+			{
+				"id": 320,
+				"name": "2-3 Goals",
+				"value": 5.0
+			},
+			{
+				"id": 321,
+				"name": "4+ Goals",
+				"value": 1.4
+			}
+		]
+	}
+]

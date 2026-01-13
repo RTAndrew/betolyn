@@ -25,9 +25,14 @@ public class OddService implements IOddService {
         return oddMapper.toOddDTO(odd);
     }
 
+    public List<OddEntity> findAllByCriterionId(String criterionId) {
+        return oddRepository.findAllByCriterionId(criterionId);
+    }
+
     @Override
     public List<OddDTO> findAll() {
-        return oddRepository.findAll().stream().map(oddMapper::toOddDTO).toList();
+        var odds = oddRepository.findAll();
+        return odds.stream().map(oddMapper::toOddDTO).toList();
     }
 
     @Override

@@ -1,0 +1,251 @@
+[
+	{
+		"id": 1,
+		"homeTeam": {
+			"name": "Manchester United",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061361/betolyn/team-badges/manchester_united.png"
+		},
+		"awayTeam": {
+			"name": "Newcastle United",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061364/betolyn/team-badges/newcastle_united.png"
+		},
+		"homeTeamScore": 2,
+		"awayTeamScore": 1,
+		"startTime": "2025-09-09T20:47:16.569338Z",
+		"endTime": null,
+		"criterion": {
+			"id": 201,
+			"matchId": 1,
+			"name": "Match Winner",
+			"odds": [
+				{
+					"id": 301,
+					"name": "Manchester United Win",
+					"value": 2.1
+				},
+				{
+					"id": 302,
+					"name": "Draw",
+					"value": 3.4
+				},
+				{
+					"id": 303,
+					"name": "Newcastle United Win",
+					"value": 3.1
+				}
+			]
+		}
+	},
+	{
+		"id": 2,
+		"homeTeam": {
+			"name": "Manchester City",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061363/betolyn/team-badges/manchester_city.png"
+		},
+		"awayTeam": {
+			"name": "Wolverhampton WOL",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061365/betolyn/team-badges/wolverhampton_wanderers.png"
+		},
+		"homeTeamScore": 0,
+		"awayTeamScore": 0,
+		"startTime": "2025-09-09T20:47:16.578085Z",
+		"endTime": null,
+		"criterion": {
+			"id": 202,
+			"matchId": 2,
+			"name": "Over/Under 2.5 Goals",
+			"odds": [
+				{
+					"id": 304,
+					"name": "Over 2.5 Goals",
+					"value": 1.5
+				},
+				{
+					"id": 305,
+					"name": "Under 2.5 Goals",
+					"value": 4.0
+				},
+				{
+					"id": 306,
+					"name": "Exactly 2.5 Goals",
+					"value": 5.5
+				}
+			]
+		}
+	},
+	{
+		"id": 3,
+		"homeTeam": {
+			"name": "GD Interclube",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061363/betolyn/team-badges/grupo_desportivo_interclube.png"
+		},
+		"awayTeam": {
+			"name": "Primeiro de Agosto",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061366/betolyn/team-badges/cd_primeiro_de_agosto.png"
+		},
+		"homeTeamScore": 1,
+		"awayTeamScore": 1,
+		"startTime": "2025-09-09T20:47:16.580188Z",
+		"endTime": null,
+		"criterion": {
+			"id": 203,
+			"matchId": 3,
+			"name": "Both Teams to Score",
+			"odds": [
+				{
+					"id": 307,
+					"name": "Yes",
+					"value": 2.5
+				},
+				{
+					"id": 308,
+					"name": "No",
+					"value": 3.2
+				}
+			]
+		}
+	},
+	{
+		"id": 4,
+		"homeTeam": {
+			"name": "Toulouse FC",
+			"badgeUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/367.png"
+		},
+		"awayTeam": {
+			"name": "Paris Saint-Germain",
+			"badgeUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/160.png"
+		},
+		"homeTeamScore": 0,
+		"awayTeamScore": 0,
+		"startTime": "2025-09-09T20:47:16.582378Z",
+		"endTime": null,
+		"criterion": {
+			"id": 204,
+			"matchId": 4,
+			"name": "Double Chance",
+			"odds": [
+				{
+					"id": 310,
+					"name": "Toulouse FC or Draw",
+					"value": 5.0
+				},
+				{
+					"id": 311,
+					"name": "PSG or Draw",
+					"value": 3.8
+				},
+				{
+					"id": 312,
+					"name": "Toulouse FC or PSG",
+					"value": 1.65
+				}
+			]
+		}
+	},
+	{
+		"id": 5,
+		"homeTeam": {
+			"name": "Lille OSC",
+			"badgeUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/166.png"
+		},
+		"awayTeam": {
+			"name": "Olympique Lyonnais",
+			"badgeUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/167.png"
+		},
+		"homeTeamScore": 0,
+		"awayTeamScore": 0,
+		"startTime": "2025-09-09T20:47:16.584180Z",
+		"endTime": null,
+		"criterion": {
+			"id": 205,
+			"matchId": 5,
+			"name": "Correct Score",
+			"odds": [
+				{
+					"id": 313,
+					"name": "1-0",
+					"value": 2.2
+				},
+				{
+					"id": 314,
+					"name": "1-1",
+					"value": 3.1
+				},
+				{
+					"id": 315,
+					"name": "0-1",
+					"value": 3.0
+				}
+			]
+		}
+	},
+	{
+		"id": 6,
+		"homeTeam": {
+			"name": "Anderson Silva",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061357/betolyn/athletes/anderson_silva.png"
+		},
+		"awayTeam": {
+			"name": "Wanderlei Silva",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061357/betolyn/athletes/wanderlei_silva.png"
+		},
+		"homeTeamScore": 0,
+		"awayTeamScore": 0,
+		"startTime": "2025-09-09T20:47:16.585871Z",
+		"endTime": null,
+		"criterion": {
+			"id": 206,
+			"matchId": 6,
+			"name": "First Half Winner",
+			"odds": [
+				{
+					"id": 316,
+					"name": "Anderson Silva Win",
+					"value": 1.25
+				},
+				{
+					"id": 318,
+					"name": "Wanderlei Silva Win",
+					"value": 4.5
+				}
+			]
+		}
+	},
+	{
+		"id": 7,
+		"homeTeam": {
+			"name": "Conor McGregor",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061357/betolyn/athletes/conor_mcgregor.png"
+		},
+		"awayTeam": {
+			"name": "Khabib Nurmagomedov",
+			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061357/betolyn/athletes/khabib_nurmagomedov.png"
+		},
+		"homeTeamScore": 0,
+		"awayTeamScore": 0,
+		"startTime": "2025-09-09T20:47:16.587965Z",
+		"endTime": null,
+		"criterion": {
+			"id": 207,
+			"matchId": 7,
+			"name": "Total Goals",
+			"odds": [
+				{
+					"id": 319,
+					"name": "0-1 Goals",
+					"value": 2.75
+				},
+				{
+					"id": 320,
+					"name": "2-3 Goals",
+					"value": 5.0
+				},
+				{
+					"id": 321,
+					"name": "4+ Goals",
+					"value": 1.4
+				}
+			]
+		}
+	}
+]

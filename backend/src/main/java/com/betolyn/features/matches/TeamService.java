@@ -26,6 +26,7 @@ public class TeamService implements ITeamService {
     public TeamEntity createTeam(CreateTeamRequestDTO requestDTO) {
         TeamEntity team = new TeamEntity();
         team.setName(requestDTO.getName());
+        team.setBadgeUrl(requestDTO.getBadgeUrl());
 
         return teamRepository.save(team);
     }

@@ -1,5 +1,9 @@
 package com.betolyn.features.matches;
 
+import com.betolyn.features.betting.criterion.CriterionMapper;
+import com.betolyn.features.betting.criterion.CriterionRepository;
+import com.betolyn.features.betting.criterion.CriterionService;
+import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.mapper.MatchMapper;
@@ -15,6 +19,8 @@ public class MatchService implements IMatchService {
     private final MatchMapper matchMapper;
     private final TeamService teamService;
     private final MatchRepository matchRepository;
+    private final CriterionRepository criterionRepository;
+    private final CriterionMapper criterionMapper;
 
     @Override
     public List<MatchDTO> findAll() {
@@ -27,6 +33,12 @@ public class MatchService implements IMatchService {
         return matchMapper.toMatchDTO(match);
     }
 
+    public List<CriterionDTO> findAllCriteriaByMatchId(String matchId) {
+        var criteria = criterionRepository.findAllByMatchId(matchId);
+        return criteria.stream().map(criterionMapper::toCriterionDTO).toList();
+
+    }
+
     @Override
     public MatchDTO createMatch(CreateMatchRequestDTO requestDTO) {
         var homeTeam = teamService.findById(requestDTO.getHomeTeamId());
@@ -36,7 +48,7 @@ public class MatchService implements IMatchService {
         entity.setHomeTeam(homeTeam);
         entity.setAwayTeam(awayTeam);
 
-        var match =  matchRepository.save(entity);
+        var match = matchRepository.save(entity);
         return matchMapper.toMatchDTO(match);
     }
 }

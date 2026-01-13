@@ -8,5 +8,6 @@ import java.util.List;
 public interface ICriterionService {
     List<CriterionDTO> findAll();
     CriterionDTO findById(String id);
+    List<CriterionEntity> findAllByMatchId(String matchId);
     CriterionDTO save(CreateCriterionRequestDTO data);
 }

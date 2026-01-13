@@ -24,10 +24,10 @@ public class CriterionController {
         return ResponseEntity.ok(ApiResponse.success("Criteria found", criteria));
     }
 
-    @PostMapping
-    public ResponseEntity<@NotNull ApiResponse<CriterionDTO>> save(@RequestBody CreateCriterionRequestDTO data) {
-        var criterion = criterionService.save(data);
-        return ResponseEntity.ok(ApiResponse.success("Criterion created", criterion));
+    @GetMapping("/{criterionId}")
+    public ResponseEntity<ApiResponse<CriterionDTO>> findById(@PathVariable String criterionId) {
+        var criterion = criterionService.findById(criterionId);
+        return ResponseEntity.ok(ApiResponse.success("Criterion found", criterion));
     }
 
     @PatchMapping("/{criterionId}")
@@ -36,4 +36,9 @@ public class CriterionController {
         return ResponseEntity.ok(ApiResponse.success("Criterion updated", criterion));
     }
 
+    @PostMapping
+    public ResponseEntity<@NotNull ApiResponse<CriterionDTO>> save(@RequestBody CreateCriterionRequestDTO data) {
+        var criterion = criterionService.save(data);
+        return ResponseEntity.ok(ApiResponse.success("Criterion created", criterion));
+    }
 }

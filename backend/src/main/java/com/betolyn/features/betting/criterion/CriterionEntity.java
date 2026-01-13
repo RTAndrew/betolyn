@@ -1,13 +1,17 @@
 package com.betolyn.features.betting.criterion;
 
+import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.validation.constraints.NotNull;
+import org.json.JSONPropertyIgnore;
+
+import java.util.List;
 
 
 @Getter
@@ -28,14 +32,18 @@ public class CriterionEntity extends BaseEntity {
     @JoinColumn(name = "match_entity_id")
     private MatchEntity match;
 
-    /** Ensures that the flag "isStandalone" is properly saved
+    @OneToMany(mappedBy = "criterion")
+    private List<OddEntity> odds;
+
+    /**
+     * Ensures that the flag "isStandalone" is properly saved
      * at DB level and accessed by external APIs,
      * without relying on DTO mappers.
      */
     @PrePersist
     @PreUpdate
     private void checkIfStandalone() {
-        if(this.match == null) {
+        if (this.match == null) {
             this.setIsStandalone(true);
         }
     }

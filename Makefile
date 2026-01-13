@@ -16,6 +16,11 @@ dev-backend: ## Start the Spring Boot development server
 	fi
 	cd backend && ./mvnw spring-boot:run
 
+dev-seed: ## Start the Database Seeder
+	@echo "Starting Database Seeder..."
+	cd seed && node seed.js
+	@echo "Database Seeder complete! "
+
 install-mobile: ## Install mobile app dependencies
 	@echo "Installing mobile app dependencies..."
 	cd mobile && npm install

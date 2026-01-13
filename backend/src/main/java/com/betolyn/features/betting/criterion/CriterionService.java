@@ -4,6 +4,7 @@ import com.betolyn.features.betting.criterion.dto.CreateCriterionRequestDTO;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.criterion.dto.UpdateCriterionOddsRequestDTO;
 import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddMapper;
 import com.betolyn.features.betting.odds.OddService;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.matches.MatchService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,10 @@ public class CriterionService implements ICriterionService {
     public CriterionDTO findById(String id) {
         var criterion = criterionRepository.findById(id).orElseThrow(EntityNotfoundException::new);
         return criterionMapper.toCriterionDTO(criterion);
+    }
+
+    public List<CriterionEntity> findAllByMatchId(String matchId) {
+        return criterionRepository.findAllByMatchId(matchId);
     }
 
     @Override
