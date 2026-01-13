@@ -5,7 +5,7 @@ import React, { PropsWithChildren } from 'react';
 import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 interface AuthWrapperProps {
   type?: 'signup' | 'login';
 }
@@ -39,20 +39,22 @@ export const AuthForm = ({ children }: PropsWithChildren) => {
 const AuthWrapper = ({ children, type = 'signup' }: PropsWithChildren<AuthWrapperProps>) => {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#61687E' }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <SafeHorizontalView>
-          <View style={styles.logoWrapper}>
-            <LogoComplete2 width={250} height={60} />
-          </View>
+      <KeyboardAwareScrollView>
+        <SafeAreaView style={{ flex: 1 }}>
+          <SafeHorizontalView>
+            <View style={styles.logoWrapper}>
+              <LogoComplete2 width={250} height={60} />
+            </View>
 
-          <View style={styles.titleWrapper}>
-            <ThemedText type="title">{type === 'signup' ? 'Criar conta' : 'Login'}</ThemedText>
-          </View>
-          {type === 'signup' ? <SignUpDescription /> : <LoginDescription />}
+            <View style={styles.titleWrapper}>
+              <ThemedText type="title">{type === 'signup' ? 'Criar conta' : 'Login'}</ThemedText>
+            </View>
+            {type === 'signup' ? <SignUpDescription /> : <LoginDescription />}
 
-          <View style={{ marginTop: 20 }}>{children}</View>
-        </SafeHorizontalView>
-      </SafeAreaView>
+            <View style={{ marginTop: 20 }}>{children}</View>
+          </SafeHorizontalView>
+        </SafeAreaView>
+      </KeyboardAwareScrollView>
     </ScrollView>
   );
 };
