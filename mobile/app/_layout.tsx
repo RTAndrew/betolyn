@@ -1,7 +1,10 @@
+import { queryClient } from '@/utils/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-reanimated';
 
 if (__DEV__) {
@@ -19,38 +22,40 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="auth" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal/match/[id]"
-          options={{
-            headerShown: false,
-            presentation: 'formSheet',
-            animation: 'slide_from_bottom',
-            sheetElevation: 24,
-            sheetGrabberVisible: true,
-            gestureDirection: 'vertical',
-            sheetAllowedDetents: [1],
-          }}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            presentation: 'containedModal',
-            animation: 'slide_from_bottom',
-            sheetElevation: 24,
-            sheetGrabberVisible: true,
-            gestureDirection: 'vertical',
-            sheetAllowedDetents: [50],
-          }}
-          name="modal/channels/[id]/create-event/index"
-        />
+    <QueryClientProvider client={queryClient}>
+      <KeyboardProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="modal/match/[id]"
+            options={{
+              headerShown: false,
+              presentation: 'formSheet',
+              animation: 'slide_from_bottom',
+              sheetElevation: 24,
+              sheetGrabberVisible: true,
+              gestureDirection: 'vertical',
+              sheetAllowedDetents: [1],
+            }}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+              presentation: 'containedModal',
+              animation: 'slide_from_bottom',
+              sheetElevation: 24,
+              sheetGrabberVisible: true,
+              gestureDirection: 'vertical',
+              sheetAllowedDetents: [50],
+            }}
+            name="modal/channels/[id]/create-event/index"
+          />
 
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style={Platform.OS === 'ios' ? 'dark' : 'light'} backgroundColor="#262F3D" />
-    </>
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style={Platform.OS === 'ios' ? 'dark' : 'light'} backgroundColor="#262F3D" />
+      </KeyboardProvider>
+    </QueryClientProvider>
   );
 }

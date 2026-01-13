@@ -1,12 +1,5 @@
-import { IOdd } from '@/mock/matches';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-  ViewProps,
-} from 'react-native';
+import { IOdd } from '@/types';
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 interface OddButtonProps extends TouchableOpacityProps {
   odd: IOdd;
@@ -23,7 +16,12 @@ export const OddButton = ({ odd, style, variant = 'primary', ...props }: OddButt
       ]}
       {...props}
     >
-      <Text style={oddsStyles.oddText}>{odd.value}</Text>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}
+      >
+        <Text style={oddsStyles.oddText}>{odd.name}</Text>
+        <Text style={oddsStyles.oddText}>({odd.value})</Text>
+      </View>
     </TouchableOpacity>
   );
 };

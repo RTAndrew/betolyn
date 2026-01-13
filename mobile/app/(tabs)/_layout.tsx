@@ -9,7 +9,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 export default function TabLayout() {
   return (
     <>
-      <AppHeader />
+      {/* <AppHeader /> */}
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: '#F3CA41',

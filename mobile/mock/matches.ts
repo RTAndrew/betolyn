@@ -4,17 +4,17 @@ export interface IMatch {
   id: number;
   homeTeam: {
     name: string;
+    badgeUrl: string;
   };
   awayTeam: {
     name: string;
+    badgeUrl: string;
   };
   homeTeamScore: number;
   awayTeamScore: number;
   startTime: string;
   endTime: string | null;
   createdBy: string;
-  homeTeamImageUrl: string;
-  awayTeamImageUrl: string;
   mainCriteria: IMainCriteria;
 }
 

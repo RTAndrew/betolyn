@@ -39,7 +39,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
         this.email = email;
         this.username = username;
         this.password = password;
-
     }
 
     public UserEntity(String id, String password, String email, String username) {

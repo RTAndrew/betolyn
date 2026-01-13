@@ -1,20 +1,21 @@
 import { ThemedView } from '@/components/ThemedView';
 import BetCard from '@/components/bet-card';
-import { mockAPI } from '@/mock';
-import { getRequest } from '@/utils/http';
 import { useQuery } from '@/utils/http/use-query';
-import { ActivityIndicator, ScrollView, Text } from 'react-native';
+import { ActivityIndicator, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <ThemedView style={{ flex: 1 }}>{children}</ThemedView>
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#61687E' }}>
+      <ScrollView style={{ flex: 1 }}>
+        <ThemedView style={{ flex: 1 }}>{children}</ThemedView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default function HomeScreen() {
-  const { data, loading, error } = useQuery('/matches');
+  const { data, loading } = useQuery('/matches');
 
   if (loading) {
     return (

@@ -12,6 +12,6 @@ public class OddDTO {
     private CriterionDTO criterion;
     private OddStatusEnum status;
 
-//    @JsonIgnoreProperties("odd") // avoid self reference lastOdd <-> odd
+    @JsonIgnoreProperties("odd") // avoid self reference lastOdd <-> odd
     private OddHistoryDTO lastOddHistory;
 }

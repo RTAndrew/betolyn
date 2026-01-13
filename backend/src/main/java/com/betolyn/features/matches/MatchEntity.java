@@ -1,8 +1,14 @@
 package com.betolyn.features.matches;
+
+import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -15,7 +21,10 @@ public class MatchEntity extends AuditableEntity {
     private boolean isOfficial = true;
     private String channelId;
 
-    private String criteriaHighlightId;
+    @OneToOne
+    @JoinColumn(name = "criteria_highlight_id")
+    @JsonIgnoreProperties({"odds", "match"})
+    private CriterionEntity mainCriterion;
 
     @ManyToOne
     @JoinColumn(name = "home_team_id")

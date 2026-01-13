@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +53,7 @@ public class CriterionService implements ICriterionService {
 
         if (data.getMatchId() != null) {
             var match = matchService.findById(data.getMatchId());
-            criterion.setMatch(matchMapper.toEntity(match));
+            criterion.setMatch(match);
         }
 
         var savedCriterion = criterionRepository.saveAndFlush(criterion);

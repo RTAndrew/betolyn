@@ -2,14 +2,61 @@ import Collapsible from '@/components/collapsible/index';
 import { OddButton } from '@/components/odd-button';
 import { ThemedView } from '@/components/ThemedView';
 import { mockAPI } from '@/mock';
+import { useGetMatch, useGetMatchCriteria } from '@/services/matches';
 import { useQuery } from '@/utils/http/use-query';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useRef } from 'react';
-import { Image, Text, View, ViewProps } from 'react-native';
+import { ActivityIndicator, Image, Text, View, ViewProps } from 'react-native';
 interface MatchTeamProps {
   name: string;
   imageUrl: string;
 }
+
+const Criteria = ({ matchId }: { matchId: string }) => {
+  const { data, isLoading, isError } = useGetMatchCriteria({ matchId });
+  const criteria = data?.data;
+
+  if (isLoading)
+    return (
+      <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
+        <Section>
+          <ActivityIndicator size="large" color="#C7D1E7" />
+        </Section>
+      </ThemedView>
+    );
+
+  if (isError || !criteria || criteria.length === 0) return <></>;
+
+  return (
+    <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
+      <Section>
+        {criteria.map((criteria, index) => (
+          <Collapsible open={index === 0} key={criteria.id} title={criteria.name}>
+            <ThemedView
+              style={{
+                backgroundColor: 'transparent',
+
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 10,
+                paddingVertical: 20,
+              }}
+            >
+              {criteria.odds.map((odd) => (
+                <OddButton
+                  key={odd.id}
+                  odd={odd}
+                  style={{ minWidth: 'auto', flex: 0, flexGrow: 1 }}
+                />
+              ))}
+            </ThemedView>
+          </Collapsible>
+        ))}
+      </Section>
+    </ThemedView>
+  );
+};
 
 const MatchTeam = ({ name, imageUrl }: MatchTeamProps) => {
   return (
@@ -54,11 +101,12 @@ const Section = ({ children, style }: ViewProps) => {
 
 const MatchPage = () => {
   const { id } = useLocalSearchParams();
-  const { match, criteria } = mockAPI.getMatchById(Number(id));
+  const { data, isLoading, isError } = useGetMatch({ matchId: id as string });
+  const match = data?.data;
 
-  if (!match) {
-    return <Text>Match not found</Text>;
-  }
+  if (isLoading) return <Text>Loading...</Text>;
+  if (isError) return <Text>Error loading match</Text>;
+  if (!match) return <Text>Match not found</Text>;
 
   return (
     <View style={{ backgroundColor: '#495064', flex: 1, height: '100%' }}>
@@ -80,7 +128,7 @@ const MatchPage = () => {
               justifyContent: 'space-between',
             }}
           >
-            <MatchTeam name={match.home_team} imageUrl={match.home_team_image_url} />
+            <MatchTeam name={match.homeTeam.name} imageUrl={match.homeTeam.badgeUrl} />
             <Text
               style={{
                 fontSize: 20,
@@ -89,29 +137,31 @@ const MatchPage = () => {
                 transform: [{ translateY: 35 }],
               }}
             >
-              {match.home_team_score !== undefined || match.home_team_score !== null
-                ? `${match.home_team_score} - ${match.away_team_score}`
+              {match.homeTeamScore !== undefined || match.homeTeamScore !== null
+                ? `${match.homeTeamScore} - ${match.awayTeamScore}`
                 : 'vs'}
             </Text>
-            <MatchTeam name={match.away_team} imageUrl={match.away_team_image_url} />
+            <MatchTeam name={match.awayTeam.name} imageUrl={match.awayTeam.badgeUrl} />
           </View>
         </View>
 
         {/* Main Bet */}
-        {match.main_criteria.odds.length && match.main_criteria.odds.length > 0 && (
-          <Section
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 10,
-            }}
-          >
-            {match.main_criteria.odds.map((odd) => (
-              <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} />
-            ))}
-          </Section>
-        )}
+        {match.mainCriterion &&
+          match.mainCriterion.odds.length &&
+          match.mainCriterion.odds.length > 0 && (
+            <Section
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 10,
+              }}
+            >
+              {match.mainCriterion.odds.map((odd) => (
+                <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} />
+              ))}
+            </Section>
+          )}
 
         {/* RealTime Bet Odds */}
         <Section style={{ borderBottomWidth: 0.25 }}>
@@ -134,31 +184,7 @@ const MatchPage = () => {
         </Section>
       </ThemedView>
 
-      <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
-        {/* Criteria */}
-        {criteria.length > 0 && (
-          <Section>
-            {criteria.map((criteria, index) => (
-              <Collapsible open={index === 0} key={criteria.id} title={criteria.name}>
-                <ThemedView
-                  style={{
-                    backgroundColor: 'transparent',
-
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: 10,
-                    paddingVertical: 20,
-                  }}
-                >
-                  {criteria.odds.map((odd) => (
-                    <OddButton key={odd.id} odd={odd} style={{ minWidth: '30%' }} />
-                  ))}
-                </ThemedView>
-              </Collapsible>
-            ))}
-          </Section>
-        )}
-      </ThemedView>
+      <Criteria matchId={match.id} />
     </View>
   );
 };

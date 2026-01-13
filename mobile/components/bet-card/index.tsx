@@ -62,8 +62,8 @@ export default function BetCard({ match, onPress }: BetCardProps) {
     if (onPress) {
       onPress(match);
     } else {
-      router.push(`/auth/login`);
-      // router.push(`/modal/match/${match.id}`);
+      // router.push(`/auth/login`);
+      router.push(`/modal/match/${match.id}`);
     }
   };
 
@@ -76,12 +76,12 @@ export default function BetCard({ match, onPress }: BetCardProps) {
           <View style={styles.teamWrapper}>
             <Team
               name={match.homeTeam.name}
-              imageUrl={match.homeTeamImageUrl}
+              imageUrl={match.homeTeam.badgeUrl}
               score={match.homeTeamScore}
             />
             <Team
               name={match.awayTeam.name}
-              imageUrl={match.awayTeamImageUrl}
+              imageUrl={match.awayTeam.badgeUrl}
               score={match.awayTeamScore}
             />
           </View>

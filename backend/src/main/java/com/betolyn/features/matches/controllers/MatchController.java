@@ -5,6 +5,8 @@ import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.MatchService;
 import com.betolyn.features.matches.dto.MatchDTO;
+import com.betolyn.features.matches.dto.UpdateMatchMainCriterionRequestDTO;
+import com.betolyn.features.matches.mapper.MatchMapper;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 public class MatchController {
     private final MatchService matchService;
     private final CriterionRepository criterionRepository;
+    private final MatchMapper matchMapper;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<MatchDTO>>> findAll() {
@@ -28,7 +31,8 @@ public class MatchController {
     @GetMapping("/{matchId}")
     public ResponseEntity<ApiResponse<MatchDTO>> findById(@PathVariable String matchId) {
         var match = matchService.findById(matchId);
-        return ResponseEntity.ok(ApiResponse.success("Match found", match));
+
+        return ResponseEntity.ok(ApiResponse.success("Match found", matchMapper.toMatchDTO(match)));
     }
 
     @GetMapping("/{matchId}/criteria")
@@ -38,9 +42,17 @@ public class MatchController {
         return ResponseEntity.ok(ApiResponse.success("Criteria for found", criteria));
     }
 
+
+    @PostMapping("/{matchId}/main-criterion")
+    public ResponseEntity<ApiResponse<MatchDTO>> updateMainCriterion(@PathVariable String matchId, @RequestBody UpdateMatchMainCriterionRequestDTO data) {
+        var match = matchService.updateMainCriterion(matchId, data);
+        return ResponseEntity.ok(ApiResponse.success("Criteria for found", matchMapper.toMatchDTO(match)));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<MatchDTO>> createMatch(@RequestBody CreateMatchRequestDTO requestDTO) {
         var match = matchService.createMatch(requestDTO);
         return ResponseEntity.ok(ApiResponse.success("Match created", match));
     }
+
 }
