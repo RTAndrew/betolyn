@@ -1,5 +1,7 @@
 // This file contains the matches and criterias data, with each match having a nested main criteria.
 
+import { IOdd } from '@/types';
+
 export interface IMatch {
   id: number;
   homeTeam: {
@@ -26,14 +28,7 @@ export interface IMainCriteria {
   odds: IOdd[];
 }
 
-export interface IOdd {
-  id: number;
-  name: string;
-  value: number | string;
-  minimum_amount: number;
-  maximum_amount: number;
-  created_by: string;
-}
+
 
 export interface IChannel {
   id: number;

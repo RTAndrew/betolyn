@@ -306,13 +306,9 @@ async function seedCriteriaAndOdds(matches, token) {
 	return createdCriteria;
 }
 
-// 2.2 Update match with highlightCriteria
+// 2.2 Update match with highlightCriteria (main criterion)
 async function updateMatchHighlightCriteria(matches, criteria, token) {
-	console.log("\n=== 2.2. Updating Matches with Highlight Criteria ===");
-
-	// Check if there's a PATCH endpoint for matches
-	// For now, we'll try to update if the endpoint exists
-	// If not, this step will be skipped with a warning
+	console.log("\n=== 2.2. Updating Matches with Main Criterion ===");
 
 	for (const match of matches) {
 		const matchCriterion = criteria.find((c) => c.matchId === match.id);
@@ -321,23 +317,23 @@ async function updateMatchHighlightCriteria(matches, criteria, token) {
 		}
 
 		try {
-			// Try to update match with highlightCriteria
-			// Note: This assumes there's a PATCH /matches/:id endpoint
-			// If it doesn't exist, this will fail gracefully
+			// Update match with main criterion using POST /matches/:id/main-criterion
 			await apiRequest(
-				"PATCH",
-				`/matches/${match.id}`,
+				"POST",
+				`/matches/${match.id}/main-criterion`,
 				{
-					criteriaHighlightId: matchCriterion.criterionId,
+					criterionId: matchCriterion.criterionId,
 				},
 				token
 			);
 
-			console.log(`✓ Updated match ${match.id} with highlight criterion`);
-		} catch (error) {
-			// Endpoint might not exist yet, just log a warning
 			console.log(
-				`⚠ Could not update match ${match.id} with highlight criterion (endpoint may not exist): ${error.message}`
+				`✓ Updated match ${match.id} with main criterion ${matchCriterion.criterionId}`
+			);
+		} catch (error) {
+			console.error(
+				`✗ Failed to update match ${match.id} with main criterion:`,
+				error.message
 			);
 		}
 	}

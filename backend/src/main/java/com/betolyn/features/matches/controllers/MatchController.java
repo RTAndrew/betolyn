@@ -1,5 +1,7 @@
 package com.betolyn.features.matches.controllers;
 
+import com.betolyn.features.betting.criterion.CriterionEntity;
+import com.betolyn.features.betting.criterion.CriterionMapper;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
@@ -19,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchController {
     private final MatchService matchService;
-    private final CriterionRepository criterionRepository;
+    private final CriterionMapper criterionMapper;
     private final MatchMapper matchMapper;
 
     @GetMapping
@@ -36,11 +38,12 @@ public class MatchController {
     }
 
     @GetMapping("/{matchId}/criteria")
-    public ResponseEntity<ApiResponse<List<CriterionDTO>>> findMatchCriteriaById(@PathVariable String matchId) {
+    public ResponseEntity<ApiResponse<List>> findMatchCriteriaById(@PathVariable String matchId) {
         var criteria = matchService.findAllCriteriaByMatchId(matchId);
-
-        return ResponseEntity.ok(ApiResponse.success("Criteria for found", criteria));
+        var response = criteria.stream().map(criterionMapper::toCriterionDTO).toList();
+        return ResponseEntity.ok(ApiResponse.success("Criteria for found", response));
     }
+
 
 
     @PostMapping("/{matchId}/main-criterion")

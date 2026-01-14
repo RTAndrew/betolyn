@@ -36,6 +36,7 @@ public interface CriterionMapper {
     }
 
     @Mapping(source = "odds", target = "odds", qualifiedByName = "listOddEntityToListOddDTO")
+    @Mapping(source = "match.mainCriterion", target = "match.mainCriterion", ignore = true)
     CriterionDTO toCriterionDTO(CriterionEntity entity);
 
     CriterionEntity toCriterionEntity(CriterionDTO criterionDTO);

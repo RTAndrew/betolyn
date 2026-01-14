@@ -12,7 +12,7 @@ interface MatchTeamProps {
   imageUrl: string;
 }
 
-const Criteria = ({ matchId }: { matchId: string }) => {
+const MatchCriteria = ({ matchId }: { matchId: string }) => {
   const { data, isLoading, isError } = useGetMatchCriteria({ matchId });
   const criteria = data?.data;
 
@@ -184,7 +184,7 @@ const MatchPage = () => {
         </Section>
       </ThemedView>
 
-      <Criteria matchId={match.id} />
+      <MatchCriteria matchId={match.id} />
     </View>
   );
 };

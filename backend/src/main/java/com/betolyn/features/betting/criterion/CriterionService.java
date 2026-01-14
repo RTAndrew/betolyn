@@ -26,8 +26,8 @@ public class CriterionService implements ICriterionService {
     private final OddService oddService;
 
     @Override
-    public List<CriterionDTO> findAll() {
-        return criterionRepository.findAll().stream().map(criterionMapper::toCriterionDTO).toList();
+    public List<CriterionEntity> findAll() {
+        return criterionRepository.findAll();
     }
 
     @Override

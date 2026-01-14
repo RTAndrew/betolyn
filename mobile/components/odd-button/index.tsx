@@ -3,10 +3,17 @@ import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 
 
 interface OddButtonProps extends TouchableOpacityProps {
   odd: IOdd;
+  showName?: boolean;
   variant?: 'primary' | 'secondary';
 }
 
-export const OddButton = ({ odd, style, variant = 'primary', ...props }: OddButtonProps) => {
+export const OddButton = ({
+  odd,
+  style,
+  showName = true,
+  variant = 'primary',
+  ...props
+}: OddButtonProps) => {
   return (
     <TouchableOpacity
       style={[
@@ -19,8 +26,14 @@ export const OddButton = ({ odd, style, variant = 'primary', ...props }: OddButt
       <View
         style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}
       >
-        <Text style={oddsStyles.oddText}>{odd.name}</Text>
-        <Text style={oddsStyles.oddText}>({odd.value})</Text>
+        {!showName && <Text style={oddsStyles.oddText}>{odd.value}</Text>}
+
+        {showName && (
+          <>
+            <Text style={[oddsStyles.oddText, { fontSize: 12 }]}>{odd.name}</Text>
+            <Text style={oddsStyles.oddText}>({odd.value})</Text>
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );

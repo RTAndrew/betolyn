@@ -9,7 +9,7 @@ import {
   TextProps as _TextProps,
 } from 'react-native';
 import { OddButton } from '../odd-button';
-import { IMatch } from '@/mock/matches';
+import { IMatch } from '@/types';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
   return (
@@ -92,11 +92,11 @@ export default function BetCard({ match, onPress }: BetCardProps) {
           </View>
         </View>
 
-        {/* <View style={styles.oddsWrapper}>
-          {match.mainCriteria.odds.map((odd) => (
-            <OddButton key={odd.id} odd={odd} />
+        <View style={styles.oddsWrapper}>
+          {(match.mainCriterion?.odds ?? []).map((odd) => (
+            <OddButton showName={false} key={odd.id} odd={odd} />
           ))}
-        </View> */}
+        </View>
       </View>
     </TouchableOpacity>
   );

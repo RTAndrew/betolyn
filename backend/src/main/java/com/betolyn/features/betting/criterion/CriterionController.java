@@ -17,11 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CriterionController {
     private final CriterionService criterionService;
+    private final CriterionMapper criterionMapper;
 
     @GetMapping
     public ResponseEntity<@NotNull ApiResponse<List<CriterionDTO>>> findAll() {
         var criteria = criterionService.findAll();
-        return ResponseEntity.ok(ApiResponse.success("Criteria found", criteria));
+        var mapp = criteria.stream().map(criterionMapper::toCriterionDTO).toList();
+        return ResponseEntity.ok(ApiResponse.success("Criteria found", mapp));
     }
 
     @GetMapping("/{criterionId}")

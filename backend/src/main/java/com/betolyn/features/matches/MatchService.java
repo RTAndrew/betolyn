@@ -1,8 +1,8 @@
 package com.betolyn.features.matches;
 
+import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionMapper;
 import com.betolyn.features.betting.criterion.CriterionRepository;
-import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.dto.UpdateMatchMainCriterionRequestDTO;
@@ -28,14 +28,13 @@ public class MatchService implements IMatchService {
     }
 
     @Override
-    public MatchEntity findById(String id) throws EntityNotfoundException{
+    public MatchEntity findById(String id) throws EntityNotfoundException {
         return matchRepository.findById(id).orElseThrow(EntityNotfoundException::new);
     }
 
-    public List<CriterionDTO> findAllCriteriaByMatchId(String matchId) {
-        var match = this.findById(matchId);
-        var criteria = criterionRepository.findAllByMatchId(matchId);
-        return criteria.stream().map(criterionMapper::toCriterionDTO).toList();
+    public List<CriterionEntity> findAllCriteriaByMatchId(String matchId) {
+        this.findById(matchId);
+        return criterionRepository.findAllByMatchId(matchId);
 
     }
 
@@ -56,6 +55,11 @@ public class MatchService implements IMatchService {
     public MatchEntity updateMainCriterion(String matchId, UpdateMatchMainCriterionRequestDTO data) {
         var match = this.findById(matchId);
         var criterion = criterionRepository.findById(data.criterionId()).orElseThrow(() -> new EntityNotfoundException("ENTITY_NOT_FOUND", "Criterion not found"));
+
+        if (!criterion.getMatch().getId().equals(matchId)) {
+            throw new CriterionDoesNotBelongToMatchException();
+        }
+        
 
         match.setMainCriterion(criterion);
         var savedMatch = matchRepository.save(match);
