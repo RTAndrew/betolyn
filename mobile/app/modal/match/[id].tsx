@@ -109,7 +109,7 @@ const MatchPage = () => {
   if (!match) return <Text>Match not found</Text>;
 
   return (
-    <View style={{ backgroundColor: '#495064', flex: 1, height: '100%' }}>
+    <View style={{ backgroundColor: '#495064', flex: 1, minHeight: '100%' }}>
       <ThemedView style={{ backgroundColor: 'transparent' }}>
         {/* Highlight */}
         <View

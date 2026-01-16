@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
+import BottomSheetHeader from './bottom-sheet-header';
+import BottomSheetActionOption from './bottom-sheet-action-option';
 
 export interface BottomSheetProps extends ActionSheetProps {
   title?: string;
@@ -25,6 +27,7 @@ const BottomSheet = ({
     const actionSheet = actionSheetRef.current;
     if (visible) {
       actionSheet?.show();
+      // TODO: change navigation bar color
     } else {
       actionSheet?.hide();
     }
@@ -38,10 +41,11 @@ const BottomSheet = ({
       containerStyle={{ ...styles.container, ...(containerStyle as object) }}
       {...props}
     >
-      <SafeAreaView style={{ paddingVertical: 16 }}>
+      <StatusBar backgroundColor="#000000" barStyle="light-content" />
+      <View style={styles.root}>
         {title && <Text style={styles.title}>{title}</Text>}
         {children}
-      </SafeAreaView>
+      </View>
     </ActionSheet>
   );
 };
@@ -51,6 +55,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: '#61687E',
   },
+  root: { paddingBottom: Platform.OS === 'ios' ? '10%' : '20%', paddingTop: 24 },
   title: {
     fontSize: 22,
     color: 'white',
@@ -60,5 +65,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+BottomSheet.SafeHorizontalView = BottomSheetSafeHorizontalView;
+BottomSheet.Header = BottomSheetHeader;
+BottomSheet.ActionOption = BottomSheetActionOption;
 
 export default BottomSheet;

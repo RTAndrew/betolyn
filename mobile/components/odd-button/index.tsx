@@ -56,7 +56,7 @@ const oddsStyles = StyleSheet.create({
   },
   oddText: {
     color: '#F3C942',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
   },

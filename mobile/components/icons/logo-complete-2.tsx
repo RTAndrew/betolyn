@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Svg, { G, Path, Defs, ClipPath, Rect, SvgProps } from 'react-native-svg';
+import Svg, { G, Path, Defs, SvgProps } from 'react-native-svg';
 const LogoComplete2 = ({ width = 159, height = 38, ...props }: SvgProps) => (
   <Svg
     width={width}

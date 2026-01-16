@@ -1,15 +1,19 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   Text as _Text,
   TextProps as _TextProps,
 } from 'react-native';
 import { OddButton } from '../odd-button';
 import { IMatch } from '@/types';
+import BottomSheet from '../bottom-sheet';
+import SafeHorizontalView from '../safe-horizontal-view';
+import { BetCardMainAction } from './bet-card-main-action';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
   return (
@@ -58,6 +62,8 @@ interface BetCardProps {
 }
 
 export default function BetCard({ match, onPress }: BetCardProps) {
+  const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
+
   const handlePress = () => {
     if (onPress) {
       onPress(match);
@@ -68,37 +74,52 @@ export default function BetCard({ match, onPress }: BetCardProps) {
   };
 
   return (
-    <TouchableOpacity activeOpacity={1} onPress={handlePress} style={styles.container}>
-      <Text style={styles.cardTitle}>Futebol 100%</Text>
+    <>
+      {isActionSheetVisible && (
+        <BetCardMainAction
+          match={match}
+          onClose={() => setIsActionSheetVisible(false)}
+          visible={true}
+        />
+      )}
 
-      <View style={styles.content}>
-        <View style={styles.teamBody}>
-          <View style={styles.teamWrapper}>
-            <Team
-              name={match.homeTeam.name}
-              imageUrl={match.homeTeam.badgeUrl}
-              score={match.homeTeamScore}
-            />
-            <Team
-              name={match.awayTeam.name}
-              imageUrl={match.awayTeam.badgeUrl}
-              score={match.awayTeamScore}
-            />
+      <TouchableWithoutFeedback
+        onLongPress={() => {
+          console.log('long press');
+          setIsActionSheetVisible(true);
+        }}
+        onPress={handlePress}
+        style={styles.container}
+      >
+        <View style={styles.content}>
+          <View style={styles.teamBody}>
+            <View style={styles.teamWrapper}>
+              <Team
+                name={match.homeTeam.name}
+                imageUrl={match.homeTeam.badgeUrl}
+                score={match.homeTeamScore}
+              />
+              <Team
+                name={match.awayTeam.name}
+                imageUrl={match.awayTeam.badgeUrl}
+                score={match.awayTeamScore}
+              />
+            </View>
+
+            <View style={styles.betInfo}>
+              <View style={styles.divider} />
+              <Text style={{ color: '#C7D1E7' }}>100</Text>
+            </View>
           </View>
 
-          <View style={styles.betInfo}>
-            <View style={styles.divider} />
-            <Text style={{ color: '#C7D1E7' }}>100</Text>
+          <View style={styles.oddsWrapper}>
+            {(match.mainCriterion?.odds ?? []).map((odd) => (
+              <OddButton showName={false} key={odd.id} odd={odd} />
+            ))}
           </View>
         </View>
-
-        <View style={styles.oddsWrapper}>
-          {(match.mainCriterion?.odds ?? []).map((odd) => (
-            <OddButton showName={false} key={odd.id} odd={odd} />
-          ))}
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableWithoutFeedback>
+    </>
   );
 }
 
@@ -142,9 +163,5 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     flexDirection: 'column',
     gap: 10,
-  },
-  cardTitle: {
-    color: '#C7D1E7',
-    fontStyle: 'italic',
   },
 });
