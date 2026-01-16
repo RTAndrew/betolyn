@@ -1,16 +1,17 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 
-export interface BottomSheetActionOptionProps {
+export interface BottomSheetActionOptionProps
+  extends Omit<TouchableOpacityProps, 'children' | 'activeOpacity'> {
   text: string;
   icon?: React.ReactNode;
 }
 
-const BottomSheetActionOption = ({ text, icon }: BottomSheetActionOptionProps) => {
+const BottomSheetActionOption = ({ text, icon, ...props }: BottomSheetActionOptionProps) => {
   return (
-    <TouchableOpacity activeOpacity={0.8}>
+    <TouchableOpacity activeOpacity={0.8} {...props}>
       <BottomSheetSafeHorizontalView style={styles.actionOption}>
         {icon}
         <ThemedText style={styles.actionOptionText}>{text}</ThemedText>

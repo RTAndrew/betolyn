@@ -1,10 +1,11 @@
 import React, { PropsWithChildren, useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
   disabled?: boolean;
   variant?: 'solid' | 'outline' | 'text';
+  style?: ViewStyle;
 }
 
 export const GradientButton = ({ children, style, disabled, ...props }: TouchableOpacityProps) => {
@@ -31,6 +32,7 @@ const NormalButton = ({ children, style, disabled, variant = 'solid', ...props }
         disabled && styles.disabled,
         variant === 'solid' && styles.solid,
         variant === 'outline' && styles.outline,
+        style,
       ]}
       {...props}
     >
@@ -72,4 +74,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Button;

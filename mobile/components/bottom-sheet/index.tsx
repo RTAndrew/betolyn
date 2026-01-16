@@ -4,6 +4,8 @@ import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-acti
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 import BottomSheetHeader from './bottom-sheet-header';
 import BottomSheetActionOption from './bottom-sheet-action-option';
+import { ThemedText } from '../ThemedText';
+import { Button } from '../button';
 
 export interface BottomSheetProps extends ActionSheetProps {
   title?: string;
@@ -66,8 +68,75 @@ const styles = StyleSheet.create({
   },
 });
 
+interface ModalConfirmationProps extends BottomSheetProps {
+  title: string;
+  visible?: boolean;
+  onClose: () => void;
+  description?: string;
+  onConfirmText?: string;
+  onCancelText?: string;
+  onConfirm?: () => Promise<void> | void;
+}
+
+const ModalConfirmation = ({
+  visible = true,
+  onConfirmText = 'Confirm',
+  onCancelText = 'Cancel',
+  description,
+  onConfirm,
+  onClose,
+  title,
+  ...props
+}: ModalConfirmationProps) => {
+  if (!visible) return <></>;
+
+  return (
+    <BottomSheet onClose={onClose} visible={true} {...props}>
+      <BottomSheet.SafeHorizontalView>
+        <ThemedText style={modalConfirmationStyles.title}>{title}</ThemedText>
+        {description && (
+          <ThemedText style={modalConfirmationStyles.description}>
+            If you end the match, other users will no longer be able to bet on it.
+          </ThemedText>
+        )}
+
+        <View style={modalConfirmationStyles.actions}>
+          {onConfirm && (
+            <Button.Root style={{ backgroundColor: '#F80069' }} onPress={onConfirm}>
+              {onConfirmText}
+            </Button.Root>
+          )}
+          <Button.Root variant="text" onPress={onClose}>
+            {onCancelText}
+          </Button.Root>
+        </View>
+      </BottomSheet.SafeHorizontalView>
+    </BottomSheet>
+  );
+};
+
+const modalConfirmationStyles = StyleSheet.create({
+  title: {
+    fontSize: 28,
+    color: 'white',
+    marginBottom: 10,
+    fontWeight: '700',
+    lineHeight: 32,
+    textAlign: 'left',
+  },
+  description: {},
+  actions: {
+    gap: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginTop: 30,
+  },
+});
+
 BottomSheet.SafeHorizontalView = BottomSheetSafeHorizontalView;
 BottomSheet.Header = BottomSheetHeader;
 BottomSheet.ActionOption = BottomSheetActionOption;
+
+BottomSheet.ModalConfirmation = ModalConfirmation;
 
 export default BottomSheet;

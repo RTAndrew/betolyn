@@ -1,9 +1,8 @@
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Image,
   StyleSheet,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   Text as _Text,
@@ -11,9 +10,7 @@ import {
 } from 'react-native';
 import { OddButton } from '../odd-button';
 import { IMatch } from '@/types';
-import BottomSheet from '../bottom-sheet';
-import SafeHorizontalView from '../safe-horizontal-view';
-import { BetCardMainAction } from './bet-card-main-action';
+import { BetCardBottomSheetProvider, useBetCardBottomSheet } from './bottom-sheet';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
   return (
@@ -61,8 +58,16 @@ interface BetCardProps {
   onPress?: (match: IMatch) => void;
 }
 
-export default function BetCard({ match, onPress }: BetCardProps) {
-  const [isActionSheetVisible, setIsActionSheetVisible] = useState(false);
+const BetCard = (props: BetCardProps) => {
+  return (
+    <BetCardBottomSheetProvider match={props.match}>
+      {<BetCardChild {...props} />}
+    </BetCardBottomSheetProvider>
+  );
+};
+
+const BetCardChild = ({ match, onPress }: BetCardProps) => {
+  const { pushSheet } = useBetCardBottomSheet();
 
   const handlePress = () => {
     if (onPress) {
@@ -75,18 +80,10 @@ export default function BetCard({ match, onPress }: BetCardProps) {
 
   return (
     <>
-      {isActionSheetVisible && (
-        <BetCardMainAction
-          match={match}
-          onClose={() => setIsActionSheetVisible(false)}
-          visible={true}
-        />
-      )}
-
       <TouchableWithoutFeedback
         onLongPress={() => {
           console.log('long press');
-          setIsActionSheetVisible(true);
+          pushSheet('main-action');
         }}
         onPress={handlePress}
         style={styles.container}
@@ -121,7 +118,8 @@ export default function BetCard({ match, onPress }: BetCardProps) {
       </TouchableWithoutFeedback>
     </>
   );
-}
+};
+export default BetCard;
 
 const styles = StyleSheet.create({
   container: {
