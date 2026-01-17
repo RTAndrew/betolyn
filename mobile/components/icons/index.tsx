@@ -1,9 +1,11 @@
-export { default as Ellipsis } from './ellipsis';
-export { default as LogoComplete2 } from './logo-complete-2';
-export { default as SoccerBall } from './soccer';
-export { default as Close } from './close';
 export { default as Add } from './add';
+export { default as Down } from './down';
+export { default as Close } from './close';
 export { default as Subtract } from './subtract';
+export { default as SoccerBall } from './soccer';
+export { default as Ellipsis } from './ellipsis';
 export { default as CloseFilled } from './close-filled';
+export { default as MoreVertical } from './more-vertical';
 export { default as TimeHistory } from './time-history';
 export { default as TrendingLines } from './trending-lines';
+export { default as LogoComplete2 } from './logo-complete-2';

@@ -1,12 +1,12 @@
 import Collapsible from '@/components/collapsible/index';
 import { OddButton } from '@/components/odd-button';
+import ScreenTopBar from '@/components/screen-topbar';
 import { ThemedView } from '@/components/ThemedView';
-import { mockAPI } from '@/mock';
 import { useGetMatch, useGetMatchCriteria } from '@/services/matches';
-import { useQuery } from '@/utils/http/use-query';
 import { useLocalSearchParams } from 'expo-router';
-import React, { useMemo, useRef } from 'react';
-import { ActivityIndicator, Image, Text, View, ViewProps } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 interface MatchTeamProps {
   name: string;
   imageUrl: string;
@@ -29,7 +29,7 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
 
   return (
     <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
-      <Section>
+      <Section style={{ paddingTop: 0 }}>
         {criteria.map((criteria, index) => (
           <Collapsible open={index === 0} key={criteria.id} title={criteria.name}>
             <ThemedView
@@ -104,88 +104,94 @@ const MatchPage = () => {
   const { data, isLoading, isError } = useGetMatch({ matchId: id as string });
   const match = data?.data;
 
+  // Ensure there's always enough padding so ScrollView can scroll to top,
+  // which enables the formSheet dismiss gesture even when content is short
+  // Problem: scrolling to top is not working in Android after reaching the bottom of the screen.
+  // The bug is present in Android.
+  // https://github.com/software-mansion/react-native-screens/issues/2424
+  const screenHeight = Platform.OS === 'android' ? Dimensions.get('window').height * 0.3 : 50;
+
   if (isLoading) return <Text>Loading...</Text>;
   if (isError) return <Text>Error loading match</Text>;
   if (!match) return <Text>Match not found</Text>;
 
   return (
-    <View style={{ backgroundColor: '#495064', flex: 1, minHeight: '100%' }}>
-      <ThemedView style={{ backgroundColor: 'transparent' }}>
-        {/* Highlight */}
-        <View
-          style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-            paddingVertical: 30,
-          }}
-        >
-          <Text style={{ color: '#C7D1E7', marginBottom: 10 }}>UFC</Text>
+    <SafeAreaView style={{ backgroundColor: '#495064', flex: 1 }}>
+      <ScrollView
+        stickyHeaderIndices={[0]}
+        nestedScrollEnabled={Platform.OS === 'android'}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
+        showsVerticalScrollIndicator={true}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+      >
+        <ScreenTopBar />
 
+        <ThemedView style={{ backgroundColor: 'transparent' }}>
+          {/* Highlight */}
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
+              flexDirection: 'column',
+              alignItems: 'center',
+              paddingVertical: 30,
             }}
           >
-            <MatchTeam name={match.homeTeam.name} imageUrl={match.homeTeam.badgeUrl} />
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: 'white',
-                transform: [{ translateY: 35 }],
-              }}
-            >
-              {match.homeTeamScore !== undefined || match.homeTeamScore !== null
-                ? `${match.homeTeamScore} - ${match.awayTeamScore}`
-                : 'vs'}
-            </Text>
-            <MatchTeam name={match.awayTeam.name} imageUrl={match.awayTeam.badgeUrl} />
-          </View>
-        </View>
+            <Text style={{ color: '#C7D1E7', marginBottom: 10 }}>UFC</Text>
 
-        {/* Main Bet */}
-        {match.mainCriterion &&
-          match.mainCriterion.odds.length &&
-          match.mainCriterion.odds.length > 0 && (
-            <Section
+            <View
               style={{
                 flexDirection: 'row',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 justifyContent: 'space-between',
-                gap: 10,
               }}
             >
-              {match.mainCriterion.odds.map((odd) => (
-                <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} />
-              ))}
-            </Section>
-          )}
+              <MatchTeam name={match.homeTeam.name} imageUrl={match.homeTeam.badgeUrl} />
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  transform: [{ translateY: 35 }],
+                }}
+              >
+                {match.homeTeamScore !== undefined || match.homeTeamScore !== null
+                  ? `${match.homeTeamScore} - ${match.awayTeamScore}`
+                  : 'vs'}
+              </Text>
+              <MatchTeam name={match.awayTeam.name} imageUrl={match.awayTeam.badgeUrl} />
+            </View>
+          </View>
 
-        {/* RealTime Bet Odds */}
-        <Section style={{ borderBottomWidth: 0.25 }}>
-          <Text style={{ color: '#C7D1E7', marginBottom: 5 }}>Critérios em tempo real</Text>
-          <Text style={{ color: 'white', marginBottom: 10, fontWeight: '600' }}>
-            Quem irá vencer por Knockout?
-          </Text>
+          {/* Main Bet */}
+          {match.mainCriterion &&
+            match.mainCriterion.odds.length &&
+            match.mainCriterion.odds.length > 0 && (
+              <Section
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                }}
+              >
+                {match.mainCriterion.odds.map((odd) => (
+                  <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} />
+                ))}
+              </Section>
+            )}
 
-          {/* <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 10,
-          }}
-        >
-          <OddButton style={{ flex: 1 }} />
-          <OddButton style={{ flex: 1 }} />
-        </View> */}
-        </Section>
-      </ThemedView>
+          {/* RealTime Bet Odds */}
+          <Section>
+            <Text style={{ color: '#C7D1E7', marginBottom: 5 }}>Critérios em tempo real</Text>
+            <Text style={{ color: 'white', marginBottom: 10, fontWeight: '600' }}>
+              Quem irá vencer por Knockout?
+            </Text>
+          </Section>
+        </ThemedView>
 
-      <MatchCriteria matchId={match.id} />
-    </View>
+        <MatchCriteria matchId={match.id} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

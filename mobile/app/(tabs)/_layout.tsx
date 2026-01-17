@@ -2,14 +2,12 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import AppHeader from '@/components/app-header';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function TabLayout() {
   return (
     <>
-      {/* <AppHeader /> */}
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: '#F3CA41',
