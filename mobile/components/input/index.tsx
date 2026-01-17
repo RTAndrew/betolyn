@@ -1,35 +1,45 @@
-import { StyleSheet, TextInput as _TextInput, TextInputProps, View } from 'react-native';
+import {
+  StyleSheet,
+  TextInput as _TextInput,
+  TextInputProps,
+  View,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import { ThemedText } from '../ThemedText';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface InputProps extends TextInputProps {
-  label: string;
-  showLabel?: boolean;
+  label?: string;
   errorMessage?: string | null;
-  errorType?: 'warning' | 'error';
+  status?: 'warning' | 'error' | 'success';
+  style?: TextStyle;
 }
 
-const TextInput = ({ label, errorMessage, errorType, showLabel = true, ...props }: InputProps) => {
-  const errorColor = errorMessage && errorStyles[errorType ?? 'error'];
+const TextInput = ({ label, errorMessage, status, style, ...props }: InputProps) => {
+  const errorColor = useMemo(() => {
+    if (status) return errorStyles[status];
+    if (errorMessage) return errorStyles.error;
+    return undefined;
+  }, [status, errorMessage]);
 
   const [isFocused, setIsFocused] = useState(false);
 
   return (
     <View>
-      {showLabel && <ThemedText style={styles.label}>{label}</ThemedText>}
+      {label && <ThemedText style={styles.label}>{label}</ThemedText>}
 
       <_TextInput
         {...props}
-
         placeholderTextColor="#BFBFBF"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={[styles.input, errorColor, isFocused && styles.focused]}
+        style={[styles.input, errorColor, isFocused && styles.focused, style]}
       />
 
       {errorMessage && (
         <ThemedText
-          style={{ ...styles.errorMessage, color: errorType !== 'error' ? '#FF5CA0' : '#FA8C16' }}
+          style={{ ...styles.errorMessage, color: status !== 'error' ? '#FF5CA0' : '#FA8C16' }}
         >
           {errorMessage}
         </ThemedText>
@@ -67,6 +77,9 @@ const errorStyles = StyleSheet.create({
   },
   error: {
     borderColor: '#F80069',
+  },
+  success: {
+    borderColor: '#3CC5A4',
   },
 });
 

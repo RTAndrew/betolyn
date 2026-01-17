@@ -1,4 +1,4 @@
-export type BottomSheetType = 'main-action' | 'end-match';
+export type BottomSheetType = 'main-action' | 'end-match' | 'update-score';
 
 export interface BetCardBottomSheetContextType {
   match: import('@/types').IMatch;

@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { ThemedText } from '../ThemedText';
+import SafeHorizontalView from '../safe-horizontal-view';
+import { CloseFilled } from '../icons';
 
 interface IHeaderWithChildren {
   title?: never;
@@ -32,11 +34,15 @@ const BottomSheetHeader = (props: BottomSheetHeaderProps) => {
   const { title, onClose, onPrevious } = props;
 
   return (
-    <View style={styles.root}>
+    <SafeHorizontalView style={styles.root}>
       {onPrevious && <AntDesign name="left" size={24} color="white" onPress={onPrevious} />}
-      <ThemedText type="title">{title}</ThemedText>
-      {onClose && <AntDesign name="close" size={24} color="white" onPress={onClose} />}
-    </View>
+      <ThemedText style={styles.title} type="default">
+        {title}
+      </ThemedText>
+      {onClose && (
+        <CloseFilled width={24} height={24} color="#272F3D" fill="white" onPress={onClose} />
+      )}
+    </SafeHorizontalView>
   );
 };
 
@@ -50,6 +56,9 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     borderBottomWidth: 0.3,
     borderBottomColor: '#C7D1E7',
+  },
+  title: {
+    fontWeight: '600',
   },
 });
 

@@ -43,7 +43,6 @@ const BottomSheet = ({
       containerStyle={{ ...styles.container, ...(containerStyle as object) }}
       {...props}
     >
-      <StatusBar backgroundColor="#000000" barStyle="light-content" />
       <View style={styles.root}>
         {title && <Text style={styles.title}>{title}</Text>}
         {children}

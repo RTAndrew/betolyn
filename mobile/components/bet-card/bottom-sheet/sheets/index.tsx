@@ -2,6 +2,7 @@ import React from 'react';
 import { BottomSheetType } from '../types';
 import { MainActionSheet } from './main-action-sheet';
 import { EndMatchSheet } from './end-match-sheet';
+import UpdateMatchScoreSheet from './update-match-score';
 
 export interface ISheet {
   visible?: boolean;
@@ -17,6 +18,9 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'end-match': {
     component: EndMatchSheet,
+  },
+  'update-score': {
+    component: UpdateMatchScoreSheet,
   },
 };
 

@@ -43,6 +43,9 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
           text="Update Score"
+          onPress={() => {
+            pushSheet('update-score');
+          }}
           icon={<SoccerBall width={28} height={28} color="white" />}
         />
         <BottomSheet.ActionOption

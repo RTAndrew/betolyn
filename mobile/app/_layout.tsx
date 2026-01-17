@@ -3,7 +3,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-reanimated';
 
@@ -54,7 +53,7 @@ export default function RootLayout() {
 
           <Stack.Screen name="+not-found" />
         </Stack>
-        <StatusBar style={Platform.OS === 'ios' ? 'dark' : 'light'} backgroundColor="#262F3D" />
+        <StatusBar style={'light'} backgroundColor="#262F3D" />
       </KeyboardProvider>
     </QueryClientProvider>
   );
