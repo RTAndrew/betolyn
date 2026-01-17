@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { OddButton } from '../odd-button';
 import { IMatch } from '@/types';
-import { BetCardBottomSheetProvider, useBetCardBottomSheet } from './bottom-sheet';
+import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
   return (
@@ -60,14 +60,14 @@ interface BetCardProps {
 
 const BetCard = (props: BetCardProps) => {
   return (
-    <BetCardBottomSheetProvider match={props.match}>
+    <MatchBottomSheetProvider match={props.match}>
       {<BetCardChild {...props} />}
-    </BetCardBottomSheetProvider>
+    </MatchBottomSheetProvider>
   );
 };
 
 const BetCardChild = ({ match, onPress }: BetCardProps) => {
-  const { pushSheet } = useBetCardBottomSheet();
+  const { pushSheet } = useMatchBottomSheet();
 
   const handlePress = () => {
     if (onPress) {

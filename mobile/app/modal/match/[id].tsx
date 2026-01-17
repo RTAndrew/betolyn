@@ -7,6 +7,7 @@ import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet';
 interface MatchTeamProps {
   name: string;
   imageUrl: string;
@@ -29,7 +30,7 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
 
   return (
     <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
-      <Section style={{ paddingTop: 0 }}>
+      <Section style={{ paddingVertical: 0 }}>
         {criteria.map((criteria, index) => (
           <Collapsible open={index === 0} key={criteria.id} title={criteria.name}>
             <ThemedView
@@ -116,18 +117,19 @@ const MatchPage = () => {
   if (!match) return <Text>Match not found</Text>;
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#495064', flex: 1 }}>
-      <ScrollView
-        stickyHeaderIndices={[0]}
-        nestedScrollEnabled={Platform.OS === 'android'}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
-        showsVerticalScrollIndicator={true}
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps="handled"
-      >
-        <ScreenTopBar />
+    <MatchBottomSheetProvider match={match}>
+      <SafeAreaView style={{ backgroundColor: '#61687E', flex: 1 }}>
+        <ScrollView
+          scrollEventThrottle={16}
+          stickyHeaderIndices={[0]}
+          showsVerticalScrollIndicator={true}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled={Platform.OS === 'android'}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
+        >
+          <ScreenTopBar style={{ backgroundColor: '#495064' }} />
 
-        <ThemedView style={{ backgroundColor: 'transparent' }}>
+          <ThemedView style={{ backgroundColor: '#495064' }}>
           {/* Highlight */}
           <View
             style={{
@@ -192,6 +194,7 @@ const MatchPage = () => {
         <MatchCriteria matchId={match.id} />
       </ScrollView>
     </SafeAreaView>
+    </MatchBottomSheetProvider>
   );
 };
 

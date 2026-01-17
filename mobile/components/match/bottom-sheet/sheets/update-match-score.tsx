@@ -1,6 +1,6 @@
 import BottomSheet from '@/components/bottom-sheet';
 import React, { useMemo, useRef, useState } from 'react';
-import { useBetCardBottomSheet } from '../context';
+import { useMatchBottomSheet } from '../context';
 import { Image, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ISheet } from '.';
@@ -97,7 +97,7 @@ const teamStyle = StyleSheet.create({
 type TTeamPosition = 'home' | 'away';
 
 const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
-  const { closeAll, goBack, match } = useBetCardBottomSheet();
+  const { closeAll, goBack, match } = useMatchBottomSheet();
 
   const [score, setScore] = useState<Record<TTeamPosition, number>>({
     home: 2,

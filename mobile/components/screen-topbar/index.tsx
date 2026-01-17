@@ -1,22 +1,26 @@
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, ViewStyle } from 'react-native';
-import { ThemedText } from '../ThemedText';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { Down, MoreVertical } from '../icons';
+import { useMatchBottomSheet } from '@/components/match/bottom-sheet';
 
 interface ScreenTopBarProps {
   style?: ViewStyle;
 }
 
 const ScreenTopBar = ({ style }: ScreenTopBarProps) => {
+  const { pushSheet } = useMatchBottomSheet();
+
   return (
     <SafeHorizontalView style={{ ...style, ...styles.header }}>
       <TouchableWithoutFeedback onPress={() => router.back()}>
         <Down />
       </TouchableWithoutFeedback>
 
-      <MoreVertical />
+      <TouchableWithoutFeedback onPress={() => pushSheet('main-action')}>
+        <MoreVertical />
+      </TouchableWithoutFeedback>
     </SafeHorizontalView>
   );
 };

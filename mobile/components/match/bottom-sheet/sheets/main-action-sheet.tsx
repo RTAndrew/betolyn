@@ -3,7 +3,7 @@ import BottomSheet from '@/components/bottom-sheet';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Close, SoccerBall, TimeHistory, TrendingLines } from '@/components/icons';
-import { useBetCardBottomSheet } from '../context';
+import { useMatchBottomSheet } from '../context';
 import { ISheet } from '.';
 
 const Team = ({
@@ -26,7 +26,7 @@ const Team = ({
 };
 
 export const MainActionSheet = ({ visible = false }: ISheet) => {
-  const { match, pushSheet, closeAll } = useBetCardBottomSheet();
+  const { match, pushSheet, closeAll } = useMatchBottomSheet();
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>

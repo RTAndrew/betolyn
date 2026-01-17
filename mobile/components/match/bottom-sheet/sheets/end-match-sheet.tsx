@@ -1,10 +1,10 @@
 import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
-import { useBetCardBottomSheet } from '../context';
+import { useMatchBottomSheet } from '../context';
 import { ISheet } from '.';
 
 export const EndMatchSheet = ({ visible = false }: ISheet) => {
-  const { closeAll, goBack } = useBetCardBottomSheet();
+  const { closeAll, goBack } = useMatchBottomSheet();
 
   return (
     <BottomSheet.ModalConfirmation
