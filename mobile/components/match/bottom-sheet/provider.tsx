@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { IMatch } from '@/types';
 import { BottomSheetStackItem, MatchBottomSheetContextType } from './types';
 import { MatchBottomSheetContext, useMatchBottomSheet } from './context';
-import { SHEET_REGISTRY } from './index';
+import { SHEET_REGISTRY } from './registry';
 
 interface MatchBottomSheetProviderProps {
   match: IMatch;
