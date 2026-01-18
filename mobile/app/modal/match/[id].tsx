@@ -7,7 +7,7 @@ import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet';
+import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 interface MatchTeamProps {
   name: string;
   imageUrl: string;
@@ -15,6 +15,7 @@ interface MatchTeamProps {
 
 const MatchCriteria = ({ matchId }: { matchId: string }) => {
   const { data, isLoading, isError } = useGetMatchCriteria({ matchId });
+  const { pushSheet } = useMatchBottomSheet();
   const criteria = data?.data;
 
   if (isLoading)
@@ -32,7 +33,9 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
     <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
       <Section style={{ paddingVertical: 0 }}>
         {criteria.map((criteria, index) => (
-          <Collapsible open={index === 0} key={criteria.id} title={criteria.name}>
+          <Collapsible onLongPress={() => {
+            pushSheet({ type: 'criterion-action', data: criteria });
+          }} open={index === 0} key={criteria.id} title={criteria.name}>
             <ThemedView
               style={{
                 backgroundColor: 'transparent',

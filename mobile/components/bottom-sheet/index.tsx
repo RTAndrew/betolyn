@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 import BottomSheetHeader from './bottom-sheet-header';
@@ -56,12 +56,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: '#61687E',
   },
-  root: { paddingBottom: Platform.OS === 'ios' ? '10%' : '20%', paddingTop: 24 },
+  root: { paddingBottom: Platform.OS === 'ios' ? '10%' : '20%', paddingTop: 10 },
   title: {
     fontSize: 22,
     color: 'white',
     marginBottom: 32,
-    marginTop: 8,
     fontWeight: 'bold',
     textAlign: 'center',
   },

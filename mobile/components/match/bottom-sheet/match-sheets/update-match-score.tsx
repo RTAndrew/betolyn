@@ -3,9 +3,8 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useMatchBottomSheet } from '../context';
 import { Image, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { ISheet } from '.';
-import TextInput from '@/components/input';
-import { Add, Subtract } from '@/components/icons';
+import { ISheet } from '../index';
+import { NumberInput } from '@/components/forms';
 import { Button } from '@/components/button';
 
 interface TeamProps {
@@ -41,17 +40,13 @@ const Team = ({ name, imageUrl, score, onScoreChange }: TeamProps) => {
         </View>
       </View>
 
-      <View style={teamStyle.inputContainer}>
-        <Subtract onPress={() => onScoreChange(score - 1)} opacity={score > 0 ? 1 : 0.5} />
-        <TextInput
-          status={inputStatus}
-          keyboardType="numeric"
-          value={score.toString()}
-          style={teamStyle.input}
-          onChangeText={(text) => onScoreChange(Number(text))}
-        />
-        <Add onPress={() => onScoreChange(score + 1)} />
-      </View>
+      <NumberInput
+        value={score}
+        status={inputStatus}
+        onChange={onScoreChange}
+        inputStyle={teamStyle.input}
+        containerStyle={teamStyle.inputContainer}
+      />
     </View>
   );
 };

@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { IMatch } from '@/types';
-import { BottomSheetType, MatchBottomSheetContextType } from './types';
+import { BottomSheetStackItem, MatchBottomSheetContextType } from './types';
 import { MatchBottomSheetContext, useMatchBottomSheet } from './context';
-import { SHEET_REGISTRY } from './sheets';
+import { SHEET_REGISTRY } from './index';
 
 interface MatchBottomSheetProviderProps {
   match: IMatch;
@@ -16,12 +16,18 @@ export const MatchSheets = () => {
   const renderSheet = useMemo(() => {
     if (!currentSheet) return null;
 
-    const sheetConfig = SHEET_REGISTRY[currentSheet];
+    const sheetConfig = SHEET_REGISTRY[currentSheet.type];
     if (!sheetConfig) return null;
 
     const SheetComponent = sheetConfig.component;
 
-    return <SheetComponent key={`${currentSheet}-${stack.length}`} visible={true} />;
+    return (
+      <SheetComponent
+        key={`${currentSheet.type}-${stack.length}`}
+        visible={true}
+        data={currentSheet.data}
+      />
+    );
   }, [currentSheet, stack.length]);
 
   return <>{renderSheet}</>;
@@ -29,10 +35,10 @@ export const MatchSheets = () => {
 
 export const MatchBottomSheetProvider = ({ children, match }: PropsWithChildren<MatchBottomSheetProviderProps>) => {
   /**A LIFO stack of bottom sheets */
-  const [stack, setStack] = useState<BottomSheetType[]>([]);
+  const [stack, setStack] = useState<BottomSheetStackItem[]>([]);
 
-  const pushSheet = useCallback((sheet: BottomSheetType) => {
-    setStack((prev) => [...prev, sheet]);
+  const pushSheet = useCallback((item: BottomSheetStackItem) => {
+    setStack((prev) => [...prev, item]);
   }, []);
 
   const goBack = useCallback(() => {

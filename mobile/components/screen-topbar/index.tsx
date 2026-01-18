@@ -18,7 +18,7 @@ const ScreenTopBar = ({ style }: ScreenTopBarProps) => {
         <Down />
       </TouchableWithoutFeedback>
 
-      <TouchableWithoutFeedback onPress={() => pushSheet('main-action')}>
+      <TouchableWithoutFeedback onPress={() => pushSheet({ type: 'match-action' })}>
         <MoreVertical />
       </TouchableWithoutFeedback>
     </SafeHorizontalView>

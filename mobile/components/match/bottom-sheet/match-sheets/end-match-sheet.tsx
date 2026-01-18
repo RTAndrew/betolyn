@@ -1,7 +1,7 @@
 import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { useMatchBottomSheet } from '../context';
-import { ISheet } from '.';
+import { ISheet } from '../index';
 
 export const EndMatchSheet = ({ visible = false }: ISheet) => {
   const { closeAll, goBack } = useMatchBottomSheet();

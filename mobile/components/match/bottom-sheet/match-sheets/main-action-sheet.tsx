@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Close, SoccerBall, TimeHistory, TrendingLines } from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
-import { ISheet } from '.';
+import { ISheet } from '../index';
 
 const Team = ({
   name,
@@ -44,7 +44,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Update Score"
           onPress={() => {
-            pushSheet('update-score');
+            pushSheet({ type: 'match-update-score' });
           }}
           icon={<SoccerBall width={28} height={28} color="white" />}
         />
@@ -60,7 +60,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           text="End Match"
           icon={<Close width={28} height={28} color="white" />}
           onPress={() => {
-            pushSheet('end-match');
+            pushSheet({ type: 'match-end-match' });
           }}
         />
       </View>

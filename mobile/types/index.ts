@@ -39,7 +39,7 @@ enum EOddStatus {
 }
 
 export interface IOdd {
-  id: number;
+  id: string;
   name: string;
   value: number;
   status: `${EOddStatus}`;

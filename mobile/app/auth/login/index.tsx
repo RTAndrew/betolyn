@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AuthWrapper, { AuthForm } from '../components/auth-wrapper';
-import TextInput from '@/components/input';
+import TextInput from '@/components/forms/text-input';
 import { GradientButton } from '@/components/button';
 import { AuthService } from '../../../services/auth-service';
 import { SafeStorage } from '@/utils/safe-storage';

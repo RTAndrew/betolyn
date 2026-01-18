@@ -6,7 +6,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { ThemedText } from '../ThemedText';
+import { ThemedText } from '../../ThemedText';
 import { useMemo, useState } from 'react';
 
 interface InputProps extends TextInputProps {

@@ -83,7 +83,7 @@ const BetCardChild = ({ match, onPress }: BetCardProps) => {
       <TouchableWithoutFeedback
         onLongPress={() => {
           console.log('long press');
-          pushSheet('main-action');
+          pushSheet({ type: 'match-action' });
         }}
         onPress={handlePress}
         style={styles.container}

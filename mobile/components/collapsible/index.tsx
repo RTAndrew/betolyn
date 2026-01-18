@@ -1,19 +1,20 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TouchableOpacityProps } from 'react-native';
 import React, { useState } from 'react';
 import { IconSymbol } from '../ui/IconSymbol';
 
-interface CollapsibleProps {
+interface CollapsibleProps extends TouchableOpacityProps {
   title: string;
   open?: boolean;
   children: React.ReactNode;
+
 }
 
-export default function Collapsible({ children, title, open = false }: CollapsibleProps) {
+export default function Collapsible({ children, title, open = false, ...props }: CollapsibleProps) {
   const [isOpen, setIsOpen] = useState(open);
 
   return (
     <View>
-      <TouchableOpacity activeOpacity={1} onPress={() => setIsOpen(!isOpen)}>
+      <TouchableOpacity activeOpacity={1} onPress={() => setIsOpen(!isOpen)} {...props}>
         <View style={styles.titleWrapper}>
           <IconSymbol
             name="chevron.right"
