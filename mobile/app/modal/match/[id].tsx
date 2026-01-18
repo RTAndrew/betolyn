@@ -51,6 +51,7 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
                 <OddButton
                   key={odd.id}
                   odd={odd}
+                  criterion={criteria}
                   style={{ minWidth: 'auto', flex: 0, flexGrow: 1 }}
                 />
               ))}

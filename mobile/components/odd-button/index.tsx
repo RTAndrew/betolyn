@@ -1,21 +1,35 @@
 import { IOdd } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { useMatchBottomSheet } from '../match/bottom-sheet';
+import { IOddSheetData } from '../match/bottom-sheet/types';
 
 interface OddButtonProps extends TouchableOpacityProps {
   odd: IOdd;
   showName?: boolean;
   variant?: 'primary' | 'secondary';
+  criterion?: IOddSheetData['criterion'];
 }
 
 export const OddButton = ({
   odd,
   style,
   showName = true,
+  criterion,
   variant = 'primary',
   ...props
 }: OddButtonProps) => {
+  const { pushSheet } = useMatchBottomSheet();
+
+  const oddSheetData: IOddSheetData = {
+    ...odd,
+    criterion,
+  };
+
   return (
     <TouchableOpacity
+      onLongPress={() => {
+        pushSheet({ type: 'odd-action', data: oddSheetData });
+      }}
       style={[
         oddsStyles.oddButton,
         variant === 'primary' ? oddsStyles.primaryVariant : oddsStyles.secondaryVariant,

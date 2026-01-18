@@ -4,6 +4,8 @@ import { CriterionLockAndResultSheet } from './criterion-sheets/lock-and-result-
 import { EndMatchSheet } from './match-sheets/end-match-sheet';
 import { MainActionSheet } from './match-sheets/main-action-sheet';
 import UpdateMatchScoreSheet from './match-sheets/update-match-score';
+import { OddActionSheet } from './odd-sheets/odd-action-sheet';
+import { OddRepriceSheet } from './odd-sheets/odd-reprice-sheet';
 import { BottomSheetType } from './types';
 
 export { MatchBottomSheetProvider } from './provider';
@@ -37,6 +39,12 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'criterion-lock-and-result': {
     component: CriterionLockAndResultSheet,
+  },
+  'odd-action': {
+    component: OddActionSheet,
+  },
+  'odd-reprice': {
+    component: OddRepriceSheet,
   },
 };
 

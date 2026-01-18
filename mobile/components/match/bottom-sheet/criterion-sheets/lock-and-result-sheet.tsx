@@ -86,7 +86,7 @@ export const CriterionLockAndResultSheet = ({ visible = false }: ISheet) => {
     setOddValues((prev) => ({ ...prev, [oddId]: value }));
   };
 
-  if (!currentSheet?.data) return <> Error: No criterion data found </>;
+  if (!currentSheet?.data) throw new Error('No criterion data found');
 
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
 
