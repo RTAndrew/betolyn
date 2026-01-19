@@ -1,20 +1,32 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { IApiResponse } from './types';
 import { ApiError } from './api-error';
 import { SafeStorage } from '../safe-storage';
 
-const TOKEN_KEY = SafeStorage.get('authToken');
-
 const api = axios.create({
   baseURL: `http://192.168.178.110:8080`,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    ...(TOKEN_KEY ? { Authorization: `Bearer ${TOKEN_KEY}` } : {}),
   },
 });
+
+// Request interceptor to dynamically add the token to each request
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    const token =  SafeStorage.get('authToken');
+    if (token) {
+      const cleanToken = typeof token === 'string' ? token.replaceAll('"', '') : token;
+      config.headers.Authorization = `Bearer ${cleanToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 /** Modify the response to be easier to use within the application  */
 const onSuccessfulResponseInterception = (data: AxiosResponse) => ({

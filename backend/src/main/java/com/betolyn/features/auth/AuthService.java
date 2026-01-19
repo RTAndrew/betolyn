@@ -42,7 +42,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public JwtSessionDTO signIn(SignInRequestDTO requestDTO) throws RuntimeException {
-        UserEntity foundUser = userRepository.findByEmail(requestDTO.getEmail());
+        UserEntity foundUser = userRepository.findByEmail(requestDTO.getEmail().toLowerCase());
         if (foundUser == null) {
             throw new InvalidCredentialsException();
         }
