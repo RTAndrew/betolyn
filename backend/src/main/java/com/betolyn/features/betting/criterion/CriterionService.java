@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -87,7 +88,10 @@ public class CriterionService implements ICriterionService {
                 status = odd.status();
             }
 
+            var foundOddFromCriterion = criterion.getOdds().stream().filter((o) -> Objects.equals(o.getId(), odd.id())).findFirst();
             var tempOdd = new OddEntity();
+            foundOddFromCriterion.ifPresent(oddDTO -> tempOdd.setName(oddDTO.getName()));
+
             tempOdd.setCriterion(criterionMapper.toCriterionEntity(criterion));
             tempOdd.setStatus(status);
             tempOdd.setValue(odd.value());
@@ -97,6 +101,6 @@ public class CriterionService implements ICriterionService {
         }).toList();
 
         oddService.update(odds);
-        return criterion;
+        return this.findById(criterionId);
     }
 }

@@ -9,6 +9,7 @@ import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
+import { useRepriceCriterionOdds } from '@/services/criterion-mutation';
 
 interface TeamProps {
   name: string;
@@ -92,17 +93,40 @@ interface IOddValue {
 }
 
 export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
-  const { closeAll, currentSheet, goBack } = useMatchBottomSheet();
+  const { closeAll, currentSheet, goBack, match } = useMatchBottomSheet();
+  const { mutateAsync: repriceOdds, isPending } = useRepriceCriterionOdds();
 
   const [oddValues, setOddValues] = useState<IOddValue>({});
-
 
   const handleOddValueChange = (oddId: string, value: number) => {
     setOddValues((prev) => ({ ...prev, [oddId]: value }));
   };
+
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
+  if (!criterion) throw new Error('Criterion not found');
 
+  const handleSave = async () => {
 
+    const oddsDTO = criterion.odds.map((odd) => ({
+      id: odd.id,
+      value: oddValues[odd.id] ?? odd.value,
+    }));
+
+    await repriceOdds(
+      {
+        criterionId: criterion.id.toString(),
+        matchId: match.id,
+        variables: {
+          odds: oddsDTO,
+        },
+      },
+      {
+        onSuccess: () => {
+          closeAll();
+        },
+      }
+    );
+  };
 
   return (
     <BottomSheet
@@ -122,7 +146,9 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView  style={{ marginTop: 32 }}>
-      <Button.GradientButton onPress={closeAll}>Save</Button.GradientButton>
+        <Button.GradientButton onPress={handleSave} disabled={isPending}>
+          {isPending ? 'Saving...' : 'Save'}
+        </Button.GradientButton>
       </SafeHorizontalView>
 
     </BottomSheet>

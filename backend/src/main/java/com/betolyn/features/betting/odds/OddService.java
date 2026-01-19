@@ -58,16 +58,14 @@ public class OddService implements IOddService {
      * Saves odds and oddsHistory in a transaction
      */
     @Transactional
-    public List<OddDTO> save(List<OddEntity> odds) {
+    public List<OddEntity> save(List<OddEntity> odds) {
         this.checkIfOddsAreActiveOrThrow(odds);
 
-        var savedOdds = saveAndSyncOddUseCase.execute(odds);
-        return savedOdds.stream().map(oddMapper::toOddDTO).toList();
+        return saveAndSyncOddUseCase.execute(odds);
     }
 
     @Transactional
-    public List<OddDTO> update(List<OddEntity> odds) {
-
+    public List<OddEntity> update(List<OddEntity> odds) {
         // 1. Check if the incoming odds have status.ACTIVE
         this.checkIfOddsAreActiveOrThrow(odds);
 
@@ -77,8 +75,7 @@ public class OddService implements IOddService {
         this.checkIfOddsAreActiveOrThrow(foundOdds);
 
         // 3. Save
-        var savedOdds = saveAndSyncOddUseCase.execute(odds);
-        return savedOdds.stream().map(oddMapper::toOddDTO).toList();
+        return saveAndSyncOddUseCase.execute(odds);
     }
 
     protected void checkIfOddsAreActiveOrThrow(List<OddEntity> odds) {

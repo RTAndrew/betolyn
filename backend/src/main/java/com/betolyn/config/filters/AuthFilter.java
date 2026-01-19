@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -58,9 +59,9 @@ public class AuthFilter extends OncePerRequestFilter {
     /** Supports Bearer Token (external clients) and cookies (browser-based clients) */
     @Nullable
     private String recoverTokenFromRequest(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
-        if (Boolean.parseBoolean(authHeader)) {
-            return authHeader.replace("Bearer ", "");
+        Optional<String> authHeader = Optional.ofNullable(request.getHeader("Authorization"));
+        if (authHeader.isPresent()) {
+            return authHeader.get().replace("Bearer ", "");
         }
 
         var cookies = request.getCookies();

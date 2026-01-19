@@ -22,17 +22,14 @@ public class SaveAndSyncOddUseCase {
     public List<OddEntity> execute(List<OddEntity> odds) {
 
         for(var odd: odds) {
-            // 1. ensure the ID is available in memory (and not at DB)
-            odd.generateId();
-
-            // 2. Create oddHistory and link with odd
+            // 1. Create oddHistory and link with odd
             var history = new OddHistoryEntity();
             history.generateId(); // ensure the ID is available in memory
             history.setOdd(odd);
             history.setValue(odd.getValue());
             history.setStatus(odd.getStatus());
 
-            // 3. Link the oddHistory back to the odd
+            // 2. Link the oddHistory back to the odd
             odd.setLastOddHistory(history);
         }
 

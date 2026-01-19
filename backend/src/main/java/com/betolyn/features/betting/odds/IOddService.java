@@ -8,6 +8,6 @@ public interface IOddService {
     OddDTO findById(String id);
     List<OddDTO> findAll();
     OddDTO save(CreateOddRequestDTO data);
-    List<OddDTO> save(List<OddEntity> odds);
-    List<OddDTO> update(List<OddEntity> odds);
+    List<OddEntity> save(List<OddEntity> odds);
+    List<OddEntity> update(List<OddEntity> odds);
 }
