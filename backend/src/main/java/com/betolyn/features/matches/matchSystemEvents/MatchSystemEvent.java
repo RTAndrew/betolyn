@@ -35,7 +35,6 @@ public final class MatchSystemEvent implements ISystemEvent {
     public void publicMatchUpdate(Object source, MatchEntity match) {
         var channelId = "matchUpdated:" + match.getId();
         this.publish(source, channelId, match);
-
     }
 
     @Override

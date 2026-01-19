@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ICriterionService {
     List<CriterionEntity> findAll();
-    CriterionDTO findById(String id);
+    CriterionEntity findById(String id);
     List<CriterionEntity> findAllByMatchId(String matchId);
     CriterionDTO save(CreateCriterionRequestDTO data);
 }

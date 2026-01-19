@@ -3,6 +3,7 @@ package com.betolyn.features.matches;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionMapper;
 import com.betolyn.features.betting.criterion.CriterionRepository;
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.dto.UpdateMatchMainCriterionRequestDTO;
@@ -49,7 +50,7 @@ public class MatchService implements IMatchService {
 
     public List<CriterionEntity> findAllCriteriaByMatchId(String matchId) {
         this.findById(matchId);
-        return criterionRepository.findAllByMatchId(matchId);
+        return criterionRepository.findAllByMatchId(matchId, List.of(CriterionStatusEnum.ACTIVE, CriterionStatusEnum.SUSPENDED));
 
     }
 

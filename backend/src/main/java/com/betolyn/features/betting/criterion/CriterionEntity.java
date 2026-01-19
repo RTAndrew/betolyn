@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 import org.json.JSONPropertyIgnore;
 
 import java.util.List;
@@ -22,11 +24,17 @@ import java.util.List;
 public class CriterionEntity extends BaseEntity {
     @NotNull
     private String name;
+
     @NotNull
     private boolean allowMultipleOdds = true;
 
     @Column(nullable = false) // it's optional to pass it as param
     private boolean isStandalone;
+
+    @Column(nullable = false) // it's optional to pass it as param
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    private CriterionStatusEnum status;
 
     @ManyToOne
     @JoinColumn(name = "match_entity_id")

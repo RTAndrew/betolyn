@@ -1,7 +1,8 @@
-package com.betolyn.features.betting.oddSystemEvents;
+package com.betolyn.features.betting.bettingSystemEvents;
 
 import com.betolyn.config.systemEvent.ISystemEvent;
 import com.betolyn.config.systemEvent.SystemEvent;
+import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.shared.sse.ServerSentEventEmitter;
 import com.betolyn.utils.UUID;
@@ -42,6 +43,11 @@ public final class BettingSystemEvent implements ISystemEvent {
             var channelId = "oddUpdated:" + odd.getId();
             this.publish(source, channelId, odd);
         });
+    }
+
+    public void publishCriterionUpdate(Object source, CriterionEntity criterion) {
+        var channelId = "criterionUpdated:" + criterion.getId();
+        this.publish(source, channelId, criterion);
     }
 
     @Override

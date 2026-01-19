@@ -277,9 +277,11 @@ async function seedCriteriaAndOdds(matches, token) {
 					name: criterionData.name,
 					matchId: match.id,
 					allowMultipleOdds: criterionData.odds.length > 1,
+					status: criterionData.status || "ACTIVE",
 					odds: criterionData.odds.map((odd) => ({
 						name: odd.name,
 						value: odd.value,
+						status: odd.status || "ACTIVE",
 					})),
 				},
 				token

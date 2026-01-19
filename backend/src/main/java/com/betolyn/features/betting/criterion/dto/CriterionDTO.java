@@ -1,5 +1,6 @@
 package com.betolyn.features.betting.criterion.dto;
 
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,6 +16,8 @@ public class CriterionDTO {
     private boolean isStandalone;
 
     private MatchDTO match;
+    private CriterionStatusEnum status;
+
     @JsonIgnoreProperties("criterion")
     private List<OddDTO> odds;
 }

@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.criterion;
+package com.betolyn.features.betting.criterion.exceptions;
 
 import com.betolyn.shared.exceptions.BusinessRuleException;
 

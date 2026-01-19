@@ -1,12 +1,12 @@
 meta {
-  name: findById
+  name: updateById
   type: http
-  seq: 1
+  seq: 2
 }
 
-get {
-  url: {{baseUrl}}/criteria/crit_n2pB7G07g8W0
-  body: none
+patch {
+  url: {{baseUrl}}/criteria/crit_ASGuUVM8Lla3
+  body: json
   auth: inherit
 }
 
@@ -15,7 +15,8 @@ body:json {
     "name": "Cartões Amarelos",
     "value": 48,
     "allowMultipleOdds": false,
-    "matchId": "match_KxQcwT42YXSA"
+    "matchId": "match_KxQcwT42YXSA",
+    "status": "DRAFT"
   }
 }
 

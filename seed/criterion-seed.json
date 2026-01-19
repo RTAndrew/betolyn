@@ -3,21 +3,25 @@
 		"id": 201,
 		"matchId": 1,
 		"name": "Match Winner",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 301,
 				"name": "Manchester United Win",
-				"value": 2.1
+				"value": 2.1,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 302,
 				"name": "Draw",
-				"value": 3.4
+				"value": 3.4,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 303,
 				"name": "Newcastle United Win",
-				"value": 3.1
+				"value": 3.1,
+				"status": "ACTIVE"
 			}
 		]
 	},
@@ -25,21 +29,25 @@
 		"id": 202,
 		"matchId": 2,
 		"name": "Over/Under 2.5 Goals",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 304,
 				"name": "Over 2.5 Goals",
-				"value": 1.5
+				"value": 1.5,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 305,
 				"name": "Under 2.5 Goals",
-				"value": 4.0
+				"value": 4.0,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 306,
 				"name": "Exactly 2.5 Goals",
-				"value": 5.5
+				"value": 5.5,
+				"status": "ACTIVE"
 			}
 		]
 	},
@@ -47,16 +55,19 @@
 		"id": 203,
 		"matchId": 3,
 		"name": "Both Teams to Score",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 307,
 				"name": "Yes",
-				"value": 2.5
+				"value": 2.5,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 308,
 				"name": "No",
-				"value": 3.2
+				"value": 3.2,
+				"status": "ACTIVE"
 			}
 		]
 	},
@@ -64,21 +75,25 @@
 		"id": 204,
 		"matchId": 4,
 		"name": "Double Chance",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 310,
 				"name": "Toulouse FC or Draw",
-				"value": 5.0
+				"value": 5.0,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 311,
 				"name": "PSG or Draw",
-				"value": 3.8
+				"value": 3.8,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 312,
 				"name": "Toulouse FC or PSG",
-				"value": 1.65
+				"value": 1.65,
+				"status": "ACTIVE"
 			}
 		]
 	},
@@ -86,21 +101,25 @@
 		"id": 205,
 		"matchId": 5,
 		"name": "Correct Score",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 313,
 				"name": "1-0",
-				"value": 2.2
+				"value": 2.2,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 314,
 				"name": "1-1",
-				"value": 3.1
+				"value": 3.1,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 315,
 				"name": "0-1",
-				"value": 3.0
+				"value": 3.0,
+				"status": "ACTIVE"
 			}
 		]
 	},
@@ -108,16 +127,19 @@
 		"id": 206,
 		"matchId": 6,
 		"name": "First Half Winner",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 316,
 				"name": "Anderson Silva Win",
-				"value": 1.25
+				"value": 1.25,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 318,
 				"name": "Wanderlei Silva Win",
-				"value": 4.5
+				"value": 4.5,
+				"status": "ACTIVE"
 			}
 		]
 	},
@@ -125,21 +147,25 @@
 		"id": 207,
 		"matchId": 7,
 		"name": "Total Goals",
+		"status": "ACTIVE",
 		"odds": [
 			{
 				"id": 319,
 				"name": "0-1 Goals",
-				"value": 2.75
+				"value": 2.75,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 320,
 				"name": "2-3 Goals",
-				"value": 5.0
+				"value": 5.0,
+				"status": "ACTIVE"
 			},
 			{
 				"id": 321,
 				"name": "4+ Goals",
-				"value": 1.4
+				"value": 1.4,
+				"status": "ACTIVE"
 			}
 		]
 	}

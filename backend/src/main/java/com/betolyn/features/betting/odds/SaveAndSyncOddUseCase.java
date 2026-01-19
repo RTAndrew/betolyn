@@ -1,6 +1,6 @@
 package com.betolyn.features.betting.odds;
 
-import com.betolyn.features.betting.oddSystemEvents.BettingSystemEvent;
+import com.betolyn.features.betting.bettingSystemEvents.BettingSystemEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

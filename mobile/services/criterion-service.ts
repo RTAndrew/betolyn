@@ -10,6 +10,6 @@ export interface IRepriceOddsRequest {
 
 export class CriterionService {
   public static async repriceCriterionOdds(criterionId: string, data: IRepriceOddsRequest) {
-    return await patchRequest<IMatchCriteriaResponse, IRepriceOddsRequest>(`/criteria/${criterionId}`, data);
+    return await patchRequest<IMatchCriteriaResponse, IRepriceOddsRequest>(`/criteria/${criterionId}/odds`, data);
   }
 }
