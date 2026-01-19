@@ -94,7 +94,7 @@ const ModalConfirmation = ({
         <ThemedText style={modalConfirmationStyles.title}>{title}</ThemedText>
         {description && (
           <ThemedText style={modalConfirmationStyles.description}>
-            If you end the match, other users will no longer be able to bet on it.
+            {description}
           </ThemedText>
         )}
 

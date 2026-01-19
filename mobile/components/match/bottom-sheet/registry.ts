@@ -1,6 +1,7 @@
 import { CriterionBulkRepriceOddsSheet } from './criterion-sheets/bulk-reprice-odds-sheet';
 import { CriterionActionSheet } from './criterion-sheets/criterion-action-sheet';
 import { CriterionLockAndResultSheet } from './criterion-sheets/lock-and-result-sheet';
+import { CriterionSuspendSheet } from './criterion-sheets/criterion-suspend-sheet';
 import { EndMatchSheet } from './match-sheets/end-match-sheet';
 import { MainActionSheet } from './match-sheets/main-action-sheet';
 import UpdateMatchScoreSheet from './match-sheets/update-match-score';
@@ -35,6 +36,9 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'criterion-lock-and-result': {
     component: CriterionLockAndResultSheet,
+  },
+  'criterion-suspend': {
+    component: CriterionSuspendSheet,
   },
   'odd-action': {
     component: OddActionSheet,

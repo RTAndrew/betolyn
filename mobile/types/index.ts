@@ -38,6 +38,13 @@ enum EOddStatus {
   CANCELLED = 'CANCELLED',
 }
 
+export enum CriterionStatusEnum {
+  SUSPENDED = 'SUSPENDED',
+  ACTIVE = 'ACTIVE',
+  SETTLED = 'SETTLED',
+  VOID = 'VOID',
+}
+
 export interface IOdd {
   id: string;
   name: string;

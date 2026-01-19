@@ -2,7 +2,7 @@ import type { ICriteria, IMatch, IOdd } from '@/types';
 
 export type BottomSheetType =
   'match-action' | 'match-end-match' | 'match-update-score' |
-  'criterion-action' | 'criterion-reprice-update-odds' | 'criterion-lock-and-result' |
+  'criterion-action' | 'criterion-reprice-update-odds' | 'criterion-lock-and-result' | 'criterion-suspend' |
   'odd-action' | 'odd-reprice';
 
   export interface IOddSheetData extends IOdd {

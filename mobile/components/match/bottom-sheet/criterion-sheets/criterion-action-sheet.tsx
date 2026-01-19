@@ -37,6 +37,9 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Suspend all odds"
           icon={<LockClosed width={28} height={28} color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'criterion-suspend', data: criterion });
+          }}
         />
 
         <BottomSheet.ActionOption
