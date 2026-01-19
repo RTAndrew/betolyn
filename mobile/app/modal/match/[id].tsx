@@ -2,7 +2,7 @@ import Collapsible from '@/components/collapsible/index';
 import { OddButton } from '@/components/odd-button';
 import ScreenTopBar from '@/components/screen-topbar';
 import { ThemedView } from '@/components/ThemedView';
-import { useGetMatch, useGetMatchCriteria } from '@/services/matches';
+import { useGetMatch, useGetMatchCriteria } from '@/services/matches/match-query';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';

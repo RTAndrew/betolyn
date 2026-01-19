@@ -6,10 +6,13 @@ import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.dto.UpdateMatchMainCriterionRequestDTO;
+import com.betolyn.features.matches.dto.UpdateMatchRequestDTO;
 import com.betolyn.features.matches.mapper.MatchMapper;
+import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class MatchService implements IMatchService {
     private final TeamService teamService;
     private final MatchRepository matchRepository;
     private final CriterionRepository criterionRepository;
-    private final CriterionMapper criterionMapper;
+    private final MatchSystemEvent matchSystemEvent;
 
     @Override
     public List<MatchDTO> findAll() {
@@ -30,6 +33,18 @@ public class MatchService implements IMatchService {
     @Override
     public MatchEntity findById(String id) throws EntityNotfoundException {
         return matchRepository.findById(id).orElseThrow(EntityNotfoundException::new);
+    }
+
+    @Override
+    @Transactional
+    public MatchEntity updateById(String id, UpdateMatchRequestDTO requestDTO) {
+        var match = this.matchRepository.findById(id).orElseThrow(EntityNotfoundException::new);
+        var mappedMatch = matchMapper.toEntity(requestDTO, match);
+
+        var savedMatch = matchRepository.save(mappedMatch);
+
+        matchSystemEvent.publicMatchUpdate(this, savedMatch);
+        return savedMatch;
     }
 
     public List<CriterionEntity> findAllCriteriaByMatchId(String matchId) {
@@ -59,10 +74,8 @@ public class MatchService implements IMatchService {
         if (!criterion.getMatch().getId().equals(matchId)) {
             throw new CriterionDoesNotBelongToMatchException();
         }
-        
 
         match.setMainCriterion(criterion);
-        var savedMatch = matchRepository.save(match);
-        return savedMatch;
+        return matchRepository.save(match);
     }
 }

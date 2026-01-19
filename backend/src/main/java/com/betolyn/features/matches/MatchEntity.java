@@ -5,10 +5,13 @@ import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 @Getter
 @Setter
@@ -20,6 +23,14 @@ public class MatchEntity extends AuditableEntity {
 
     private boolean isOfficial = true;
     private String channelId;
+
+    private String startTime;
+    private String endTime;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    private MatchStatusEnum status = MatchStatusEnum.SCHEDULED;
 
     @OneToOne
     @JoinColumn(name = "criteria_highlight_id")
@@ -37,9 +48,6 @@ public class MatchEntity extends AuditableEntity {
     private TeamEntity awayTeam;
     private String awayTeamName;
     private int awayTeamScore = 0;
-
-    private String startTime;
-    private String endTime;
 
     @Override
     protected EntityUUID getUUIDPrefix() {

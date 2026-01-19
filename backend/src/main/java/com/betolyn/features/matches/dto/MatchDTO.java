@@ -1,5 +1,6 @@
 package com.betolyn.features.matches.dto;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
+import com.betolyn.features.matches.MatchStatusEnum;
 import com.betolyn.features.matches.TeamEntity;
 import com.betolyn.features.user.UserDTO;
 import lombok.Data;
@@ -22,4 +23,6 @@ public class MatchDTO {
     private String endTime;
     private UserDTO createdBy;
     private UserDTO updatedBy;
+
+    private MatchStatusEnum status = MatchStatusEnum.SCHEDULED;
 }

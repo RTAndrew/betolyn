@@ -1,7 +1,9 @@
 import { ThemedView } from '@/components/ThemedView';
 import BetCard from '@/components/bet-card';
-import { useQuery } from '@/utils/http/use-query';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { useGetMatches } from '@/services/matches/match-query';
+
+import { router } from 'expo-router';
+import { ActivityIndicator, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -15,9 +17,9 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function HomeScreen() {
-  const { data, loading } = useQuery('/matches');
+  const { data, isPending } = useGetMatches({});
 
-  if (loading) {
+  if (isPending) {
     return (
       <Wrapper>
         <ActivityIndicator size="large" color="#fff" />
@@ -25,9 +27,18 @@ export default function HomeScreen() {
     );
   }
 
+  if (!data) {
+    return (
+      <Wrapper>
+        <Text>No matches found</Text>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
-      {(data ?? []).map((match: any) => (
+      <Text onPress={() => router.push('/auth/login')}> Sign In </Text>
+      {(data.data ?? []).map((match: any) => (
         <BetCard key={match.id} match={match} />
       ))}
     </Wrapper>

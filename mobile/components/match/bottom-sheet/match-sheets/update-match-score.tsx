@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ISheet } from '../index';
 import { NumberInput } from '@/components/forms';
 import { Button } from '@/components/button';
+import { useUpdateMatchScore } from '@/services/matches/match-mutation';
 
 interface TeamProps {
   name: string;
@@ -17,7 +18,7 @@ interface TeamProps {
 const Team = ({ name, imageUrl, score, onScoreChange }: TeamProps) => {
   const scoreRef = useRef<number>(score);
   const inputStatus = useMemo(() => {
-    if(score === scoreRef.current) return undefined;
+    if (score === scoreRef.current) return undefined;
     return score < scoreRef.current ? 'error' : "success";
   }, [score]);
 
@@ -95,9 +96,11 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
   const { closeAll, goBack, match } = useMatchBottomSheet();
 
   const [score, setScore] = useState<Record<TTeamPosition, number>>({
-    home: 2,
+    home: match.homeTeamScore,
     away: match.awayTeamScore,
   });
+
+  const { mutateAsync: MUTATION, isPending } = useUpdateMatchScore()
 
   const handleScoreChange = (team: `${TTeamPosition}`, newScore: number) => {
     if (isNaN(newScore)) return;
@@ -105,6 +108,27 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
 
     setScore((score) => ({ ...score, [team]: newScore }));
   };
+
+  const handleSubmit = async () => {
+
+    try {
+      await MUTATION({
+        matchId: match.id,
+        variables: {
+          awayTeamScore: score.away,
+          homeTeamScore: score.home,
+        },
+
+
+
+      });
+      closeAll();
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
+
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
@@ -124,10 +148,10 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
         />
 
         <Button.GradientButton
-          onPress={() => { }}
+          onPress={handleSubmit}
           style={styles.updateScoreButton}
         >
-          Update Score
+          {isPending ? '...' : 'Update Score'}
         </Button.GradientButton>
       </BottomSheet.SafeHorizontalView>
     </BottomSheet>

@@ -8,6 +8,7 @@ import com.betolyn.features.matches.dto.CreateMatchRequestDTO;
 import com.betolyn.features.matches.MatchService;
 import com.betolyn.features.matches.dto.MatchDTO;
 import com.betolyn.features.matches.dto.UpdateMatchMainCriterionRequestDTO;
+import com.betolyn.features.matches.dto.UpdateMatchRequestDTO;
 import com.betolyn.features.matches.mapper.MatchMapper;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,12 @@ public class MatchController {
         var match = matchService.findById(matchId);
 
         return ResponseEntity.ok(ApiResponse.success("Match found", matchMapper.toMatchDTO(match)));
+    }
+    @PatchMapping("/{matchId}")
+    public ResponseEntity<ApiResponse<MatchDTO>> updateById(@PathVariable String matchId, @RequestBody UpdateMatchRequestDTO requestDTO) {
+        var match = matchService.updateById(matchId, requestDTO);
+
+        return ResponseEntity.ok(ApiResponse.success("Match updated", matchMapper.toMatchDTO(match)));
     }
 
     @GetMapping("/{matchId}/criteria")

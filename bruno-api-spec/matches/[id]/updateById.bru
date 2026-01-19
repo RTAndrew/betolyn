@@ -1,17 +1,24 @@
 meta {
-  name: findById
+  name: updateById
   type: http
-  seq: 3
+  seq: 4
 }
 
-get {
+patch {
   url: {{baseUrl}}/matches/match_eVojfUdkNrIV
-  body: none
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwidXNlcl9pZCI6InVfS2dPTldpTE5hVUdSIiwiaXNzIjoiYmV0b2x5biIsInNlc3Npb25faWQiOiJzZXNzX3dlYTV1MWo5IiwiZXhwIjoxNzY3ODAwODE3LCJpYXQiOjE3NjcxOTYwMTcsImVtYWlsIjoibWF0aWFzc0BnbWFpdWwuY29tIiwidXNlcm5hbWUiOiJhbmRlcnNvbiJ9.9Yhgo8vIZdUj70mcg24yRE5iTWnp7t_Xema1w0RGjrU
+}
+
+body:json {
+  {
+    "awayTeamScore": 1,
+    "status": "SCHEDULED"
+  }
 }
 
 settings {

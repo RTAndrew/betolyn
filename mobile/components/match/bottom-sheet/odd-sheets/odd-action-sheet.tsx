@@ -21,7 +21,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
-          text="Cancel"
+          text="Cancel & Refund"
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}

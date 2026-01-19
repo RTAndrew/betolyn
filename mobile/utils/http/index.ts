@@ -54,4 +54,12 @@ export const putRequest = async <TResponse, TBody = Record<string, unknown>>(
   return await api.put<TGeneric, IApiResponse<TResponse>>(endpoint, data, config);
 };
 
+export const patchRequest = async <TResponse, TBody = Record<string, unknown>>(
+  endpoint: string,
+  data?: TBody,
+  config?: AxiosRequestConfig
+) => {
+  return await api.patch<TGeneric, IApiResponse<TResponse>>(endpoint, data, config);
+};
+
 export default api;

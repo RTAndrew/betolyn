@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.systemEvents;
+package com.betolyn.features.betting.oddSystemEvents;
 
 import com.betolyn.config.systemEvent.ISystemEvent;
 import com.betolyn.config.systemEvent.SystemEvent;
@@ -7,7 +7,6 @@ import com.betolyn.shared.sse.ServerSentEventEmitter;
 import com.betolyn.utils.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -20,7 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class BettingSystemEvent implements ISystemEvent<String> {
+public final class BettingSystemEvent implements ISystemEvent {
     private static final String EVENT_TYPE = "betting";
     private final ApplicationEventPublisher eventPublisher;
     private final ServerSentEventEmitter sse;
