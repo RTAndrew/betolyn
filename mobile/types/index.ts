@@ -30,12 +30,16 @@ export interface ICriteria {
   match: IMatch;
   isStandalone: boolean;
   allowMultipleOdds: boolean;
+  status: `${CriterionStatusEnum}`;
 }
 
 enum EOddStatus {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',
-  CANCELLED = 'CANCELLED',
+  DRAFT = 'DRAFT',
+  SUSPENDED = 'SUSPENDED',
+  VOID = 'VOID',
+  SETTLED = 'SETTLED',
 }
 
 export enum CriterionStatusEnum {
@@ -43,6 +47,8 @@ export enum CriterionStatusEnum {
   ACTIVE = 'ACTIVE',
   SETTLED = 'SETTLED',
   VOID = 'VOID',
+  EXPIRED = 'EXPIRED',
+  DRAFT = 'DRAFT',
 }
 
 export interface IOdd {

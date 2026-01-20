@@ -181,7 +181,7 @@ const MatchPage = () => {
                 }}
               >
                 {match.mainCriterion.odds.map((odd) => (
-                  <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} />
+                  <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} criterion={match.mainCriterion!} />
                 ))}
               </Section>
             )}

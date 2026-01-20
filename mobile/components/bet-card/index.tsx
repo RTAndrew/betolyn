@@ -110,7 +110,7 @@ const BetCardChild = ({ match, onPress }: BetCardProps) => {
 
           <View style={styles.oddsWrapper}>
             {(match.mainCriterion?.odds ?? []).map((odd) => (
-              <OddButton showName={false} key={odd.id} odd={odd} criterion={match.mainCriterion} />
+              <OddButton showName={false} key={odd.id} odd={odd} criterion={match.mainCriterion!} />
             ))}
           </View>
         </View>

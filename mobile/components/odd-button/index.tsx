@@ -1,4 +1,4 @@
-import { IOdd } from '@/types';
+import { ICriteria, IOdd } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
@@ -7,18 +7,74 @@ interface OddButtonProps extends TouchableOpacityProps {
   odd: IOdd;
   showName?: boolean;
   variant?: 'primary' | 'secondary';
-  criterion?: IOddSheetData['criterion'];
+  criterion: Omit<ICriteria, 'match'>;
 }
 
-export const OddButton = ({
+const DisabledOddButton = ({
   odd,
-  style,
   showName = true,
-  criterion,
-  variant = 'primary',
-  ...props
 }: OddButtonProps) => {
+  return (
+    <View style={[oddsStyles.oddButton, disabledOddButtonStyles.root]}>
+      <View
+        style={disabledOddButtonStyles.wrapper}
+      >
+        {!showName && <Text style={[oddsStyles.oddText, disabledOddButtonStyles.text]}>{odd.value}</Text>}
+
+        {showName && (
+          <>
+            <Text style={[oddsStyles.oddText, disabledOddButtonStyles.text, { fontSize: 12 }]}>{odd.name}</Text>
+            <Text style={[oddsStyles.oddText, disabledOddButtonStyles.text]}>({odd.value})</Text>
+          </>
+        )}
+      </View>
+    </View>
+  );
+};
+
+const disabledOddButtonStyles = StyleSheet.create({
+  root: {
+    paddingHorizontal: 2,
+    paddingVertical: 2,
+    borderWidth: 0,
+    backgroundColor: '#55556E',
+    // opacity: 0.5,
+  },
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
+    borderWidth: 1,
+    borderRadius: 96, // border radius(100) - padding(4) = 96
+    borderColor: '#61687E',
+    backgroundColor: 'transparent',
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+  },
+  text: {
+    color: '#C7D1E7',
+    fontWeight: "500"
+  },
+});
+
+export const OddButton = (props: OddButtonProps) => {
   const { pushSheet } = useMatchBottomSheet();
+
+
+
+  if (props.odd.status === 'SUSPENDED' || props.criterion.status === 'SUSPENDED') {
+    return <DisabledOddButton {...props} />;
+  }
+
+  const {
+    odd,
+    style,
+    showName = true,
+    criterion,
+    variant = 'primary',
+    ...rest
+  } = props;
 
   const oddSheetData: IOddSheetData = {
     ...odd,
@@ -35,7 +91,7 @@ export const OddButton = ({
         variant === 'primary' ? oddsStyles.primaryVariant : oddsStyles.secondaryVariant,
         style,
       ]}
-      {...props}
+      {...rest}
     >
       <View
         style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}

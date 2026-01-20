@@ -41,6 +41,7 @@ public interface MatchMapper {
         criterionDTO.setName(criterion.getName());
         criterionDTO.setMatch(null);
         criterionDTO.setOdds(odds);
+        criterionDTO.setStatus(criterion.getStatus());
         criterionDTO.setAllowMultipleOdds(criterion.getAllowMultipleOdds());
         criterionDTO.setIsStandalone(criterionDTO.getIsStandalone());
 
