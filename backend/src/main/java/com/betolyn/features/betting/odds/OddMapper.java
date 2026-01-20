@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Mapper(config = BaseMapperConfig.class)
 public interface OddMapper {
     @Mapping(source = "criterion.odds", target = "criterion.odds", ignore = true)
+    @Mapping(source = "criterion.match", target = "criterion.match", ignore = true)
     OddDTO toOddDTO(OddEntity odd);
     OddEntity toOddEntity(OddDTO odd);
 }

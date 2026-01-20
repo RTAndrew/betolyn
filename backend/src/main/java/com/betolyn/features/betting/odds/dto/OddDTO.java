@@ -9,6 +9,8 @@ public class OddDTO {
     private String id;
     private String name;
     private double value;
+
+    @JsonIgnoreProperties({"match", "odds"}) // avoid self reference
     private CriterionDTO criterion;
     private OddStatusEnum status;
 

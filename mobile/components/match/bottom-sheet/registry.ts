@@ -7,6 +7,7 @@ import { MainActionSheet } from './match-sheets/main-action-sheet';
 import UpdateMatchScoreSheet from './match-sheets/update-match-score';
 import { OddActionSheet } from './odd-sheets/odd-action-sheet';
 import { OddRepriceSheet } from './odd-sheets/odd-reprice-sheet';
+import { SuspendOddSheet } from './odd-sheets/suspend-odd-sheet';
 import { BottomSheetType } from './types';
 
 export interface ISheet {
@@ -45,5 +46,8 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'odd-reprice': {
     component: OddRepriceSheet,
+  },
+  'odd-suspend': {
+    component: SuspendOddSheet,
   },
 };

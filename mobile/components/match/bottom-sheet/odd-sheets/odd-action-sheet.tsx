@@ -34,6 +34,9 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Suspend"
           icon={<LockClosed width={28} height={28} color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'odd-suspend', data: odd });
+          }}
         />
 
         <BottomSheet.ActionOption

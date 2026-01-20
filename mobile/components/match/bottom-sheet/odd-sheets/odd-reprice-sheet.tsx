@@ -9,6 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
 import { IOddSheetData } from '../types';
+import { useUpdateOdd } from '@/services';
 
 interface TeamProps {
   name: string;
@@ -88,12 +89,24 @@ const teamStyle = StyleSheet.create({
 });
 
 export const OddRepriceSheet = ({ visible = false }: ISheet) => {
-  const { closeAll, currentSheet, goBack } = useMatchBottomSheet();
+  const { match, closeAll, currentSheet, goBack } = useMatchBottomSheet();
   const odd = currentSheet?.data as IOddSheetData;
+  const description = odd.criterion?.name ?? 'Odd';
 
   const [oddValue, setOddValue] = useState<number>(odd.value);
 
-  const description = odd.criterion?.name ?? 'Odd';
+
+  const { mutateAsync: updateOdd, isPending } = useUpdateOdd();
+
+  const handleUpdateOdd = async () => {
+    await updateOdd({
+      oddId: odd.id,
+      matchId: match.id,
+      variables: { value: oddValue },
+    });
+    closeAll();
+  };
+
 
   return (
     <BottomSheet
@@ -110,7 +123,7 @@ export const OddRepriceSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
-        <Button.GradientButton onPress={closeAll}>Save</Button.GradientButton>
+        <Button.GradientButton onPress={handleUpdateOdd} disabled={isPending}>{isPending ? 'Saving...' : 'Save'}</Button.GradientButton>
       </SafeHorizontalView>
 
     </BottomSheet>

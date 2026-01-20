@@ -9,7 +9,7 @@ import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
-import { useRepriceCriterionOdds } from '@/services/criterion-mutation';
+import { useRepriceCriterionOdds } from '@/services';
 
 interface TeamProps {
   name: string;

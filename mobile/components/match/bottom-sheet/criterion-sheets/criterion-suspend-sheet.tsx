@@ -3,7 +3,7 @@ import BottomSheet from '@/components/bottom-sheet';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { useSuspendCriterion } from '@/services/criterion-mutation';
+import { useSuspendCriterion } from '@/services';
 import { CriterionStatusEnum } from '@/types';
 
 export const CriterionSuspendSheet = ({ visible = false }: ISheet) => {

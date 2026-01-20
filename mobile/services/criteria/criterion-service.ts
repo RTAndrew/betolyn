@@ -1,5 +1,5 @@
 import { patchRequest } from "@/utils/http";
-import { IMatchCriteriaResponse } from "./matches/matches-services";
+import { IMatchCriteriaResponse } from "../matches/matches-services";
 import { CriterionStatusEnum } from "@/types";
 
 export interface IRepriceOddsRequest {

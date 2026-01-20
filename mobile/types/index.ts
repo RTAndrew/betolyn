@@ -33,7 +33,7 @@ export interface ICriteria {
   status: `${CriterionStatusEnum}`;
 }
 
-enum EOddStatus {
+export enum EOddStatus {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',
   DRAFT = 'DRAFT',

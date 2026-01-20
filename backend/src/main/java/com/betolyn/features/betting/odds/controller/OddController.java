@@ -1,8 +1,10 @@
 package com.betolyn.features.betting.odds.controller;
 
 import com.betolyn.features.betting.odds.CreateOddRequestDTO;
+import com.betolyn.features.betting.odds.OddMapper;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.features.betting.odds.OddService;
+import com.betolyn.features.betting.odds.dto.UpdateOddRequestDTO;
 import com.betolyn.shared.sse.ServerSentEventEmitter;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OddController {
     private final OddService oddService;
+    private final OddMapper oddMapper;
 
     @GetMapping
     public ResponseEntity<@NotNull ApiResponse<List<OddDTO>>> findAll() {
@@ -34,5 +37,12 @@ public class OddController {
         var odds = oddService.save(data);
 
         return ResponseEntity.ok(ApiResponse.success("Odd created", odds));
+    }
+
+    @PatchMapping("/{oddId}")
+    public ResponseEntity<ApiResponse<OddDTO>> update(@PathVariable String oddId, @RequestBody UpdateOddRequestDTO data) {
+        var odd = oddService.update(oddId, data);
+
+        return ResponseEntity.ok(ApiResponse.success("Odd created", oddMapper.toOddDTO(odd)));
     }
 }
