@@ -1,4 +1,4 @@
-package com.betolyn.features.eventStream;
+package com.betolyn.features.eventstream;
 
 import com.betolyn.shared.sse.ServerSentEventEmitter;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class EventStreamController {
     private final ServerSentEventEmitter sse;
-    private final ObjectMapper objectMapper;
 
     @GetMapping( produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream() {

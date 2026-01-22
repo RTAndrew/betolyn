@@ -1,8 +1,8 @@
 package com.betolyn.config.filters;
 
-import com.betolyn.features.auth.AuthService;
 import com.betolyn.features.auth.JwtTokenService;
 import com.betolyn.features.auth.config.AuthConstants;
+import com.betolyn.features.auth.validatesession.ValidateSessionUC;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
     private final JwtTokenService tokenService;
-    private final AuthService authService;
+    private final ValidateSessionUC validateSessionUC;
     private final AuthConstants authConstants;
 
     @Override
@@ -40,7 +40,7 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         var decodedToken = tokenService.decode(token);
-        if (!authService.isSessionValid(decodedToken)) {
+        if (!validateSessionUC.execute(decodedToken)) {
             throw new RuntimeException("The current session is invalid");
         }
 

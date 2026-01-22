@@ -1,7 +1,7 @@
 package com.betolyn.features.auth;
 
 import com.betolyn.features.auth.dto.JwtSessionDTO;
-import com.betolyn.features.auth.dto.SignInResponseDTO;
+import com.betolyn.features.auth.signin.SignInResponseDTO;
 import com.betolyn.features.user.UserDTO;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.BaseMapperConfig;

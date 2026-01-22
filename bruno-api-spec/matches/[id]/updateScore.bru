@@ -1,0 +1,23 @@
+meta {
+  name: updateScore
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/matches/match_eVojfUdkNrIV/score
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "homeTeamScore": 2,
+    "awayTeamScore": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

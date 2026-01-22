@@ -1,0 +1,22 @@
+meta {
+  name: updateStatus
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/matches/match_eVojfUdkNrIV/status
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "status": "LIVE"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
