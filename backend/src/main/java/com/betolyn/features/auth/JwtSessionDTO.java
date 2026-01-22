@@ -1,4 +1,4 @@
-package com.betolyn.features.auth.dto;
+package com.betolyn.features.auth;
 
 import lombok.Data;
 

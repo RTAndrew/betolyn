@@ -2,10 +2,8 @@ package com.betolyn.features.betting.odds;
 
 import com.betolyn.features.betting.bettingSystemEvents.BettingSystemEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -14,9 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaveAndSyncOddUseCase {
     private final OddRepository oddRepository;
-    private final ApplicationEventPublisher eventPublisher;
     private final BettingSystemEvent bettingSystemEvent;
-    private final ObjectMapper objectMapper;
 
     @Transactional
     public List<OddEntity> execute(List<OddEntity> odds) {

@@ -1,0 +1,30 @@
+package com.betolyn.features.betting.odds.updateoddvalue;
+
+import com.betolyn.features.betting.odds.OddApiPaths;
+import com.betolyn.features.betting.odds.OddMapper;
+import com.betolyn.features.betting.odds.dto.OddDTO;
+import com.betolyn.utils.responses.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(OddApiPaths.ODDS)
+@RequiredArgsConstructor
+public class UpdateOddValue {
+    private final UpdateOddValueUC updateOddValueUC;
+    private final OddMapper oddMapper;
+
+    @PutMapping(OddApiPaths.ODD_VALUE)
+    public ResponseEntity<ApiResponse<OddDTO>> updateValue(
+            @PathVariable String oddId,
+            @RequestBody @Valid UpdateOddValueRequestDTO requestDTO) {
+        var odd = updateOddValueUC.execute(new UpdateOddValueParam(oddId, requestDTO));
+        return ResponseEntity.ok(ApiResponse.success("Odd value updated", oddMapper.toOddDTO(odd)));
+    }
+}

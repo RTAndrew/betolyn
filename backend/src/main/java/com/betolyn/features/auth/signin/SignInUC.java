@@ -2,8 +2,8 @@ package com.betolyn.features.auth.signin;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.AuthSessionRepository;
+import com.betolyn.features.auth.JwtSessionDTO;
 import com.betolyn.features.auth.JwtTokenService;
-import com.betolyn.features.auth.dto.JwtSessionDTO;
 import com.betolyn.features.auth.exceptions.InvalidCredentialsException;
 import com.betolyn.features.user.UserRepository;
 import com.betolyn.utils.UUID;

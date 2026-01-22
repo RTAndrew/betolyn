@@ -1,6 +1,5 @@
 package com.betolyn.features.auth;
 
-import com.betolyn.features.auth.dto.JwtSessionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import redis.clients.jedis.RedisClient;

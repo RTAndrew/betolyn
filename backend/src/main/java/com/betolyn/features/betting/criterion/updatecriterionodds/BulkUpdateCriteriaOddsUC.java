@@ -4,7 +4,7 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import com.betolyn.features.betting.odds.OddEntity;
-import com.betolyn.features.betting.odds.OddService;
+import com.betolyn.features.betting.odds.bulkupdateodds.BulkUpdateOddsUC;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsParam, CriterionEntity> {
     private final FindCriterionByIdUC findCriterionByIdUC;
-    private final OddService oddService;
+    private final BulkUpdateOddsUC bulkUpdateOddsUC;
 
     @Override
     @Transactional
@@ -45,7 +45,7 @@ public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsPar
             return tempOdd;
         }).toList();
 
-        oddService.update(odds);
+        bulkUpdateOddsUC.execute(odds);
         return findCriterionByIdUC.execute(param.criterionId());
     }
 }

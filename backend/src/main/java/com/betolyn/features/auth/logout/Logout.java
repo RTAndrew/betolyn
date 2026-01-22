@@ -1,8 +1,8 @@
 package com.betolyn.features.auth.logout;
 
 import com.betolyn.features.auth.AuthApiPaths;
+import com.betolyn.features.auth.JwtSessionDTO;
 import com.betolyn.features.auth.config.AuthConstants;
-import com.betolyn.features.auth.dto.JwtSessionDTO;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.servlet.http.Cookie;

@@ -1,18 +1,17 @@
 meta {
-  name: updateById
+  name: updateStatus
   type: http
-  seq: 1
+  seq: 2
 }
 
-patch {
-  url: {{baseUrl}}/odds/od_o0zLXXLlGMnb
+put {
+  url: {{baseUrl}}/odds/od_o0zLXXLlGMnb/status
   body: json
-  auth: none
+  auth: inherit
 }
 
 body:json {
   {
-    "value": 2,
     "status": "ACTIVE"
   }
 }

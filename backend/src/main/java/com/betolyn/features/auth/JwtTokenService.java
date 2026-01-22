@@ -1,7 +1,7 @@
 package com.betolyn.features.auth;
 
 import com.betolyn.features.auth.config.AuthConstants;
-import com.betolyn.features.auth.dto.JwtSessionDTO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;

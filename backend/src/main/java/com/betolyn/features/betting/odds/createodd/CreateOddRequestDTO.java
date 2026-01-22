@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.odds;
+package com.betolyn.features.betting.odds.createodd;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

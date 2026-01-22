@@ -8,7 +8,7 @@ import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.criterion.exceptions.MultipleOddsIsNotAllowedException;
 import com.betolyn.features.betting.odds.OddEntity;
-import com.betolyn.features.betting.odds.OddService;
+import com.betolyn.features.betting.odds.bulksaveodds.BulkSaveOddsUC;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
     private final FindMatchByIdUC findMatchByIdUC;
     private final CriterionMapper criterionMapper;
     private final CriterionRepository criterionRepository;
-    private final OddService oddService;
+    private final BulkSaveOddsUC bulkSaveOddsUC;
 
     @Override
     @Transactional
@@ -62,7 +62,7 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
             return tempOdd;
         }).toList();
 
-        oddService.save(oddList);
+        bulkSaveOddsUC.execute(oddList);
 
         return criterionMapper.toCriterionDTO(savedCriterion);
     }

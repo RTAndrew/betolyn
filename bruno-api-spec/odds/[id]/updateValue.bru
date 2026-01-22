@@ -1,0 +1,22 @@
+meta {
+  name: updateValue
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/odds/od_o0zLXXLlGMnb/value
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "value": 2
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

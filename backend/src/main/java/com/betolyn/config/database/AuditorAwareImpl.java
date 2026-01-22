@@ -1,7 +1,8 @@
 package com.betolyn.config.database;
 
+import com.betolyn.features.auth.JwtSessionDTO;
 import com.betolyn.features.user.UserEntity;
-import com.betolyn.features.auth.dto.JwtSessionDTO;
+
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

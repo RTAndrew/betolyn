@@ -2,7 +2,8 @@ package com.betolyn.features.auth.validatesession;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.AuthSessionRepository;
-import com.betolyn.features.auth.dto.JwtSessionDTO;
+import com.betolyn.features.auth.JwtSessionDTO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
