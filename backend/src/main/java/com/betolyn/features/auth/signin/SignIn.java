@@ -33,6 +33,6 @@ public class SignIn {
         response.addHeader("token", session.getToken());
 
         var responseData = authMapper.toSignInResponse(session);
-        return ResponseEntity.ok().body(ApiResponse.success("user authenticated", responseData));
+        return ResponseEntity.ok().body(ApiResponse.success("User authenticated", responseData));
     }
 }

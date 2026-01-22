@@ -1,13 +1,12 @@
-package com.betolyn.features.betting.criterion.dto;
+package com.betolyn.features.betting.criterion.createcriterion;
 
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.dto.CreateCriterionOddRequestDTO;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
 
 @Data
 public class CreateCriterionRequestDTO {

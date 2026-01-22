@@ -1,0 +1,22 @@
+meta {
+  name: updateStatus
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/criteria/crit_ASGuUVM8Lla3/status
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "status": "ACTIVE"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
