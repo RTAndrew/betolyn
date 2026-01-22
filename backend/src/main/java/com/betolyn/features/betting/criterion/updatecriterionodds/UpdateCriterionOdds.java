@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(CriterionApiPaths.CRITERIA)
+@RequestMapping(CriterionApiPaths.CRITERIA_ODDS)
 @RequiredArgsConstructor
 public class UpdateCriterionOdds {
     private final BulkUpdateCriteriaOddsUC bulkUpdateCriteriaOddsUC;
     private final CriterionMapper criterionMapper;
 
-    @PatchMapping(CriterionApiPaths.CRITERIA_ODDS)
+    @PatchMapping
     public ResponseEntity<ApiResponse<CriterionDTO>> updateOdds(
             @PathVariable String criterionId,
             @RequestBody UpdateCriterionOddsRequestDTO requestDTO) {

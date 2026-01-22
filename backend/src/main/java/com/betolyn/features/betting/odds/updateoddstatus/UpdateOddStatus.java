@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(OddApiPaths.ODDS)
+@RequestMapping(OddApiPaths.ODD_STATUS)
 @RequiredArgsConstructor
 public class UpdateOddStatus {
     private final UpdateOddStatusUC updateOddStatusUC;
     private final OddMapper oddMapper;
 
-    @PutMapping(OddApiPaths.ODD_STATUS)
+    @PutMapping
     public ResponseEntity<ApiResponse<OddDTO>> updateStatus(
             @PathVariable String oddId,
             @RequestBody @Valid UpdateOddStatusRequestDTO requestDTO) {

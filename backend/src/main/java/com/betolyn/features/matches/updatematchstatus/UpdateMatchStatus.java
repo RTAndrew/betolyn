@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(MatchApiPaths.MATCHES)
+@RequestMapping(MatchApiPaths.MATCH_STATUS)
 @RequiredArgsConstructor
 public class UpdateMatchStatus {
     private final UpdateMatchStatusUC updateMatchStatusUC;
     private final MatchMapper matchMapper;
 
-    @PutMapping(MatchApiPaths.MATCH_STATUS)
+    @PutMapping
     public ResponseEntity<ApiResponse<MatchDTO>> updateMatchStatus(
             @PathVariable String matchId,
             @RequestBody @Valid UpdateMatchStatusRequestDTO requestDTO) {

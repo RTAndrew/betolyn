@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(MatchApiPaths.MATCHES)
+@RequestMapping(MatchApiPaths.MATCH_MAIN_CRITERION)
 @RequiredArgsConstructor
 public class UpdateMatchMainCriterion {
     private final UpdateMatchMainCriterionUC updateMatchMainCriterionUC;
     private final MatchMapper matchMapper;
 
-    @PutMapping(MatchApiPaths.MATCH_MAIN_CRITERION)
+    @PutMapping
     public ResponseEntity<ApiResponse<MatchDTO>> updateMainCriterion(
             @PathVariable String matchId,
             @RequestBody @Valid UpdateMatchMainCriterionRequestDTO requestDTO) {

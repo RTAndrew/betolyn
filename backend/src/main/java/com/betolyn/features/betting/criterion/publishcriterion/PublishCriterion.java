@@ -18,7 +18,7 @@ public class PublishCriterion {
     private final PublishCriterionUC publishCriterionUC;
     private final CriterionMapper criterionMapper;
 
-    @PostMapping
+    @PatchMapping
     public ResponseEntity<ApiResponse<CriterionDTO>> publish(@PathVariable String criterionId) {
         var criterion = publishCriterionUC.execute(criterionId);
         return ResponseEntity.ok(ApiResponse.success("Criterion published", criterionMapper.toCriterionDTO(criterion)));

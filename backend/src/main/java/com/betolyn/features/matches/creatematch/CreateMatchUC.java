@@ -1,16 +1,13 @@
 package com.betolyn.features.matches.creatematch;
 
 import com.betolyn.features.IUseCase;
-import com.betolyn.features.matches.MatchApiPaths;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.teams.findteambyid.FindTeamByIdUC;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
-@RequestMapping(MatchApiPaths.MATCHES)
+@Service
 @RequiredArgsConstructor
 public class CreateMatchUC implements IUseCase<CreateMatchRequestDTO, MatchEntity> {
     private final FindTeamByIdUC findTeamByIdUC;
