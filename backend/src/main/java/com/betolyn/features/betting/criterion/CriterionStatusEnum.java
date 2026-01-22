@@ -7,5 +7,4 @@ public enum CriterionStatusEnum {
     EXPIRED, // Possibly updated (only for OddHistory) // TODO: move to OddHistory
     SUSPENDED, // Visible + Not Clickable (Locked)
     VOID, // Visible in History + Refunded
-
 }

@@ -1,4 +1,4 @@
-package com.betolyn.features.matches.dto;
+package com.betolyn.features.matches.creatematch;
 
 import lombok.Data;
 

@@ -1,19 +1,18 @@
-package com.betolyn.features.matches.dto;
+package com.betolyn.features.matches.reschedulematch;
 
 import com.betolyn.features.matches.MatchStatusEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.util.Optional;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UpdateMatchRequestDTO {
-    private Integer homeTeamScore;
-    private Integer awayTeamScore;
-
+public class RescheduleMatchRequestDTO {
+    @NotNull
     private String startTime;
+    
     private String endTime;
-
+    
+    @NotNull
     private MatchStatusEnum status;
 }

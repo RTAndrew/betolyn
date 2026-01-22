@@ -2,7 +2,7 @@ package com.betolyn.features.betting.criterion.dto;
 
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.dto.OddDTO;
-import com.betolyn.features.matches.dto.MatchDTO;
+import com.betolyn.features.matches.MatchDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 

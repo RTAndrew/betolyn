@@ -34,6 +34,7 @@ public class SaveAndSyncOddUseCase {
         }
 
         oddRepository.saveAll(odds);
+
         bettingSystemEvent.publishOddUpdate(this, odds);
         return odds;
     }

@@ -10,20 +10,19 @@ import com.betolyn.features.betting.criterion.exceptions.MultipleOddsIsNotAllowe
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddService;
 import com.betolyn.features.betting.odds.OddStatusEnum;
-import com.betolyn.features.matches.MatchService;
+import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class CriterionService implements ICriterionService {
-    private final MatchService matchService;
+    private final FindMatchByIdUC findMatchByIdUC;
     private final CriterionMapper criterionMapper;
     private final CriterionRepository criterionRepository;
     private final OddService oddService;
@@ -38,8 +37,7 @@ public class CriterionService implements ICriterionService {
 
     @Override
     public CriterionEntity findById(String id) {
-        var criterion = criterionRepository.findById(id).orElseThrow(EntityNotfoundException::new);
-        return criterion;
+        return criterionRepository.findById(id).orElseThrow(EntityNotfoundException::new);
     }
 
     public List<CriterionEntity> findAllByMatchId(String matchId) {
@@ -79,7 +77,7 @@ public class CriterionService implements ICriterionService {
         }
 
         if (data.getMatchId() != null) {
-            var match = matchService.findById(data.getMatchId());
+            var match = findMatchByIdUC.execute(data.getMatchId());
             criterion.setMatch(match);
         }
 

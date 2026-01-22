@@ -7,7 +7,6 @@ import com.betolyn.shared.sse.ServerSentEventEmitter;
 import com.betolyn.utils.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;

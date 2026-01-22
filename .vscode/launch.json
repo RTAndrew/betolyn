@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "name": "Radon IDE panel",
+      "type": "radon-ide",
+      "request": "launch",
+      "appRoot": "./mobile",
+      "env": {},
+      "ios": {},
+      "isExpo": true,
+      "android": {},
+      "usePrebuild": true
+    }
+  ]
+}

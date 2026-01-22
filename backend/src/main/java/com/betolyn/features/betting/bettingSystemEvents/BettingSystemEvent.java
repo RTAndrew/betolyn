@@ -4,6 +4,7 @@ import com.betolyn.config.systemEvent.ISystemEvent;
 import com.betolyn.config.systemEvent.SystemEvent;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddMapper;
 import com.betolyn.shared.sse.ServerSentEventEmitter;
 import com.betolyn.utils.UUID;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public final class BettingSystemEvent implements ISystemEvent {
     private final ApplicationEventPublisher eventPublisher;
     private final ServerSentEventEmitter sse;
     private final ObjectMapper objectMapper;
+    private final OddMapper oddMapper;
 
     @Override
     public void publish(Object source, String channel, Object data) {
@@ -41,7 +43,7 @@ public final class BettingSystemEvent implements ISystemEvent {
     public void publishOddUpdate(Object source, List<OddEntity> odds) {
         odds.forEach(odd -> {
             var channelId = "oddUpdated:" + odd.getId();
-            this.publish(source, channelId, odd);
+            this.publish(source, channelId, oddMapper.toOddDTO(odd));
         });
     }
 
