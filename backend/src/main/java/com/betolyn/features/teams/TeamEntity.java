@@ -1,4 +1,4 @@
-package com.betolyn.features.matches;
+package com.betolyn.features.teams;
 
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
@@ -26,9 +26,8 @@ public class TeamEntity extends BaseEntity {
         return new EntityUUID(12, "team");
     }
 
-
-    //   Keeping relationships unidirectional (Match -> Team only),
-    //   to prevent accidental "Infinite Recursion"
-    //   when converting entities to JSON.
-    //   private List<MatchEntity> matches;
+    // Keeping relationships unidirectional (Match -> Team only),
+    // to prevent accidental "Infinite Recursion"
+    // when converting entities to JSON.
+    // private List<MatchEntity> matches;
 }

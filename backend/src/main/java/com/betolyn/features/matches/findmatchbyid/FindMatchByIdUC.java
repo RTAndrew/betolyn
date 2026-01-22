@@ -2,8 +2,9 @@ package com.betolyn.features.matches.findmatchbyid;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.matches.MatchEntity;
-import com.betolyn.features.matches.MatchNotFoundException;
 import com.betolyn.features.matches.MatchRepository;
+import com.betolyn.features.matches.exceptions.MatchNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

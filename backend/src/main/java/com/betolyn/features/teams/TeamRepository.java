@@ -1,4 +1,4 @@
-package com.betolyn.features.matches;
+package com.betolyn.features.teams;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

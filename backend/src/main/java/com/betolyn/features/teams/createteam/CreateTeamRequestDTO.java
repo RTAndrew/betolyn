@@ -1,4 +1,4 @@
-package com.betolyn.features.matches.dto;
+package com.betolyn.features.teams.createteam;
 
 import lombok.Data;
 import lombok.NonNull;

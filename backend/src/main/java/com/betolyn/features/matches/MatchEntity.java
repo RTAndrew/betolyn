@@ -1,11 +1,11 @@
 package com.betolyn.features.matches;
 
 import com.betolyn.features.betting.criterion.CriterionEntity;
+import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,6 @@
 package com.betolyn.features.matches;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
+import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.features.user.UserDTO;
 import lombok.Data;
 

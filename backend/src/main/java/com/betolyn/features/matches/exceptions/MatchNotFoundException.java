@@ -1,4 +1,4 @@
-package com.betolyn.features.matches;
+package com.betolyn.features.matches.exceptions;
 
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 
