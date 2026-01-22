@@ -9,11 +9,8 @@ import com.betolyn.features.auth.dto.SignInResponseDTO;
 import com.betolyn.features.auth.dto.SignUpRequestDTO;
 import com.betolyn.features.user.UserDTO;
 import com.betolyn.features.user.UserEntity;
-import com.betolyn.features.user.UserMapper;
-import com.betolyn.features.user.UserService;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.utils.responses.ApiResponse;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,22 +27,9 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
     private final AuthService authService;
     private final AuthConstants authConstants;
     private final AuthMapper authMapper;
-    private final UserMapper userMapper;
-
-    @GetMapping
-    public List<UserEntity> listUsers() {
-        return userService.getUsers();
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponse> getUserById(@PathVariable("userId") String userId) {
-        var user = userMapper.toDTO(userService.getUserById(userId).orElseThrow(() -> new EntityNotFoundException("Entity not found")));
-        return ResponseEntity.ok().body(ApiResponse.success("Entity found", user));
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<@NotNull ApiResponse<UserDTO>> signUp(@RequestBody SignUpRequestDTO requestDTO) throws BadRequestException {
