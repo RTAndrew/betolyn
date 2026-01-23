@@ -3,12 +3,12 @@ import BottomSheet from '@/components/bottom-sheet';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
-import { useUpdateOdd } from '@/services/odds/odd-mutation';
+import { useUpdateOddStatus } from '@/services/odds/odd-mutation';
 import { EOddStatus } from '@/types';
 
 export const SuspendOddSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet, match } = useMatchBottomSheet();
-  const { mutateAsync: suspendOdd, isPending } = useUpdateOdd();
+  const { mutateAsync: suspendOdd, isPending } = useUpdateOddStatus();
 
   if (!currentSheet?.data) {
     return <> Error: No odd data found </>;

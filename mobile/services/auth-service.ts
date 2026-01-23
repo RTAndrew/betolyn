@@ -12,6 +12,6 @@ export class AuthService {
   }
 
   public static async signOut() {
-    return await getRequest<void>(`/auth/signout`);
+    return await getRequest<void>(`/auth/logout`);
   }
 }

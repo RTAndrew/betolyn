@@ -9,7 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
 import { IOddSheetData } from '../types';
-import { useUpdateOdd } from '@/services';
+import { useRepriceOdd } from '@/services';
 
 interface TeamProps {
   name: string;
@@ -96,10 +96,10 @@ export const OddRepriceSheet = ({ visible = false }: ISheet) => {
   const [oddValue, setOddValue] = useState<number>(odd.value);
 
 
-  const { mutateAsync: updateOdd, isPending } = useUpdateOdd();
+  const { mutateAsync: repriceOdd, isPending } = useRepriceOdd();
 
   const handleUpdateOdd = async () => {
-    await updateOdd({
+    await repriceOdd({
       oddId: odd.id,
       matchId: match.id,
       variables: { value: oddValue },

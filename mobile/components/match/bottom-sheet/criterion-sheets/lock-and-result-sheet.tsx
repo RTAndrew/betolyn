@@ -38,7 +38,7 @@ const Team = ({ name, score, isSelected, onValueChange }: TeamProps) => {
         </View>
       </View>
 
-      <Checkbox borderRadius={100} iconColor='white' color='#3CC5A4' value={isSelected} onValueChange={(value) => onValueChange(value)} style={checkboxStyle.root} />
+      <Checkbox borderRadius={100} iconColor='#61687E' color='#3CC5A4' value={isSelected} onValueChange={(value) => onValueChange(value)} style={checkboxStyle.root} />
 
     </View>
   );

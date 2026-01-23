@@ -7,7 +7,7 @@ export interface IUser {
 }
 
 export interface ITeam {
-  id: number;
+  id: string;
   name: string;
   badgeUrl: string;
 }
@@ -25,12 +25,20 @@ export interface IMatch {
 }
 
 export interface ICriteria {
-  id: number;
+  id: string;
   name: string;
   match: IMatch;
   isStandalone: boolean;
   allowMultipleOdds: boolean;
   status: `${CriterionStatusEnum}`;
+}
+
+export enum MatchStatusEnum {
+  SCHEDULED = 'SCHEDULED',
+  LIVE = 'LIVE',
+  PAUSED = 'PAUSED',
+  ENDED = 'ENDED',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum EOddStatus {
