@@ -1,10 +1,7 @@
 package com.betolyn.features.betting.criterion.createcriterion;
 
 import com.betolyn.features.IUseCase;
-import com.betolyn.features.betting.criterion.CriterionEntity;
-import com.betolyn.features.betting.criterion.CriterionMapper;
-import com.betolyn.features.betting.criterion.CriterionRepository;
-import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.*;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.criterion.exceptions.MultipleOddsIsNotAllowedException;
 import com.betolyn.features.betting.odds.OddEntity;
@@ -24,6 +21,7 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
     private final CriterionMapper criterionMapper;
     private final CriterionRepository criterionRepository;
     private final BulkSaveOddsUC bulkSaveOddsUC;
+    private final CriterionSystemEvent criterionSystemEvent;
 
     @Override
     @Transactional
@@ -63,7 +61,9 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
         }).toList();
 
         bulkSaveOddsUC.execute(oddList);
+        var criterionDTO = criterionMapper.toCriterionDTO(savedCriterion);
+        criterionSystemEvent.publish(this, "criterionCreated", criterionDTO);
 
-        return criterionMapper.toCriterionDTO(savedCriterion);
+        return criterionDTO;
     }
 }

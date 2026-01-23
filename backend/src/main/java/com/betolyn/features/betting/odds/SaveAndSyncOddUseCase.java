@@ -1,6 +1,5 @@
 package com.betolyn.features.betting.odds;
 
-import com.betolyn.features.betting.bettingSystemEvents.BettingSystemEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaveAndSyncOddUseCase {
     private final OddRepository oddRepository;
-    private final BettingSystemEvent bettingSystemEvent;
 
     @Transactional
     public List<OddEntity> execute(List<OddEntity> odds) {
@@ -30,8 +28,6 @@ public class SaveAndSyncOddUseCase {
         }
 
         oddRepository.saveAll(odds);
-
-        bettingSystemEvent.publishOddUpdate(this, odds);
         return odds;
     }
 }

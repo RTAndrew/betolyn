@@ -7,14 +7,14 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 @Setter
 public class SystemEvent extends ApplicationEvent {
-    private String eventType;
-    private String channel;
-    private Object data;
+    private Object payload;
+    private String domain;
+    private String eventName;
 
-    public SystemEvent(Object source, String eventType, String channel, Object data) {
+    public SystemEvent(Object source, String domain, String eventName, Object payload) {
         super(source);
-        this.eventType = eventType;
-        this.data = data;
-        this.channel = channel;
+        this.domain = domain;
+        this.payload = payload;
+        this.eventName = eventName;
     }
 }

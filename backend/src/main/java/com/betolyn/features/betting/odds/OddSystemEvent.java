@@ -1,4 +1,4 @@
-package com.betolyn.features.matches.matchSystemEvents;
+package com.betolyn.features.betting.odds;
 
 import com.betolyn.config.systemEvent.ISystemEvent;
 import com.betolyn.config.systemEvent.SystemEvent;
@@ -11,10 +11,10 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public final class MatchSystemEvent implements ISystemEvent {
-    private static final String DOMAIN = "match";
-    private final ApplicationEventPublisher eventPublisher;
+public final class OddSystemEvent implements ISystemEvent {
+    private static final String DOMAIN = "odd";
     private final ServerSentEventEmitter sse;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public void publish(Object source, String eventName, Object data) {
@@ -23,7 +23,7 @@ public final class MatchSystemEvent implements ISystemEvent {
     }
 
     @Override
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('match')")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('odd')")
     public void listen(SystemEvent event) {
         sse.emitEvent(event.getEventName(), event);
     }

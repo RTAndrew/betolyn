@@ -1,6 +1,7 @@
 package com.betolyn.features.betting.odds.createodd;
 
 import com.betolyn.features.betting.odds.OddApiPaths;
+import com.betolyn.features.betting.odds.OddMapper;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CreateOdd {
     private final CreateOddUC createOddUC;
+    private final OddMapper oddMapper;
 
     @PostMapping
     public ResponseEntity<ApiResponse<OddDTO>> save(@RequestBody CreateOddRequestDTO data) {
         var odd = createOddUC.execute(data);
-        return ResponseEntity.ok(ApiResponse.success("Odd created", odd));
+        return ResponseEntity.ok(ApiResponse.success("Odd created", oddMapper.toOddDTO(odd)));
     }
 }

@@ -1,10 +1,10 @@
 package com.betolyn.features.betting.criterion.updatecriterionstatus;
 
 import com.betolyn.features.IUseCase;
-import com.betolyn.features.betting.bettingSystemEvents.BettingSystemEvent;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import com.betolyn.shared.exceptions.BadRequestException;
 
@@ -19,7 +19,7 @@ import java.util.Set;
 public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusParam, CriterionEntity> {
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final CriterionRepository criterionRepository;
-    private final BettingSystemEvent bettingSystemEvent;
+    private final CriterionSystemEvent criterionSystemEvent;
 
     private static final Set<CriterionStatusEnum> ALLOWED_STATUSES = Set.of(
             CriterionStatusEnum.EXPIRED,
@@ -39,7 +39,9 @@ public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusPa
 
         foundCriterion.setStatus(newStatus);
         var savedCriterion = criterionRepository.save(foundCriterion);
-        bettingSystemEvent.publishCriterionUpdate(this, savedCriterion);
+
+        var eventDTO = new CriterionStatusChangedEventDTO(savedCriterion.getId(), savedCriterion.getStatus());
+        criterionSystemEvent.publish(this, "criterionStatusChanged", eventDTO);
 
         return savedCriterion;
     }

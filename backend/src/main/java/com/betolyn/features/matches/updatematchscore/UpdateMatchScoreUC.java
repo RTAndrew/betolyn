@@ -4,6 +4,7 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.exceptions.MatchNotFoundException;
+import com.betolyn.features.matches.matchSystemEvents.MatchScoreChangedEventDTO;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class UpdateMatchScoreUC implements IUseCase<UpdateMatchScoreParam, Match
         }
 
         var savedMatch = matchRepository.save(match);
-        matchSystemEvent.publicMatchUpdate(this, savedMatch);
+        
+        var eventDTO = new MatchScoreChangedEventDTO(savedMatch.getId(), savedMatch.getHomeTeamScore(), savedMatch.getAwayTeamScore());
+        matchSystemEvent.publish(this, "scoreChanged", eventDTO);
 
         return savedMatch;
     }

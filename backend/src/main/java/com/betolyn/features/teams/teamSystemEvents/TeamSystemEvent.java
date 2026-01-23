@@ -1,4 +1,4 @@
-package com.betolyn.features.matches.matchSystemEvents;
+package com.betolyn.features.teams.teamSystemEvents;
 
 import com.betolyn.config.systemEvent.ISystemEvent;
 import com.betolyn.config.systemEvent.SystemEvent;
@@ -11,8 +11,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public final class MatchSystemEvent implements ISystemEvent {
-    private static final String DOMAIN = "match";
+public final class TeamSystemEvent implements ISystemEvent {
+    private static final String DOMAIN = "team";
     private final ApplicationEventPublisher eventPublisher;
     private final ServerSentEventEmitter sse;
 
@@ -23,7 +23,7 @@ public final class MatchSystemEvent implements ISystemEvent {
     }
 
     @Override
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('match')")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('team')")
     public void listen(SystemEvent event) {
         sse.emitEvent(event.getEventName(), event);
     }

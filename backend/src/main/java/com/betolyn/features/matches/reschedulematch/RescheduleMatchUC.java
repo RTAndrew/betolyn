@@ -5,6 +5,7 @@ import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.MatchStatusEnum;
 import com.betolyn.features.matches.exceptions.MatchNotFoundException;
+import com.betolyn.features.matches.matchSystemEvents.MatchRescheduledEventDTO;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,9 @@ public class RescheduleMatchUC implements IUseCase<RescheduleMatchParam, MatchEn
         }
 
         var savedMatch = matchRepository.save(match);
-        matchSystemEvent.publicMatchUpdate(this, savedMatch);
+        
+        var eventDTO = new MatchRescheduledEventDTO(savedMatch.getId(), savedMatch.getStartTime(), savedMatch.getEndTime());
+        matchSystemEvent.publish(this, "rescheduled", eventDTO);
 
         return savedMatch;
     }

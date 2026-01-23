@@ -1,10 +1,10 @@
 package com.betolyn.features.betting.criterion.publishcriterion;
 
 import com.betolyn.features.IUseCase;
-import com.betolyn.features.betting.bettingSystemEvents.BettingSystemEvent;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PublishCriterionUC implements IUseCase<String, CriterionEntity> {
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final CriterionRepository criterionRepository;
-    private final BettingSystemEvent bettingSystemEvent;
+    private final CriterionSystemEvent criterionSystemEvent;
+
 
     @Override
     @Transactional
@@ -24,7 +25,9 @@ public class PublishCriterionUC implements IUseCase<String, CriterionEntity> {
         
         foundCriterion.setStatus(CriterionStatusEnum.ACTIVE);
         var savedCriterion = criterionRepository.save(foundCriterion);
-        bettingSystemEvent.publishCriterionUpdate(this, savedCriterion);
+
+        var eventDTO = new PublishCriterionEventDTO(savedCriterion.getId(), savedCriterion.getStatus());
+        criterionSystemEvent.publish(this, "criterionPublished", eventDTO);
         
         return savedCriterion;
     }
