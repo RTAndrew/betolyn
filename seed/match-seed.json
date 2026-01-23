@@ -1,6 +1,5 @@
 [
 	{
-		"id": 1,
 		"homeTeam": {
 			"name": "Manchester United",
 			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061361/betolyn/team-badges/manchester_united.png"
@@ -14,25 +13,20 @@
 		"startTime": "2025-09-09T20:47:16.569338Z",
 		"endTime": null,
 		"criterion": {
-			"id": 201,
-			"matchId": 1,
 			"name": "Match Winner",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 301,
 					"name": "Manchester United Win",
 					"value": 2.1,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 302,
 					"name": "Draw",
 					"value": 3.4,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 303,
 					"name": "Newcastle United Win",
 					"value": 3.1,
 					"status": "ACTIVE"
@@ -41,7 +35,6 @@
 		}
 	},
 	{
-		"id": 2,
 		"homeTeam": {
 			"name": "Manchester City",
 			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061363/betolyn/team-badges/manchester_city.png"
@@ -55,25 +48,20 @@
 		"startTime": "2025-09-09T20:47:16.578085Z",
 		"endTime": null,
 		"criterion": {
-			"id": 202,
-			"matchId": 2,
 			"name": "Over/Under 2.5 Goals",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 304,
 					"name": "Over 2.5 Goals",
 					"value": 1.5,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 305,
 					"name": "Under 2.5 Goals",
 					"value": 4.0,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 306,
 					"name": "Exactly 2.5 Goals",
 					"value": 5.5,
 					"status": "ACTIVE"
@@ -82,7 +70,6 @@
 		}
 	},
 	{
-		"id": 3,
 		"homeTeam": {
 			"name": "GD Interclube",
 			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061363/betolyn/team-badges/grupo_desportivo_interclube.png"
@@ -96,19 +83,15 @@
 		"startTime": "2025-09-09T20:47:16.580188Z",
 		"endTime": null,
 		"criterion": {
-			"id": 203,
-			"matchId": 3,
 			"name": "Both Teams to Score",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 307,
 					"name": "Yes",
 					"value": 2.5,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 308,
 					"name": "No",
 					"value": 3.2,
 					"status": "ACTIVE"
@@ -117,7 +100,6 @@
 		}
 	},
 	{
-		"id": 4,
 		"homeTeam": {
 			"name": "Toulouse FC",
 			"badgeUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/367.png"
@@ -131,25 +113,20 @@
 		"startTime": "2025-09-09T20:47:16.582378Z",
 		"endTime": null,
 		"criterion": {
-			"id": 204,
-			"matchId": 4,
 			"name": "Double Chance",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 310,
 					"name": "Toulouse FC or Draw",
 					"value": 5.0,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 311,
 					"name": "PSG or Draw",
 					"value": 3.8,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 312,
 					"name": "Toulouse FC or PSG",
 					"value": 1.65,
 					"status": "ACTIVE"
@@ -158,7 +135,6 @@
 		}
 	},
 	{
-		"id": 5,
 		"homeTeam": {
 			"name": "Lille OSC",
 			"badgeUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/166.png"
@@ -172,25 +148,20 @@
 		"startTime": "2025-09-09T20:47:16.584180Z",
 		"endTime": null,
 		"criterion": {
-			"id": 205,
-			"matchId": 5,
 			"name": "Correct Score",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 313,
 					"name": "1-0",
 					"value": 2.2,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 314,
 					"name": "1-1",
 					"value": 3.1,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 315,
 					"name": "0-1",
 					"value": 3.0,
 					"status": "ACTIVE"
@@ -199,7 +170,6 @@
 		}
 	},
 	{
-		"id": 6,
 		"homeTeam": {
 			"name": "Anderson Silva",
 			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061357/betolyn/athletes/anderson_silva.png"
@@ -213,19 +183,15 @@
 		"startTime": "2025-09-09T20:47:16.585871Z",
 		"endTime": null,
 		"criterion": {
-			"id": 206,
-			"matchId": 6,
 			"name": "First Half Winner",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 316,
 					"name": "Anderson Silva Win",
 					"value": 1.25,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 318,
 					"name": "Wanderlei Silva Win",
 					"value": 4.5,
 					"status": "ACTIVE"
@@ -234,7 +200,6 @@
 		}
 	},
 	{
-		"id": 7,
 		"homeTeam": {
 			"name": "Conor McGregor",
 			"badgeUrl": "https://res.cloudinary.com/db9ha9ox6/image/upload/v1757061357/betolyn/athletes/conor_mcgregor.png"
@@ -248,25 +213,20 @@
 		"startTime": "2025-09-09T20:47:16.587965Z",
 		"endTime": null,
 		"criterion": {
-			"id": 207,
-			"matchId": 7,
 			"name": "Total Goals",
 			"status": "ACTIVE",
 			"odds": [
 				{
-					"id": 319,
 					"name": "0-1 Goals",
 					"value": 2.75,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 320,
 					"name": "2-3 Goals",
 					"value": 5.0,
 					"status": "ACTIVE"
 				},
 				{
-					"id": 321,
 					"name": "4+ Goals",
 					"value": 1.4,
 					"status": "ACTIVE"

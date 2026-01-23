@@ -269,7 +269,7 @@ async function seedCriteriaAndOdds(matches, token) {
 		try {
 			const criterionData = match.originalCriterion;
 
-			// Create criterion with odds
+			// Create criterion with odds (status defaults to ACTIVE, odds are always created as ACTIVE)
 			const criterionResponse = await apiRequest(
 				"POST",
 				"/criteria",
@@ -277,11 +277,11 @@ async function seedCriteriaAndOdds(matches, token) {
 					name: criterionData.name,
 					matchId: match.id,
 					allowMultipleOdds: criterionData.odds.length > 1,
-					status: criterionData.status || "ACTIVE",
+					status: "ACTIVE", // Create directly as ACTIVE
 					odds: criterionData.odds.map((odd) => ({
 						name: odd.name,
 						value: odd.value,
-						status: odd.status || "ACTIVE",
+						// Note: Odd status is ignored by backend - always created as ACTIVE
 					})),
 				},
 				token
@@ -319,9 +319,9 @@ async function updateMatchHighlightCriteria(matches, criteria, token) {
 		}
 
 		try {
-			// Update match with main criterion using POST /matches/:id/main-criterion
+			// Update match with main criterion using PUT /matches/:id/main-criterion
 			await apiRequest(
-				"POST",
+				"PUT",
 				`/matches/${match.id}/main-criterion`,
 				{
 					criterionId: matchCriterion.criterionId,
