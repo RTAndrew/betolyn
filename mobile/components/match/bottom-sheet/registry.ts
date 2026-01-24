@@ -9,6 +9,7 @@ import { OddActionSheet } from './odd-sheets/odd-action-sheet';
 import { OddRepriceSheet } from './odd-sheets/odd-reprice-sheet';
 import { SuspendOddSheet } from './odd-sheets/suspend-odd-sheet';
 import { BottomSheetType } from './types';
+import { PublishOddSheet } from './odd-sheets/publish';
 
 export interface ISheet {
   visible?: boolean;
@@ -49,5 +50,8 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'odd-suspend': {
     component: SuspendOddSheet,
+  },
+  'odd-publish': {
+    component: PublishOddSheet,
   },
 };

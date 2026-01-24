@@ -71,15 +71,17 @@ interface ModalConfirmationProps extends BottomSheetProps {
   visible?: boolean;
   onClose: () => void;
   description?: string;
+  destructive?: boolean;
   onConfirmText?: string;
   onCancelText?: string;
   onConfirm?: () => Promise<void> | void;
 }
 
 const ModalConfirmation = ({
-  visible = true,
   onConfirmText = 'Confirm',
   onCancelText = 'Cancel',
+  destructive = false,
+  visible = true,
   description,
   onConfirm,
   onClose,
@@ -100,7 +102,7 @@ const ModalConfirmation = ({
 
         <View style={modalConfirmationStyles.actions}>
           {onConfirm && (
-            <Button.Root style={{ backgroundColor: '#F80069' }} onPress={onConfirm}>
+            <Button.Root style={{ backgroundColor: destructive ? '#F80069' : '#7E87F1' }} onPress={onConfirm}>
               {onConfirmText}
             </Button.Root>
           )}

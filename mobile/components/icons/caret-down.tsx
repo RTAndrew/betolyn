@@ -7,7 +7,7 @@ const CaretDown = ({ width = 24, height = 24, color = 'white', ...props }: SvgPr
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
       <Path
         d="M6.10204 8C5.0281 8 4.45412 9.2649 5.16132 10.0731L10.6831 16.3838C11.3804 17.1806 12.6199 17.1806 13.3172 16.3838L18.839 10.0731C19.5462 9.2649 18.9722 8 17.8983 8H6.10204Z"
-        fill={color as string}
+        fill={color}
       />
     </Svg>
   );

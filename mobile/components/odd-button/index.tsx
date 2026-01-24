@@ -11,12 +11,40 @@ interface OddButtonProps extends TouchableOpacityProps {
   criterion: Omit<ICriterion, 'match'>;
 }
 
+interface OddWrapperProps extends TouchableOpacityProps, Pick<OddButtonProps, 'variant'> {
+  children: React.ReactNode;
+  sheetData: IOddSheetData;
+}
+
+const OddWrapper = ({ children, sheetData, variant, style, ...rest }: OddWrapperProps) => {
+  const { pushSheet } = useMatchBottomSheet();
+
+
+  return (
+    <TouchableOpacity
+      onLongPress={() => {
+        pushSheet({ type: 'odd-action', data: sheetData });
+      }}
+      style={[
+        oddsStyles.oddButton,
+        variant === 'primary' ? oddsStyles.primaryVariant : oddsStyles.secondaryVariant,
+        style,
+      ]}
+      {...rest}
+    >
+      {children}
+    </TouchableOpacity>
+  );
+};
+
 const DisabledOddButton = ({
   odd,
   showName = true,
-}: OddButtonProps) => {
+  variant,
+  sheetData,
+}: OddButtonProps & { sheetData: IOddSheetData }) => {
   return (
-    <View style={[oddsStyles.oddButton, disabledOddButtonStyles.root]}>
+    <OddWrapper sheetData={sheetData} variant={variant} style={[oddsStyles.oddButton, disabledOddButtonStyles.root]}>
       <View
         style={disabledOddButtonStyles.wrapper}
       >
@@ -29,7 +57,7 @@ const DisabledOddButton = ({
           </>
         )}
       </View>
-    </View>
+    </OddWrapper>
   );
 };
 
@@ -60,16 +88,21 @@ const disabledOddButtonStyles = StyleSheet.create({
 });
 
 export const OddButton = (props: OddButtonProps) => {
-  const { pushSheet } = useMatchBottomSheet();
   const { data, isPending, error } = useGetOddById({ oddId: props.odd.id });
   const odd = data?.data;
+
 
   if (isPending) return <Text> Loading... </Text>;
   if (error) { console.log("error fetching odd", error); return <></> }
   if (!odd) return <Text> odd not found </Text>
 
+  const oddSheetData: IOddSheetData = {
+    ...odd,
+    criterion: props.criterion,
+  };
+
   if (odd.status === 'SUSPENDED' || props.criterion.status === 'SUSPENDED') {
-    return <DisabledOddButton {...props} odd={odd} />
+    return <DisabledOddButton sheetData={oddSheetData} {...props} odd={odd} />
   }
 
   const {
@@ -81,23 +114,10 @@ export const OddButton = (props: OddButtonProps) => {
   } = props;
 
 
-  const oddSheetData: IOddSheetData = {
-    ...odd,
-    criterion,
-  };
+
 
   return (
-    <TouchableOpacity
-      onLongPress={() => {
-        pushSheet({ type: 'odd-action', data: oddSheetData });
-      }}
-      style={[
-        oddsStyles.oddButton,
-        variant === 'primary' ? oddsStyles.primaryVariant : oddsStyles.secondaryVariant,
-        style,
-      ]}
-      {...rest}
-    >
+    <OddWrapper sheetData={oddSheetData} variant={variant} style={style} {...rest}>
       <View
         style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}
       >
@@ -110,7 +130,7 @@ export const OddButton = (props: OddButtonProps) => {
           </>
         )}
       </View>
-    </TouchableOpacity>
+    </OddWrapper>
   );
 };
 

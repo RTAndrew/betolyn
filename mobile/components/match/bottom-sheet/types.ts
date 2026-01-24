@@ -1,9 +1,17 @@
 import type { ICriterion, IMatch, IOdd } from '@/types';
 
 export type BottomSheetType =
-  'match-action' | 'match-end-match' | 'match-update-score' |
-  'criterion-action' | 'criterion-reprice-update-odds' | 'criterion-lock-and-result' | 'criterion-suspend' |
-  'odd-action' | 'odd-reprice' | 'odd-suspend';
+  | 'match-action'
+  | 'match-end-match'
+  | 'match-update-score'
+  | 'criterion-action'
+  | 'criterion-reprice-update-odds'
+  | 'criterion-lock-and-result'
+  | 'criterion-suspend'
+  | 'odd-action'
+  | 'odd-reprice'
+  | 'odd-suspend'
+  | 'odd-publish';
 
   export interface IOddSheetData extends IOdd {
     criterion?: Omit<ICriterion, 'match'>;

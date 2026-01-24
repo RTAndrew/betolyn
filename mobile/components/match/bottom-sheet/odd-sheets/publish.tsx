@@ -3,11 +3,11 @@ import BottomSheet from '@/components/bottom-sheet';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
-import { useSuspendOdd } from '@/services/odds/odd-mutation';
+import { usePublishOdd } from '@/services/odds/odd-mutation';
 
-export const SuspendOddSheet = ({ visible = false }: ISheet) => {
+export const PublishOddSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();
-  const { mutateAsync: suspendOdd, isPending } = useSuspendOdd();
+  const { mutateAsync: publishOdd, isPending } = usePublishOdd();
 
   if (!currentSheet?.data) {
     return <> Error: No odd data found </>;
@@ -16,7 +16,7 @@ export const SuspendOddSheet = ({ visible = false }: ISheet) => {
   const odd = currentSheet?.data as IOddSheetData;
 
   const handleConfirm = async () => {
-    await suspendOdd(
+    await publishOdd(
       odd.id,
       {
         onSuccess: () => {
@@ -28,14 +28,13 @@ export const SuspendOddSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet.ModalConfirmation
-      destructive
     visible={visible}
     onClose={closeAll}
     onConfirm={handleConfirm}
-      onCancelText="Cancel"
-    title="Are you sure you want to suspend this odd?"
-    description="Users will no longer be able to bet on it."
-    onConfirmText={isPending ? 'Suspending...' : 'Suspend'}
+    onCancelText="Cancel"
+    title="Publish this odd?"
+    description="Users will be able to see and bet on it."
+    onConfirmText={isPending ? 'Publishing...' : 'Publish'}
     />
   );
 };

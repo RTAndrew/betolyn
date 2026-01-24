@@ -1,3 +1,4 @@
+export { default as Eye } from './eye';
 export { default as Add } from './add';
 export { default as Down } from './down';
 export { default as Close } from './close';
