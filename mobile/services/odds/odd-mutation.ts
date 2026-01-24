@@ -6,8 +6,7 @@ import {
 } from "../odds/odd-service";
 import { queryClient } from "@/utils/react-query";
 import { useMutation } from "@tanstack/react-query";
-import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from "../matches/match-query";
-import { getAllOddsQueryOptions, getOddByIdQueryOptions } from "./odd-query";
+import { getAllOddsQueryOptions } from './odd-query';
 
 interface IUpdateOddStatusVariables {
   oddId: string;
@@ -26,41 +25,45 @@ interface ICreateOddVariables {
 }
 
 export const useUpdateOddStatus = () => {
-  const mutation = useMutation({
-    mutationFn: (data: IUpdateOddStatusVariables) => OddService.updateOddStatus(data.oddId, data.variables),
-    onSuccess: (_, variables) => {
-      // Refetch both the match query and match criteria query to get updated data
-      queryClient.refetchQueries({
-        queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getOddByIdQueryOptions({ oddId: variables.oddId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getAllOddsQueryOptions().queryKey,
-      });
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IUpdateOddStatusVariables) =>
+        OddService.updateOddStatus(data.oddId, data.variables),
     },
-  }, queryClient);
+    queryClient
+  );
 
   return mutation;
 };
 
-export const useRepriceOdd = () => {
-  const mutation = useMutation({
-    mutationFn: (data: IUpdateOddValueVariables) => OddService.reprice(data.oddId, data.variables),
-    onSuccess: (_, variables) => {
-      // Refetch both the match query and match criteria query to get updated data
-      // queryClient.refetchQueries({
-      //   queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
-      // });
-      // queryClient.refetchQueries({
-      //   queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
-      // });
+export const usePublishOdd = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (oddId: string) => OddService.publishOdd(oddId),
     },
-  }, queryClient);
+    queryClient
+  );
+  return mutation;
+};
+
+export const useSuspendOdd = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (oddId: string) => OddService.suspendOdd(oddId),
+    },
+    queryClient
+  );
+  return mutation;
+};
+
+export const useRepriceOdd = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IUpdateOddValueVariables) =>
+        OddService.reprice(data.oddId, data.variables),
+    },
+    queryClient
+  );
 
   return mutation;
 };

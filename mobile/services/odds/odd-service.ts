@@ -1,5 +1,5 @@
-import { getRequest, postRequest, putRequest } from "@/utils/http";
-import { IOdd, EOddStatus } from "@/types";
+import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
+import { IOdd, EOddStatus } from '@/types';
 import { DataSync } from '@/server-sent-events/data-sync';
 
 export interface IUpdateOddStatusRequest {
@@ -41,5 +41,15 @@ export class OddService {
 
   public static async reprice(oddId: string, data: IUpdateOddValueRequest) {
     return await putRequest<IOdd, IUpdateOddValueRequest>(`/odds/${oddId}/value`, data);
+  }
+
+  public static async publishOdd(oddId: string) {
+    return await patchRequest<IOdd, void>(`/odds/${oddId}/publish`);
+  }
+
+  public static async suspendOdd(oddId: string) {
+    return await putRequest<IOdd, unknown>(`/odds/${oddId}/status`, {
+      status: EOddStatus.SUSPENDED as EOddStatus,
+    });
   }
 }

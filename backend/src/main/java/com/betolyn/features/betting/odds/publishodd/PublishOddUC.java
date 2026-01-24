@@ -1,7 +1,6 @@
 package com.betolyn.features.betting.odds.publishodd;
 
 import com.betolyn.features.IUseCase;
-import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.*;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.shared.exceptions.InternalServerException;
