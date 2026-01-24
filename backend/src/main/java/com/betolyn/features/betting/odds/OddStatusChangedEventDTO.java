@@ -1,4 +1,6 @@
 package com.betolyn.features.betting.odds;
 
-public record OddStatusChangedEventDTO(String oddId, OddStatusEnum status) {
+import java.util.List;
+
+public record OddStatusChangedEventDTO(List<String> odds, OddStatusEnum status) {
 }

@@ -4,4 +4,5 @@ public final class OddApiPaths {
     public static final String ODDS = "/odds";
     public static final String ODD_VALUE = "/odds/{oddId}/value";
     public static final String ODD_STATUS = "/odds/{oddId}/status";
+    public static final String ODD_PUBLISH = "/odds/{oddId}/publish";
 }

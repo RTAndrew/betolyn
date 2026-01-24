@@ -1,6 +1,7 @@
-package com.betolyn.features.betting.odds.updateoddstatus;
+package com.betolyn.features.betting.odds.publishodd;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.*;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.shared.exceptions.InternalServerException;
@@ -9,33 +10,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateOddStatusUC implements IUseCase<UpdateOddStatusParam, OddEntity> {
+public class PublishOddUC implements IUseCase<String, OddEntity> {
+    private static final Set<OddStatusEnum> ALLOWED_CRITERION_STATUSES = Set.of(OddStatusEnum.SUSPENDED,
+            OddStatusEnum.DRAFT);
+
     private final FindOddByIdUC findOddByIdUC;
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final OddSystemEvent oddSystemEvent;
 
     @Override
     @Transactional
-    public OddEntity execute(UpdateOddStatusParam param) {
-        var foundOdd = findOddByIdUC.execute(param.oddId());
-        var newStatus = param.requestDTO().getStatus();
+    public OddEntity execute(String oddId) {
+        var foundOdd = findOddByIdUC.execute(oddId);
 
-        if (newStatus == OddStatusEnum.DRAFT) {
-            throw new OddCannotUpdateToDraftException();
+        if (!ALLOWED_CRITERION_STATUSES.contains(foundOdd.getStatus())) {
+            throw new OddCannotPublishException();
         }
 
-        foundOdd.setStatus(newStatus);
+        foundOdd.setStatus(OddStatusEnum.ACTIVE);
 
         var savedOdd = saveAndSyncOddUseCase.execute(List.of(foundOdd)).stream().findFirst();
         if (savedOdd.isEmpty()) {
             throw new InternalServerException("It was not possible to save the entity");
         }
 
-        var eventDTO = new OddStatusChangedEventDTO(List.of(param.oddId()), savedOdd.get().getStatus());
-        oddSystemEvent.publish(this, "oddStatusChanged", eventDTO);
+        oddSystemEvent.publish(this, "oddStatusChanged",
+                new OddStatusChangedEventDTO(List.of(oddId), OddStatusEnum.ACTIVE));
         return savedOdd.get();
     }
 }

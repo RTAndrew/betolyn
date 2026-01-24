@@ -5,13 +5,23 @@ import { IOdd } from '@/types';
 
 type TPayload = ISseEvent<any>;
 
-interface IOddChangeEvent {
+interface IOddStatusChangeEvent {
+  odds: string[];
+  status?: IOdd['status'];
+}
+
+interface IOddValueChangeEvent {
   oddId: string;
   value?: number;
-  status?: IOdd['status'];
   direction?: 'UP' | 'DOWN';
 }
 
+/**
+ * If you ever have issues with Odd outta of when the data comes from Criterion,
+ * it's because the sync here does not affect the Criterion.
+ * Because, the odds will always look for the Odds store,
+ * and Criterion will always sync the Odd store, and not the other way around.
+ */
 class OddSseListener implements ISseListener {
   private readonly payload: TPayload;
 
@@ -23,19 +33,15 @@ class OddSseListener implements ISseListener {
     const { eventName, payload: eventPayload } = this.payload;
 
     switch (eventName) {
-      case 'oddValueChanged':
       case 'oddStatusChanged': {
-        console.log('[SSE] Odd status changed:', eventPayload);
-        const odd = eventPayload as IOddChangeEvent;
+        const { odds, status } = eventPayload as IOddStatusChangeEvent;
+        DataSync.updateOdds(odds.map((id) => ({ id, status })));
+        break;
+      }
 
-        DataSync.updateOdds([
-          {
-            id: odd.oddId,
-            direction: odd.direction,
-            status: odd?.status,
-            value: odd?.value,
-          },
-        ]);
+      case 'oddValueChanged': {
+        const { oddId, value, direction } = eventPayload as IOddValueChangeEvent;
+        DataSync.updateOdds([{ id: oddId, value, direction }]);
         break;
       }
 

@@ -55,7 +55,9 @@ class _DataSync {
           }
 
           if (criterion.odds) {
-            const withId = criterion.odds.filter((o): o is WithRequiredId<IOdd> => typeof o?.id === 'string');
+            const withId = criterion.odds.filter(
+              (o): o is WithRequiredId<IOdd> => typeof o?.id === 'string'
+            );
             allOdds = allOdds.concat(withId);
           }
 
@@ -91,6 +93,12 @@ class _DataSync {
     this.updateOdds(allOdds);
   }
 
+  /**
+   * If you ever have issues with Odd outta of when the data comes from Criterion,
+   * it's because the sync here does not affect the Criterion.
+   * Because, the odds will always look for the Odds store,
+   * and Criterion will always sync the Odd store, and not the other way around.
+   */
   public updateOdds(odds: WithRequiredId<IOdd>[]) {
     for (const odd of odds) {
       // 1. Update single odd query
@@ -130,7 +138,10 @@ class _DataSync {
       const criterionKey = getCriterionByIdQueryOptions({ criterionId });
       queryClient.invalidateQueries({ queryKey: criterionKey.queryKey });
 
-      matchId && queryClient.invalidateQueries({ queryKey: getMatchCriteriaQueryOptions({ matchId }).queryKey });
+      matchId &&
+        queryClient.invalidateQueries({
+          queryKey: getMatchCriteriaQueryOptions({ matchId }).queryKey,
+        });
     }
   }
 }

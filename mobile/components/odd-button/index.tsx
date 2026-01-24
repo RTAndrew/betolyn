@@ -69,7 +69,7 @@ export const OddButton = (props: OddButtonProps) => {
   if (!odd) return <Text> odd not found </Text>
 
   if (odd.status === 'SUSPENDED' || props.criterion.status === 'SUSPENDED') {
-    return <DisabledOddButton {...props} />
+    return <DisabledOddButton {...props} odd={odd} />
   }
 
   const {

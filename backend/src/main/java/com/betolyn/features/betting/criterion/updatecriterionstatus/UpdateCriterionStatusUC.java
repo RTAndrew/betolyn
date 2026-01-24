@@ -19,8 +19,9 @@ import java.util.Set;
 public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusParam, CriterionEntity> {
     private static final Set<CriterionStatusEnum> ALLOWED_STATUSES = Set.of(
             CriterionStatusEnum.EXPIRED,
-            CriterionStatusEnum.ACTIVE,
+            CriterionStatusEnum.ACTIVE, // TODO: remove this from here, and perhaps create a /cancel for voiding
             CriterionStatusEnum.VOID);
+
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final CriterionRepository criterionRepository;
     private final CriterionSystemEvent criterionSystemEvent;
@@ -53,17 +54,12 @@ public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusPa
         var affectedOddIds = odds.stream().map(o -> o.getId()).toList();
         var criterionEventDTO = new CriterionStatusChangedEventDTO(
                 savedCriterion.getId(), savedCriterion.getStatus(),
-                affectedOddIds
-        );
+                affectedOddIds);
 
         criterionSystemEvent.publish(this, "criterionStatusChanged", criterionEventDTO);
-        odds.forEach(odd -> {
-            var oddEventDTO = new OddStatusChangedEventDTO(
-                    odd.getId(),
-                    oddStatus
-            );
-            oddSystemEvent.publish(this, "oddStatusChanged", oddEventDTO);
-        });
+        if (!odds.isEmpty()) {
+            oddSystemEvent.publish(this, "oddStatusChanged", new OddStatusChangedEventDTO(affectedOddIds, oddStatus));
+        }
 
         return savedCriterion;
     }
