@@ -1,10 +1,13 @@
 import { DefaultOptions, QueryClient, UseMutationOptions } from "@tanstack/react-query";
 
+const THREE_MINUTES = 3 * 60 * 1000;
+
 export const DEFAULT_QUERY_CONFIG = {
   queries: {
     retry: false,
-    staleTime: 1000 * 60,
-    refetchOnWindowFocus: false,
+    staleTime: THREE_MINUTES,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   },
 } satisfies DefaultOptions;
 

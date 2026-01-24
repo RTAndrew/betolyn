@@ -1,7 +1,8 @@
-import { ICriteria, IMatch, IOdd, MatchStatusEnum } from "@/types";
-import { getRequest, postRequest, putRequest, patchRequest } from "@/utils/http";
+import { SseStoreOrchestrator } from '@/SseStore/stores';
+import { ICriterion, IMatch, IOdd, MatchStatusEnum } from '@/types';
+import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
 
-export interface IMatchCriteriaResponse extends ICriteria {
+export interface IMatchCriteriaResponse extends ICriterion {
   odds: IOdd[];
 }
 
@@ -35,15 +36,23 @@ export interface IUpdateMatchStatusRequest {
 
 export class MatchesService {
   public static async getMatch(matchId: string) {
-    return await getRequest<IMatch>(`/matches/${matchId}`);
+    const data = await getRequest<IMatch>(`/matches/${matchId}`);
+
+    SseStoreOrchestrator.updateMatch(data.data);
+    return data;
   }
 
   public static async getMatches() {
-    return await getRequest<IMatch[]>('/matches');
+    const data = await getRequest<IMatch[]>('/matches');
+
+    SseStoreOrchestrator.setMatches(data.data);
+    return data;
   }
 
   public static async getMatchCriteria(matchId: string) {
-    return await getRequest<IMatchCriteriaResponse[]>(`/matches/${matchId}/criteria`);
+    const result = await getRequest<IMatchCriteriaResponse[]>(`/matches/${matchId}/criteria`);
+    SseStoreOrchestrator.setMatchWithCriteria(result.data);
+    return result;
   }
 
   public static async createMatch(data: ICreateMatchRequest) {
@@ -54,12 +63,21 @@ export class MatchesService {
     return await postRequest<IMatch, IUpdateMatchScoreRequest>(`/matches/${matchId}/score`, data);
   }
 
-  public static async updateMatchMainCriterion(matchId: string, data: IUpdateMatchMainCriterionRequest) {
-    return await putRequest<IMatch, IUpdateMatchMainCriterionRequest>(`/matches/${matchId}/main-criterion`, data);
+  public static async updateMatchMainCriterion(
+    matchId: string,
+    data: IUpdateMatchMainCriterionRequest
+  ) {
+    return await putRequest<IMatch, IUpdateMatchMainCriterionRequest>(
+      `/matches/${matchId}/main-criterion`,
+      data
+    );
   }
 
   public static async rescheduleMatch(matchId: string, data: IRescheduleMatchRequest) {
-    return await patchRequest<IMatch, IRescheduleMatchRequest>(`/matches/${matchId}/reschedule`, data);
+    return await patchRequest<IMatch, IRescheduleMatchRequest>(
+      `/matches/${matchId}/reschedule`,
+      data
+    );
   }
 
   public static async updateMatchStatus(matchId: string, data: IUpdateMatchStatusRequest) {

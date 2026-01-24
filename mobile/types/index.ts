@@ -21,10 +21,10 @@ export interface IMatch {
   startTime: string;
   endTime: string | null;
   createdBy: string;
-  mainCriterion?: ICriteria & { odds: IOdd[] };
+  mainCriterion?: ICriterion & { odds: IOdd[] };
 }
 
-export interface ICriteria {
+export interface ICriterion {
   id: string;
   name: string;
   match: IMatch;
@@ -63,5 +63,6 @@ export interface IOdd {
   id: string;
   name: string;
   value: number;
+  direction?: 'UP' | 'DOWN';
   status: `${EOddStatus}`;
 }

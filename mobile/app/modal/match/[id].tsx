@@ -8,6 +8,7 @@ import React from 'react';
 import { ActivityIndicator, Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
+
 interface MatchTeamProps {
   name: string;
   imageUrl: string;
@@ -106,8 +107,7 @@ const Section = ({ children, style }: ViewProps) => {
 
 const MatchPage = () => {
   const { id } = useLocalSearchParams();
-  const { data, isLoading, isError } = useGetMatch({ matchId: id as string });
-  const match = data?.data;
+  const { data: result, refetch, isLoading, isError } = useGetMatch({ matchId: id as string });
 
   // Ensure there's always enough padding so ScrollView can scroll to top,
   // which enables the formSheet dismiss gesture even when content is short
@@ -118,7 +118,9 @@ const MatchPage = () => {
 
   if (isLoading) return <Text>Loading...</Text>;
   if (isError) return <Text>Error loading match</Text>;
-  if (!match) return <Text>Match not found</Text>;
+  if (!result?.data) return <Text>Match not found</Text>;
+
+  const match = result.data;
 
   return (
     <MatchBottomSheetProvider match={match}>
@@ -132,6 +134,7 @@ const MatchPage = () => {
           contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
         >
           <ScreenTopBar style={{ backgroundColor: '#495064' }} />
+          <Text onPress={() => refetch()}> Refreshe </Text>
 
           <ThemedView style={{ backgroundColor: '#495064' }}>
           {/* Highlight */}

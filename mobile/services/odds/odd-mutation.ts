@@ -53,18 +53,12 @@ export const useRepriceOdd = () => {
     mutationFn: (data: IUpdateOddValueVariables) => OddService.reprice(data.oddId, data.variables),
     onSuccess: (_, variables) => {
       // Refetch both the match query and match criteria query to get updated data
-      queryClient.refetchQueries({
-        queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getOddByIdQueryOptions({ oddId: variables.oddId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getAllOddsQueryOptions().queryKey,
-      });
+      // queryClient.refetchQueries({
+      //   queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
+      // });
+      // queryClient.refetchQueries({
+      //   queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
+      // });
     },
   }, queryClient);
 

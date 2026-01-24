@@ -28,9 +28,11 @@ public class ServerSentEventEmitter {
     private static final Logger log = LogManager.getLogger(ServerSentEventEmitter.class);
 
     public SseEmitter newEmitter() {
-        var timeOutInSeconds = Instant.now().plus(1, ChronoUnit.MINUTES).toEpochMilli();
+        var timeOutInSeconds = Instant.now().plus(10, ChronoUnit.MINUTES).toEpochMilli();
         SseEmitter emitter = new SseEmitter(timeOutInSeconds);
         this.addEmitter(emitter);
+
+        log.info("[SSE] New emitter connected: {}", emitter.toString());
         return emitter;
     }
 
@@ -49,11 +51,12 @@ public class ServerSentEventEmitter {
             try {
                 emitter.send(SseEmitter.event()
                         .id(UUID.random())
-                        .name(eventName)
+                        .name("message") // a global message group for easy processing
                         .data(jsonPayload, MediaType.APPLICATION_JSON));
             } catch (Exception e) {
                 deadEmitters.add(emitter);
                 log.info("[SSE] The emitter at was found dead: {}", emitter.toString());
+                log.error(e);
             }
         });
 

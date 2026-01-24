@@ -1,13 +1,16 @@
-import { ICriteria, IOdd } from '@/types';
+import { ICriterion, IOdd } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
+import { OddSseStore } from '@/SseStore/stores/OddSse.store';
+import { sseClientStore } from '@/SseStore/provider';
+import { useQuery } from '@tanstack/react-query';
 
 interface OddButtonProps extends TouchableOpacityProps {
   odd: IOdd;
   showName?: boolean;
   variant?: 'primary' | 'secondary';
-  criterion: Omit<ICriteria, 'match'>;
+  criterion: Omit<ICriterion, 'match'>;
 }
 
 const DisabledOddButton = ({
@@ -58,23 +61,30 @@ const disabledOddButtonStyles = StyleSheet.create({
   },
 });
 
+const useOddSSE = (oddId: string) => {
+  return useQuery({
+    queryKey: ['odd', oddId],
+    queryFn: () => OddSseStore.getOdd(oddId),
+  }, sseClientStore);
+}
+
 export const OddButton = (props: OddButtonProps) => {
   const { pushSheet } = useMatchBottomSheet();
-
-
+  const { data: odd } = useOddSSE(props.odd.id);
 
   if (props.odd.status === 'SUSPENDED' || props.criterion.status === 'SUSPENDED') {
-    return <DisabledOddButton {...props} />;
+    return <DisabledOddButton {...props} />
   }
+  if (!odd) return <Text> odd not found </Text>;
 
   const {
-    odd,
     style,
     showName = true,
     criterion,
     variant = 'primary',
     ...rest
   } = props;
+
 
   const oddSheetData: IOddSheetData = {
     ...odd,

@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import 'react-native-reanimated';
+import { SSEProvider } from '@/SseStore/provider';
 
 if (__DEV__) {
   require('../reactotron-config');
@@ -22,11 +23,12 @@ export default function RootLayout() {
   }
 
   return (
+    <SSEProvider>
+
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <KeyboardProvider>
-          <Stack>
-
+            <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="auth" options={{ headerShown: false }} />
             <Stack.Screen
@@ -61,6 +63,8 @@ export default function RootLayout() {
           <StatusBar style={'light'} backgroundColor="#262F3D" />
         </KeyboardProvider>
       </SafeAreaProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </SSEProvider>
+
   );
 }

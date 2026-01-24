@@ -36,9 +36,6 @@ public class UpdateOddValueUC implements IUseCase<UpdateOddValueParam, OddEntity
         if(foundOdd.getValue() == param.requestDTO().getValue()) {
             throw new BusinessRuleException("INVALID_ODD_VALUE", "The odd value cannot be the same as the previous one");
         }
-        if (foundOdd.getStatus() != OddStatusEnum.ACTIVE) {
-            throw new BusinessRuleException("INVALID_ODD_STATUS", "Only odds with active state are allowed to be edited");
-        }
 
         oddValueChangeDirection = param.requestDTO().getValue() > foundOdd.getValue()
                 ? OddValueChangeDirection.UP

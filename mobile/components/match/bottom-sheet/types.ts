@@ -1,4 +1,4 @@
-import type { ICriteria, IMatch, IOdd } from '@/types';
+import type { ICriterion, IMatch, IOdd } from '@/types';
 
 export type BottomSheetType =
   'match-action' | 'match-end-match' | 'match-update-score' |
@@ -6,7 +6,7 @@ export type BottomSheetType =
   'odd-action' | 'odd-reprice' | 'odd-suspend';
 
   export interface IOddSheetData extends IOdd {
-    criterion?: Omit<ICriteria, 'match'>;
+    criterion?: Omit<ICriterion, 'match'>;
   }
 
 export interface BottomSheetStackItem {

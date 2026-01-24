@@ -1,6 +1,7 @@
 import { getRequest, postRequest, putRequest, patchRequest } from "@/utils/http";
 import { IMatchCriteriaResponse } from "../matches/matches-services";
-import { CriterionStatusEnum, ICriteria } from "@/types";
+import { CriterionStatusEnum, ICriterion } from "@/types";
+import { SseStoreOrchestrator } from '@/SseStore/stores';
 
 export interface IRepriceOddsRequest {
   odds: {
@@ -29,15 +30,19 @@ export interface ICreateCriterionOddRequest {
 
 export class CriterionService {
   public static async findAllCriteria() {
-    return await getRequest<ICriteria[]>('/criteria');
+    const data = await getRequest<ICriterion[]>('/criteria');
+    SseStoreOrchestrator.setCriteria(data.data);
+    return data;
   }
 
   public static async findCriterionById(criterionId: string) {
-    return await getRequest<ICriteria>(`/criteria/${criterionId}`);
+    const data = await getRequest<ICriterion>(`/criteria/${criterionId}`);
+    SseStoreOrchestrator.setCriteria([data.data]);
+    return data;
   }
 
   public static async createCriterion(data: ICreateCriterionRequest) {
-    return await postRequest<ICriteria, ICreateCriterionRequest>('/criteria', data);
+    return await postRequest<ICriterion, ICreateCriterionRequest>('/criteria', data);
   }
 
   public static async repriceCriterionOdds(criterionId: string, data: IRepriceOddsRequest) {
@@ -45,10 +50,10 @@ export class CriterionService {
   }
 
   public static async updateCriterionStatus(criterionId: string, data: IUpdateCriterionStatusRequest) {
-    return await putRequest<ICriteria, IUpdateCriterionStatusRequest>(`/criteria/${criterionId}/status`, data);
+    return await putRequest<ICriterion, IUpdateCriterionStatusRequest>(`/criteria/${criterionId}/status`, data);
   }
 
   public static async publishCriterion(criterionId: string) {
-    return await patchRequest<ICriteria, void>(`/criteria/${criterionId}/publish`, undefined);
+    return await patchRequest<ICriterion, void>(`/criteria/${criterionId}/publish`, undefined);
   }
 }
