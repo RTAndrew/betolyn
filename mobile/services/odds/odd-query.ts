@@ -2,7 +2,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 import { OddService } from './odd-service';
 import { IOdd } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
-import { IQueryOptions } from '@/utils/react-query';
+import { IQueryOptions, queryClient } from '@/utils/react-query';
 
 // QUERIES OPTIONS
 

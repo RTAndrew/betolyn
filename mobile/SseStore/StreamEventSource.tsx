@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import EventSource, { MessageEvent } from "react-native-sse";
-import ListenerFactory from './event-listeners';
+import ListenerFactory from './event-listeners/sse-listener-factory';
 
 
 

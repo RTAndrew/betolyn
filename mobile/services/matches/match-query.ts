@@ -3,7 +3,6 @@ import { IMatchCriteriaResponse, MatchesService } from './matches-services';
 import { IMatch } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
-import { useMatchesSSE, useMatchSSE } from '@/SseStore/hooks';
 
 // QUERIES OPTIONS
 
@@ -32,28 +31,12 @@ export const getMatchCriteriaQueryOptions = ({ matchId }: { matchId: string }) =
 
 export const useGetMatch = ({ matchId }: { matchId: string }) => {
   const query = getMatchQueryOptions({ matchId });
-  const sseMatch = useMatchSSE(matchId);
-  const result = useQuery(query);
-
-  if (result.dataUpdatedAt > sseMatch?.dataUpdatedAt) return result;
-
-  return {
-    ...result, // result has all the propperties required by the contract IApiResponse
-    data: sseMatch,
-  };
+  return useQuery(query);
 };
 
 export const useGetMatches = ({ queryOptions }: IQueryOptions<typeof getMatchesQueryOptions>) => {
   const query = getMatchesQueryOptions();
-  const sseMatches = useMatchesSSE();
-  const result = useQuery({ ...query, ...queryOptions });
-
-  if (result.dataUpdatedAt > sseMatches?.dataUpdatedAt) return result;
-
-  return {
-    ...result, // result has all the propperties required by the contract IApiResponse
-    data: result.data?.data,
-  };
+  return useQuery({ ...query, ...queryOptions });
 };
 
 export const useGetMatchCriteria = ({ matchId }: { matchId: string }) => {

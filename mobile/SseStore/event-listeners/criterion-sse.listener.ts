@@ -1,9 +1,13 @@
-import { ISseEvent } from ".";
-import { ISseListener } from "./types";
-import { SseStoreOrchestrator } from "../stores/index";
-import { ICriterion } from "@/types";
+import { DataSync } from '../data-sync';
+import { ISseEvent } from './sse-listener-factory';
+import { ISseListener } from './types';
+import { ICriterion } from '@/types';
 
-type TPayload = ISseEvent<any>;
+type TPayload = ISseEvent<ICriterionChangeEvent>;
+interface ICriterionChangeEvent {
+  criterionId: string;
+  status?: ICriterion['status'];
+}
 
 class CriterionSseListener implements ISseListener {
   private readonly payload: TPayload;
@@ -19,21 +23,25 @@ class CriterionSseListener implements ISseListener {
 
     // Handle different criterion event types
     switch (eventName) {
+      case 'REFRESH_REQUIRED': {
+        const odd = eventPayload as any;
+        DataSync.refreshCriteriaData(odd.criterionId);
+        break;
+      }
+
       case 'criterionStatusChanged':
       case 'criterionCreated':
       case 'criterionPublished':
         if (eventPayload) {
-          const criterion = eventPayload as ICriterion;
-          SseStoreOrchestrator.setCriteria([criterion]);
+          const criterion = eventPayload;
+          // DataSync.updateCriteria([criterion]);
         }
         break;
 
       case 'criterionUpdated':
-        // Handle dynamic criterion update events (criterionUpdated:{criterionId})
-        if (eventPayload) {
-          const criterion = eventPayload as ICriterion;
-          SseStoreOrchestrator.setCriteria([criterion]);
-        }
+        const criterion = eventPayload as unknown as ISseEvent<ICriterion>;
+        // DataSync.updateCriteria([criterion]);
+
         break;
 
       default:

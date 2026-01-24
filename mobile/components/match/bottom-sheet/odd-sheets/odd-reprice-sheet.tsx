@@ -10,10 +10,7 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
 import { IOddSheetData } from '../types';
 import { useRepriceOdd } from '@/services';
-import { sseClientStore } from '@/SseStore/provider';
-import { IMatch } from '@/types';
-import { SseStoreOrchestrator } from '@/SseStore/stores';
-import { queryClient } from '@/utils/react-query';
+
 
 interface TeamProps {
   name: string;

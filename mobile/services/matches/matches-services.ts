@@ -1,4 +1,4 @@
-import { SseStoreOrchestrator } from '@/SseStore/stores';
+import { DataSync } from '@/SseStore/data-sync';
 import { ICriterion, IMatch, IOdd, MatchStatusEnum } from '@/types';
 import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
 
@@ -38,20 +38,28 @@ export class MatchesService {
   public static async getMatch(matchId: string) {
     const data = await getRequest<IMatch>(`/matches/${matchId}`);
 
-    SseStoreOrchestrator.updateMatch(data.data);
+    DataSync.updateMatches([data.data]);
     return data;
   }
 
   public static async getMatches() {
     const data = await getRequest<IMatch[]>('/matches');
 
-    SseStoreOrchestrator.setMatches(data.data);
+    DataSync.updateMatches(data.data);
     return data;
   }
 
   public static async getMatchCriteria(matchId: string) {
     const result = await getRequest<IMatchCriteriaResponse[]>(`/matches/${matchId}/criteria`);
-    SseStoreOrchestrator.setMatchWithCriteria(result.data);
+    DataSync.updateCriteria(
+      result.data.map((criterion) => ({
+        id: criterion.id,
+        odds: criterion.odds.map((odd) => ({
+          id: odd.id,
+          value: odd.value,
+        })),
+      }))
+    );
     return result;
   }
 

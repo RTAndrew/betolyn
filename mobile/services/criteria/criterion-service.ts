@@ -1,7 +1,7 @@
 import { getRequest, postRequest, putRequest, patchRequest } from "@/utils/http";
 import { IMatchCriteriaResponse } from "../matches/matches-services";
-import { CriterionStatusEnum, ICriterion } from "@/types";
-import { SseStoreOrchestrator } from '@/SseStore/stores';
+import { CriterionStatusEnum, ICriterion } from '@/types';
+import { DataSync } from '@/SseStore/data-sync';
 
 export interface IRepriceOddsRequest {
   odds: {
@@ -31,13 +31,13 @@ export interface ICreateCriterionOddRequest {
 export class CriterionService {
   public static async findAllCriteria() {
     const data = await getRequest<ICriterion[]>('/criteria');
-    SseStoreOrchestrator.setCriteria(data.data);
+    DataSync.updateCriteria(data.data);
     return data;
   }
 
   public static async findCriterionById(criterionId: string) {
     const data = await getRequest<ICriterion>(`/criteria/${criterionId}`);
-    SseStoreOrchestrator.setCriteria([data.data]);
+    DataSync.updateCriteria([data.data]);
     return data;
   }
 

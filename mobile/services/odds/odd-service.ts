@@ -1,5 +1,6 @@
 import { getRequest, postRequest, putRequest } from "@/utils/http";
 import { IOdd, EOddStatus } from "@/types";
+import { DataSync } from '@/SseStore/data-sync';
 
 export interface IUpdateOddStatusRequest {
   status: EOddStatus;
@@ -19,11 +20,15 @@ export interface ICreateOddRequest {
 
 export class OddService {
   public static async findAllOdds() {
-    return await getRequest<IOdd[]>('/odds');
+    const data = await getRequest<IOdd[]>('/odds');
+    // DataSync.updateOdds(data.data);
+    return data;
   }
 
   public static async findOddById(oddId: string) {
-    return await getRequest<IOdd>(`/odds/${oddId}`);
+    const data = await getRequest<IOdd>(`/odds/${oddId}`);
+    DataSync.updateOdds([data.data]);
+    return data;
   }
 
   public static async createOdd(data: ICreateOddRequest) {

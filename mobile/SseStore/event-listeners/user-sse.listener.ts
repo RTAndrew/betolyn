@@ -1,5 +1,5 @@
-import { ISseEvent } from ".";
-import { ISseListener } from "./types";
+import { ISseEvent } from './sse-listener-factory';
+import { ISseListener } from './types';
 
 type TPayload = ISseEvent<any>;
 

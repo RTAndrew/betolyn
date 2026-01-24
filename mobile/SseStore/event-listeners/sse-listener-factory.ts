@@ -9,11 +9,11 @@ import { ISseListener } from "./types";
 export interface ISseEvent<T extends object> {
   payload: T;
   domain: "odd" | "match" | "team" | "user" | "criterion";
-  eventName: string;
+  eventName: "REFRESH_REQUIRED" | string;
   timestamp: number;
 }
 
-class ListenerFactory {
+class SseListenerFactory {
   public static createListener(event: MessageEvent): ISseListener {
     const payload = JSON.parse(event?.data ?? '') as ISseEvent<any>;
 
@@ -34,4 +34,4 @@ class ListenerFactory {
   }
 }
 
-export default ListenerFactory;
+export default SseListenerFactory;

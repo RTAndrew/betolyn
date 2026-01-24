@@ -1,9 +1,7 @@
-import { ISseEvent } from '.';
+import { DataSync } from '../data-sync';
+import { ISseEvent } from './sse-listener-factory';
 import { ISseListener } from './types';
-import { SseStoreOrchestrator } from '../stores/index';
 import { IOdd } from '@/types';
-import { getSseQueryClient } from '../utils';
-import { OddSseStore } from '../stores/OddSse.store';
 
 type TPayload = ISseEvent<any>;
 
@@ -30,17 +28,21 @@ class OddSseListener implements ISseListener {
         console.log('[SSE] Odd status changed:', eventPayload);
         const odd = eventPayload as IOddChangeEvent;
 
-        OddSseStore.setOdds([{
-          id: odd.oddId,
-          direction: odd.direction,
-          status: odd?.status,
-          value: odd?.value,
-        }]);
+        DataSync.updateOdds([
+          {
+            id: odd.oddId,
+            direction: odd.direction,
+            status: odd?.status,
+            value: odd?.value,
+          },
+        ]);
         break;
       }
 
       case 'oddCreated': {
-        // SseStoreOrchestrator.setOdds([odd]);
+        const odd = eventPayload as IOdd;
+
+        DataSync.updateOdds([odd]);
         break;
       }
 

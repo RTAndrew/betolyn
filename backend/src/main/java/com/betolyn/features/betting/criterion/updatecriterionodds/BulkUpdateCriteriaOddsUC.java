@@ -23,7 +23,7 @@ public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsPar
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final CriterionSystemEvent criterionSystemEvent;
 
-    record BulkUpdateCriteriaOddsEventDTO(String criterionId, List<String> odds){}
+    record BulkUpdateCriteriaOddsEventDTO(String criterionId, String matchId, List<String> odds){}
 
     @Override
     @Transactional
@@ -58,6 +58,7 @@ public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsPar
 
         var eventDTO = new BulkUpdateCriteriaOddsEventDTO(
                 criterion.getId(),
+                criterion.getMatch().getId(),
                 param.requestDTO().getOdds().stream().map(odd -> odd.id()).toList()
         );
         criterionSystemEvent.publish(this, DefaultSystemEventNames.REFRESH_REQUIRED.name(), eventDTO);

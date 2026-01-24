@@ -8,7 +8,7 @@ export const sseClientStore = new QueryClient({
       refetchOnWindowFocus: true,
       refetchOnMount: true,
       staleTime: 0,
-      gcTime: Infinity,
+      gcTime: 3 * 60, // 3 minutes
     },
   },
 });
