@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-record OddStatusChangedEventDTO(String oddId, OddStatusEnum status) {}
-
 @Service
 @RequiredArgsConstructor
 public class UpdateOddStatusUC implements IUseCase<UpdateOddStatusParam, OddEntity> {

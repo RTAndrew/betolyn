@@ -5,4 +5,5 @@ public final class CriterionApiPaths {
     public static final String CRITERIA_STATUS = "/criteria/{criterionId}/status";
     public static final String CRITERIA_ODDS = "/criteria/{criterionId}/odds";
     public static final String CRITERIA_PUBLISH = "/criteria/{criterionId}/publish";
+    public static final String CRITERIA_SUSPEND = "/criteria/{criterionId}/suspend";
 }
