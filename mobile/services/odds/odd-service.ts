@@ -1,6 +1,6 @@
 import { getRequest, postRequest, putRequest } from "@/utils/http";
 import { IOdd, EOddStatus } from "@/types";
-import { DataSync } from '@/SseStore/data-sync';
+import { DataSync } from '@/server-sent-events/data-sync';
 
 export interface IUpdateOddStatusRequest {
   status: EOddStatus;

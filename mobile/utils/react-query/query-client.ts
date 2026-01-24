@@ -6,8 +6,8 @@ export const DEFAULT_QUERY_CONFIG = {
   queries: {
     retry: false,
     staleTime: THREE_MINUTES,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   },
 } satisfies DefaultOptions;
 

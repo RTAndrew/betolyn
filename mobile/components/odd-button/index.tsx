@@ -2,8 +2,6 @@ import { ICriterion, IOdd } from '@/types';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
-import { sseClientStore } from '@/SseStore/provider';
-import { useQuery } from '@tanstack/react-query';
 import { useGetOddById } from '@/services/odds/odd-query';
 
 interface OddButtonProps extends TouchableOpacityProps {

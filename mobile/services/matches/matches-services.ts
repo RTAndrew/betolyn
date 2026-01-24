@@ -1,4 +1,4 @@
-import { DataSync } from '@/SseStore/data-sync';
+import { DataSync } from '@/server-sent-events/data-sync';
 import { ICriterion, IMatch, IOdd, MatchStatusEnum } from '@/types';
 import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
 

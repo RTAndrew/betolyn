@@ -1,7 +1,7 @@
 import { getRequest, postRequest, putRequest, patchRequest } from "@/utils/http";
 import { IMatchCriteriaResponse } from "../matches/matches-services";
 import { CriterionStatusEnum, ICriterion } from '@/types';
-import { DataSync } from '@/SseStore/data-sync';
+import { DataSync } from '@/server-sent-events/data-sync';
 
 export interface IRepriceOddsRequest {
   odds: {
