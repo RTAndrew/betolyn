@@ -7,6 +7,8 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
 import { useCreateOdd } from '@/services';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+import { NumberInput } from '@/components/forms';
+import Checkbox from '@/components/forms/checkbox';
 
 type ValidationSuccess = { success: true; name: string; value: number };
 type ValidationFailure = { success: false; nameError: string | null; valueError: string | null };
@@ -49,6 +51,7 @@ function validateCreateOddForm(name: string | null, value: string | null): Valid
 export const CreateOddSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet, goBack } = useMatchBottomSheet();
 
+  const [isDraft, setIsDraft] = useState(true);
   const [name, setName] = useState<string | null>(null);
   const [value, setValue] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -74,16 +77,19 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
       return;
     }
 
+
     await createOdd({
       variables: {
         name: result.name,
         value: result.value,
         criterionId: criterion.id,
+        status: isDraft ? "DRAFT" : "ACTIVE",
       },
     });
 
     closeAll();
   };
+
 
   return (
     <BottomSheet onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}>
@@ -102,13 +108,20 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
           onChangeText={setName}
           errorMessage={nameError}
         />
-        <TextInput
+
+        <NumberInput
           label="Outcome value"
-          placeholder="e.g. 2.5"
-          keyboardType="decimal-pad"
-          value={value ?? ''}
-          onChangeText={setValue}
+          value={Number(value ?? 0)}
+          onChange={(value) => setValue(value.toString())}
           errorMessage={valueError}
+        />
+
+        <Checkbox
+
+          label="Create as a draft?"
+          description="Draft outcomes are not visible to users until they are published."
+          value={isDraft}
+          onChange={setIsDraft}
         />
       </SafeHorizontalView>
 

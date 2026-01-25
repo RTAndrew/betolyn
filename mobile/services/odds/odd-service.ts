@@ -14,6 +14,7 @@ export interface ICreateOddRequest {
   name: string;
   value: number;
   criterionId: string;
+  status?: `${EOddStatus.ACTIVE | EOddStatus.DRAFT}`;
 }
 
 export class OddService {

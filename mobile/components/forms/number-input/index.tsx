@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ViewStyle, TextStyle, Pressable } from 'react-native';
 import TextInput from '../text-input';
-import BaseField, { BaseFieldProps } from '../input-field';
+import BaseField, { BaseFieldProps } from '../base-field';
 import { Add, Subtract } from '@/components/icons';
 
 interface NumberInputProps extends Omit<BaseFieldProps, 'children'> {

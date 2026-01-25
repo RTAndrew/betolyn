@@ -146,9 +146,9 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView  style={{ marginTop: 32 }}>
-        <Button.RootButton onPress={handleSave} disabled={isPending}>
+        <Button.Root onPress={handleSave} disabled={isPending}>
           {isPending ? 'Saving...' : 'Save'}
-        </Button.RootButton>
+        </Button.Root>
       </SafeHorizontalView>
 
     </BottomSheet>

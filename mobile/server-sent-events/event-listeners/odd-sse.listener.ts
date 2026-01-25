@@ -10,6 +10,13 @@ interface IOddStatusChangeEvent {
   status?: IOdd['status'];
 }
 
+interface IOddCreatedEvent {
+  oddId: string;
+  criterionId: string;
+  matchId: string;
+  status: IOdd['status'];
+}
+
 interface IOddValueChangeEvent {
   oddId: string;
   value?: number;
@@ -32,8 +39,6 @@ class OddSseListener implements ISseListener {
   handleEvent = () => {
     const { eventName, payload: eventPayload } = this.payload;
 
-    console.log('eventName', eventName);
-
     switch (eventName) {
       case 'oddStatusChanged': {
         const { odds, status } = eventPayload as IOddStatusChangeEvent;
@@ -49,9 +54,9 @@ class OddSseListener implements ISseListener {
 
       case 'oddCreated': {
         console.log('oddCreated', eventPayload);
-        const { criterion } = eventPayload as IOdd & { criterion: ICriterion };
+        const { criterionId, oddId, status, matchId } = eventPayload as IOddCreatedEvent;
 
-        DataSync.refreshCriteriaData([criterion.id], criterion.match.id);
+        DataSync.refreshCriteriaData([criterionId], matchId);
         break;
       }
 

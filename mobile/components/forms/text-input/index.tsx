@@ -5,7 +5,7 @@ import {
   TextStyle,
 } from 'react-native';
 import { useMemo, useState } from 'react';
-import BaseField, { BaseFieldProps } from '../input-field';
+import BaseField, { BaseFieldProps } from '../base-field';
 
 interface InputProps extends TextInputProps, Omit<BaseFieldProps, 'children'> {
   style?: TextStyle;

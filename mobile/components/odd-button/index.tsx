@@ -102,7 +102,7 @@ export const OddButton = (props: OddButtonProps) => {
     criterion: props.criterion,
   };
 
-  if (odd.status === 'SUSPENDED' || props.criterion.status === 'SUSPENDED') {
+  if (odd.status === 'SUSPENDED' || props.criterion.status === 'SUSPENDED' || odd.status === 'DRAFT') {
     return <DisabledOddButton sheetData={oddSheetData} {...props} odd={odd} />
   }
 
@@ -113,8 +113,6 @@ export const OddButton = (props: OddButtonProps) => {
     variant = 'primary',
     ...rest
   } = props;
-
-
 
 
   return (
