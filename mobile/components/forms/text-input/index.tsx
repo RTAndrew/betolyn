@@ -2,21 +2,16 @@ import {
   StyleSheet,
   TextInput as _TextInput,
   TextInputProps,
-  View,
-  ViewStyle,
   TextStyle,
 } from 'react-native';
-import { ThemedText } from '../../ThemedText';
 import { useMemo, useState } from 'react';
+import BaseField, { BaseFieldProps } from '../input-field';
 
-interface InputProps extends TextInputProps {
-  label?: string;
-  errorMessage?: string | null;
-  status?: 'warning' | 'error' | 'success';
+interface InputProps extends TextInputProps, Omit<BaseFieldProps, 'children'> {
   style?: TextStyle;
 }
 
-const TextInput = ({ label, errorMessage, status, style, ...props }: InputProps) => {
+const TextInput = ({ label, errorMessage, status, style, containerStyle, ...props }: InputProps) => {
   const errorColor = useMemo(() => {
     if (status) return errorStyles[status];
     if (errorMessage) return errorStyles.error;
@@ -26,9 +21,7 @@ const TextInput = ({ label, errorMessage, status, style, ...props }: InputProps)
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View>
-      {label && <ThemedText style={styles.label}>{label}</ThemedText>}
-
+    <BaseField label={label} errorMessage={errorMessage} status={status} containerStyle={containerStyle}>
       <_TextInput
         {...props}
         placeholderTextColor="#BFBFBF"
@@ -36,15 +29,7 @@ const TextInput = ({ label, errorMessage, status, style, ...props }: InputProps)
         onBlur={() => setIsFocused(false)}
         style={[styles.input, errorColor, isFocused && styles.focused, style]}
       />
-
-      {errorMessage && (
-        <ThemedText
-          style={{ ...styles.errorMessage, color: status !== 'error' ? '#FF5CA0' : '#FA8C16' }}
-        >
-          {errorMessage}
-        </ThemedText>
-      )}
-    </View>
+    </BaseField>
   );
 };
 
@@ -56,15 +41,6 @@ const styles = StyleSheet.create({
     color: 'white',
     borderColor: '#8791A5',
     backgroundColor: '#485164',
-  },
-  label: {
-    marginBottom: 5,
-    fontWeight: '600',
-  },
-  errorMessage: {
-    fontSize: 12,
-    marginTop: 5,
-    color: '#F80069',
   },
   focused: {
     borderColor: '#7E87F1',
