@@ -13,8 +13,6 @@ export interface IUpdateOddValueRequest {
 export interface ICreateOddRequest {
   name: string;
   value: number;
-  minimumAmount: number;
-  maximumAmount: number;
   criterionId: string;
 }
 
@@ -47,7 +45,7 @@ export class OddService {
     return await patchRequest<IOdd, void>(`/odds/${oddId}/publish`);
   }
 
-  public static async suspendOdd(oddId: string) {
+  public static async suspend(oddId: string) {
     return await putRequest<IOdd, unknown>(`/odds/${oddId}/status`, {
       status: EOddStatus.SUSPENDED as EOddStatus,
     });

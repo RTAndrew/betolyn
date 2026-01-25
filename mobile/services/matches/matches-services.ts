@@ -51,15 +51,7 @@ export class MatchesService {
 
   public static async getMatchCriteria(matchId: string) {
     const result = await getRequest<IMatchCriteriaResponse[]>(`/matches/${matchId}/criteria`);
-    DataSync.updateCriteria(
-      result.data.map((criterion) => ({
-        id: criterion.id,
-        odds: criterion.odds.map((odd) => ({
-          id: odd.id,
-          value: odd.value,
-        })),
-      }))
-    );
+    DataSync.updateCriteria(result.data);
     return result;
   }
 

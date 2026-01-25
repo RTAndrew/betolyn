@@ -87,6 +87,24 @@ class _DataSync {
           } as IApiResponse<IMatchCriteriaResponse[]>;
         });
       }
+
+      // 3. Update Match Query
+      if (criterion.match?.id) {
+        const matchKey = getMatchQueryOptions({ matchId: criterion.match.id });
+        queryClient.setQueryData(matchKey.queryKey, (lastMatch) => {
+          if (lastMatch?.data?.mainCriterion?.id === criterion.id) {
+            const patchedMainCriterion = patch(lastMatch?.data.mainCriterion, criterion);
+            return {
+              ...lastMatch,
+              data: {
+                ...lastMatch?.data,
+                mainCriterion: patchedMainCriterion,
+              },
+            } as IApiResponse<IMatch>;
+          }
+          return lastMatch;
+        });
+      }
     }
 
     // 3. Update odds data

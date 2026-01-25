@@ -147,12 +147,12 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
           onScoreChange={(value) => handleScoreChange('away', value)}
         />
 
-        <Button.GradientButton
+        <Button.Root
           onPress={handleSubmit}
           style={styles.updateScoreButton}
         >
           {isPending ? '...' : 'Update Score'}
-        </Button.GradientButton>
+        </Button.Root>
       </BottomSheet.SafeHorizontalView>
     </BottomSheet>
   );

@@ -8,6 +8,8 @@ export type BottomSheetType =
   | 'criterion-reprice-update-odds'
   | 'criterion-lock-and-result'
   | 'criterion-suspend'
+  | 'criterion-create-odd'
+  | 'criterion-publish'
   | 'odd-action'
   | 'odd-reprice'
   | 'odd-suspend'

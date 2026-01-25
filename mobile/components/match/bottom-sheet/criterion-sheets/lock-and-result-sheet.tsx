@@ -111,7 +111,7 @@ export const CriterionLockAndResultSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
-        <Button.GradientButton onPress={closeAll}>Save</Button.GradientButton>
+        <Button.RootButton onPress={closeAll}>Save</Button.RootButton>
       </SafeHorizontalView>
 
     </BottomSheet>

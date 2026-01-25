@@ -17,7 +17,7 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 @Table(name = "odds")
 public class OddEntity extends BaseEntity {
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -25,13 +25,13 @@ public class OddEntity extends BaseEntity {
     @JsonIgnoreProperties("odd") // avoid self reference lastOdd <-> odd
     private OddHistoryEntity lastOddHistory;
 
-    @NotNull
+    @Column(nullable = false)
     private double value = 0.1;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
-    private OddStatusEnum status;
+    private OddStatusEnum status = OddStatusEnum.DRAFT;
 
     @NotNull
     @ManyToOne

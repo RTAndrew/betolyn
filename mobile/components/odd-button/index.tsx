@@ -95,6 +95,7 @@ export const OddButton = (props: OddButtonProps) => {
   if (isPending) return <Text> Loading... </Text>;
   if (error) { console.log("error fetching odd", error); return <></> }
   if (!odd) return <Text> odd not found </Text>
+  // if (odd.status === "DRAFT") return <></>
 
   const oddSheetData: IOddSheetData = {
     ...odd,

@@ -1,7 +1,7 @@
 import { DataSync } from '../data-sync';
 import { ISseEvent } from './sse-listener-factory';
 import { ISseListener } from './types';
-import { IOdd } from '@/types';
+import { ICriterion, IOdd } from '@/types';
 
 type TPayload = ISseEvent<any>;
 
@@ -32,6 +32,8 @@ class OddSseListener implements ISseListener {
   handleEvent = () => {
     const { eventName, payload: eventPayload } = this.payload;
 
+    console.log('eventName', eventName);
+
     switch (eventName) {
       case 'oddStatusChanged': {
         const { odds, status } = eventPayload as IOddStatusChangeEvent;
@@ -46,9 +48,10 @@ class OddSseListener implements ISseListener {
       }
 
       case 'oddCreated': {
-        const odd = eventPayload as IOdd;
+        console.log('oddCreated', eventPayload);
+        const { criterion } = eventPayload as IOdd & { criterion: ICriterion };
 
-        DataSync.updateOdds([odd]);
+        DataSync.refreshCriteriaData([criterion.id], criterion.match.id);
         break;
       }
 

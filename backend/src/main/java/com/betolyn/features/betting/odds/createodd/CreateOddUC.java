@@ -3,7 +3,6 @@ package com.betolyn.features.betting.odds.createodd;
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.odds.OddSystemEvent;
-import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddMapper;
 import com.betolyn.features.betting.odds.SaveAndSyncOddUseCase;

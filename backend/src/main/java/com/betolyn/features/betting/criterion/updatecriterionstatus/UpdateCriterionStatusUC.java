@@ -53,8 +53,11 @@ public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusPa
 
         var affectedOddIds = odds.stream().map(o -> o.getId()).toList();
         var criterionEventDTO = new CriterionStatusChangedEventDTO(
-                savedCriterion.getId(), savedCriterion.getStatus(),
-                affectedOddIds);
+                savedCriterion.getId(),
+                savedCriterion.getMatch().getId(),
+                savedCriterion.getStatus(),
+                affectedOddIds
+        );
 
         criterionSystemEvent.publish(this, "criterionStatusChanged", criterionEventDTO);
         if (!odds.isEmpty()) {

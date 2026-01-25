@@ -26,7 +26,11 @@ public class PublishCriterionUC implements IUseCase<String, CriterionEntity> {
         foundCriterion.setStatus(CriterionStatusEnum.ACTIVE);
         var savedCriterion = criterionRepository.save(foundCriterion);
 
-        var eventDTO = new PublishCriterionEventDTO(savedCriterion.getId(), savedCriterion.getStatus());
+        var eventDTO = new PublishCriterionEventDTO(
+                savedCriterion.getId(),
+                savedCriterion.getMatch().getId(),
+                savedCriterion.getStatus()
+        );
         criterionSystemEvent.publish(this, "criterionPublished", eventDTO);
         
         return savedCriterion;

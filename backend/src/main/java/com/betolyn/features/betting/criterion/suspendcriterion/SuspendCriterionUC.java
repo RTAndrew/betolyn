@@ -45,8 +45,13 @@ public class SuspendCriterionUC implements IUseCase<String, CriterionEntity> {
         }
 
         var affectedOddIds = active.stream().map(o -> o.getId()).toList();
-        var eventDTO = new CriterionStatusChangedEventDTO(savedCriterion.getId(), savedCriterion.getStatus(), affectedOddIds);
-        criterionSystemEvent.publish(this, "criterionStatusChanged", eventDTO);
+        var eventDTO = new CriterionStatusChangedEventDTO(
+                savedCriterion.getId(),
+                savedCriterion.getMatch().getId(),
+                savedCriterion.getStatus(),
+                affectedOddIds
+        );
+        criterionSystemEvent.publish(this, "criterionSuspended", eventDTO);
         if (!active.isEmpty()) {
             oddSystemEvent.publish(this, "oddStatusChanged", new OddStatusChangedEventDTO(affectedOddIds, OddStatusEnum.SUSPENDED));
         }

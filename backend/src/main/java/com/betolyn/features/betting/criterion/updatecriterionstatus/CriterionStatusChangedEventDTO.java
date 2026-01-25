@@ -8,5 +8,5 @@ import java.util.List;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @JsonInclude(NON_NULL)
-public record CriterionStatusChangedEventDTO(String criterionId, CriterionStatusEnum status, List<String> odds) {
+public record CriterionStatusChangedEventDTO(String criterionId, String matchId,  CriterionStatusEnum status, List<String> odds) {
 }

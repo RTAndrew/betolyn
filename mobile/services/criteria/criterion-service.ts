@@ -46,14 +46,27 @@ export class CriterionService {
   }
 
   public static async repriceCriterionOdds(criterionId: string, data: IRepriceOddsRequest) {
-    return await patchRequest<IMatchCriteriaResponse, IRepriceOddsRequest>(`/criteria/${criterionId}/odds`, data);
+    return await patchRequest<IMatchCriteriaResponse, IRepriceOddsRequest>(
+      `/criteria/${criterionId}/odds`,
+      data
+    );
   }
 
-  public static async updateCriterionStatus(criterionId: string, data: IUpdateCriterionStatusRequest) {
-    return await putRequest<ICriterion, IUpdateCriterionStatusRequest>(`/criteria/${criterionId}/status`, data);
+  public static async updateCriterionStatus(
+    criterionId: string,
+    data: IUpdateCriterionStatusRequest
+  ) {
+    return await putRequest<ICriterion, IUpdateCriterionStatusRequest>(
+      `/criteria/${criterionId}/status`,
+      data
+    );
   }
 
-  public static async publishCriterion(criterionId: string) {
-    return await patchRequest<ICriterion, void>(`/criteria/${criterionId}/publish`, undefined);
+  public static async publish(criterionId: string) {
+    return await patchRequest<ICriterion>(`/criteria/${criterionId}/publish`);
+  }
+
+  public static async suspend(criterionId: string) {
+    return await patchRequest<ICriterion>(`/criteria/${criterionId}/suspend`);
   }
 }

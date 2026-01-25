@@ -7,7 +7,7 @@ import {
 import { queryClient } from "@/utils/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from "../matches/match-query";
-import { getAllCriteriaQueryOptions, getCriterionByIdQueryOptions } from "./criterion-query";
+import { getAllCriteriaQueryOptions } from './criterion-query';
 
 interface IRepriceCriterionOddsVariables {
   criterionId: string;
@@ -23,11 +23,6 @@ interface ISuspendCriterionVariables {
 
 interface ICreateCriterionVariables {
   variables: ICreateCriterionRequest;
-}
-
-interface IPublishCriterionVariables {
-  criterionId: string;
-  matchId?: string;
 }
 
 export const useRepriceCriterionOdds = () => {
@@ -49,24 +44,12 @@ export const useRepriceCriterionOdds = () => {
 };
 
 export const useSuspendCriterion = () => {
-  const mutation = useMutation({
-    mutationFn: (data: ISuspendCriterionVariables) => CriterionService.updateCriterionStatus(data.criterionId, data.variables),
-    onSuccess: (data, variables) => {
-      // Refetch both the match query and match criteria query to get updated data
-      queryClient.refetchQueries({
-        queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getCriterionByIdQueryOptions({ criterionId: variables.criterionId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getAllCriteriaQueryOptions().queryKey,
-      });
+  const mutation = useMutation(
+    {
+      mutationFn: (data: ISuspendCriterionVariables) => CriterionService.suspend(data.criterionId),
     },
-  }, queryClient);
+    queryClient
+  );
 
   return mutation;
 };
@@ -93,25 +76,12 @@ export const useCreateCriterion = () => {
 };
 
 export const usePublishCriterion = () => {
-  const mutation = useMutation({
-    mutationFn: (data: IPublishCriterionVariables) => CriterionService.publishCriterion(data.criterionId),
-    onSuccess: (data, variables) => {
-      queryClient.refetchQueries({
-        queryKey: getCriterionByIdQueryOptions({ criterionId: variables.criterionId }).queryKey,
-      });
-      queryClient.refetchQueries({
-        queryKey: getAllCriteriaQueryOptions().queryKey,
-      });
-      if (variables.matchId) {
-        queryClient.refetchQueries({
-          queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
-        });
-        queryClient.refetchQueries({
-          queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
-        });
-      }
+  const mutation = useMutation(
+    {
+      mutationFn: (criterionId: string) => CriterionService.publish(criterionId),
     },
-  }, queryClient);
+    queryClient
+  );
 
   return mutation;
 };

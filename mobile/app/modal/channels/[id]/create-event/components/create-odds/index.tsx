@@ -126,12 +126,12 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
         </View>
 
         <ThemedView style={styles.footer}>
-          <Button.GradientButton
+          <Button.RootButton
             disabled={odds.length === 0}
             onPress={() => setIsConfirmationVisible(true)}
           >
             Seguinte
-          </Button.GradientButton>
+          </Button.RootButton>
         </ThemedView>
       </ThemedView>
 
@@ -150,7 +150,7 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
             <Button.Root variant="text" onPress={() => setIsConfirmationVisible(false)}>
               Cancelar
             </Button.Root>
-            <Button.GradientButton onPress={onSave}>Confirmar</Button.GradientButton>
+            <Button.RootButton onPress={onSave}>Confirmar</Button.RootButton>
           </View>
         </ThemedView>
       </BottomSheet>
