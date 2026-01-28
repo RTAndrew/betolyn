@@ -20,7 +20,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function HomeScreen() {
-  const { data, isPending } = useGetMatches({});
+  const { data, isPending, error } = useGetMatches({});
 
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('authToken');
@@ -36,6 +36,7 @@ export default function HomeScreen() {
   }
 
   if (!data) {
+    console.log('No matches found', data, error);
     return (
       <Wrapper>
         <Text>No matches found</Text>

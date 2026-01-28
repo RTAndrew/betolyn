@@ -1,8 +1,7 @@
 import BetCard from '@/components/bet-card';
 import { ThemedView } from '@/components/ThemedView';
-import { mockAPI } from '@/mock';
-import { IMatch } from '@/mock/matches';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { useGetMatches } from '@/services';
+import { IMatch } from '@/types';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -11,6 +10,17 @@ interface ChannelSearchMatchesProps {
 }
 
 const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
+
+  const { data, error, isPending } = useGetMatches({});
+  const matches = data?.data;
+
+  if (isPending) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!matches || error) {
+    return <Text>Error loading matches</Text>;
+  }
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: '#61687E' }}>
@@ -21,7 +31,7 @@ const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
         </ThemedView>
 
         <ThemedView style={{ flex: 1, backgroundColor: 'transparent' }}>
-          {mockAPI.getMatches().map((match, index) => (
+          {matches.map((match, index) => (
             <BetCard onPress={(m) => onMatchPress?.(m)} key={index} match={match} />
           ))}
         </ThemedView>

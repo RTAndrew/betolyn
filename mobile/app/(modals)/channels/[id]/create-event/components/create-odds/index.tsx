@@ -1,10 +1,11 @@
 import BottomSheet, { BottomSheetProps } from '@/components/bottom-sheet';
-import Button from '@/components/button';
-import { OddButton } from '@/components/odd-button';
+import { Button } from '@/components/button';
+import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet';
+import { OddBaseButton } from '@/components/odd-button';
 import { ThemedView } from '@/components/ThemedView';
-import { IMatch } from '@/mock/matches';
+import { IMatch } from '@/types';
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
 import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 
 interface InputProps extends Omit<TextInputProps, 'placeholder'> {
@@ -91,38 +92,14 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
   return (
-    <>
+    <MatchBottomSheetProvider match={match}>
       <ThemedView style={styles.container}>
         <Text style={styles.title}>ChannelCreateOdds</Text>
 
         <View style={styles.oddList}>
-          <OddButton
-            onPress={() => setIsFormVisible(true)}
-            variant="secondary"
-            odd={{
-              id: 1,
-              name: 'Adicionar',
-              value: 'Adicionar',
-              minimum_amount: 1.0,
-              maximum_amount: 1.0,
-              created_by: 'system',
-            }}
-          />
-
-          {odds.map((odd) => (
-            <OddButton
-              key={odd}
-              // onPress={() => actionSheetRef.current?.show()}
-              odd={{
-                id: 1,
-                name: odd,
-                value: odd,
-                minimum_amount: 1.0,
-                maximum_amount: 1.0,
-                created_by: 'system',
-              }}
-            />
-          ))}
+          <Pressable onPress={() => setIsFormVisible(true)}>
+            <OddBaseButton showValue={false} value={0} name="Adicionar" />
+          </Pressable>
         </View>
 
         <ThemedView style={styles.footer}>
@@ -143,7 +120,7 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
         <ThemedView>
           <Text style={styles.confirmationText}>
             Tem certeza que deseja criar este critério para o event{' '}
-            {`${match.home_team} vs ${match.away_team}`}?
+            {`${match.homeTeam.name} vs ${match.awayTeam.name}`}?
           </Text>
 
           <View style={styles.confirmationButtonWrapper}>
@@ -164,7 +141,7 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
           }}
         />
       )}
-    </>
+    </MatchBottomSheetProvider>
   );
 };
 

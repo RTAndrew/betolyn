@@ -33,8 +33,11 @@ export default function RootLayout() {
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="auth" options={{ headerShown: false }} />
+            <Stack.Screen name="(modals)" options={{ headerShown: false, presentation: 'card', animation: 'slide_from_bottom' }} />
+
+            {/* This has to be here otherwise the form sheet will not work */}
             <Stack.Screen
-              name="modal/match/[id]"
+              name="(form-sheet)"
               options={{
                 headerShown: false,
                 presentation: 'formSheet',
@@ -46,18 +49,6 @@ export default function RootLayout() {
                 gestureEnabled: true,
                 sheetAllowedDetents: [1],
               }}
-            />
-            <Stack.Screen
-              options={{
-                headerShown: false,
-                presentation: 'containedModal',
-                animation: 'slide_from_bottom',
-                sheetElevation: 24,
-                sheetGrabberVisible: true,
-                gestureDirection: 'vertical',
-                sheetAllowedDetents: [50],
-              }}
-              name="modal/channels/[id]/create-event/index"
             />
 
             <Stack.Screen name="+not-found" />

@@ -5,7 +5,7 @@ import { ApiError } from './api-error';
 import { SafeStorage } from '../safe-storage';
 
 const api = axios.create({
-  baseURL: `http://192.168.178.110:8080`,
+  baseURL: `http://192.168.178.76:8080`,
   withCredentials: false,
   headers: {
     Accept: 'application/json',

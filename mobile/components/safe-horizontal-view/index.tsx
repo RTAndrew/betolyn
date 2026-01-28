@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react'
-import { View, ViewStyle } from 'react-native';
+import { StyleProp, View, ViewStyle } from 'react-native';
 
-const SafeHorizontalView = ({ children, style }: PropsWithChildren<{ style?: ViewStyle }>) => {
-  return <View style={{ paddingHorizontal: 20, ...style }}>{children}</View>;
+const SafeHorizontalView = ({ children, style }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) => {
+  return <View style={[style, { paddingHorizontal: 20 }]}>{children}</View>;
 };
 
 export default SafeHorizontalView

@@ -1,6 +1,7 @@
 package com.betolyn.features.betting.criterion.dto;
 
-import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -11,5 +12,5 @@ public class CreateCriterionOddRequestDTO {
     @NotNull
     private double value;
 
-    private CriterionStatusEnum status = CriterionStatusEnum.DRAFT;
+    private OddStatusEnum status;
 }

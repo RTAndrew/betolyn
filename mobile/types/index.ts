@@ -63,6 +63,6 @@ export interface IOdd {
   id: string;
   name: string;
   value: number;
-  direction?: 'UP' | 'DOWN';
   status: `${EOddStatus}`;
+  direction?: 'UP' | 'DOWN';
 }

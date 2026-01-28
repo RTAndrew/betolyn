@@ -6,18 +6,35 @@ import BetCard from '@/components/bet-card';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import { mockAPI } from '@/mock';
+import { useGetMatches } from '@/services';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ChannelId = () => {
   const { id } = useLocalSearchParams();
+
+  const insets = useSafeAreaInsets();
   const channel = mockAPI.getChannelById(Number(id));
+  const { data, error, isPending } = useGetMatches({});
+  const matches = data?.data;
 
   if (!channel) {
     return <Text>Channel not found</Text>;
   }
 
+  if (isPending) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!matches || error) {
+    return <Text>Error loading matches</Text>;
+  }
+
+
   return (
-    <ScrollView>
-      <View style={styles.headerContainer}>
+
+
+    <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
+      <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
         <ThemedView style={styles.header}>
           <View style={styles.headerLeft}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -41,7 +58,7 @@ const ChannelId = () => {
               <AntDesign name="message" size={24} color="white" />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.push(`/modal/channels/${id}/create-event`)}>
+            <TouchableOpacity onPress={() => router.push(`/channels/${id}/create-event`)}>
               <AntDesign name="plus" size={24} color="white" />
             </TouchableOpacity>
           </View>
@@ -49,11 +66,12 @@ const ChannelId = () => {
       </View>
 
       <ThemedView style={{ flex: 1, backgroundColor: '#61687E' }}>
-        {mockAPI.getMatches().map((match, index) => (
-          <BetCard key={index} match={match} />
+        {matches.map((match, index) => (
+          <BetCard key={index} match={match} onPress={(m) => router.push(`/channels/${m.id}/create-event`)} />
         ))}
       </ThemedView>
     </ScrollView>
+
   );
 };
 

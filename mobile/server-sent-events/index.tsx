@@ -5,7 +5,7 @@ import { AppState } from 'react-native';
 
 
 const connectToStream = () => {
-  const eventSource = new EventSource("http://192.168.178.110:8080/stream")
+  const eventSource = new EventSource("http://192.168.178.76:8080/stream")
 
   eventSource.addEventListener("close", () =>
     console.log("[SSE] Disconnected from the stream")

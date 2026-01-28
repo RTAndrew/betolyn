@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 import BottomSheetHeader from './bottom-sheet-header';
@@ -88,7 +88,22 @@ const ModalConfirmation = ({
   title,
   ...props
 }: ModalConfirmationProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    try {
+      await onConfirm?.();
+      onClose();
+    } catch {
+
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   if (!visible) return <></>;
+
 
   return (
     <BottomSheet onClose={onClose} visible={true} {...props}>
@@ -102,8 +117,8 @@ const ModalConfirmation = ({
 
         <View style={modalConfirmationStyles.actions}>
           {onConfirm && (
-            <Button.Root style={{ backgroundColor: destructive ? '#F80069' : '#7E87F1' }} onPress={onConfirm}>
-              {onConfirmText}
+            <Button.Root style={{ backgroundColor: destructive ? '#F80069' : '#7E87F1' }} onPress={handleConfirm}>
+              {isLoading ? <ActivityIndicator size="small" color="white" /> : onConfirmText}
             </Button.Root>
           )}
           <Button.Root variant="text" onPress={onClose}>

@@ -2,9 +2,10 @@ import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { Close, SoccerBall, TimeHistory, TrendingLines } from '@/components/icons';
+import { Add, Close, SoccerBall, TimeHistory, TrendingLines } from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
+import { router } from 'expo-router';
 
 const Team = ({
   name,
@@ -42,7 +43,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
-          text="Update Score"
+          text="Update score"
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}
@@ -53,11 +54,19 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           icon={<TimeHistory width={28} height={28} color="white" />}
         />
         <BottomSheet.ActionOption
-          text="Update Criteria"
+          text="View all markets"
           icon={<TrendingLines width={28} height={28} color="white" />}
         />
         <BottomSheet.ActionOption
-          text="End Match"
+          text="Add market"
+          onPress={() => {
+            closeAll();
+            router.push(`/matches/${match.id}/create-criterion`);
+          }}
+          icon={<Add width={28} height={28} color="white" />}
+        />
+        <BottomSheet.ActionOption
+          text="End match"
           icon={<Close width={28} height={28} color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-end-match' });

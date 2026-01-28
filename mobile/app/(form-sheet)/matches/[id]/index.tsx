@@ -34,7 +34,9 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
     <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
       <Section style={{ paddingVertical: 0 }}>
         {criteria.map((criteria, index) => (
-          <Collapsible onLongPress={() => {
+          <Collapsible
+            delayLongPress={200}
+            onLongPress={() => {
             pushSheet({ type: 'criterion-action', data: criteria });
           }} open={index === 0} key={criteria.id} title={criteria.name}>
             <ThemedView
@@ -200,7 +202,7 @@ const MatchPage = () => {
 
         <MatchCriteria matchId={match.id} />
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
     </MatchBottomSheetProvider>
   );
 };

@@ -74,13 +74,14 @@ const BetCardChild = ({ match, onPress }: BetCardProps) => {
       onPress(match);
     } else {
       // router.push(`/auth/login`);
-      router.push(`/modal/match/${match.id}`);
+      router.push(`/matches/${match.id}`);
     }
   };
 
   return (
     <>
       <TouchableWithoutFeedback
+        delayLongPress={200}
         onLongPress={() =>
           pushSheet({ type: 'match-action' })
         }

@@ -1,9 +1,9 @@
 import { ThemedText } from '@/components/ThemedText'
 import React from 'react'
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { Switch } from 'react-native-ui-lib'
+import { Switch as ReactNativeUISwitch } from 'react-native-ui-lib'
 
-interface CheckboxProps {
+interface SwitchProps {
   label?: string
   value: boolean
   description?: string
@@ -11,7 +11,7 @@ interface CheckboxProps {
   onChange: (value: boolean) => void
 }
 
-const Checkbox = ({ label, value, description, onChange, switchStyle }: CheckboxProps) => {
+const Switch = ({ label, value, description, onChange, switchStyle }: SwitchProps) => {
 
   const handleChange = () => {
     onChange(!value);
@@ -25,7 +25,7 @@ const Checkbox = ({ label, value, description, onChange, switchStyle }: Checkbox
       </View>
 
       <View style={styles.switchContainer}>
-        <Switch onColor='#3CC5A4' offColor='#485164' value={value} style={switchStyle} onValueChange={onChange}/>
+        <ReactNativeUISwitch onColor='#3CC5A4' offColor='#485164' value={value} style={switchStyle} onValueChange={onChange}/>
       </View>
     </Pressable>
 
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Checkbox
+export default Switch

@@ -1,6 +1,6 @@
 import { Ellipsis } from '@/components/icons'
 import { ThemedView } from '@/components/ThemedView'
-import { IMatch } from '@/mock/matches'
+import { IMatch } from '@/types';
 import React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
@@ -44,7 +44,7 @@ const ChannelSelectCriteria = ({ match, onSelectCriteria }: ChannelSelectCriteri
     <ScrollView style={styles.container}>
       <ThemedView style={styles.container}>
         <Text>
-          ChannelSelectCriteri a match {match.home_team} vs {match.away_team}
+          ChannelSelectCriteri a match {match.homeTeam.name} vs {match.awayTeam.name}
         </Text>
 
           <CriteriaItem isCreate criteria={"Criar critério"} onPress={() => onSelectCriteria("create-criteria")} />

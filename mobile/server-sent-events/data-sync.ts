@@ -162,6 +162,14 @@ class _DataSync {
         });
     }
   }
+
+  public refreshMatchData(matchId: string) {
+    const matchKey = getMatchQueryOptions({ matchId });
+    queryClient.invalidateQueries({ queryKey: matchKey.queryKey });
+
+    const matchCriteriaKey = getMatchCriteriaQueryOptions({ matchId });
+    queryClient.invalidateQueries({ queryKey: matchCriteriaKey.queryKey });
+  }
 }
 
 

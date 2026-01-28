@@ -55,7 +55,7 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
             tempOdd.setName(odd.getName());
             tempOdd.setValue(odd.getValue());
             tempOdd.setCriterion(savedCriterion);
-            tempOdd.setStatus(OddStatusEnum.ACTIVE);
+            tempOdd.setStatus(odd.getStatus() != null ? odd.getStatus() : OddStatusEnum.DRAFT);
 
             return tempOdd;
         }).toList();

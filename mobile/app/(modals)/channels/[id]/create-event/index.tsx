@@ -1,16 +1,11 @@
-import BetCard from '@/components/bet-card';
-import { ThemedView } from '@/components/ThemedView';
-import { mockAPI } from '@/mock';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import ChannelSearchMatches from './components/channel-search-matches';
-import { IMatch } from '@/mock/matches';
 import ChannelSelectCriteria from './components/select-criteria';
 import ChannelCreateOdds from './components/create-odds';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CreateEventHeader from './components/create-event-header';
 import { router } from 'expo-router';
+import { IMatch } from '@/types';
 
 type TScreen = 'search-matches' | 'select-criteria' | 'create-odds';
 

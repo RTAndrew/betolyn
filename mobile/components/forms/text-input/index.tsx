@@ -36,7 +36,7 @@ const TextInput = ({ label, errorMessage, status, style, containerStyle, ...prop
 const styles = StyleSheet.create({
   input: {
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 5,
     color: 'white',
     borderColor: '#8791A5',
