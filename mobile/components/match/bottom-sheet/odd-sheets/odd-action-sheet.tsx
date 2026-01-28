@@ -12,8 +12,8 @@ const canPublishOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${Criterion
   if (criterionStatus === "DRAFT") return false;
 
   if (oddStatus === "ACTIVE") return false;
-  if (oddStatus === "DRAFT") return false;
-
+  if (oddStatus === "SETTLED") return false;
+  if (oddStatus === "VOID") return false;
 
   return true;
 }
