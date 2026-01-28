@@ -4,5 +4,5 @@ export interface ICreateCriterionScreen<T = unknown> {
 }
 
 export interface ICreateCriterionScreenRef {
-  handleNext: () => void;
+  handleNext: () => boolean;
 }

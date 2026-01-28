@@ -136,7 +136,10 @@ const CreateCriterionOutcomes = forwardRef<ICreateCriterionScreenRef, ICreateCri
     const handleNext = () => {
       if (validateOutcomes()) {
         onDataCaptureNext('outcomes', outcomes);
+        return true;
       }
+
+      return false;
     };
 
     const handleRemoveOutcome = (id: string) => {
@@ -150,8 +153,8 @@ const CreateCriterionOutcomes = forwardRef<ICreateCriterionScreenRef, ICreateCri
     };
 
     useImperativeHandle(ref, () => ({
-      handleNext,
-    }));
+        handleNext
+      }));
 
     useEffect(() => {
       setOutcomes(data ?? {});

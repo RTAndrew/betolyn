@@ -43,7 +43,10 @@ const MarketConfiguration = forwardRef<ICreateCriterionScreenRef, ICreateCriteri
     const handleNext = () => {
       if (validateForm()) {
         onDataCaptureNext('market-configuration', formData);
+        return true
       }
+
+      return false;
     };
 
     useImperativeHandle(ref, () => ({

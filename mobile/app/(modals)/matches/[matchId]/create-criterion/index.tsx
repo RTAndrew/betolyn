@@ -13,7 +13,6 @@ import { ICreateCriterionScreenRef } from './types';
 import Wizard from '@/components/wizard';
 import BottomSheet from '@/components/bottom-sheet';
 import { CriterionStatusEnum, EOddStatus } from '@/types';
-import toast from 'react-native-ui-lib/src/incubator/toast';
 
 type TScreen = 'market-configuration' | 'outcomes';
 
@@ -26,11 +25,12 @@ export default function CreateCriterion() {
   const [dataCapture, setDataCapture] = useState<Record<`${TScreen}`, any>>({} as any);
 
   const { data, isPending, error } = useGetMatch({ matchId });
-  const { mutateAsync: createCriterion, isPending: isCreatingCriterion } = useCreateCriterion();
+  const { mutateAsync: createCriterion } = useCreateCriterion();
 
 
   const handleNext = () => {
-    screenRef.current?.handleNext();
+    const canContinue = screenRef.current?.handleNext();
+    if (!canContinue) return;
 
     if (activeStep === 1) {
       handleModalConfirmation();
@@ -54,7 +54,7 @@ export default function CreateCriterion() {
 
     if (!criterion.isDraft) {
       if (activeOdds === 0) {
-        Alert.alert('Unable to create criterion', 'Active criterion must have at least one activeoutcome. Please add an active outcome and try again.');
+        Alert.alert('Unable to create market', 'Active market must have at least one active outcome. Please add an active outcome and try again.');
         return;
       }
     }
@@ -91,7 +91,12 @@ export default function CreateCriterion() {
 
 
     setIsConfirmationVisible(null);
-    router.canGoBack() ? router.back() : router.dismissAll();
+    const canGoBack = router.canGoBack();
+    if (canGoBack) {
+      router.back();
+    } else {
+      router.dismissAll();
+    }
   }
 
   const handleDataCaptureNext = (type: TScreen, data: unknown) => {
