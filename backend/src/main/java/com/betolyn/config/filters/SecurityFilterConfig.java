@@ -37,6 +37,7 @@ public class SecurityFilterConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/signup").not().authenticated()
                         .requestMatchers(HttpMethod.POST, "/auth/signin").not().authenticated()
                         .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/accounts/seed").permitAll()
                         .requestMatchers(HttpMethod.POST).authenticated()
                         .requestMatchers(HttpMethod.PUT).authenticated()
                         .requestMatchers(HttpMethod.PATCH).authenticated()

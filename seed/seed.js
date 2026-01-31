@@ -12,6 +12,7 @@
  *   node seed.js
  *
  * Order of operations:
+ * 0. Ensure bankroll system accounts (GLOBAL_RESERVE, GLOBAL_ESCROW)
  * 1. Seed users (sign up)
  * 2. Sign in with first user to get auth token
  * 3. Seed matches (create teams first, then matches)
@@ -84,6 +85,18 @@ function extractTokenFromResponse(response) {
 		}
 	}
 	return null;
+}
+
+// 0. Ensure bankroll system accounts exist
+async function seedBankrollSystemAccounts() {
+	console.log("\n=== 0. Ensuring Bankroll System Accounts ===");
+	try {
+		await apiRequest("POST", "/accounts/seed");
+		console.log("✓ Bankroll system accounts (GLOBAL_RESERVE, GLOBAL_ESCROW) ensured");
+	} catch (error) {
+		console.error("✗ Failed to ensure bankroll system accounts:", error.message);
+		throw error;
+	}
 }
 
 // 1. Seed users
@@ -346,6 +359,9 @@ async function seed() {
 	console.log("Starting database seed...\n");
 
 	try {
+		// 0. Ensure bankroll system accounts
+		await seedBankrollSystemAccounts();
+
 		// 1. Seed users
 		const users = await seedUsers();
 
