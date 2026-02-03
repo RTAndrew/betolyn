@@ -1,5 +1,9 @@
 
-import { getAllCriteriaQueryOptions, getCriterionByIdQueryOptions } from '@/services/criteria/criterion-query';
+import { IOddWithCriterion } from '@/services';
+import {
+  getAllCriteriaQueryOptions,
+  getCriterionByIdQueryOptions,
+} from '@/services/criteria/criterion-query';
 import { getMatchQueryOptions, getMatchCriteriaQueryOptions } from '@/services/matches/match-query';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
 import { getOddByIdQueryOptions, getAllOddsQueryOptions } from '@/services/odds/odd-query';
@@ -15,18 +19,25 @@ type DeepPartial<T> = {
 /** Entity with id required; all other fields remain partial */
 type WithRequiredId<T> = DeepPartial<T> & { id: string };
 
-
-
 class _DataSync {
   public updateMatches(matches: WithRequiredId<IMatch>[]) {
     let criteria: ICriterion[] = [];
-    let odds: IOdd[] = [];
+    let odds: IOddWithCriterion[] = [];
 
     for (const match of matches) {
       if (!match.mainCriterion) continue;
 
       criteria.push(match.mainCriterion);
-      odds.push(...match.mainCriterion.odds);
+
+      if (match.mainCriterion) {
+        const criterion = match.mainCriterion;
+        odds.concat(
+          match.mainCriterion.odds.map((odd) => ({
+            ...odd,
+            criterion,
+          }))
+        );
+      }
 
       // 1. Update the match data
       const matchKey = getMatchQueryOptions({ matchId: match.id });
@@ -112,17 +123,20 @@ class _DataSync {
   }
 
   /**
-   * If you ever have issues with Odd outta of when the data comes from Criterion,
+   * If you ever have issues with Odds outta sync when the data comes from Criterion,
    * it's because the sync here does not affect the Criterion.
    * Because, the odds will always look for the Odds store,
-   * and Criterion will always sync the Odd store, and not the other way around.
+   * and Criterion will always sync the Criterion and the Odd store, and not the other way around.
    */
   public updateOdds(odds: WithRequiredId<IOdd>[]) {
     for (const odd of odds) {
       // 1. Update single odd query
       const oddKey = getOddByIdQueryOptions({ oddId: odd.id });
       queryClient.setQueryData(oddKey.queryKey, (lastOdd) => {
-        let copy = { ...lastOdd, data: patch(lastOdd?.data, odd) } as IApiResponse<IOdd>;
+        let copy = {
+          ...lastOdd,
+          data: patch(lastOdd?.data, odd),
+        } as IApiResponse<IOddWithCriterion>;
         return copy;
       });
 
@@ -134,12 +148,12 @@ class _DataSync {
             return [...acc, patch(value, odd)];
           }
           return [...acc, value];
-        }, [] as IOdd[]);
+        }, [] as IOddWithCriterion[]);
 
         return {
           ...lastOdds,
           data,
-        } as IApiResponse<IOdd[]>;
+        } as IApiResponse<IOddWithCriterion[]>;
       });
     }
   }

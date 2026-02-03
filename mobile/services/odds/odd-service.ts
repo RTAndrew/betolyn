@@ -1,5 +1,5 @@
 import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
-import { IOdd, EOddStatus } from '@/types';
+import { IOdd as IOdd, EOddStatus, ICriterion } from '@/types';
 import { DataSync } from '@/server-sent-events/data-sync';
 
 export interface IUpdateOddStatusRequest {
@@ -17,15 +17,19 @@ export interface ICreateOddRequest {
   status?: `${EOddStatus.ACTIVE | EOddStatus.DRAFT}`;
 }
 
+export interface IOddWithCriterion extends IOdd {
+  criterion: Omit<ICriterion, 'match'>;
+}
+
 export class OddService {
   public static async findAllOdds() {
-    const data = await getRequest<IOdd[]>('/odds');
+    const data = await getRequest<IOddWithCriterion[]>('/odds');
     // DataSync.updateOdds(data.data);
     return data;
   }
 
   public static async findOddById(oddId: string) {
-    const data = await getRequest<IOdd>(`/odds/${oddId}`);
+    const data = await getRequest<IOddWithCriterion>(`/odds/${oddId}`);
     DataSync.updateOdds([data.data]);
     return data;
   }

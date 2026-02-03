@@ -1,20 +1,23 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { OddService } from './odd-service';
-import { IOdd } from '@/types';
+
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
+
+type IOdd = Awaited<ReturnType<typeof OddService.findOddById>>;
+type IAllOdds = Awaited<ReturnType<typeof OddService.findAllOdds>>;
 
 // QUERIES OPTIONS
 
 export const getAllOddsQueryOptions = () => {
-  return queryOptions<IApiResponse<IOdd[]>, IApiResponse>({
+  return queryOptions<IAllOdds, IApiResponse>({
     queryKey: ['odds'],
     queryFn: async () => await OddService.findAllOdds(),
   });
 };
 
 export const getOddByIdQueryOptions = ({ oddId }: { oddId: string }) => {
-  return queryOptions<IApiResponse<IOdd>, IApiResponse>({
+  return queryOptions<IOdd, IApiResponse>({
     queryKey: ['odd', oddId],
     queryFn: async () => await OddService.findOddById(oddId),
   });
