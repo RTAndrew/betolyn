@@ -1,7 +1,5 @@
-import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
-import { useGetMatch, useGetOddById } from '@/services';
-import { IBet } from '@/store/bet-slip';
+import { useGetMatch } from '@/services';
 import React, { PropsWithChildren } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 
@@ -28,68 +26,8 @@ const Team = ({
   );
 };
 
-interface BetCardProps {
-  bet: IBet;
-  border?: boolean;
-}
-
-export const BetCard = ({ bet, border = true }: BetCardProps) => {
-  const { data, isPending, error } = useGetOddById({ oddId: bet.oddId });
-
-  if (isPending) {
-    return <ThemedText>Loading...</ThemedText>;
-  }
-
-  if (!data || error) {
-    return <ThemedText>Error loading odd</ThemedText>;
-  }
-
-  const odd = data?.data;
-  return (
-    <SafeHorizontalView style={[oddStyles.root, border && oddStyles.border]}>
-      <View>
-        <ThemedText>{odd?.name}</ThemedText>
-        <ThemedText style={oddStyles.lowPriorityText}>{odd?.criterion?.name} </ThemedText>
-      </View>
-
-      <View style={oddStyles.value}>
-        <ThemedText style={oddStyles.lowPriorityText}>{odd?.value}</ThemedText>
-        <ThemedText style={[oddStyles.divider, oddStyles.lowPriorityText]}>•</ThemedText>
-        <ThemedText style={oddStyles.stake}>${bet.amount}</ThemedText>
-      </View>
-    </SafeHorizontalView>
-  )
-}
-
-const oddStyles = StyleSheet.create({
-  root: {
-    paddingVertical: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  border: {
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#61687E',
-  },
-  value: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  divider: {
-    color: '#C7D1E7',
-    marginHorizontal: 4,
-  },
-  lowPriorityText: {
-    color: '#C7D1E7',
-  },
-  stake: {
-    fontWeight: '700',
-  },
-});
-
 const BetSlipCard = ({ matchId, children }: PropsWithChildren<BetSlipCardProps>) => {
+
   const { data, isPending, error } = useGetMatch({ matchId });
   const matches = data?.data;
 
@@ -122,7 +60,6 @@ const styles = StyleSheet.create({
   root: {
     borderRadius: 8,
     backgroundColor: '#61687E',
-
   },
   header: {
     padding: 16,

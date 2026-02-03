@@ -1,7 +1,7 @@
 import SafeHorizontalView from "@/components/safe-horizontal-view";
 import { ThemedText } from "@/components/ThemedText";
 import { useGetOddById } from "@/services";
-import { IBet } from "@/store/bet-slip";
+import { IBet } from "@/store/bet-slip.store";
 import { StyleSheet, View } from "react-native";
 
 interface BetCardProps {
@@ -29,9 +29,9 @@ export const BetCard = ({ bet, border = true }: BetCardProps) => {
       </View>
 
       <View style={oddStyles.value}>
-        <ThemedText style={oddStyles.lowPriorityText}>{odd?.value}</ThemedText>
+        <ThemedText style={oddStyles.lowPriorityText}>{bet.oddAtPlacement}</ThemedText>
         <ThemedText style={[oddStyles.divider, oddStyles.lowPriorityText]}>•</ThemedText>
-        <ThemedText style={oddStyles.stake}>${bet.amount}</ThemedText>
+        <ThemedText style={oddStyles.stake}>${bet.stake}</ThemedText>
       </View>
     </SafeHorizontalView>
   )
@@ -39,13 +39,13 @@ export const BetCard = ({ bet, border = true }: BetCardProps) => {
 
 const oddStyles = StyleSheet.create({
   root: {
-    paddingVertical: 8,
+    paddingVertical: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   border: {
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderBottomColor: '#61687E',
   },
   value: {
@@ -61,6 +61,8 @@ const oddStyles = StyleSheet.create({
     color: '#C7D1E7',
   },
   stake: {
+    fontSize: 16,
+
     fontWeight: '700',
   },
 });

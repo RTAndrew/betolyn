@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, TouchableOpac
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
 import { useGetOddById } from '@/services/odds/odd-query';
-import { addBetToSlip } from '@/store/bet-slip';
+import { betSlipStore } from '@/store/bet-slip.store';
 
 interface OddButtonProps extends TouchableOpacityProps, Omit<OddBaseButtonProps, 'value' | 'name'> {
   odd: IOdd;
@@ -17,6 +17,7 @@ interface OddWithMatchBottomSheetProps extends TouchableOpacityProps {
 
 const OddWithMatchBottomSheet = ({ children, sheetData, style, ...rest }: OddWithMatchBottomSheetProps) => {
   const { pushSheet, match } = useMatchBottomSheet();
+  const { addBetToSlip } = betSlipStore;
 
   return (
     <TouchableOpacity
@@ -24,7 +25,7 @@ const OddWithMatchBottomSheet = ({ children, sheetData, style, ...rest }: OddWit
       onPress={() => {
         addBetToSlip(match.id, {
           oddId: sheetData.id,
-          amount: sheetData.value,
+          stake: Number(Math.random().toFixed(2)),
           criterionId: sheetData.criterion?.id ?? '',
           oddAtPlacement: sheetData.value,
         });

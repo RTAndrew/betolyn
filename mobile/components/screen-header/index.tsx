@@ -1,16 +1,16 @@
 
 import React, { PropsWithChildren } from 'react';
-import { Pressable, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { Close } from '../icons';
 import { ThemedText } from '../ThemedText';
 
 interface ScreenHeaderProps extends HeaderProps {
-  onClose: () => void;
+  onClose?: () => void;
   safeArea?: boolean;
   style?: StyleProp<ViewStyle>;
-  type: 'close' | 'back';
+  type?: 'close' | 'back';
   iconColor?: string;
 }
 
@@ -44,19 +44,19 @@ const Header = ({ title, description }: HeaderProps) => {
 
 
 const ScreenHeader = ({ onClose, type, safeArea = true, title, description, children, style, iconColor = "#485164" }: ScreenHeaderProps) => {
-const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeHorizontalView style={[styles.root, { paddingTop: safeArea ? insets.top : 0 }, style]}>
       <View style={styles.headerContainer}>
+        {onClose && <IconContainer color={iconColor} onPress={onClose}>
+          <Close width={18} height={18} color="white" />
+        </IconContainer>
+        }
 
-        <IconContainer color={iconColor} onPress={onClose}>
-        <Close width={18} height={18} color="white" />
-      </IconContainer>
+        <Header title={title} description={description} />
 
-      <Header title={title} description={description} />
-
-      <View style={styles.actionContainer}>
+        <View style={styles.actionContainer}>
           {children}
         </View>
       </View>
@@ -99,6 +99,6 @@ const styles = StyleSheet.create({
   },
 });
 
-ScreenHeader.Icon= IconContainer;
+ScreenHeader.Icon = IconContainer;
 
 export default ScreenHeader;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 import BottomSheetHeader from './bottom-sheet-header';
@@ -16,6 +16,7 @@ export interface BottomSheetProps extends ActionSheetProps {
 
 const BottomSheet = ({
   containerStyle,
+  indicatorStyle,
   visible = true,
   minHeight,
   children,
@@ -40,6 +41,7 @@ const BottomSheet = ({
       gestureEnabled
       onClose={onClose}
       ref={actionSheetRef}
+      indicatorStyle={[styles.indicator, indicatorStyle]}
       containerStyle={{ ...styles.container, ...(containerStyle as object) }}
       {...props}
     >
@@ -56,7 +58,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: '#61687E',
   },
-  root: { paddingBottom: Platform.OS === 'ios' ? '10%' : '20%', paddingTop: 10 },
+  indicator: {
+    width: 45,
+  },
+  root: { paddingTop: 10 },
   title: {
     fontSize: 22,
     color: 'white',
