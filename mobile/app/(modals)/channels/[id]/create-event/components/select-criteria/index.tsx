@@ -1,8 +1,8 @@
-import { Ellipsis } from '@/components/icons'
-import { ThemedView } from '@/components/ThemedView'
+import { Ellipsis } from '@/components/icons';
+import { ThemedView } from '@/components/ThemedView';
 import { IMatch } from '@/types';
-import React from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const criterias = [
   'Cartões amarelos',
@@ -17,19 +17,25 @@ const criterias = [
 ];
 
 interface ChannelSelectCriteriaProps {
-  match: IMatch
-  onSelectCriteria: (criteria: string) => void
+  match: IMatch;
+  onSelectCriteria: (criteria: string) => void;
 }
 
 interface CriteriaItemProps {
-  isCreate?: boolean
-  criteria: string
-  onPress: (criteria: string) => void
+  isCreate?: boolean;
+  criteria: string;
+  onPress: (criteria: string) => void;
 }
 
 const CriteriaItem = ({ isCreate = false, criteria, onPress }: CriteriaItemProps) => {
   return (
-    <TouchableOpacity onPress={() => onPress(criteria)} style={[criteriaItemStyles.criteriaItem, isCreate ? criteriaItemStyles.criteriaItemCreate : criteriaItemStyles.criteriaItemSelect]}>
+    <TouchableOpacity
+      onPress={() => onPress(criteria)}
+      style={[
+        criteriaItemStyles.criteriaItem,
+        isCreate ? criteriaItemStyles.criteriaItemCreate : criteriaItemStyles.criteriaItemSelect,
+      ]}
+    >
       <Text style={criteriaItemStyles.criteriaItemText}>{criteria}</Text>
 
       <View>
@@ -37,7 +43,7 @@ const CriteriaItem = ({ isCreate = false, criteria, onPress }: CriteriaItemProps
       </View>
     </TouchableOpacity>
   );
-}
+};
 
 const ChannelSelectCriteria = ({ match, onSelectCriteria }: ChannelSelectCriteriaProps) => {
   return (
@@ -47,7 +53,11 @@ const ChannelSelectCriteria = ({ match, onSelectCriteria }: ChannelSelectCriteri
           ChannelSelectCriteri a match {match.homeTeam.name} vs {match.awayTeam.name}
         </Text>
 
-          <CriteriaItem isCreate criteria={"Criar critério"} onPress={() => onSelectCriteria("create-criteria")} />
+        <CriteriaItem
+          isCreate
+          criteria={'Criar critério'}
+          onPress={() => onSelectCriteria('create-criteria')}
+        />
 
         <View style={styles.criteriaList}>
           {criterias.map((criteria) => (
@@ -57,7 +67,7 @@ const ChannelSelectCriteria = ({ match, onSelectCriteria }: ChannelSelectCriteri
       </ThemedView>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -98,4 +108,4 @@ const criteriaItemStyles = StyleSheet.create({
   },
 });
 
-export default ChannelSelectCriteria
+export default ChannelSelectCriteria;

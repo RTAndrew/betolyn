@@ -7,8 +7,6 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 
-
-
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#61687E' }}>
@@ -25,7 +23,7 @@ export default function HomeScreen() {
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('authToken');
     await SecureStore.deleteItemAsync('authUser');
-  }
+  };
 
   if (isPending) {
     return (
@@ -50,7 +48,7 @@ export default function HomeScreen() {
         <Text onPress={() => router.push('/auth/login')}> Sign In </Text>
         <Text onPress={() => handleLogout()}> Logout </Text>
       </View>
-      {(Object.values(data.data ?? [])).map((match: any) => (
+      {Object.values(data.data ?? []).map((match: any) => (
         <BetCard key={match.id} match={match} />
       ))}
     </Wrapper>

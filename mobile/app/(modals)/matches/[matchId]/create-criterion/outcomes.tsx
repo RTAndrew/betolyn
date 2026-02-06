@@ -1,6 +1,6 @@
-import { ThemedText } from '@/components/ThemedText'
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types'
+import { ThemedText } from '@/components/ThemedText';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types';
 import { OddBaseButton } from '@/components/odd-button';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { EOddStatus, IOdd } from '@/types';
@@ -12,7 +12,7 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import Switch from '@/components/forms/switch';
 import { randomUUID } from '@/utils/random-uuid';
 
-export interface ICreateCriterionOdds extends Pick<IOdd, | 'name' | 'value' | 'id'> {
+export interface ICreateCriterionOdds extends Pick<IOdd, 'name' | 'value' | 'id'> {
   status: `${EOddStatus.ACTIVE}` | `${EOddStatus.DRAFT}`;
 }
 
@@ -30,7 +30,7 @@ interface FormErrors {
 const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: FormProps) => {
   const [name, setName] = useState(outcome?.name ?? '');
   const [value, setValue] = useState(outcome?.value ?? 0);
-  const [isDraft, setIsDraft] = useState(outcome?.status === "DRAFT" ? true : false);
+  const [isDraft, setIsDraft] = useState(outcome?.status === 'DRAFT' ? true : false);
   const [errors, setErrors] = useState<FormErrors>({});
 
   const validateForm = (): boolean => {
@@ -54,7 +54,7 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
         id: outcome?.id ?? randomUUID(),
         name,
         value,
-        status: isDraft ? EOddStatus.DRAFT : EOddStatus.ACTIVE
+        status: isDraft ? EOddStatus.DRAFT : EOddStatus.ACTIVE,
       });
       setName('');
       setValue(0);
@@ -64,7 +64,7 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
   };
 
   const handleRemoveOdd = () => {
-    if(!outcome?.id) return;
+    if (!outcome?.id) return;
     onRemove(outcome.id);
     onClose();
   };
@@ -72,25 +72,19 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
   const updateName = (text: string) => {
     setName(text);
     if (errors.name) {
-      setErrors(prev => ({ ...prev, name: undefined }));
+      setErrors((prev) => ({ ...prev, name: undefined }));
     }
   };
 
   const updateValue = (newValue: number) => {
     setValue(newValue);
     if (errors.value) {
-      setErrors(prev => ({ ...prev, value: undefined }));
+      setErrors((prev) => ({ ...prev, value: undefined }));
     }
   };
 
   return (
-    <BottomSheet
-      gestureEnabled
-      visible={visible}
-      onClose={onClose}
-      title="Add outcome"
-
-    >
+    <BottomSheet gestureEnabled visible={visible} onClose={onClose} title="Add outcome">
       <SafeHorizontalView style={styles.formSheet}>
         <TextInput
           label="Name"
@@ -107,101 +101,112 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
           errorMessage={errors.value}
         />
 
-        <Switch label="Create as a draft?"
-          description="Draft outcomes are not visible to users until they are published." value={isDraft} onChange={setIsDraft} />
+        <Switch
+          label="Create as a draft?"
+          description="Draft outcomes are not visible to users until they are published."
+          value={isDraft}
+          onChange={setIsDraft}
+        />
 
-        <Button.Root onPress={handleCreateOdd}>
-          {outcome ? 'Update' : 'Add'}
-        </Button.Root>
-        {outcome && <Button.Root variant='text' onPress={handleRemoveOdd}>Remove</Button.Root>}
+        <Button.Root onPress={handleCreateOdd}>{outcome ? 'Update' : 'Add'}</Button.Root>
+        {outcome && (
+          <Button.Root variant="text" onPress={handleRemoveOdd}>
+            Remove
+          </Button.Root>
+        )}
       </SafeHorizontalView>
     </BottomSheet>
   );
 };
 
+const CreateCriterionOutcomes = forwardRef<
+  ICreateCriterionScreenRef,
+  ICreateCriterionScreen<Record<string, ICreateCriterionOdds>>
+>(({ onDataCaptureNext, data }, ref) => {
+  const [outcomes, setOutcomes] = useState<typeof data>(data);
+  const [isFormVisible, setIsFormVisible] = useState<ICreateCriterionOdds | true | null>(null);
 
-const CreateCriterionOutcomes = forwardRef<ICreateCriterionScreenRef, ICreateCriterionScreen<Record<string, ICreateCriterionOdds>>>(
-  ({ onDataCaptureNext, data }, ref) => {
-
-    const [outcomes, setOutcomes] = useState<typeof data>(data);
-    const [isFormVisible, setIsFormVisible] = useState<ICreateCriterionOdds | true | null>(null);
-
-    const validateOutcomes = (): boolean => {
-      if (Object.keys(outcomes).length === 0) {
-        return false;
-      }
-      return true;
-    };
-
-    const handleNext = () => {
-      if (validateOutcomes()) {
-        onDataCaptureNext('outcomes', outcomes);
-        return true;
-      }
-
+  const validateOutcomes = (): boolean => {
+    if (Object.keys(outcomes).length === 0) {
       return false;
-    };
+    }
+    return true;
+  };
 
-    const handleRemoveOutcome = (id: string) => {
-      setOutcomes(prev => {
-        const newOutcomes = { ...prev };
-        delete newOutcomes[id];
+  const handleNext = () => {
+    if (validateOutcomes()) {
+      onDataCaptureNext('outcomes', outcomes);
+      return true;
+    }
 
-        onDataCaptureNext('outcomes', newOutcomes);
-        return newOutcomes;
-      });
-    };
+    return false;
+  };
 
-    useImperativeHandle(ref, () => ({
-        handleNext
-      }));
+  const handleRemoveOutcome = (id: string) => {
+    setOutcomes((prev) => {
+      const newOutcomes = { ...prev };
+      delete newOutcomes[id];
 
-    useEffect(() => {
-      setOutcomes(data ?? {});
-    }, [data]);
+      onDataCaptureNext('outcomes', newOutcomes);
+      return newOutcomes;
+    });
+  };
 
+  useImperativeHandle(ref, () => ({
+    handleNext,
+  }));
 
-    return (
-      <>
-        <ThemedText type="title">Outcomes</ThemedText>
+  useEffect(() => {
+    setOutcomes(data ?? {});
+  }, [data]);
 
+  return (
+    <>
+      <ThemedText type="title">Outcomes</ThemedText>
 
-        <View style={styles.oddList}>
-          <TouchableOpacity onPress={() => {
+      <View style={styles.oddList}>
+        <TouchableOpacity
+          onPress={() => {
             setIsFormVisible(true);
-          }}>
-            <OddBaseButton name="Adicionar" variant='dashed' />
-          </TouchableOpacity>
+          }}
+        >
+          <OddBaseButton name="Adicionar" variant="dashed" />
+        </TouchableOpacity>
 
-          {(Object.values(outcomes ?? {})).map((outcome) => (
-            <TouchableOpacity key={outcome.id} onPress={() => {
+        {Object.values(outcomes ?? {}).map((outcome) => (
+          <TouchableOpacity
+            key={outcome.id}
+            onPress={() => {
               setIsFormVisible(outcome);
-            }}>
-              <OddBaseButton name={outcome.name} value={outcome.value} variant={outcome.status === EOddStatus.DRAFT ? 'default' : 'outline'} />
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {isFormVisible && (
-          <FormSheet
-            onRemove={handleRemoveOutcome}
-            outcome={typeof isFormVisible === 'object' ? isFormVisible : undefined}
-            visible={true}
-            onClose={() => setIsFormVisible(null)}
-            onSubmit={(data) => {
-              setOutcomes(prev => {
-                const newOutcomes = { ...prev, [data.id]: data };
-                onDataCaptureNext('outcomes', newOutcomes);
-                return newOutcomes;
-              });
-
             }}
-          />
-        )}
-      </>
-    )
-  }
-);
+          >
+            <OddBaseButton
+              name={outcome.name}
+              value={outcome.value}
+              variant={outcome.status === EOddStatus.DRAFT ? 'default' : 'outline'}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {isFormVisible && (
+        <FormSheet
+          onRemove={handleRemoveOutcome}
+          outcome={typeof isFormVisible === 'object' ? isFormVisible : undefined}
+          visible={true}
+          onClose={() => setIsFormVisible(null)}
+          onSubmit={(data) => {
+            setOutcomes((prev) => {
+              const newOutcomes = { ...prev, [data.id]: data };
+              onDataCaptureNext('outcomes', newOutcomes);
+              return newOutcomes;
+            });
+          }}
+        />
+      )}
+    </>
+  );
+});
 
 const styles = StyleSheet.create({
   oddList: {
@@ -215,7 +220,7 @@ const styles = StyleSheet.create({
   formSheet: {
     flexDirection: 'column',
     gap: 24,
-  }
+  },
 });
 
 CreateCriterionOutcomes.displayName = 'CreateCriterionOutcomes';

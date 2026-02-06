@@ -19,22 +19,20 @@ const Team = ({ name, imageUrl, score, onScoreChange }: TeamProps) => {
   const scoreRef = useRef<number>(score);
   const inputStatus = useMemo(() => {
     if (score === scoreRef.current) return undefined;
-    return score < scoreRef.current ? 'error' : "success";
+    return score < scoreRef.current ? 'error' : 'success';
   }, [score]);
 
   return (
     <View style={teamStyle.root}>
       <View style={teamStyle.teamInfo}>
         <Image source={{ uri: imageUrl }} style={{ width: 42, height: 42 }} />
-        <View style={{
-          flexDirection: 'row',
-          gap: 4,
-        }}>
-          <ThemedText
-            ellipsizeMode="tail"
-            style={teamStyle.teamName}
-            className="team-name"
-          >
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 4,
+          }}
+        >
+          <ThemedText ellipsizeMode="tail" style={teamStyle.teamName} className="team-name">
             {name}
           </ThemedText>
           <ThemedText>({scoreRef.current})</ThemedText>
@@ -100,7 +98,7 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
     away: match.awayTeamScore,
   });
 
-  const { mutateAsync: MUTATION, isPending } = useUpdateMatchScore()
+  const { mutateAsync: MUTATION, isPending } = useUpdateMatchScore();
 
   const handleScoreChange = (team: `${TTeamPosition}`, newScore: number) => {
     if (isNaN(newScore)) return;
@@ -110,7 +108,6 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
   };
 
   const handleSubmit = async () => {
-
     try {
       await MUTATION({
         matchId: match.id,
@@ -118,17 +115,12 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
           awayTeamScore: score.away,
           homeTeamScore: score.home,
         },
-
-
-
       });
       closeAll();
     } catch (error) {
       console.error(error);
     }
-
-  }
-
+  };
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
@@ -136,21 +128,18 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
       <BottomSheet.SafeHorizontalView style={styles.content}>
         <Team
           score={score.home}
-          name={"Home"}
+          name={'Home'}
           imageUrl={match.homeTeam.badgeUrl}
           onScoreChange={(value) => handleScoreChange('home', value)}
         />
         <Team
           score={score.away}
-          name={"Away"}
+          name={'Away'}
           imageUrl={match.awayTeam.badgeUrl}
           onScoreChange={(value) => handleScoreChange('away', value)}
         />
 
-        <Button.Root
-          onPress={handleSubmit}
-          style={styles.updateScoreButton}
-        >
+        <Button.Root onPress={handleSubmit} style={styles.updateScoreButton}>
           {isPending ? '...' : 'Update Score'}
         </Button.Root>
       </BottomSheet.SafeHorizontalView>

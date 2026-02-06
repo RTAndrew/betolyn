@@ -1,4 +1,9 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
 
 import { IApiResponse } from './types';
 import { ApiError } from './api-error';
@@ -16,7 +21,7 @@ const api = axios.create({
 // Request interceptor to dynamically add the token to each request
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token =  SafeStorage.get('authToken');
+    const token = SafeStorage.get('authToken');
     if (token) {
       const cleanToken = typeof token === 'string' ? token.replaceAll('"', '') : token;
       config.headers.Authorization = `Bearer ${cleanToken}`;

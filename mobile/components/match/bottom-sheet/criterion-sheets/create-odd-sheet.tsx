@@ -77,19 +77,17 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
       return;
     }
 
-
     await createOdd({
       variables: {
         name: result.name,
         value: result.value,
         criterionId: criterion.id,
-        status: isDraft ? "DRAFT" : "ACTIVE",
+        status: isDraft ? 'DRAFT' : 'ACTIVE',
       },
     });
 
     closeAll();
   };
-
 
   return (
     <BottomSheet onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}>

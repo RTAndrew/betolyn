@@ -22,7 +22,9 @@ export const getCriterionByIdQueryOptions = ({ criterionId }: { criterionId: str
 
 // QUERIES
 
-export const useGetAllCriteria = ({ queryOptions }: IQueryOptions<typeof getAllCriteriaQueryOptions>) => {
+export const useGetAllCriteria = ({
+  queryOptions,
+}: IQueryOptions<typeof getAllCriteriaQueryOptions>) => {
   const query = getAllCriteriaQueryOptions();
   return useQuery({ ...query, ...queryOptions }, queryClient);
 };

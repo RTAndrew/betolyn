@@ -12,7 +12,3 @@ export type QueryConfig<T extends (...args: any[]) => any> = Omit<
 export interface IQueryOptions<T extends (...args: any[]) => any> {
   queryOptions?: QueryConfig<T>;
 }
-
-
-
-

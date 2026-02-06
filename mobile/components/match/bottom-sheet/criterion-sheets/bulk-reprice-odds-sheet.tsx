@@ -23,7 +23,11 @@ const Team = ({ name, score, onScoreChange }: TeamProps) => {
   const inputStatus = useMemo(() => {
     const isIncreasing = score > scoreRef.current;
     const isDecreasing = score < scoreRef.current;
-    const status: 'success' | 'error' | undefined = isIncreasing ? 'success' : isDecreasing ? 'error' : undefined;
+    const status: 'success' | 'error' | undefined = isIncreasing
+      ? 'success'
+      : isDecreasing
+        ? 'error'
+        : undefined;
     return { status, isIncreasing, isDecreasing };
   }, [score]);
 
@@ -35,37 +39,27 @@ const Team = ({ name, score, onScoreChange }: TeamProps) => {
   return (
     <View style={teamStyle.root}>
       <View style={teamStyle.teamInfo}>
-
-        <View style={{
-          flexDirection: 'row',
-          gap: 6,
-        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 6,
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
             <ThemedText style={teamStyle.teamScore}>{scoreRef.current}</ThemedText>
             {inputStatus?.isIncreasing && <CaretUp width={10} height={10} color="#3CC5A4" />}
             {inputStatus?.isDecreasing && <CaretDown width={10} height={10} color="#F80069" />}
           </View>
-          <ThemedText
-            ellipsizeMode="tail"
-            style={teamStyle.teamName}
-            className="team-name"
-          >
+          <ThemedText ellipsizeMode="tail" style={teamStyle.teamName} className="team-name">
             {name}
           </ThemedText>
         </View>
       </View>
 
-      <NumberInput
-        min={0}
-        value={score}
-        status={inputStatus?.status}
-        onChange={onScoreChange}
-      />
+      <NumberInput min={0} value={score} status={inputStatus?.status} onChange={onScoreChange} />
     </View>
   );
 };
-
 
 const teamStyle = StyleSheet.create({
   root: {
@@ -106,7 +100,6 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
   if (!criterion) throw new Error('Criterion not found');
 
   const handleSave = async () => {
-
     const oddsDTO = criterion.odds.map((odd) => ({
       id: odd.id,
       value: oddValues[odd.id] ?? odd.value,
@@ -129,28 +122,30 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
   };
 
   return (
-    <BottomSheet
-      onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}
-    >
+    <BottomSheet onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}>
       <BottomSheet.Header
         onClose={closeAll}
-        onPrevious={() =>
-          goBack()}
-        title={criterion.name} description={"Criterion"}
+        onPrevious={() => goBack()}
+        title={criterion.name}
+        description={'Criterion'}
       />
 
       <SafeHorizontalView style={{ flexDirection: 'column', gap: 24 }}>
         {criterion.odds.map((odd) => (
-          <Team key={odd.id} name={odd.name} score={oddValues?.[odd.id] ?? odd.value} onScoreChange={(value) => handleOddValueChange(odd.id, value)} />
+          <Team
+            key={odd.id}
+            name={odd.name}
+            score={oddValues?.[odd.id] ?? odd.value}
+            onScoreChange={(value) => handleOddValueChange(odd.id, value)}
+          />
         ))}
       </SafeHorizontalView>
 
-      <SafeHorizontalView  style={{ marginTop: 32 }}>
+      <SafeHorizontalView style={{ marginTop: 32 }}>
         <Button.Root onPress={handleSave} disabled={isPending}>
           {isPending ? 'Saving...' : 'Save'}
         </Button.Root>
       </SafeHorizontalView>
-
     </BottomSheet>
   );
 };

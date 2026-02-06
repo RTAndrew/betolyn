@@ -1,6 +1,6 @@
-import React from 'react'
-import Svg, { Path } from 'react-native-svg'
-import type { SvgProps } from 'react-native-svg'
+import React from 'react';
+import Svg, { Path } from 'react-native-svg';
+import type { SvgProps } from 'react-native-svg';
 
 const DollarEuro = ({ width = 24, height = 24, color = 'white', ...props }: SvgProps) => {
   return (
@@ -11,6 +11,6 @@ const DollarEuro = ({ width = 24, height = 24, color = 'white', ...props }: SvgP
       />
     </Svg>
   );
-}
+};
 
 export default DollarEuro;

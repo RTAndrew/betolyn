@@ -35,9 +35,7 @@ export default function TabLayout() {
           name="betslips"
           options={{
             title: 'Apostas',
-            tabBarIcon: ({ color }) => (
-              <IconSymbol size={28} name="dollarsign" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <IconSymbol size={28} name="dollarsign" color={color} />,
           }}
         />
         <Tabs.Screen

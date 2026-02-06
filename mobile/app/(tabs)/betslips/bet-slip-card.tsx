@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch } from '@/services';
-import React, { PropsWithChildren } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import React, { PropsWithChildren } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
 interface BetSlipCardProps {
   matchId: string;
@@ -27,7 +27,6 @@ const Team = ({
 };
 
 const BetSlipCard = ({ matchId, children }: PropsWithChildren<BetSlipCardProps>) => {
-
   const { data, isPending, error } = useGetMatch({ matchId });
   const matches = data?.data;
 
@@ -42,19 +41,24 @@ const BetSlipCard = ({ matchId, children }: PropsWithChildren<BetSlipCardProps>)
   return (
     <View style={styles.root}>
       <View style={styles.header}>
-        <Team name={matches.homeTeam.name} imageUrl={matches.homeTeam.badgeUrl} direction='row-reverse' />
-        <ThemedText style={styles.matchScore}> {matches.homeTeamScore} : {matches.awayTeamScore} </ThemedText>
-        <Team name={matches.awayTeam.name} imageUrl={matches.awayTeam.badgeUrl} direction='row' />
+        <Team
+          name={matches.homeTeam.name}
+          imageUrl={matches.homeTeam.badgeUrl}
+          direction="row-reverse"
+        />
+        <ThemedText style={styles.matchScore}>
+          {' '}
+          {matches.homeTeamScore} : {matches.awayTeamScore}{' '}
+        </ThemedText>
+        <Team name={matches.awayTeam.name} imageUrl={matches.awayTeam.badgeUrl} direction="row" />
       </View>
 
-      <View style={styles.body}>
-        {children}
-      </View>
+      <View style={styles.body}>{children}</View>
     </View>
-  )
-}
+  );
+};
 
-export default BetSlipCard
+export default BetSlipCard;
 
 const styles = StyleSheet.create({
   root: {
@@ -87,5 +91,5 @@ const styles = StyleSheet.create({
     color: '#C7D1E7',
     marginHorizontal: 10,
     fontWeight: '600',
-  }
+  },
 });

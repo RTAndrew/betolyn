@@ -19,4 +19,3 @@ export function randomUUID(size: number = DEFAULT_SIZE): string {
 
   return result;
 }
-

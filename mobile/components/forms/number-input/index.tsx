@@ -27,12 +27,12 @@ const NumberInput = ({
   const handleChange = (value: number) => {
     if (value < min) {
       onChange(min);
-      return
+      return;
     }
 
     if (value > max) {
       onChange(max);
-      return
+      return;
     }
 
     onChange(value);
@@ -41,12 +41,16 @@ const NumberInput = ({
   return (
     <BaseField label={label} errorMessage={errorMessage} status={status}>
       <View style={[styles.container, containerStyle]}>
-        <Pressable onPress={() => onChange(value - 1)} disabled={value <= min} style={styles.pressableButton}>
+        <Pressable
+          onPress={() => onChange(value - 1)}
+          disabled={value <= min}
+          style={styles.pressableButton}
+        >
           <Subtract opacity={value > min ? 1 : 0.5} />
         </Pressable>
         <TextInput
           keyboardType="numeric"
-          value={value === 0 ? "0" : value.toString()}
+          value={value === 0 ? '0' : value.toString()}
           containerStyle={styles.inputContainer}
           status={errorMessage ? 'error' : status}
           style={{ ...styles.input, ...inputStyle }}

@@ -33,7 +33,10 @@ export const MatchSheets = () => {
   return <>{renderSheet}</>;
 };
 
-export const MatchBottomSheetProvider = ({ children, match }: PropsWithChildren<MatchBottomSheetProviderProps>) => {
+export const MatchBottomSheetProvider = ({
+  children,
+  match,
+}: PropsWithChildren<MatchBottomSheetProviderProps>) => {
   /**A LIFO stack of bottom sheets */
   const [stack, setStack] = useState<BottomSheetStackItem[]>([]);
 
@@ -71,7 +74,6 @@ export const MatchBottomSheetProvider = ({ children, match }: PropsWithChildren<
 
   return (
     <MatchBottomSheetContext.Provider value={contextValue}>
-
       <MatchSheets />
       {children}
     </MatchBottomSheetContext.Provider>

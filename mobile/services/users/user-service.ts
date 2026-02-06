@@ -1,5 +1,5 @@
-import { getRequest } from "@/utils/http";
-import { IUser } from "@/types";
+import { getRequest } from '@/utils/http';
+import { IUser } from '@/types';
 
 export class UserService {
   public static async findAllUsers() {

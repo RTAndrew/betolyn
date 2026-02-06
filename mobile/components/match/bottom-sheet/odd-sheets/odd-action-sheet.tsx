@@ -8,24 +8,24 @@ import { IOddSheetData } from '../types';
 import { CriterionStatusEnum, EOddStatus } from '@/types';
 
 const canPublishOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${CriterionStatusEnum}`) => {
-  if (criterionStatus === "SUSPENDED") return false;
-  if (criterionStatus === "DRAFT") return false;
+  if (criterionStatus === 'SUSPENDED') return false;
+  if (criterionStatus === 'DRAFT') return false;
 
-  if (oddStatus === "ACTIVE") return false;
-  if (oddStatus === "SETTLED") return false;
-  if (oddStatus === "VOID") return false;
+  if (oddStatus === 'ACTIVE') return false;
+  if (oddStatus === 'SETTLED') return false;
+  if (oddStatus === 'VOID') return false;
 
   return true;
-}
+};
 
 const canSuspendOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${CriterionStatusEnum}`) => {
-  if (criterionStatus === "DRAFT") return false;
+  if (criterionStatus === 'DRAFT') return false;
 
-  if (oddStatus === "SUSPENDED") return false;
-  if (oddStatus === "DRAFT") return true;
+  if (oddStatus === 'SUSPENDED') return false;
+  if (oddStatus === 'DRAFT') return true;
 
   return true;
-}
+};
 
 export const OddActionSheet = ({ visible = false }: ISheet) => {
   const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();
@@ -33,7 +33,6 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
   if (!currentSheet?.data) {
     return <> Error: No odd data found </>;
   }
-
 
   const odd = currentSheet?.data as IOddSheetData;
 
@@ -55,21 +54,25 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
           icon={<MoneyHand width={28} height={28} color="white" />}
         />
 
-        {(canPublishOdd(odd.status, odd.criterion?.status ?? "ACTIVE")) && <BottomSheet.ActionOption
-          text="Publish"
-          icon={<Eye width={28} height={28} color="white" />}
-          onPress={() => {
-            pushSheet({ type: 'odd-publish', data: odd });
-          }}
-        />}
+        {canPublishOdd(odd.status, odd.criterion?.status ?? 'ACTIVE') && (
+          <BottomSheet.ActionOption
+            text="Publish"
+            icon={<Eye width={28} height={28} color="white" />}
+            onPress={() => {
+              pushSheet({ type: 'odd-publish', data: odd });
+            }}
+          />
+        )}
 
-        {(canSuspendOdd(odd.status, odd.criterion?.status ?? "ACTIVE")) && <BottomSheet.ActionOption
-          text="Suspend"
-          icon={<LockClosed width={28} height={28} color="white" />}
-          onPress={() => {
-            pushSheet({ type: 'odd-suspend', data: odd });
-          }}
-        />}
+        {canSuspendOdd(odd.status, odd.criterion?.status ?? 'ACTIVE') && (
+          <BottomSheet.ActionOption
+            text="Suspend"
+            icon={<LockClosed width={28} height={28} color="white" />}
+            onPress={() => {
+              pushSheet({ type: 'odd-suspend', data: odd });
+            }}
+          />
+        )}
 
         <BottomSheet.ActionOption
           text="Reprice"

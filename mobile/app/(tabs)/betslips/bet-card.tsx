@@ -1,8 +1,8 @@
-import SafeHorizontalView from "@/components/safe-horizontal-view";
-import { ThemedText } from "@/components/ThemedText";
-import { useGetOddById } from "@/services";
-import { IBet } from "@/store/bet-slip.store";
-import { StyleSheet, View } from "react-native";
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { ThemedText } from '@/components/ThemedText';
+import { useGetOddById } from '@/services';
+import { IBet } from '@/store/bet-slip.store';
+import { StyleSheet, View } from 'react-native';
 
 interface BetCardProps {
   bet: IBet;
@@ -34,8 +34,8 @@ export const BetCard = ({ bet, border = true }: BetCardProps) => {
         <ThemedText style={oddStyles.stake}>${bet.stake}</ThemedText>
       </View>
     </SafeHorizontalView>
-  )
-}
+  );
+};
 
 const oddStyles = StyleSheet.create({
   root: {

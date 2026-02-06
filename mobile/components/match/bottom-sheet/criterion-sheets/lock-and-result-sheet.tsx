@@ -16,40 +16,38 @@ interface TeamProps {
 }
 
 const Team = ({ name, score, isSelected, onValueChange }: TeamProps) => {
-
   return (
     <View style={teamStyle.root}>
       <View style={teamStyle.teamInfo}>
-
-        <View style={{
-          flexDirection: 'row',
-          gap: 6,
-        }}>
-
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 6,
+          }}
+        >
           <ThemedText style={teamStyle.teamScore}>{score}</ThemedText>
 
-          <ThemedText
-            ellipsizeMode="tail"
-            style={teamStyle.teamName}
-            className="team-name"
-          >
+          <ThemedText ellipsizeMode="tail" style={teamStyle.teamName} className="team-name">
             {name}
           </ThemedText>
         </View>
       </View>
 
-      <Checkbox borderRadius={100} iconColor='#61687E' color={isSelected ? '#3CC5A4' : 'white'} value={isSelected} onValueChange={(value) => onValueChange(value)} style={checkboxStyle.root} />
-
+      <Checkbox
+        borderRadius={100}
+        iconColor="#61687E"
+        color={isSelected ? '#3CC5A4' : 'white'}
+        value={isSelected}
+        onValueChange={(value) => onValueChange(value)}
+        style={checkboxStyle.root}
+      />
     </View>
   );
 };
 
 const checkboxStyle = StyleSheet.create({
-  root: {
-
-  },
+  root: {},
 });
-
 
 const teamStyle = StyleSheet.create({
   root: {
@@ -81,7 +79,6 @@ export const CriterionLockAndResultSheet = ({ visible = false }: ISheet) => {
 
   const [oddValues, setOddValues] = useState<IOddValue>({});
 
-
   const handleOddValueChange = (oddId: string, value: boolean) => {
     setOddValues((prev) => ({ ...prev, [oddId]: value }));
   };
@@ -91,21 +88,27 @@ export const CriterionLockAndResultSheet = ({ visible = false }: ISheet) => {
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
 
   return (
-    <BottomSheet
-      closeOnTouchBackdrop={false}
-      onClose={closeAll} visible={visible}
-    >
+    <BottomSheet closeOnTouchBackdrop={false} onClose={closeAll} visible={visible}>
       <BottomSheet.Header
         onClose={closeAll}
-        onPrevious={() =>
-          goBack()}
-        title={criterion.name} description={"Lock & Result"}
+        onPrevious={() => goBack()}
+        title={criterion.name}
+        description={'Lock & Result'}
       />
 
-      <SafeHorizontalView style={{ flexDirection: 'column'}}>
+      <SafeHorizontalView style={{ flexDirection: 'column' }}>
         {criterion.odds.map((odd) => (
-          <Pressable style={{ paddingVertical: 12 }} key={odd.id} onPress={() => handleOddValueChange(odd.id, !(oddValues?.[odd.id] ?? false))}>
-            <Team onValueChange={(value) => handleOddValueChange(odd.id, value)} name={odd.name} score={odd.value} isSelected={oddValues?.[odd.id] ?? false} />
+          <Pressable
+            style={{ paddingVertical: 12 }}
+            key={odd.id}
+            onPress={() => handleOddValueChange(odd.id, !(oddValues?.[odd.id] ?? false))}
+          >
+            <Team
+              onValueChange={(value) => handleOddValueChange(odd.id, value)}
+              name={odd.name}
+              score={odd.value}
+              isSelected={oddValues?.[odd.id] ?? false}
+            />
           </Pressable>
         ))}
       </SafeHorizontalView>
@@ -113,7 +116,6 @@ export const CriterionLockAndResultSheet = ({ visible = false }: ISheet) => {
       <SafeHorizontalView style={{ marginTop: 32 }}>
         <Button.Root onPress={closeAll}>Save</Button.Root>
       </SafeHorizontalView>
-
     </BottomSheet>
   );
 };

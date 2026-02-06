@@ -1,15 +1,15 @@
-import { MessageEvent } from "react-native-sse";
-import OddSseListener from "./odd-sse.listener";
-import MatchSseListener from "./match-sse.listener";
-import TeamSseListener from "./team-sse.listener";
-import UserSseListener from "./user-sse.listener";
-import CriterionSseListener from "./criterion-sse.listener";
-import { ISseListener } from "./types";
+import { MessageEvent } from 'react-native-sse';
+import OddSseListener from './odd-sse.listener';
+import MatchSseListener from './match-sse.listener';
+import TeamSseListener from './team-sse.listener';
+import UserSseListener from './user-sse.listener';
+import CriterionSseListener from './criterion-sse.listener';
+import { ISseListener } from './types';
 
 export interface ISseEvent<T extends object> {
   payload: T;
-  domain: "odd" | "match" | "team" | "user" | "criterion";
-  eventName: "REFRESH_REQUIRED" | string;
+  domain: 'odd' | 'match' | 'team' | 'user' | 'criterion';
+  eventName: 'REFRESH_REQUIRED' | string;
   timestamp: number;
 }
 

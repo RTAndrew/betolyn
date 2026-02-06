@@ -9,7 +9,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import StreamEventSource from '@/server-sent-events';
 
-
 if (__DEV__) {
   require('../reactotron-config');
 }
@@ -33,7 +32,14 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="auth" options={{ headerShown: false }} />
-              <Stack.Screen name="(modals)" options={{ headerShown: false, presentation: 'modal', animation: 'slide_from_bottom' }} />
+              <Stack.Screen
+                name="(modals)"
+                options={{
+                  headerShown: false,
+                  presentation: 'modal',
+                  animation: 'slide_from_bottom',
+                }}
+              />
 
               {/* This has to be here otherwise the form sheet will not work */}
               <Stack.Screen

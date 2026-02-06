@@ -16,25 +16,22 @@ export const PublishCriterionSheet = ({ visible = false }: ISheet) => {
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
 
   const handleConfirm = async () => {
-    await publishCriterion(
-      criterion.id,
-      {
-        onSuccess: () => {
-          closeAll();
-        },
-      }
-    );
+    await publishCriterion(criterion.id, {
+      onSuccess: () => {
+        closeAll();
+      },
+    });
   };
 
   return (
     <BottomSheet.ModalConfirmation
-    visible={visible}
-    onClose={closeAll}
-    onConfirm={handleConfirm}
-    onCancelText="Cancel"
-    title="Publish this odd?"
-    description="Users will be able to see and bet on it."
-    onConfirmText={isPending ? 'Publishing...' : 'Publish'}
+      visible={visible}
+      onClose={closeAll}
+      onConfirm={handleConfirm}
+      onCancelText="Cancel"
+      title="Publish this odd?"
+      description="Users will be able to see and bet on it."
+      onConfirmText={isPending ? 'Publishing...' : 'Publish'}
     />
   );
 };

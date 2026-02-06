@@ -1,4 +1,3 @@
-
 /**
  * Copies only the fields that exist in `source` onto `target`, returning a new object.
  * Properties in `target` that are not in `source` remain unchanged.

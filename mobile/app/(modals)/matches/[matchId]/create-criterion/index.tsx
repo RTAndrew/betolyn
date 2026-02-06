@@ -27,7 +27,6 @@ export default function CreateCriterion() {
   const { data, isPending, error } = useGetMatch({ matchId });
   const { mutateAsync: createCriterion } = useCreateCriterion();
 
-
   const handleNext = () => {
     const canContinue = screenRef.current?.handleNext();
     if (!canContinue) return;
@@ -35,7 +34,7 @@ export default function CreateCriterion() {
     if (activeStep === 1) {
       handleModalConfirmation();
     } else {
-      setActiveStep(prev => prev + 1);
+      setActiveStep((prev) => prev + 1);
     }
   };
 
@@ -43,18 +42,16 @@ export default function CreateCriterion() {
     const criterion = dataCapture['market-configuration'] as IMarketConfigurationFormData;
     const odds = Object.values(dataCapture['outcomes']) as ICreateCriterionOdds[];
 
+    const activeOdds = odds.filter((odd) => odd.status === 'ACTIVE').length;
 
-    const activeOdds = odds.filter(odd =>
-      odd.status === 'ACTIVE'
-    ).length;
-
-    const draftOdds = odds.filter(odd =>
-      odd.status === 'DRAFT'
-    ).length;
+    const draftOdds = odds.filter((odd) => odd.status === 'DRAFT').length;
 
     if (!criterion.isDraft) {
       if (activeOdds === 0) {
-        Alert.alert('Unable to create market', 'Active market must have at least one active outcome. Please add an active outcome and try again.');
+        Alert.alert(
+          'Unable to create market',
+          'Active market must have at least one active outcome. Please add an active outcome and try again.'
+        );
         return;
       }
     }
@@ -69,7 +66,7 @@ export default function CreateCriterion() {
     }
 
     setIsConfirmationVisible(description);
-  }
+  };
 
   const handleSubmit = async () => {
     const criterion = dataCapture['market-configuration'] as IMarketConfigurationFormData;
@@ -81,14 +78,13 @@ export default function CreateCriterion() {
         name: criterion.name,
         allowMultipleOdds: true,
         status: criterion.isDraft ? CriterionStatusEnum.DRAFT : CriterionStatusEnum.ACTIVE,
-        odds: odds.map(odd => ({
+        odds: odds.map((odd) => ({
           name: odd.name,
           value: odd.value,
           status: odd.status as EOddStatus,
         })),
-      }
+      },
     });
-
 
     setIsConfirmationVisible(null);
     const canGoBack = router.canGoBack();
@@ -97,18 +93,30 @@ export default function CreateCriterion() {
     } else {
       router.dismissAll();
     }
-  }
+  };
 
   const handleDataCaptureNext = (type: TScreen, data: unknown) => {
-    setDataCapture(prev => ({ ...prev, [type]: data }));
+    setDataCapture((prev) => ({ ...prev, [type]: data }));
   };
 
   const activeScreen = useMemo(() => {
     if (activeStep === 0) {
-      return <MarketConfiguration data={dataCapture['market-configuration']} ref={screenRef} onDataCaptureNext={handleDataCaptureNext} />
+      return (
+        <MarketConfiguration
+          data={dataCapture['market-configuration']}
+          ref={screenRef}
+          onDataCaptureNext={handleDataCaptureNext}
+        />
+      );
     }
 
-    return <CreateCriterionOutcomes data={dataCapture['outcomes']} ref={screenRef} onDataCaptureNext={handleDataCaptureNext} />;
+    return (
+      <CreateCriterionOutcomes
+        data={dataCapture['outcomes']}
+        ref={screenRef}
+        onDataCaptureNext={handleDataCaptureNext}
+      />
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep]);
 
@@ -121,12 +129,12 @@ export default function CreateCriterion() {
   }
 
   const subtitle = `${data.data.homeTeam.name} vs ${data.data.awayTeam.name}`;
-  const isNextButtonDisabled = Object.keys(dataCapture['outcomes'] ?? {}).length === 0 && activeStep === 1;
+  const isNextButtonDisabled =
+    Object.keys(dataCapture['outcomes'] ?? {}).length === 0 && activeStep === 1;
 
   return (
     <>
       <View style={{ flex: 1, backgroundColor: '#61687E' }}>
-
         <KeyboardAvoidingView
           style={styles.root}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -141,33 +149,49 @@ export default function CreateCriterion() {
             <ScreenHeader
               type="close"
               title="New Market"
-              iconColor='#61687E'
+              iconColor="#61687E"
               style={styles.header}
               description={subtitle}
               onClose={() => router.back()}
             />
 
             <SafeHorizontalView style={{ backgroundColor: '#485164' }}>
-              <Wizard activeIndex={activeStep} steps={[{ label: 'Market' }, { label: 'Outcomes' }]} />
+              <Wizard
+                activeIndex={activeStep}
+                steps={[{ label: 'Market' }, { label: 'Outcomes' }]}
+              />
             </SafeHorizontalView>
 
-            <SafeHorizontalView style={styles.body}>
-              {activeScreen}
-
-            </SafeHorizontalView>
+            <SafeHorizontalView style={styles.body}>{activeScreen}</SafeHorizontalView>
           </ScrollView>
         </KeyboardAvoidingView>
         <SafeHorizontalView style={styles.buttonContainer}>
-
-          {activeStep > 0 && <Button.Root variant='text' style={styles.button} onPress={() => setActiveStep(prev => prev - 1)}> Previous </Button.Root>}
-          <Button.Root disabled={isNextButtonDisabled} style={styles.button} onPress={handleNext}> Next </Button.Root>
+          {activeStep > 0 && (
+            <Button.Root
+              variant="text"
+              style={styles.button}
+              onPress={() => setActiveStep((prev) => prev - 1)}
+            >
+              {' '}
+              Previous{' '}
+            </Button.Root>
+          )}
+          <Button.Root disabled={isNextButtonDisabled} style={styles.button} onPress={handleNext}>
+            {' '}
+            Next{' '}
+          </Button.Root>
         </SafeHorizontalView>
       </View>
 
-      {isConfirmationVisible && <BottomSheet.ModalConfirmation title='Create Criterion'
-        description={isConfirmationVisible} onConfirm={handleSubmit} onClose={() => setIsConfirmationVisible(null)}
-        onConfirmText='Create criterion'
-      />}
+      {isConfirmationVisible && (
+        <BottomSheet.ModalConfirmation
+          title="Create Criterion"
+          description={isConfirmationVisible}
+          onConfirm={handleSubmit}
+          onClose={() => setIsConfirmationVisible(null)}
+          onConfirmText="Create criterion"
+        />
+      )}
     </>
   );
 }

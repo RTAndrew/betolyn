@@ -1,5 +1,5 @@
-import { getRequest, postRequest, putRequest, patchRequest } from "@/utils/http";
-import { IMatchCriteriaResponse } from "../matches/matches-services";
+import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
+import { IMatchCriteriaResponse } from '../matches/matches-services';
 import { CriterionStatusEnum, EOddStatus, ICriterion } from '@/types';
 import { DataSync } from '@/server-sent-events/data-sync';
 

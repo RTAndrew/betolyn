@@ -15,9 +15,9 @@ export type BottomSheetType =
   | 'odd-suspend'
   | 'odd-publish';
 
-  export interface IOddSheetData extends IOdd {
-    criterion?: Omit<ICriterion, 'match'>;
-  }
+export interface IOddSheetData extends IOdd {
+  criterion?: Omit<ICriterion, 'match'>;
+}
 
 export interface BottomSheetStackItem {
   type: BottomSheetType;

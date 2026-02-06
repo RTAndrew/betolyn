@@ -5,7 +5,16 @@ import { ThemedView } from '@/components/ThemedView';
 import { useGetMatch, useGetMatchCriteria } from '@/services/matches/match-query';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+  ViewProps,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 
@@ -37,8 +46,12 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
           <Collapsible
             delayLongPress={200}
             onLongPress={() => {
-            pushSheet({ type: 'criterion-action', data: criteria });
-          }} open={index === 0} key={criteria.id} title={criteria.name}>
+              pushSheet({ type: 'criterion-action', data: criteria });
+            }}
+            open={index === 0}
+            key={criteria.id}
+            title={criteria.name}
+          >
             <ThemedView
               style={{
                 backgroundColor: 'transparent',
@@ -139,69 +152,74 @@ const MatchPage = () => {
           <Text onPress={() => refetch()}> Refreshe </Text>
 
           <ThemedView style={{ backgroundColor: '#495064' }}>
-          {/* Highlight */}
-          <View
-            style={{
-              flexDirection: 'column',
-              alignItems: 'center',
-              paddingVertical: 30,
-            }}
-          >
-            <Text style={{ color: '#C7D1E7', marginBottom: 10 }}>UFC</Text>
-
+            {/* Highlight */}
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
+                flexDirection: 'column',
+                alignItems: 'center',
+                paddingVertical: 30,
               }}
             >
-              <MatchTeam name={match.homeTeam.name} imageUrl={match.homeTeam.badgeUrl} />
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color: 'white',
-                  transform: [{ translateY: 35 }],
-                }}
-              >
-                {match.homeTeamScore !== undefined || match.homeTeamScore !== null
-                  ? `${match.homeTeamScore} - ${match.awayTeamScore}`
-                  : 'vs'}
-              </Text>
-              <MatchTeam name={match.awayTeam.name} imageUrl={match.awayTeam.badgeUrl} />
-            </View>
-          </View>
+              <Text style={{ color: '#C7D1E7', marginBottom: 10 }}>UFC</Text>
 
-          {/* Main Bet */}
-          {match.mainCriterion &&
-            match.mainCriterion.odds.length &&
-            match.mainCriterion.odds.length > 0 && (
-              <Section
+              <View
                 style={{
                   flexDirection: 'row',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   justifyContent: 'space-between',
-                  gap: 10,
                 }}
               >
-                {match.mainCriterion.odds.map((odd) => (
-                  <OddButton key={odd.id} odd={odd} style={{ flex: 1 }} criterion={match.mainCriterion!} />
-                ))}
-              </Section>
-            )}
+                <MatchTeam name={match.homeTeam.name} imageUrl={match.homeTeam.badgeUrl} />
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: 'white',
+                    transform: [{ translateY: 35 }],
+                  }}
+                >
+                  {match.homeTeamScore !== undefined || match.homeTeamScore !== null
+                    ? `${match.homeTeamScore} - ${match.awayTeamScore}`
+                    : 'vs'}
+                </Text>
+                <MatchTeam name={match.awayTeam.name} imageUrl={match.awayTeam.badgeUrl} />
+              </View>
+            </View>
 
-          {/* RealTime Bet Odds */}
-          <Section>
-            <Text style={{ color: '#C7D1E7', marginBottom: 5 }}>Critérios em tempo real</Text>
-            <Text style={{ color: 'white', marginBottom: 10, fontWeight: '600' }}>
-              Quem irá vencer por Knockout?
-            </Text>
-          </Section>
-        </ThemedView>
+            {/* Main Bet */}
+            {match.mainCriterion &&
+              match.mainCriterion.odds.length &&
+              match.mainCriterion.odds.length > 0 && (
+                <Section
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 10,
+                  }}
+                >
+                  {match.mainCriterion.odds.map((odd) => (
+                    <OddButton
+                      key={odd.id}
+                      odd={odd}
+                      style={{ flex: 1 }}
+                      criterion={match.mainCriterion!}
+                    />
+                  ))}
+                </Section>
+              )}
 
-        <MatchCriteria matchId={match.id} />
-      </ScrollView>
+            {/* RealTime Bet Odds */}
+            <Section>
+              <Text style={{ color: '#C7D1E7', marginBottom: 5 }}>Critérios em tempo real</Text>
+              <Text style={{ color: 'white', marginBottom: 10, fontWeight: '600' }}>
+                Quem irá vencer por Knockout?
+              </Text>
+            </Section>
+          </ThemedView>
+
+          <MatchCriteria matchId={match.id} />
+        </ScrollView>
       </SafeAreaView>
     </MatchBottomSheetProvider>
   );

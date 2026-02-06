@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  LayoutChangeEvent,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -25,11 +19,8 @@ export interface ButtonTabProps {
   onIndexChange?: (index: number) => void;
 }
 
-const normalizeOptions = (
-  options: ButtonTabOption[] | string[]
-): ButtonTabOption[] => options.map((opt) =>
-  typeof opt === 'string' ? { label: opt, value: opt } : opt
-);
+const normalizeOptions = (options: ButtonTabOption[] | string[]): ButtonTabOption[] =>
+  options.map((opt) => (typeof opt === 'string' ? { label: opt, value: opt } : opt));
 
 export function ButtonTab({
   activeIndex: controlledIndex,
@@ -100,7 +91,9 @@ export function ButtonTab({
         <TouchableOpacity
           key={opt.value}
           style={styles.tab}
-          onPress={() => { selectIndex(index) }}
+          onPress={() => {
+            selectIndex(index);
+          }}
           activeOpacity={1}
           accessibilityRole="tab"
           accessibilityState={{ selected: index === activeIndex }}
@@ -119,7 +112,6 @@ export function ButtonTab({
   );
 }
 
-
 const COLORS = {
   container: '#21243E',
   containerBorder: '#43466D',
@@ -128,7 +120,6 @@ const COLORS = {
   activeText: '#FFFFFF',
   inactiveText: '#8189A7',
 } as const;
-
 
 const styles = StyleSheet.create({
   container: {

@@ -11,7 +11,6 @@ import { Button } from '@/components/button';
 import { IOddSheetData } from '../types';
 import { useRepriceOdd } from '@/services';
 
-
 interface TeamProps {
   name: string;
   score: number;
@@ -24,7 +23,11 @@ const Team = ({ name, score, onScoreChange }: TeamProps) => {
   const inputStatus = useMemo(() => {
     const isIncreasing = score > scoreRef.current;
     const isDecreasing = score < scoreRef.current;
-    const status: 'success' | 'error' | undefined = isIncreasing ? 'success' : isDecreasing ? 'error' : undefined;
+    const status: 'success' | 'error' | undefined = isIncreasing
+      ? 'success'
+      : isDecreasing
+        ? 'error'
+        : undefined;
     return { status, isIncreasing, isDecreasing };
   }, [score]);
 
@@ -36,37 +39,27 @@ const Team = ({ name, score, onScoreChange }: TeamProps) => {
   return (
     <View style={teamStyle.root}>
       <View style={teamStyle.teamInfo}>
-
-        <View style={{
-          flexDirection: 'row',
-          gap: 6,
-        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 6,
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
             <ThemedText style={teamStyle.teamScore}>{scoreRef.current}</ThemedText>
             {inputStatus?.isIncreasing && <CaretUp width={10} height={10} color="#3CC5A4" />}
             {inputStatus?.isDecreasing && <CaretDown width={10} height={10} color="#F80069" />}
           </View>
-          <ThemedText
-            ellipsizeMode="tail"
-            style={teamStyle.teamName}
-            className="team-name"
-          >
+          <ThemedText ellipsizeMode="tail" style={teamStyle.teamName} className="team-name">
             {name}
           </ThemedText>
         </View>
       </View>
 
-      <NumberInput
-        min={0}
-        value={score}
-        status={inputStatus?.status}
-        onChange={onScoreChange}
-      />
+      <NumberInput min={0} value={score} status={inputStatus?.status} onChange={onScoreChange} />
     </View>
   );
 };
-
 
 const teamStyle = StyleSheet.create({
   root: {
@@ -96,7 +89,6 @@ export const OddRepriceSheet = ({ visible = false }: ISheet) => {
 
   const [oddValue, setOddValue] = useState<number>(odd.value);
 
-
   const { mutateAsync: repriceOdd, isPending } = useRepriceOdd();
 
   const handleUpdateOdd = async () => {
@@ -109,15 +101,13 @@ export const OddRepriceSheet = ({ visible = false }: ISheet) => {
     closeAll();
   };
 
-
   return (
-    <BottomSheet
-      onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}
-    >
+    <BottomSheet onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}>
       <BottomSheet.Header
         onClose={closeAll}
         onPrevious={() => goBack()}
-        title={odd.name} description={description}
+        title={odd.name}
+        description={description}
       />
 
       <SafeHorizontalView style={{ flexDirection: 'column', gap: 24 }}>
@@ -125,9 +115,10 @@ export const OddRepriceSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
-        <Button.Root onPress={handleUpdateOdd} disabled={isPending}>{isPending ? 'Saving...' : 'Save'}</Button.Root>
+        <Button.Root onPress={handleUpdateOdd} disabled={isPending}>
+          {isPending ? 'Saving...' : 'Save'}
+        </Button.Root>
       </SafeHorizontalView>
-
     </BottomSheet>
   );
 };

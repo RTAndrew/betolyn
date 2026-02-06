@@ -13,16 +13,7 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  return (
-    <Text
-      style={[
-        { color: 'white' },
-        styles[type],
-        style,
-      ]}
-      {...rest}
-    />
-  );
+  return <Text style={[{ color: 'white' }, styles[type], style]} {...rest} />;
 }
 
 const styles = StyleSheet.create({

@@ -101,28 +101,27 @@ const ModalConfirmation = ({
       await onConfirm?.();
       onClose();
     } catch {
-
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   if (!visible) return <></>;
-
 
   return (
     <BottomSheet onClose={onClose} visible={true} {...props}>
       <BottomSheet.SafeHorizontalView>
         <ThemedText style={modalConfirmationStyles.title}>{title}</ThemedText>
         {description && (
-          <ThemedText style={modalConfirmationStyles.description}>
-            {description}
-          </ThemedText>
+          <ThemedText style={modalConfirmationStyles.description}>{description}</ThemedText>
         )}
 
         <View style={modalConfirmationStyles.actions}>
           {onConfirm && (
-            <Button.Root style={{ backgroundColor: destructive ? '#F80069' : '#7E87F1' }} onPress={handleConfirm}>
+            <Button.Root
+              style={{ backgroundColor: destructive ? '#F80069' : '#7E87F1' }}
+              onPress={handleConfirm}
+            >
               {isLoading ? <ActivityIndicator size="small" color="white" /> : onConfirmText}
             </Button.Root>
           )}

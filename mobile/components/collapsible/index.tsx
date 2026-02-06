@@ -6,7 +6,6 @@ interface CollapsibleProps extends TouchableOpacityProps {
   title: string;
   open?: boolean;
   children: React.ReactNode;
-
 }
 
 export default function Collapsible({ children, title, open = false, ...props }: CollapsibleProps) {
@@ -22,7 +21,7 @@ export default function Collapsible({ children, title, open = false, ...props }:
             weight="medium"
             color={'#fff'}
             style={{
-              transform: [{ rotate: isOpen ? '90deg' : '0deg' }]
+              transform: [{ rotate: isOpen ? '90deg' : '0deg' }],
             }}
           />
           <Text style={styles.title}>{title}</Text>

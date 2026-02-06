@@ -16,25 +16,22 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
   const odd = currentSheet?.data as IOddSheetData;
 
   const handleConfirm = async () => {
-    await publishOdd(
-      odd.id,
-      {
-        onSuccess: () => {
-          closeAll();
-        },
-      }
-    );
+    await publishOdd(odd.id, {
+      onSuccess: () => {
+        closeAll();
+      },
+    });
   };
 
   return (
     <BottomSheet.ModalConfirmation
-    visible={visible}
-    onClose={closeAll}
-    onConfirm={handleConfirm}
-    onCancelText="Cancel"
-    title="Publish this odd?"
-    description="Users will be able to see and bet on it."
-    onConfirmText={isPending ? 'Publishing...' : 'Publish'}
+      visible={visible}
+      onClose={closeAll}
+      onConfirm={handleConfirm}
+      onCancelText="Cancel"
+      title="Publish this odd?"
+      description="Users will be able to see and bet on it."
+      onConfirmText={isPending ? 'Publishing...' : 'Publish'}
     />
   );
 };

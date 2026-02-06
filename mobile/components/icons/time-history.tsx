@@ -1,6 +1,6 @@
-import React from 'react'
-import Svg, { Path } from 'react-native-svg'
-import type { SvgProps } from 'react-native-svg'
+import React from 'react';
+import Svg, { Path } from 'react-native-svg';
+import type { SvgProps } from 'react-native-svg';
 
 const TimeHistory = ({ width = 12, height = 12, color = 'white', ...props }: SvgProps) => {
   return (
@@ -11,6 +11,6 @@ const TimeHistory = ({ width = 12, height = 12, color = 'white', ...props }: Svg
       />
     </Svg>
   );
-}
+};
 
-export default TimeHistory
+export default TimeHistory;

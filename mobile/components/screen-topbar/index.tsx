@@ -18,7 +18,11 @@ const ScreenTopBar = ({ style }: ScreenTopBarProps) => {
         <Down />
       </TouchableWithoutFeedback>
 
-      <TouchableWithoutFeedback delayLongPress={200} onLongPress={() => pushSheet({ type: 'match-action' })} onPress={() => pushSheet({ type: 'match-action' })}>
+      <TouchableWithoutFeedback
+        delayLongPress={200}
+        onLongPress={() => pushSheet({ type: 'match-action' })}
+        onPress={() => pushSheet({ type: 'match-action' })}
+      >
         <MoreVertical />
       </TouchableWithoutFeedback>
     </SafeHorizontalView>
@@ -34,8 +38,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 10,
-
-
   },
 });
 

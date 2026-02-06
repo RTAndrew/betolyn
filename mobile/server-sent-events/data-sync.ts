@@ -1,4 +1,3 @@
-
 import { IOddWithCriterion } from '@/services';
 import {
   getAllCriteriaQueryOptions,
@@ -185,6 +184,5 @@ class _DataSync {
     queryClient.invalidateQueries({ queryKey: matchCriteriaKey.queryKey });
   }
 }
-
 
 export const DataSync = new _DataSync();

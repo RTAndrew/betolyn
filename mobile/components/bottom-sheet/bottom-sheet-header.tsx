@@ -37,12 +37,14 @@ interface _TitleWithChildren {
 type TTitleProps = _TitleWithDescription | _TitleWithChildren;
 const Title = (props: TTitleProps) => {
   if ('children' in props) {
-    return <View style={styles.titleContainer}>
-      <ThemedText style={styles.title} type="default">
-        {props.title}
-      </ThemedText>
-      {props.children}
-    </View>;
+    return (
+      <View style={styles.titleContainer}>
+        <ThemedText style={styles.title} type="default">
+          {props.title}
+        </ThemedText>
+        {props.children}
+      </View>
+    );
   }
 
   return (
@@ -50,9 +52,12 @@ const Title = (props: TTitleProps) => {
       <ThemedText style={styles.title} type="default">
         {props.title}
       </ThemedText>
-      {props.description && <ThemedText style={styles.description} type="default">{props.description}</ThemedText>}
+      {props.description && (
+        <ThemedText style={styles.description} type="default">
+          {props.description}
+        </ThemedText>
+      )}
     </View>
-
   );
 };
 
@@ -70,7 +75,13 @@ const BottomSheetHeader = (props: BottomSheetHeaderProps) => {
   const shouldCenter = Boolean(!onClose && !onPrevious);
 
   return (
-    <SafeHorizontalView style={shouldCenter ? { ...styles.root, justifyContent: 'center' } : { ...styles.root, justifyContent: 'space-between' }}>
+    <SafeHorizontalView
+      style={
+        shouldCenter
+          ? { ...styles.root, justifyContent: 'center' }
+          : { ...styles.root, justifyContent: 'space-between' }
+      }
+    >
       {onPrevious && <AntDesign name="left" size={24} color="white" onPress={onPrevious} />}
 
       <Title title={title} description={description} />

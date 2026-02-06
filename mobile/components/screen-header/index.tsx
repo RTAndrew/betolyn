@@ -1,4 +1,3 @@
-
 import React, { PropsWithChildren } from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,7 +18,7 @@ interface IconContainerProps extends PropsWithChildren {
   color?: string;
 }
 
-const IconContainer = ({ children, onPress, color = "#485164" }: IconContainerProps) => {
+const IconContainer = ({ children, onPress, color = '#485164' }: IconContainerProps) => {
   return (
     <Pressable style={[styles.headerIcon, { backgroundColor: color }]} onPress={onPress}>
       {children}
@@ -39,28 +38,33 @@ const Header = ({ title, description }: HeaderProps) => {
       {description && <ThemedText style={styles.headerDescription}>{description}</ThemedText>}
     </View>
   );
-}
+};
 
-
-
-const ScreenHeader = ({ onClose, type, safeArea = true, title, description, children, style, iconColor = "#485164" }: ScreenHeaderProps) => {
+const ScreenHeader = ({
+  onClose,
+  type,
+  safeArea = true,
+  title,
+  description,
+  children,
+  style,
+  iconColor = '#485164',
+}: ScreenHeaderProps) => {
   const insets = useSafeAreaInsets();
 
   return (
     <SafeHorizontalView style={[styles.root, { paddingTop: safeArea ? insets.top : 0 }, style]}>
       <View style={styles.headerContainer}>
-        {onClose && <IconContainer color={iconColor} onPress={onClose}>
-          <Close width={18} height={18} color="white" />
-        </IconContainer>
-        }
+        {onClose && (
+          <IconContainer color={iconColor} onPress={onClose}>
+            <Close width={18} height={18} color="white" />
+          </IconContainer>
+        )}
 
         <Header title={title} description={description} />
 
-        <View style={styles.actionContainer}>
-          {children}
-        </View>
+        <View style={styles.actionContainer}>{children}</View>
       </View>
-
     </SafeHorizontalView>
   );
 };
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   header: {
-    flexDirection: "column",
+    flexDirection: 'column',
     alignItems: 'flex-start',
     flex: 1,
   },

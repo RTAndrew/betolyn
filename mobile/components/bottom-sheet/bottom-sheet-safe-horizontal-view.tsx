@@ -6,10 +6,7 @@ export interface BottomSheetSafeHorizontalViewProps {
   style?: ViewStyle;
 }
 
-const BottomSheetSafeHorizontalView = ({
-  children,
-  style,
-}: BottomSheetSafeHorizontalViewProps) => {
+const BottomSheetSafeHorizontalView = ({ children, style }: BottomSheetSafeHorizontalViewProps) => {
   return <View style={{ paddingHorizontal: 16, ...style }}>{children}</View>;
 };
 

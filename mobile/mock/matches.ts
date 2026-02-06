@@ -28,8 +28,6 @@ export interface IMainCriteria {
   odds: IOdd[];
 }
 
-
-
 export interface IChannel {
   id: number;
   name: string;

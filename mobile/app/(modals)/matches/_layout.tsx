@@ -1,5 +1,5 @@
-import { Stack } from 'expo-router'
-import React from 'react'
+import { Stack } from 'expo-router';
+import React from 'react';
 
 const FormSheetLayout = () => {
   return (
@@ -7,7 +7,7 @@ const FormSheetLayout = () => {
       <Stack.Screen name="[matchId]" options={{ headerShown: false }} />
       <Stack.Screen name="[matchId]/create-criterion/index" options={{ headerShown: false }} />
     </Stack>
-  )
-}
+  );
+};
 
-export default FormSheetLayout
+export default FormSheetLayout;

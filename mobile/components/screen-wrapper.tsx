@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -7,21 +7,21 @@ import {
   Platform,
   StatusBar,
   View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
   scrollable?: boolean; // Enable scrollable screen
-  statusBarStyle?: "default" | "dark-content" | "light-content";
+  statusBarStyle?: 'default' | 'dark-content' | 'light-content';
   backgroundColor?: string; // Background color customization
 }
 
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   children,
   scrollable = true,
-  statusBarStyle = "dark-content",
-  backgroundColor = "#fff",
+  statusBarStyle = 'dark-content',
+  backgroundColor = '#fff',
 }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor }}>
@@ -29,7 +29,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           {scrollable ? (

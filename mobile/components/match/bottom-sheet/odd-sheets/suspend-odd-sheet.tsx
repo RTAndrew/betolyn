@@ -16,26 +16,23 @@ export const SuspendOddSheet = ({ visible = false }: ISheet) => {
   const odd = currentSheet?.data as IOddSheetData;
 
   const handleConfirm = async () => {
-    await suspendOdd(
-      odd.id,
-      {
-        onSuccess: () => {
-          closeAll();
-        },
-      }
-    );
+    await suspendOdd(odd.id, {
+      onSuccess: () => {
+        closeAll();
+      },
+    });
   };
 
   return (
     <BottomSheet.ModalConfirmation
       destructive
-    visible={visible}
-    onClose={closeAll}
-    onConfirm={handleConfirm}
+      visible={visible}
+      onClose={closeAll}
+      onConfirm={handleConfirm}
       onCancelText="Cancel"
-    title="Are you sure you want to suspend this odd?"
-    description="Users will no longer be able to bet on it."
-    onConfirmText={isPending ? 'Suspending...' : 'Suspend'}
+      title="Are you sure you want to suspend this odd?"
+      description="Users will no longer be able to bet on it."
+      onConfirmText={isPending ? 'Suspending...' : 'Suspend'}
     />
   );
 };

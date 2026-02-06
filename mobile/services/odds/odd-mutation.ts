@@ -3,8 +3,8 @@ import {
   IUpdateOddValueRequest,
   ICreateOddRequest,
   OddService,
-} from "../odds/odd-service";
-import { queryClient } from "@/utils/react-query";
+} from '../odds/odd-service';
+import { queryClient } from '@/utils/react-query';
 import { useMutation } from '@tanstack/react-query';
 
 interface IUpdateOddStatusVariables {
@@ -77,4 +77,3 @@ export const useCreateOdd = () => {
 
   return mutation;
 };
-

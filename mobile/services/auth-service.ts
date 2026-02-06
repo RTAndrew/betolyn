@@ -1,6 +1,10 @@
-
 import { getRequest, postRequest } from '@/utils/http';
-import { IAuthSession, SignInRequestDTO, SignUpRequestDTO, SignUpResponseDTO } from '../app/auth/signup/types';
+import {
+  IAuthSession,
+  SignInRequestDTO,
+  SignUpRequestDTO,
+  SignUpResponseDTO,
+} from '../app/auth/signup/types';
 
 export class AuthService {
   public static async signIn(requestDTO: SignInRequestDTO) {

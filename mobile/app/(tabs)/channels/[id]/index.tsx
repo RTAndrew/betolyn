@@ -29,10 +29,7 @@ const ChannelId = () => {
     return <Text>Error loading matches</Text>;
   }
 
-
   return (
-
-
     <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
       <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
         <ThemedView style={styles.header}>
@@ -67,11 +64,14 @@ const ChannelId = () => {
 
       <ThemedView style={{ flex: 1, backgroundColor: '#61687E' }}>
         {matches.map((match, index) => (
-          <BetCard key={index} match={match} onPress={(m) => router.push(`/channels/${m.id}/create-event`)} />
+          <BetCard
+            key={index}
+            match={match}
+            onPress={(m) => router.push(`/channels/${m.id}/create-event`)}
+          />
         ))}
       </ThemedView>
     </ScrollView>
-
   );
 };
 

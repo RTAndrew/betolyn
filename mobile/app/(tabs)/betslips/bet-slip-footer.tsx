@@ -1,19 +1,17 @@
-import { Button } from '@/components/button'
-import { ButtonTab } from '@/components/button-tab'
-import { NumberInput } from '@/components/forms'
-import { ThemedText } from '@/components/ThemedText'
-import { betSlipStore } from '@/store/bet-slip.store'
-import { useSignals } from '@preact/signals-react/runtime'
-import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { ScrollView } from 'react-native-actions-sheet'
-
+import { Button } from '@/components/button';
+import { ButtonTab } from '@/components/button-tab';
+import { NumberInput } from '@/components/forms';
+import { ThemedText } from '@/components/ThemedText';
+import { betSlipStore } from '@/store/bet-slip.store';
+import { useSignals } from '@preact/signals-react/runtime';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { ScrollView } from 'react-native-actions-sheet';
 
 const BetSlipFooter = () => {
-  useSignals()
+  useSignals();
   const { totalPotentialPayout, totalBets, totatStake } = betSlipStore;
   const { betType, updateBetType } = betSlipStore;
-
 
   return (
     <ScrollView
@@ -30,15 +28,19 @@ const BetSlipFooter = () => {
         {betType.value === 'single' ? (
           <ThemedText style={styles.amount}> ${totatStake.value.toFixed(2)} </ThemedText>
         ) : (
-          <NumberInput value={0} onChange={(value) => { }} />
+          <NumberInput value={0} onChange={(value) => {}} />
         )}
       </View>
 
-      <ButtonTab activeIndex={betType.value === 'single' ? 0 : 1} options={['Single', 'Parlay']} onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')} />
+      <ButtonTab
+        activeIndex={betType.value === 'single' ? 0 : 1}
+        options={['Single', 'Parlay']}
+        onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')}
+      />
       <Button.Root> Place Bet </Button.Root>
     </ScrollView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   root: {
@@ -57,6 +59,6 @@ const styles = StyleSheet.create({
     color: '#F3CA41',
     fontWeight: '700',
   },
-})
+});
 
-export default BetSlipFooter
+export default BetSlipFooter;

@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Wizard as WizardComponent, WizardStepProps, WizardStepStates } from 'react-native-ui-lib';
 import { Image, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
 import { Add } from '../icons';
-
-
 
 interface IWizardStep {
   label: string;
@@ -21,11 +19,14 @@ interface WizardProps {
   activeIndex?: number;
   steps: IWizardStep[];
   onStepChange?: (step: number) => void;
-  activeStyle?: IStyleConfig
-  disabledStyle?: IStyleConfig
+  activeStyle?: IStyleConfig;
+  disabledStyle?: IStyleConfig;
 }
 
-const getStyleConfig = (state: `${WizardStepStates}`, styles?: Pick<WizardProps, 'activeStyle' | 'disabledStyle'>): Omit<WizardStepProps, 'state'> => {
+const getStyleConfig = (
+  state: `${WizardStepStates}`,
+  styles?: Pick<WizardProps, 'activeStyle' | 'disabledStyle'>
+): Omit<WizardStepProps, 'state'> => {
   switch (state) {
     case WizardStepStates.ENABLED:
       return {
@@ -34,8 +35,8 @@ const getStyleConfig = (state: `${WizardStepStates}`, styles?: Pick<WizardProps,
         circleColor: '#485164',
         connectorStyle: {
           borderColor: 'red',
-        }
-      }
+        },
+      };
     case WizardStepStates.DISABLED:
       return {
         circleColor: '#61687E',
@@ -48,22 +49,25 @@ const getStyleConfig = (state: `${WizardStepStates}`, styles?: Pick<WizardProps,
         color: styles?.disabledStyle?.color ?? '#61687E',
         labelStyle: styles?.disabledStyle?.labelStyle,
         circleBackgroundColor: styles?.disabledStyle?.circleBackgroundColor ?? '#61687E',
-      }
+      };
     default:
       return {
         labelStyle: styles?.disabledStyle?.labelStyle,
         circleColor: styles?.disabledStyle?.circleColor ?? '#61687E',
         circleBackgroundColor: styles?.disabledStyle?.circleBackgroundColor ?? '#61687E',
-      }
+      };
   }
-}
+};
 
-const getStepState = (activeIndex: number, idx: number, state?: `${WizardStepStates}`): `${WizardStepStates}` => {
-  if (state)
-    return state;
+const getStepState = (
+  activeIndex: number,
+  idx: number,
+  state?: `${WizardStepStates}`
+): `${WizardStepStates}` => {
+  if (state) return state;
 
   return activeIndex === idx ? WizardStepStates.ENABLED : WizardStepStates.DISABLED;
-}
+};
 
 const Wizard = ({ activeIndex, steps, onStepChange, activeStyle, disabledStyle }: WizardProps) => {
   const [activeIndexState, setActiveIndexState] = useState(activeIndex ?? 0);
@@ -73,41 +77,36 @@ const Wizard = ({ activeIndex, steps, onStepChange, activeStyle, disabledStyle }
   }, [activeIndex]);
 
   return (
+    <WizardComponent
+      onActiveIndexChanged={setActiveIndexState}
+      activeConfig={{
+        state: WizardStepStates.ENABLED,
+        labelStyle: styles.activeLabel,
+        color: activeStyle?.color ?? '#F3CA41',
+        circleColor: activeStyle?.circleColor ?? '#F3CA41',
+        connectorStyle: {
+          height: 1,
+          backgroundColor: 'red',
+        },
+      }}
+      containerStyle={styles.wizardContainer}
+      activeIndex={activeIndexState}
+    >
+      {steps.map((step, idx) => {
+        const state = getStepState(activeIndexState, idx, step.state);
 
-      <WizardComponent
-        onActiveIndexChanged={setActiveIndexState}
-        activeConfig={{
-          state: WizardStepStates.ENABLED,
-          labelStyle: styles.activeLabel,
-          color: activeStyle?.color ?? '#F3CA41',
-          circleColor: activeStyle?.circleColor ?? '#F3CA41',
-          connectorStyle: {
-            height: 1,
-            backgroundColor: 'red'
-          }
-        }}
-        containerStyle={styles.wizardContainer}
-        activeIndex={activeIndexState}
-      >
-
-
-        {steps.map((step, idx) => {
-          const state = getStepState(activeIndexState, idx, step.state);
-
-          return (
-
-            <WizardComponent.Step
-              state={state}
-              key={step.label}
-              label={step.label}
-              {...getStyleConfig(state, { activeStyle, disabledStyle })}
-            />
-          )
-        })}
-      </WizardComponent>
-
-  )
-}
+        return (
+          <WizardComponent.Step
+            state={state}
+            key={step.label}
+            label={step.label}
+            {...getStyleConfig(state, { activeStyle, disabledStyle })}
+          />
+        );
+      })}
+    </WizardComponent>
+  );
+};
 
 const styles = StyleSheet.create({
   wizardContainer: {
@@ -132,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Wizard
+export default Wizard;

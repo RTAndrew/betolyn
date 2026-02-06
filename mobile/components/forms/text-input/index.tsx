@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  TextInput as _TextInput,
-  TextInputProps,
-  TextStyle,
-} from 'react-native';
+import { StyleSheet, TextInput as _TextInput, TextInputProps, TextStyle } from 'react-native';
 import { useMemo, useState } from 'react';
 import BaseField, { BaseFieldProps } from '../base-field';
 
@@ -11,7 +6,14 @@ interface InputProps extends TextInputProps, Omit<BaseFieldProps, 'children'> {
   style?: TextStyle;
 }
 
-const TextInput = ({ label, errorMessage, status, style, containerStyle, ...props }: InputProps) => {
+const TextInput = ({
+  label,
+  errorMessage,
+  status,
+  style,
+  containerStyle,
+  ...props
+}: InputProps) => {
   const errorColor = useMemo(() => {
     if (status) return errorStyles[status];
     if (errorMessage) return errorStyles.error;
@@ -21,7 +23,12 @@ const TextInput = ({ label, errorMessage, status, style, containerStyle, ...prop
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <BaseField label={label} errorMessage={errorMessage} status={status} containerStyle={containerStyle}>
+    <BaseField
+      label={label}
+      errorMessage={errorMessage}
+      status={status}
+      containerStyle={containerStyle}
+    >
       <_TextInput
         {...props}
         placeholderTextColor="#BFBFBF"

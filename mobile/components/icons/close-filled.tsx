@@ -1,8 +1,14 @@
-import React from 'react'
-import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
-import type { SvgProps } from 'react-native-svg'
+import React from 'react';
+import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
+import type { SvgProps } from 'react-native-svg';
 
-const CloseFilled = ({ width = 24, height = 24, color = 'white', fill = 'white', ...props }: SvgProps) => {
+const CloseFilled = ({
+  width = 24,
+  height = 24,
+  color = 'white',
+  fill = 'white',
+  ...props
+}: SvgProps) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
       <G clipPath="url(#clip0_2036_5772)">
@@ -13,9 +19,8 @@ const CloseFilled = ({ width = 24, height = 24, color = 'white', fill = 'white',
           fill={color}
         />
       </G>
-
     </Svg>
   );
-}
+};
 
 export default CloseFilled;

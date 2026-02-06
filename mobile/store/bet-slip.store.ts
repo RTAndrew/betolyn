@@ -58,11 +58,12 @@ const totalPotentialPayout = computed(() => {
 
 const totalBets = computed(() => Object.keys(_betSlipStore.value).length);
 
-const totatStake = computed(() => Object.keys(_betSlipStore.value).reduce((acc, matchId) => {
-  const bets = _betSlipStore.value[matchId];
-  return acc + bets.reduce((acc, bet) => acc + bet.stake, 0);
-
-}, 0));
+const totatStake = computed(() =>
+  Object.keys(_betSlipStore.value).reduce((acc, matchId) => {
+    const bets = _betSlipStore.value[matchId];
+    return acc + bets.reduce((acc, bet) => acc + bet.stake, 0);
+  }, 0)
+);
 export const betSlipStore = {
   addBetToSlip,
   editOddSlip,

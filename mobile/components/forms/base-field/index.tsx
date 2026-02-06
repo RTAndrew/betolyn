@@ -10,11 +10,7 @@ export interface BaseFieldProps {
 }
 
 const BaseField = ({ label, errorMessage, status, children, containerStyle }: BaseFieldProps) => {
-  const errorColor = errorMessage
-    ? status === 'error'
-      ? '#FA8C16'
-      : '#FF5CA0'
-    : undefined;
+  const errorColor = errorMessage ? (status === 'error' ? '#FA8C16' : '#FF5CA0') : undefined;
 
   return (
     <View style={containerStyle}>

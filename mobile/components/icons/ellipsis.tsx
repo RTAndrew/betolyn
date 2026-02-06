@@ -1,6 +1,6 @@
-import React from 'react'
-import Svg, { Circle, Path } from 'react-native-svg'
-import type { SvgProps } from 'react-native-svg'
+import React from 'react';
+import Svg, { Circle, Path } from 'react-native-svg';
+import type { SvgProps } from 'react-native-svg';
 
 const Ellipsis = ({ width = 24, height = 24, color = '#485164', ...props }: SvgProps) => {
   return (
@@ -14,4 +14,4 @@ const Ellipsis = ({ width = 24, height = 24, color = '#485164', ...props }: SvgP
   );
 };
 
-export default Ellipsis
+export default Ellipsis;

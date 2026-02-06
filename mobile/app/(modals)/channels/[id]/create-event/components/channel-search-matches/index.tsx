@@ -10,7 +10,6 @@ interface ChannelSearchMatchesProps {
 }
 
 const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
-
   const { data, error, isPending } = useGetMatches({});
   const matches = data?.data;
 

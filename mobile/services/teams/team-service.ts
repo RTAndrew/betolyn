@@ -1,5 +1,5 @@
-import { getRequest, postRequest } from "@/utils/http";
-import { ITeam } from "@/types";
+import { getRequest, postRequest } from '@/utils/http';
+import { ITeam } from '@/types';
 
 export interface ICreateTeamRequest {
   name: string;

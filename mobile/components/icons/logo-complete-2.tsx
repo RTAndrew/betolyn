@@ -1,13 +1,7 @@
 import * as React from 'react';
 import Svg, { G, Path, Defs, SvgProps } from 'react-native-svg';
 const LogoComplete2 = ({ width = 159, height = 38, ...props }: SvgProps) => (
-  <Svg
-    width={width}
-    height={height}
-    viewBox="0 0 159 38"
-    fill="none"
-    {...props}
-  >
+  <Svg width={width} height={height} viewBox="0 0 159 38" fill="none" {...props}>
     <G clipPath="url(#clip0_640_3)">
       <Path
         d="M118.952 38.0001L122.334 29.2871L114.011 7.4397H119.776L124.653 20.2274C124.92 20.8892 125.138 21.5703 125.303 22.2647C125.363 22.0372 125.579 21.3544 125.953 20.2274L130.83 7.4397H136.546L124.799 38.0001H118.952Z"
@@ -45,8 +39,7 @@ const LogoComplete2 = ({ width = 159, height = 38, ...props }: SvgProps) => (
         fillOpacity={0.5}
       />
     </G>
-    <Defs>
-    </Defs>
+    <Defs></Defs>
   </Svg>
 );
 export default LogoComplete2;

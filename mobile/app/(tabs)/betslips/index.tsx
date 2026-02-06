@@ -1,30 +1,29 @@
-import React, { useEffect } from 'react'
-import { useSignals } from '@preact/signals-react/runtime'
-import { betSlipStore } from '@/store/bet-slip.store'
-import BetSlipCard from './bet-slip-card'
-import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native'
-import { BetCard } from './bet-card'
-import SafeHorizontalView from '@/components/safe-horizontal-view'
-import ScreenHeader from '@/components/screen-header'
-import BetSlipFooter from './bet-slip-footer'
-import BottomSheet from '@/components/bottom-sheet'
+import React, { useEffect } from 'react';
+import { useSignals } from '@preact/signals-react/runtime';
+import { betSlipStore } from '@/store/bet-slip.store';
+import BetSlipCard from './bet-slip-card';
+import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { BetCard } from './bet-card';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import ScreenHeader from '@/components/screen-header';
+import BetSlipFooter from './bet-slip-footer';
+import BottomSheet from '@/components/bottom-sheet';
 
-const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 60
+const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 60;
 
 const BetSlips = () => {
-  useSignals()
+  useSignals();
   const { bets } = betSlipStore;
 
   useEffect(() => {
-  console.log("bets.value");
-}, []);
+    console.log('bets.value');
+  }, []);
 
   return (
     <View style={styles.root}>
       <Pressable>
         <ScreenHeader safeArea title="Bet Slips" />
       </Pressable>
-
 
       <FlatList
         contentContainerStyle={{
@@ -42,17 +41,13 @@ const BetSlips = () => {
                 ))}
               </BetSlipCard>
             </SafeHorizontalView>
-          )
+          );
         }}
       />
 
-
-      <View
-        pointerEvents="box-none"
-        style={[styles.sheetWrapper, { bottom: TAB_BAR_HEIGHT }]}
-      >
+      <View pointerEvents="box-none" style={[styles.sheetWrapper, { bottom: TAB_BAR_HEIGHT }]}>
         <BottomSheet
-          onClose={() => { }}
+          onClose={() => {}}
           isModal={false}
           backgroundInteractionEnabled
           gestureEnabled
@@ -67,8 +62,8 @@ const BetSlips = () => {
         </BottomSheet>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   root: {
@@ -92,6 +87,6 @@ const styles = StyleSheet.create({
   indicator: {
     backgroundColor: '#61687E',
   },
-})
+});
 
-export default BetSlips
+export default BetSlips;
