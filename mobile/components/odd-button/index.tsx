@@ -1,10 +1,10 @@
 import { ICriterion, IOdd } from '@/types';
 import {
+  Pressable,
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
-  TouchableOpacity,
   TouchableOpacityProps,
   View,
   ViewStyle,
@@ -13,45 +13,13 @@ import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
 import { useGetOddById } from '@/services/odds/odd-query';
 import { betSlipStore } from '@/stores/bet-slip.store';
+import { useMemo } from 'react';
+import { useSubscribeSlipOdd } from '@/stores/slip-store/use-subscribe-slip-odd';
 
 interface OddButtonProps extends TouchableOpacityProps, Omit<OddBaseButtonProps, 'value' | 'name'> {
   odd: IOdd;
   criterion: Omit<ICriterion, 'match'>;
 }
-
-interface OddWithMatchBottomSheetProps extends TouchableOpacityProps {
-  children: React.ReactNode;
-  sheetData: IOddSheetData;
-}
-
-const OddWithMatchBottomSheet = ({
-  children,
-  sheetData,
-  style,
-  ...rest
-}: OddWithMatchBottomSheetProps) => {
-  const { pushSheet, match } = useMatchBottomSheet();
-  const { addBetToSlip } = betSlipStore;
-
-  return (
-    <TouchableOpacity
-      delayLongPress={200}
-      onPress={() => {
-        addBetToSlip(match.id, {
-          oddId: sheetData.id,
-          stake: Number(Math.random().toFixed(2)),
-          criterionId: sheetData.criterion?.id ?? '',
-          oddAtPlacement: sheetData.value,
-        });
-      }}
-      onLongPress={() => {
-        pushSheet({ type: 'odd-action', data: sheetData });
-      }}
-    >
-      {children}
-    </TouchableOpacity>
-  );
-};
 
 interface OddBaseButtonProps extends TouchableOpacityProps {
   variant?: 'outline' | 'solid' | 'default' | 'dashed';
@@ -59,6 +27,7 @@ interface OddBaseButtonProps extends TouchableOpacityProps {
   showName?: boolean;
   value?: number;
   name: string;
+  id?: string;
 }
 
 export const OddBaseButton = ({
@@ -151,28 +120,6 @@ const disabledOddButtonStyles = StyleSheet.create({
   },
 });
 
-// const disabledOddButtonStyles = StyleSheet.create({
-//   root: {
-//     paddingHorizontal: 1,
-//     paddingVertical: 1,
-//     borderWidth: 1.5,
-//     backgroundColor: '#61687E',
-//     borderColor: '#55556E',
-//     opacity: 0.7,
-
-//   },
-//   wrapper: {
-//     borderWidth: 1,
-//     borderColor: '#61687E',
-//     // backgroundColor: '#61687E',
-//     backgroundColor: '#55556E',
-//   },
-//   text: {
-//     color: '#C7D1E7',
-//     fontWeight: "600"
-//   },
-// });
-
 interface IGetDynamicOddStyles {
   button: StyleProp<ViewStyle>;
   text: StyleProp<TextStyle>;
@@ -224,8 +171,36 @@ const getDynamicOddStyles = (variant: OddBaseButtonProps['variant']): IGetDynami
 };
 
 export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProps) => {
+  const oddId = props.odd.id ?? '';
+  const subscribeOdd = useSubscribeSlipOdd(oddId);
+  const { addBetToSlip } = betSlipStore;
+  const { match, pushSheet } = useMatchBottomSheet();
+
   const { data, isPending, error } = useGetOddById({ oddId: props.odd.id });
   const odd = data?.data;
+  const isDisabled =
+    odd?.status === 'SUSPENDED' || criterion.status === 'SUSPENDED' || odd?.status === 'DRAFT';
+
+  const handleOnPress = () => {
+    if (isDisabled || !odd) return;
+
+    addBetToSlip(match.id, {
+      oddId: oddId,
+      stake: Number(Math.random().toFixed(2)),
+      criterionId: criterion.id,
+      oddAtPlacement: odd?.value,
+    });
+  };
+
+  const handleOnLongPress = () => {
+    pushSheet({ type: 'odd-action', data: oddSheetData });
+  };
+
+  const buttonVariant = useMemo(() => {
+    if (isDisabled) return 'default';
+    if (subscribeOdd) return 'solid';
+    return variant;
+  }, [isDisabled, subscribeOdd, variant]);
 
   if (isPending) return <Text> Loading... </Text>;
   if (error) {
@@ -239,19 +214,22 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
     criterion,
   };
 
-  const renderDisabledVariant =
-    odd.status === 'SUSPENDED' || criterion.status === 'SUSPENDED' || odd.status === 'DRAFT';
-
   return (
-    <OddWithMatchBottomSheet sheetData={oddSheetData} style={style} {...props}>
+    <Pressable
+      delayLongPress={200}
+      onLongPress={handleOnLongPress}
+      onPress={handleOnPress}
+      style={style}
+      {...props}
+    >
       <OddBaseButton
+        variant={buttonVariant}
         value={odd.value}
         name={odd.name}
-        variant={renderDisabledVariant ? 'default' : variant}
         style={style}
         {...props}
       />
-    </OddWithMatchBottomSheet>
+    </Pressable>
   );
 };
 

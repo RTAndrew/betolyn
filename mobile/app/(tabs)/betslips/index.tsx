@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSignals } from '@preact/signals-react/runtime';
 import { betSlipStore } from '@/stores/bet-slip.store';
 import BetSlipCard from './bet-slip-card';
@@ -15,10 +15,6 @@ const BetSlips = () => {
   useSignals();
   const { bets } = betSlipStore;
 
-  useEffect(() => {
-    console.log('bets.value');
-  }, []);
-
   return (
     <View style={styles.root}>
       <Pressable>
@@ -31,7 +27,7 @@ const BetSlips = () => {
           gap: 18,
           paddingBottom: Platform.OS === 'ios' ? 200 : 130,
         }}
-        data={Object.keys(betSlipStore.bets.value)}
+        data={Object.keys(bets.value)}
         renderItem={({ item }) => {
           return (
             <SafeHorizontalView key={item} style={{ flex: 1, gap: 18 }}>

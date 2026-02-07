@@ -25,9 +25,13 @@ export default function RootLayout() {
   const [isHydrated, setIsHydrated] = useState(true);
 
   const handleHydration = async () => {
-    await hydrateAuthStore();
-    setIsHydrated(false);
-    SplashScreen.hideAsync();
+    try {
+      await hydrateAuthStore();
+    } catch (error) {
+    } finally {
+      setIsHydrated(false);
+      SplashScreen.hideAsync();
+    }
   };
 
   useEffect(() => {
