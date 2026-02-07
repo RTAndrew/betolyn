@@ -4,4 +4,6 @@ public final class AuthApiPaths {
     public static final String SIGNUP = "/auth/signup";
     public static final String SIGNIN = "/auth/signin";
     public static final String LOGOUT = "/auth/logout";
+    public static final String ME = "/me";
+
 }

@@ -3,7 +3,6 @@ package com.betolyn.config.filters;
 import com.betolyn.features.auth.JwtTokenService;
 import com.betolyn.features.auth.config.AuthConstants;
 import com.betolyn.features.auth.exceptions.InvalidAuthTokenException;
-import com.betolyn.features.auth.validatesession.ValidateSessionUC;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
     private final JwtTokenService tokenService;
-    private final ValidateSessionUC validateSessionUC;
+    private final JwtTokenService.ValidateSessionUC validateSessionUC;
     private final AuthConstants authConstants;
 
     /**

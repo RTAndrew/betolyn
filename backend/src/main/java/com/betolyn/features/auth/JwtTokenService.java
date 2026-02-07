@@ -1,5 +1,6 @@
 package com.betolyn.features.auth;
 
+import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.config.AuthConstants;
 
 import lombok.RequiredArgsConstructor;
@@ -70,5 +71,16 @@ public class JwtTokenService {
         jwtDTO.setIat(decodedToken.getClaim("iat"));
 
         return jwtDTO;
+    }
+
+    @Service
+    @RequiredArgsConstructor
+    public static class ValidateSessionUC implements IUseCase<JwtSessionDTO, Boolean> {
+        private final AuthSessionRepository authSessionRepository;
+
+        @Override
+        public Boolean execute(JwtSessionDTO session) throws JwtException {
+            return authSessionRepository.isSessionValid(session);
+        }
     }
 }
