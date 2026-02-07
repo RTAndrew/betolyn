@@ -1,5 +1,2 @@
-npm run type-check
-npm run lint
-npm run format
-
+cd mobile && npm run type-check && npm run lint && npm run format
 exit 0

@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   input: {
     textAlign: 'center',
-    fontWeight: '900',
+    fontWeight: '700',
     fontSize: 16,
     color: 'white',
     backgroundColor: '#61687E',

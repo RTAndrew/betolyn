@@ -14,7 +14,7 @@ export interface IBetSlipStore {
   bets: TBetSlip;
 }
 
-const editOddSlip = (matchId: string, data: Partial<IBet>) => {
+const editOddSlip = (matchId: string, data: Partial<IBet> & { oddId: string }) => {
   slip.value = {
     ...slip.value,
     [matchId]: slip.value[matchId].flatMap((bet) => {
@@ -29,7 +29,14 @@ const editOddSlip = (matchId: string, data: Partial<IBet>) => {
       return bet;
     }),
   };
-  if (data.oddId) notifyListenersForOddId(data.oddId);
+  notifyListenersForOddId(data.oddId);
+};
+
+const removeOddSlip = (matchId: string, oddId: string, notify = true) => {
+  const copy = { ...slip.value };
+  delete copy[matchId];
+  slip.value = copy;
+  notify && notifyListenersForOddId(oddId);
 };
 
 /**
@@ -45,9 +52,7 @@ const addBetToSlip = (matchId: string, bet: IBet) => {
   if (existingBet) {
     // If the bet is the only bet in the match, delete the match completely
     if (matchBets.length === 1) {
-      const copy = { ...slip.value };
-      delete copy[matchId];
-      slip.value = copy;
+      removeOddSlip(matchId, bet.oddId, false);
     } else {
       slip.value = {
         ...slip.value,
@@ -118,6 +123,7 @@ const getBetByOddId = (oddId: string) => {
 export const betSlipStore = {
   addBetToSlip,
   editOddSlip,
+  removeOddSlip,
   totalBets,
   bets: slip,
   totalPotentialPayout,

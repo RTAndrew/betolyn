@@ -1,11 +1,14 @@
-import React, { PropsWithChildren, useMemo } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ThemedText } from '../ThemedText';
 
 interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
-  disabled?: boolean;
   variant?: 'solid' | 'outline' | 'text';
+  destructive?: boolean;
+  disabled?: boolean;
   style?: ViewStyle;
+  color?: string;
 }
 
 export const GradientButton = ({ children, style, disabled, ...props }: TouchableOpacityProps) => {
@@ -23,7 +26,15 @@ export const GradientButton = ({ children, style, disabled, ...props }: Touchabl
   );
 };
 
-const NormalButton = ({ children, style, disabled, variant = 'solid', ...props }: ButtonProps) => {
+const NormalButton = ({
+  children,
+  style,
+  disabled,
+  variant = 'solid',
+  color,
+  destructive,
+  ...props
+}: ButtonProps) => {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -36,7 +47,17 @@ const NormalButton = ({ children, style, disabled, variant = 'solid', ...props }
       ]}
       {...props}
     >
-      <Text style={[styles.text, variant === 'text' && styles.variantText]}> {children} </Text>
+      <ThemedText
+        style={[
+          styles.text,
+          variant === 'text' && styles.variantText,
+          color && { color },
+          destructive && styles.destructive,
+        ]}
+      >
+        {' '}
+        {children}{' '}
+      </ThemedText>
     </TouchableOpacity>
   );
 };
@@ -67,9 +88,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   text: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  destructive: {
+    color: '#FF0000',
   },
 });

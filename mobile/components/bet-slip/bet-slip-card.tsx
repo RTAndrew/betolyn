@@ -1,10 +1,14 @@
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch } from '@/services';
+import { IBet } from '@/stores/bet-slip.store';
+import { router } from 'expo-router';
 import React, { PropsWithChildren } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { BetCard } from './bet-card';
 
 interface BetSlipCardProps {
   matchId: string;
+  bets: IBet[];
 }
 
 const Team = ({
@@ -26,34 +30,37 @@ const Team = ({
   );
 };
 
-const BetSlipCard = ({ matchId, children }: PropsWithChildren<BetSlipCardProps>) => {
+const BetSlipCard = ({ matchId, bets, children }: PropsWithChildren<BetSlipCardProps>) => {
   const { data, isPending, error } = useGetMatch({ matchId });
-  const matches = data?.data;
+  const match = data?.data;
 
   if (isPending) {
     return <ThemedText>Loading...</ThemedText>;
   }
 
-  if (!matches || error) {
-    return <ThemedText>Error loading matches</ThemedText>;
+  if (!match || error) {
+    return <ThemedText>Error loading match</ThemedText>;
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.header}>
+    <View>
+      <Pressable onPress={() => router.push(`/matches/${matchId}`)} style={styles.header}>
         <Team
-          name={matches.homeTeam.name}
-          imageUrl={matches.homeTeam.badgeUrl}
+          name={match.homeTeam.name}
+          imageUrl={match.homeTeam.badgeUrl}
           direction="row-reverse"
         />
         <ThemedText style={styles.matchScore}>
-          {' '}
-          {matches.homeTeamScore} : {matches.awayTeamScore}{' '}
+          {match.homeTeamScore} : {match.awayTeamScore}
         </ThemedText>
-        <Team name={matches.awayTeam.name} imageUrl={matches.awayTeam.badgeUrl} direction="row" />
-      </View>
+        <Team name={match.awayTeam.name} imageUrl={match.awayTeam.badgeUrl} direction="row" />
+      </Pressable>
 
-      <View style={styles.body}>{children}</View>
+      <View style={styles.body}>
+        {bets.map((bet, idx) => (
+          <BetCard key={bet.oddId} bet={bet} match={match} border={idx !== bets.length - 1} />
+        ))}
+      </View>
     </View>
   );
 };

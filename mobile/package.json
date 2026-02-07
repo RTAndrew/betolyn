@@ -15,7 +15,7 @@
     "lint": "expo lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky",
+    "prepare": "cd .. && node mobile/node_modules/husky/bin.js mobile/.husky",
     "type-check": "npx tsc -b"
   },
   "dependencies": {

@@ -4,7 +4,7 @@ import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import { betSlipStore } from '@/stores/bet-slip.store';
 import { useSignals } from '@preact/signals-react/runtime';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-actions-sheet';
 
