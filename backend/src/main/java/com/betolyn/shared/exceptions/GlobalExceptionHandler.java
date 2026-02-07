@@ -15,10 +15,8 @@ public class GlobalExceptionHandler {
         var code = exception.getCode();
         var status = exception.getStatus().value();
         var message = exception.getMessage();
-
         return ResponseEntity
                 .status(status)
-                .body(ApiResponse.error(message, status, code ));
+                .body(ApiResponse.error(message, status, code));
     }
-
 }

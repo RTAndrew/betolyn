@@ -2,6 +2,7 @@ package com.betolyn.config.filters;
 
 import com.betolyn.features.auth.JwtTokenService;
 import com.betolyn.features.auth.config.AuthConstants;
+import com.betolyn.features.auth.exceptions.InvalidAuthTokenException;
 import com.betolyn.features.auth.validatesession.ValidateSessionUC;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,10 +10,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,8 +28,19 @@ public class AuthFilter extends OncePerRequestFilter {
     private final ValidateSessionUC validateSessionUC;
     private final AuthConstants authConstants;
 
+    /**
+     * Reuse the global exception handler because Spring Security
+     * is different from the Spring MVC. The exception is never handled
+     * by the global exception handler in Spring MVC, so we need to reuse
+     * the global exception handler.
+     */
+    @Qualifier("handlerExceptionResolver")
+    private final HandlerExceptionResolver handlerExceptionResolver;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         var token = this.recoverTokenFromRequest(request);
         if (token == null) {
             // prevents anonymousUser from being set as authenticated
@@ -36,15 +50,18 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         if (!tokenService.isValid(token)) {
-            throw new RuntimeException("Invalid auth token detected");
+            handlerExceptionResolver.resolveException(request, response, null, new InvalidAuthTokenException());
+            return;
         }
 
         var decodedToken = tokenService.decode(token);
         if (!validateSessionUC.execute(decodedToken)) {
-            throw new RuntimeException("The current session is invalid");
+            handlerExceptionResolver.resolveException(request, response, null, new InvalidAuthTokenException());
+            return;
         }
 
-        // 1. Create an empty context (to avoid race conditions across multiple threads in production)
+        // 1. Create an empty context (to avoid race conditions across multiple threads
+        // in production)
         var securityContext = SecurityContextHolder.createEmptyContext();
         var authentication = new UsernamePasswordAuthenticationToken(decodedToken, null, List.of());
         securityContext.setAuthentication(authentication);
@@ -53,10 +70,12 @@ public class AuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(securityContext);
 
         filterChain.doFilter(request, response);
+
     }
 
-
-    /** Supports Bearer Token (external clients) and cookies (browser-based clients) */
+    /**
+     * Supports Bearer Token (external clients) and cookies (browser-based clients)
+     */
     @Nullable
     private String recoverTokenFromRequest(HttpServletRequest request) {
         Optional<String> authHeader = Optional.ofNullable(request.getHeader("Authorization"));

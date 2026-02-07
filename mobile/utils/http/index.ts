@@ -8,6 +8,8 @@ import axios, {
 import { IApiResponse } from './types';
 import { ApiError } from './api-error';
 import { SafeStorage } from '../safe-storage';
+import { authStore } from '@/stores/auth.store';
+import { constants } from '@/constants';
 
 const api = axios.create({
   baseURL: `http://192.168.178.76:8080`,
@@ -21,7 +23,7 @@ const api = axios.create({
 // Request interceptor to dynamically add the token to each request
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = SafeStorage.get('authToken');
+    const token = SafeStorage.get(constants.session.tokenStorageKey);
     if (token) {
       const cleanToken = typeof token === 'string' ? token.replaceAll('"', '') : token;
       config.headers.Authorization = `Bearer ${cleanToken}`;
@@ -44,6 +46,14 @@ const onSuccessfulResponseInterception = (data: AxiosResponse) => ({
  */
 const onRejectedResponseInterception = (error: AxiosError) => {
   const responseData = error.response ? (error.response?.data as IApiResponse) : {};
+
+  // Force logout if the auth token is invalid
+  if ('error' in responseData && 'error') {
+    if ((responseData.error as Record<string, unknown>)?.code === 'INVALID_AUTH_TOKEN') {
+      authStore.handleLogout();
+    }
+  }
+
   throw new ApiError(responseData, error);
 };
 
