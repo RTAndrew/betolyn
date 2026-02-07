@@ -1,9 +1,10 @@
-import { constants } from "@/constants";
-import { IUser } from "@/types";
-import { SafeStorage } from "@/utils/safe-storage";
-import { computed, signal } from "@preact/signals-react";
+import { constants } from '@/constants';
+import { AuthService } from '@/services';
+import { IUser } from '@/types';
+import { SafeStorage } from '@/utils/safe-storage';
+import { computed, signal } from '@preact/signals-react';
+import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-
 
 interface IAuthStore extends IUser {
   token: string;
@@ -17,16 +18,29 @@ const handleLogout = async () => {
   await SecureStore.deleteItemAsync(constants.session.tokenStorageKey);
   await SecureStore.deleteItemAsync(constants.session.userStorageKey);
   authStore.user.value = null;
+  router.dismissAll();
 };
 
-const hydrateAuthStore = () => {
-  if(user.value) return; // Already hydrated
+export const hydrateAuthStore = async () => {
+  if (user.value) return; // Already hydrated
 
   const token = SafeStorage.get(constants.session.tokenStorageKey);
-  if (token) {
-
+  if (!token) {
+    return;
   }
-}
+
+  const { data, error } = await AuthService.getMe();
+  if (error) {
+    await handleLogout();
+    return;
+  }
+
+  user.value = {
+    ...data.user,
+    token,
+    sessionId: data.sessionId,
+  };
+};
 
 export const authStore = {
   user,

@@ -2,7 +2,7 @@ import { Button } from '@/components/button';
 import { ButtonTab } from '@/components/button-tab';
 import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
-import { betSlipStore } from '@/store/bet-slip.store';
+import { betSlipStore } from '@/stores/bet-slip.store';
 import { useSignals } from '@preact/signals-react/runtime';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';

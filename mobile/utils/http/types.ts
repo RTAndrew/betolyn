@@ -22,5 +22,5 @@ export interface IApiResponse<T = unknown> {
   status: number;
   /** The raw Axios response */
   raw: AxiosResponse;
-  errors: unknown | null;
+  error: unknown | null;
 }

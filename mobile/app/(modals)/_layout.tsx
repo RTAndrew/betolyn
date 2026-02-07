@@ -16,7 +16,7 @@ const ModalsLayout = () => {
           sheetAllowedDetents: [50],
         }}
       />
-
+      <Stack.Screen name="me" options={{ headerShown: false }} />
       <Stack.Screen name="matches" options={{ headerShown: false }} />
     </Stack>
   );

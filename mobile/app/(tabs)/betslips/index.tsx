@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSignals } from '@preact/signals-react/runtime';
-import { betSlipStore } from '@/store/bet-slip.store';
+import { betSlipStore } from '@/stores/bet-slip.store';
 import BetSlipCard from './bet-slip-card';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { BetCard } from './bet-card';

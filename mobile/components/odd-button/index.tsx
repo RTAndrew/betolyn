@@ -12,7 +12,7 @@ import {
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
 import { useGetOddById } from '@/services/odds/odd-query';
-import { betSlipStore } from '@/store/bet-slip.store';
+import { betSlipStore } from '@/stores/bet-slip.store';
 
 interface OddButtonProps extends TouchableOpacityProps, Omit<OddBaseButtonProps, 'value' | 'name'> {
   odd: IOdd;

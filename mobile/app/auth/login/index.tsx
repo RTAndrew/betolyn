@@ -7,6 +7,8 @@ import { SafeStorage } from '@/utils/safe-storage';
 import { ApiError } from '@/utils/http/api-error';
 import { router } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
+import { constants } from '@/constants';
+import { authStore } from '@/stores/auth.store';
 
 interface FormData {
   email: {
@@ -80,8 +82,13 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const { data } = await AuthService.signIn(formData);
-      await SafeStorage.saveObjectAsync('authToken', data.token);
-      await SafeStorage.saveObjectAsync('authUser', data);
+      await SafeStorage.saveObjectAsync(constants.session.tokenStorageKey, data.token);
+      await SafeStorage.saveObjectAsync(constants.session.userStorageKey, data);
+      authStore.user.value = {
+        ...data.user,
+        token: data.token,
+        sessionId: data.sessionId,
+      };
 
       router.push('/');
     } catch (error) {

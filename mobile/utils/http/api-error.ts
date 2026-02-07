@@ -6,7 +6,7 @@ import { IApiResponse } from './types';
  */
 export class ApiError extends Error {
   public readonly status?: number;
-  public readonly errors?: unknown | null;
+  public readonly error?: unknown | null;
   public readonly raw: AxiosError;
 
   constructor(response: Partial<IApiResponse<unknown>>, axiosError: AxiosError) {
@@ -25,7 +25,7 @@ export class ApiError extends Error {
 
     // Assign API response properties
     if ('status' in response) this.status = response.status;
-    if ('errors' in response) this.errors = response.errors;
+    if ('error' in response) this.error = response.error;
     this.raw = axiosError;
   }
 }

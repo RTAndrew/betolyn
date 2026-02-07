@@ -2,10 +2,9 @@ import { ThemedView } from '@/components/ThemedView';
 import BetCard from '@/components/bet-card';
 import { useGetMatches } from '@/services/matches/match-query';
 
-import { router } from 'expo-router';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as SecureStore from 'expo-secure-store';
+import HomeScreenHeader from '../../components/home-screen-header';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -19,11 +18,6 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
 
 export default function HomeScreen() {
   const { data, isPending, error } = useGetMatches({});
-
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync('authToken');
-    await SecureStore.deleteItemAsync('authUser');
-  };
 
   if (isPending) {
     return (
@@ -44,10 +38,7 @@ export default function HomeScreen() {
 
   return (
     <Wrapper>
-      <View style={{ paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text onPress={() => router.push('/auth/login')}> Sign In </Text>
-        <Text onPress={() => handleLogout()}> Logout </Text>
-      </View>
+      <HomeScreenHeader />
       {Object.values(data.data ?? []).map((match: any) => (
         <BetCard key={match.id} match={match} />
       ))}

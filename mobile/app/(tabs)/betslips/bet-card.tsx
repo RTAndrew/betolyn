@@ -1,7 +1,7 @@
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetOddById } from '@/services';
-import { IBet } from '@/store/bet-slip.store';
+import { IBet } from '@/stores/bet-slip.store';
 import { StyleSheet, View } from 'react-native';
 
 interface BetCardProps {

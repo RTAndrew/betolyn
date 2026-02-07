@@ -1,14 +1,18 @@
 import { getRequest, postRequest } from '@/utils/http';
 import {
-  IAuthSession,
   SignInRequestDTO,
+  SignInResponseDTO,
   SignUpRequestDTO,
   SignUpResponseDTO,
 } from '../app/auth/signup/types';
 
 export class AuthService {
+  public static async getMe() {
+    return await getRequest<SignInResponseDTO>('/me');
+  }
+
   public static async signIn(requestDTO: SignInRequestDTO) {
-    return await postRequest<IAuthSession, SignInRequestDTO>('/auth/signin', requestDTO);
+    return await postRequest<SignInResponseDTO, SignInRequestDTO>('/auth/signin', requestDTO);
   }
 
   public static async signUp(requestDTO: SignUpRequestDTO) {
