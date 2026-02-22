@@ -7,17 +7,24 @@ import ScreenHeader from '@/components/screen-header';
 import BetSlipFooter from '../../../components/bet-slip/bet-slip-footer';
 import BottomSheet from '@/components/bottom-sheet';
 import BetSlipCard from '../../../components/bet-slip/bet-slip-card';
+import { Trash } from '@/components/icons';
 
 const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 60;
 
 const BetSlips = () => {
   useSignals();
-  const { bets } = betSlipStore;
+  const { bets, clearSlip } = betSlipStore;
 
   return (
     <View style={styles.root}>
       <Pressable>
-        <ScreenHeader safeArea title="Bet Slips" />
+        <ScreenHeader safeArea title="Bet Slips">
+          <Pressable onPress={() => clearSlip()}>
+            <ScreenHeader.QuickActions>
+              <Trash width={18} height={18} color="white" />
+            </ScreenHeader.QuickActions>
+          </Pressable>
+        </ScreenHeader>
       </Pressable>
 
       <FlatList
@@ -38,7 +45,6 @@ const BetSlips = () => {
 
       <View pointerEvents="box-none" style={[styles.sheetWrapper, { bottom: TAB_BAR_HEIGHT }]}>
         <BottomSheet
-          onClose={() => {}}
           isModal={false}
           backgroundInteractionEnabled
           gestureEnabled

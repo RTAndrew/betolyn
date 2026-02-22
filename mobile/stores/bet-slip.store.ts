@@ -81,8 +81,15 @@ const slip = signal<TBetSlip>({});
  */
 const oddIdListeners = new Map<string, Set<() => void>>();
 
-const notifyListenersForOddId = (oddId: string) => {
-  oddIdListeners.get(oddId)?.forEach((cb) => cb());
+const notifyListenersForOddId = (oddId?: string) => {
+  if (oddId) {
+    oddIdListeners.get(oddId)?.forEach((cb) => cb());
+    return;
+  }
+
+  for (const [, set] of oddIdListeners.entries()) {
+    set.forEach((cb) => cb());
+  }
 };
 
 const subscribeToOddId = (oddId: string, onStateChange: () => void): (() => void) => {
@@ -120,6 +127,11 @@ const getBetByOddId = (oddId: string) => {
     .find((bet) => bet.oddId === oddId);
 };
 
+const clearSlip = () => {
+  slip.value = {};
+  notifyListenersForOddId();
+};
+
 export const betSlipStore = {
   addBetToSlip,
   editOddSlip,
@@ -132,4 +144,5 @@ export const betSlipStore = {
   updateBetType,
   getBetByOddId,
   subscribeToOddId,
+  clearSlip,
 } as const;

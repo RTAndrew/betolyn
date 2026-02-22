@@ -60,8 +60,9 @@ export default function RootLayout() {
                 name="(modals)"
                 options={{
                   headerShown: false,
-                  presentation: 'modal',
-                  animation: 'slide_from_bottom',
+                  presentation: 'card',
+                  animation: 'fade_from_bottom',
+                  animationDuration: 130,
                 }}
               />
 

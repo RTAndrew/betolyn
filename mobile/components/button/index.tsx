@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   root: {
     padding: 16,
     borderRadius: 5,
+    width: '100%',
   },
   disabled: {
     opacity: 0.5,

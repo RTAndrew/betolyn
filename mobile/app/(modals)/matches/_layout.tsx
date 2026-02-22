@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 
-const FormSheetLayout = () => {
+const MatchesLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="[matchId]" options={{ headerShown: false }} />
@@ -10,4 +10,4 @@ const FormSheetLayout = () => {
   );
 };
 
-export default FormSheetLayout;
+export default MatchesLayout;

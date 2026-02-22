@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { Close } from '../icons';
@@ -26,8 +26,16 @@ const IconContainer = ({ children, onPress, color = '#485164' }: IconContainerPr
   );
 };
 
+const QuickActions = ({ children, style, ...props }: PropsWithChildren<ViewProps>) => {
+  return (
+    <View style={[styles.quickActions, style]} {...props}>
+      {children}
+    </View>
+  );
+};
+
 interface HeaderProps extends PropsWithChildren {
-  title: string;
+  title?: string;
   description?: React.ReactNode;
 }
 
@@ -61,7 +69,7 @@ const ScreenHeader = ({
           </IconContainer>
         )}
 
-        <Header title={title} description={description} />
+        {(title || description) && <Header title={title} description={description} />}
 
         <View style={styles.actionContainer}>{children}</View>
       </View>
@@ -101,8 +109,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#C7D1E7',
   },
+
+  quickActions: {
+    flexDirection: 'row',
+    borderWidth: 2,
+    borderColor: 'rgba(199,209,231, 0.5)',
+    borderRadius: 100,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    gap: 16,
+  },
 });
 
 ScreenHeader.Icon = IconContainer;
+ScreenHeader.QuickActions = QuickActions;
 
 export default ScreenHeader;

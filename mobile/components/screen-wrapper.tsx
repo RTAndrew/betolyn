@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -15,16 +15,30 @@ interface ScreenWrapperProps {
   scrollable?: boolean; // Enable scrollable screen
   statusBarStyle?: 'default' | 'dark-content' | 'light-content';
   backgroundColor?: string; // Background color customization
+  safeArea?: boolean;
 }
+
+const WithSafeArea = ({
+  children,
+  backgroundColor,
+  safeArea = true,
+}: PropsWithChildren<{ backgroundColor: string; safeArea?: boolean }>) => {
+  if (safeArea) {
+    return <SafeAreaView style={{ flex: 1, backgroundColor }}>{children}</SafeAreaView>;
+  }
+
+  return <View style={{ flex: 1, backgroundColor }}>{children}</View>;
+};
 
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   children,
   scrollable = true,
   statusBarStyle = 'dark-content',
   backgroundColor = '#fff',
+  safeArea = true,
 }) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor }}>
+    <WithSafeArea backgroundColor={backgroundColor} safeArea={safeArea}>
       <StatusBar barStyle={statusBarStyle} />
 
       <KeyboardAvoidingView
@@ -38,14 +52,14 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
-              <View style={{ flex: 1, paddingHorizontal: 16 }}>{children}</View>
+              <View style={{ flex: 1 }}>{children}</View>
             </ScrollView>
           ) : (
-            <View style={{ flex: 1, paddingHorizontal: 16 }}>{children}</View>
+            <View style={{ flex: 1 }}>{children}</View>
           )}
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </WithSafeArea>
   );
 };
 

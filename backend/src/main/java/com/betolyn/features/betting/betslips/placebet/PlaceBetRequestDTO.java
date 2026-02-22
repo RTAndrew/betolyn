@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,5 +13,5 @@ public class PlaceBetRequestDTO {
     private BetSlipTypeEnum type;
 
     @NonNull
-    private List<PlaceBetItemParam> items;
+    private List<PlaceBetItemParam> items = new ArrayList<>();
 }

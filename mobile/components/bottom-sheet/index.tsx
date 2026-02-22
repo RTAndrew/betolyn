@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 import BottomSheetHeader from './bottom-sheet-header';
@@ -11,7 +11,7 @@ export interface BottomSheetProps extends ActionSheetProps {
   title?: string;
   visible?: boolean;
   minHeight?: number;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const BottomSheet = ({
@@ -54,6 +54,10 @@ const BottomSheet = ({
 };
 
 const styles = StyleSheet.create({
+  root: {
+    paddingTop: 10,
+    paddingBottom: Platform.OS === 'ios' ? '10%' : '10%',
+  },
   container: {
     paddingVertical: 8,
     backgroundColor: '#61687E',
@@ -61,7 +65,6 @@ const styles = StyleSheet.create({
   indicator: {
     width: 45,
   },
-  root: { paddingTop: 10 },
   title: {
     fontSize: 22,
     color: 'white',

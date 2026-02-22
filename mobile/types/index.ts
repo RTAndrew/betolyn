@@ -66,3 +66,16 @@ export interface IOdd {
   status: `${EOddStatus}`;
   direction?: 'UP' | 'DOWN';
 }
+
+export type EBetSlipType = 'SINGLE' | 'PARLAY';
+
+export interface IBetSlip {
+  id: string;
+  status: string;
+  items: unknown[];
+  totalStake: number;
+  type: `${EBetSlipType}`;
+  totalItemsCount: number;
+  totalPotentialPayout: number;
+  totalCumulativeOdds?: number;
+}

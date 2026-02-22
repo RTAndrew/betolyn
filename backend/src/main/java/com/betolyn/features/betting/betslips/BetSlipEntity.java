@@ -46,12 +46,6 @@ public class BetSlipEntity extends AuditableEntity {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private BetSlipStatusEnum status = BetSlipStatusEnum.PENDING;
 
-    // TODO: delete this
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-
     @NotNull
     @OneToMany(mappedBy = "betSlip", cascade = CascadeType.ALL)
     private List<BetSlipItemEntity> items = new ArrayList<>();
@@ -62,9 +56,9 @@ public class BetSlipEntity extends AuditableEntity {
     }
 
     @PreUpdate
-    /** Whenever creating a new BetSlip with manual `generateId()`,
-     * call the function manually
-     *
+    /* Whenever creating a new BetSlip with manual `generateId()`,
+      call the function manually
+
      */
     public void updateProjections() {
         var count = this.getItems().size();

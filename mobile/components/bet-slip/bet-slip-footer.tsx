@@ -4,6 +4,7 @@ import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import { betSlipStore } from '@/stores/bet-slip.store';
 import { useSignals } from '@preact/signals-react/runtime';
+import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-actions-sheet';
@@ -37,7 +38,13 @@ const BetSlipFooter = () => {
         options={['Single', 'Parlay']}
         onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')}
       />
-      <Button.Root> Place Bet </Button.Root>
+      <Button.Root
+        disabled={totalBets.value === 0}
+        onPress={() => router.push('/betslips/placebet')}
+      >
+        {' '}
+        Place Bet{' '}
+      </Button.Root>
     </ScrollView>
   );
 };

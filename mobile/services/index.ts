@@ -13,3 +13,5 @@ export * from './teams/team-query';
 export * from './teams/team-mutation';
 export * from './users/user-service';
 export * from './users/user-query';
+export * from './slips/slip-service';
+export * from './slips/slip-mutation';
