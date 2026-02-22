@@ -1,18 +1,26 @@
-package com.betolyn.features.auth;
+package com.betolyn.features.auth.getauthenticateduser;
 
 import com.betolyn.features.IUseCaseNoParams;
+import com.betolyn.features.auth.JwtSessionDTO;
+import com.betolyn.features.user.UserMapper;
+import com.betolyn.features.user.finduserbyid.FindUserByIdUC;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
 
-@Service
-public class GetAuthenticatedUserUC implements IUseCaseNoParams {
 
+
+@Service
+@RequiredArgsConstructor
+public class GetAuthenticatedUserUC implements IUseCaseNoParams {
+    private final FindUserByIdUC findUserByIdUC;
+    private final UserMapper userMapper;
 
     @Override
-    public Optional<JwtSessionDTO> execute() {
+    public Optional<AuthenticatedUserDTO> execute() {
         var authenticationContext = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.isNull(authenticationContext) || !authenticationContext.isAuthenticated()) {
             return Optional.empty();
@@ -24,6 +32,8 @@ public class GetAuthenticatedUserUC implements IUseCaseNoParams {
             return Optional.empty();
         }
 
-        return Optional.of(loggedUser);
+        var user = findUserByIdUC.execute(loggedUser.getUserId());
+
+        return Optional.of(new AuthenticatedUserDTO(user, loggedUser));
     }
 }

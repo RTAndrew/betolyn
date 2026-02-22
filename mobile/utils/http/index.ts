@@ -12,7 +12,7 @@ import { authStore } from '@/stores/auth.store';
 import { constants } from '@/constants';
 
 const api = axios.create({
-  baseURL: `http://192.168.178.76:8080`,
+  baseURL: `http://192.168.178.192:8080`,
   withCredentials: false,
   headers: {
     Accept: 'application/json',

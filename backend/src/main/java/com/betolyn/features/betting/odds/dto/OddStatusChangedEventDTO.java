@@ -1,4 +1,6 @@
-package com.betolyn.features.betting.odds;
+package com.betolyn.features.betting.odds.dto;
+
+import com.betolyn.features.betting.odds.OddStatusEnum;
 
 import java.util.List;
 

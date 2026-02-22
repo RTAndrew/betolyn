@@ -1,5 +1,8 @@
-package com.betolyn.features.betting.odds;
+package com.betolyn.features.betting.odds.saveandsyncodd;
 
+import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddHistoryEntity;
+import com.betolyn.features.betting.odds.OddRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

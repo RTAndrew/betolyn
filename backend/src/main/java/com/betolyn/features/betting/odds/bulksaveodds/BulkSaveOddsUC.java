@@ -2,7 +2,7 @@ package com.betolyn.features.betting.odds.bulksaveodds;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.odds.OddEntity;
-import com.betolyn.features.betting.odds.SaveAndSyncOddUseCase;
+import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

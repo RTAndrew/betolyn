@@ -1,0 +1,29 @@
+meta {
+  name: placeBet
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/slips
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "SINGLE",
+    "items": [
+      {
+        "oddId": "od_Jm9JU3tPTVxY",
+        "stake": 50,
+        "oddValueAtPlacement": 3.1
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

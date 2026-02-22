@@ -4,7 +4,7 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddRepository;
 import com.betolyn.features.betting.odds.OddStatusEnum;
-import com.betolyn.features.betting.odds.SaveAndSyncOddUseCase;
+import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import lombok.RequiredArgsConstructor;

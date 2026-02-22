@@ -27,6 +27,9 @@ public class MatchEntity extends AuditableEntity {
     private String startTime;
     private String endTime;
 
+    private Double reservedLiability = 0.0;
+    private Double maxReservedLiability = null;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)

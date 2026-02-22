@@ -1,0 +1,266 @@
+package com.betolyn.features.betting.betslips.placebet;
+
+import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.bankroll.account.AccountTypeEnum;
+import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
+import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalEscrowAccountUC;
+import com.betolyn.features.bankroll.transaction.*;
+import com.betolyn.features.betting.betslips.BetSlipEntity;
+import com.betolyn.features.betting.betslips.BetSlipItemEntity;
+import com.betolyn.features.betting.betslips.BetSlipRepository;
+import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
+import com.betolyn.features.betting.criterion.CriterionEntity;
+import com.betolyn.features.betting.criterion.CriterionRepository;
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
+import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
+import com.betolyn.shared.exceptions.BadRequestException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Rejection reason
+ *
+ *
+ *
+ */
+
+record OddRejected(String oddId, String rejectionReason) {
+}
+
+record OddAccepted(PlaceBetItemParam betItem, OddEntity odd) {
+}
+
+@Service
+@RequiredArgsConstructor
+public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, Object> {
+    private final FindOddByIdUC findOddByIdUC;
+    private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
+    private final TransactionRepository transactionRepository;
+    private final BetSlipRepository betSlipRepository;
+    private final CriterionRepository criterionRepository;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
+    private final FindMatchCriteriaUC findMatchCriteriaUC;
+
+
+    private static double calculateCriterionReservedLiabilityDelta(CriterionEntity criterion) {
+        List<Double> criterionLiabilities = new ArrayList<>();
+        for (var criterionOdd : criterion.getOdds()) {
+            // marketLiability = odd.potentialPayoutVolume - criterion.totalStakesVolume
+            var liability = criterionOdd.getPotentialPayoutVolume() - criterion.getTotalStakesVolume();
+            if (liability < 0) {
+                liability = 0;
+            }
+
+            criterionLiabilities.add(liability);
+        }
+
+        return Collections.max(criterionLiabilities);
+    }
+
+    /**
+     * matchReservedLiability = MAX(criterion1, criterion2, ... , criterion3)
+     *
+     * @param criterion - current criterion already edited
+     */
+    private static Double calculateMatchReservedLiability(List<CriterionEntity> matchCriteria, CriterionEntity criterion, double newCriterionReservedCriterion) {
+        List<Double> matchCriteriaLiabilities = new ArrayList<>();
+        for (var matchCriterion : matchCriteria) {
+            if (Objects.equals(matchCriterion.getId(), criterion.getId())) {
+                matchCriteriaLiabilities.add(newCriterionReservedCriterion);
+            } else {
+                matchCriteriaLiabilities.add(matchCriterion.getReservedLiability());
+            }
+        }
+        return Collections.max(matchCriteriaLiabilities);
+    }
+
+    // TODO: handle Duplicate odds in the same bet slip
+    @SuppressWarnings("D")
+    @Override
+    @Transactional
+    public Object execute(@Validated PlaceBetRequestDTO paramDTO) {
+        var loggedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
+        var userAccount = findAccountByOwnerIdUC.execute(loggedUser.getId());
+
+        var betSlip = new BetSlipEntity();
+        betSlip.generateId();
+
+        // prepare TX
+        var transaction = new TransactionEntity();
+        transaction.setCreatedBy(loggedUser);
+        transaction.setType(TransactionTypeEnum.BET_PLACEMENT);
+        transaction.setReferenceId(betSlip.getId());
+        transaction.setReferenceType(TransactionReferenceTypeEnum.BET_SLIP);
+
+        List<OddAccepted> oddList = new ArrayList<>();
+        List<OddRejected> oddRejectedList = new ArrayList<>();
+
+        // 1. Check if bets are valid
+        for (var betItem : paramDTO.getItems()) {
+            var odd = findOddByIdUC.execute(betItem.getOddId());
+
+            if (betItem.getOddValueAtPlacement() < odd.getValue()) {
+                // perhaps allow the user to opt for new odd price changes
+                oddRejectedList.add(
+                        new OddRejected(odd.getId(), "Odd value changed"));
+            } else if (odd.getStatus() != OddStatusEnum.ACTIVE
+                    || odd.getCriterion().getStatus() != CriterionStatusEnum.ACTIVE) {
+                oddRejectedList.add(
+                        new OddRejected(odd.getId(), "No longer available to bet"));
+            } else {
+                // since the oddValueAtPlacement is now greater or equal than the realOdd.value
+                // the bet placement must be set to the realOdd.value
+                // Because it is still favorable to the user
+                betItem.setOddValueAtPlacement(odd.getValue());
+                oddList.add(
+                        new OddAccepted(betItem, odd));
+            }
+        }
+
+        // 2. All odds in PARLAY must be valid
+        if (paramDTO.getType() == BetSlipTypeEnum.PARLAY) {
+            if (!oddRejectedList.isEmpty()) {
+                throw new RejectedBetsException("INVALID_ODDS", "Invalid odds",
+                        Collections.singletonList(oddRejectedList));
+            }
+
+            throw new RuntimeException("Feature not yet implemented");
+        }
+
+        if (!oddRejectedList.isEmpty()) {
+            throw new RejectedBetsException("INVALID_ODDS", "Invalid odds", Collections.singletonList(oddRejectedList));
+        }
+
+        if (oddList.isEmpty()) {
+            throw new BadRequestException("NO_VALID_BETS", "An unexpected error happened. No valid bets were found");
+        }
+
+        // 3. Criterion and Odd projection recalculation
+        for (var odd : oddList) {
+            var betOdd = odd.betItem();
+            Double betOddPayout = betOdd.getStake() * betOdd.getOddValueAtPlacement();
+
+            // 3.2 Update odd projection
+            var realOdd = odd.odd();
+            realOdd.setTotalBetsCount(realOdd.getTotalBetsCount() + 1);
+            realOdd.setTotalStakesVolume(realOdd.getTotalStakesVolume() + betOdd.getStake());
+            realOdd.setPotentialPayoutVolume(realOdd.getPotentialPayoutVolume() + betOddPayout);
+
+            // 3.3 Update criterion projection
+            var criterion = realOdd.getCriterion();
+            criterion.setTotalBetsCount(criterion.getTotalBetsCount() + 1);
+            criterion.setTotalStakesVolume(criterion.getTotalStakesVolume() + betOdd.getStake());
+
+            // 3.4 recalculate market liability for each criterion.odd
+            var newCriterionReservedCriterion = calculateCriterionReservedLiabilityDelta(criterion);
+            criterion.setReservedLiability(newCriterionReservedCriterion);
+
+            // 3.5 recalculate match projections
+            // TODO: for standalone criterion, there will be no match associated with it
+            var matchCriteria = findMatchCriteriaUC.execute(criterion.getMatch().getId());
+            var newMatchReservedLiability = calculateMatchReservedLiability(
+                    matchCriteria,
+                    criterion,
+                    newCriterionReservedCriterion
+            );
+
+            if (newCriterionReservedCriterion > criterion.getMaxReservedLiability()) {
+                throw new RuntimeException("Criterion does not have sufficient liquidity");
+            }
+
+            if (newMatchReservedLiability > criterion.getMatch().getMaxReservedLiability()) {
+                throw new RuntimeException("Match does not have sufficient liquidity");
+            }
+
+            criterion.getMatch().setReservedLiability(newMatchReservedLiability);
+
+
+            // 4. LOCK or RELEASE criterion funds
+            // var showLock = newMatchReservedLiability - criterion.getReservedLiability();
+            // lockOrReleaseMatchFunds(matchId, criterionId, liability)
+            var globalEscrowAccount = findGlobalEscrowAccountUC.execute(null);
+
+            // only for channels
+            // if (newCriterionReservedCriterion > 0) { // lock funds
+            // globalEscrowAccount.setBalanceAvailable(
+            // globalEscrowAccount.getBalanceAvailable()
+            // .add(BigDecimal.valueOf(newCriterionReservedCriterion)));
+            // transaction.setMemo("lock funds");
+            //
+            // var item = new TransactionItemEntity();
+            // item.setTransaction(transaction);
+            // item.setAmount(BigDecimal.valueOf(newCriterionReservedCriterion));
+            // item.setFromAccountType(AccountTypeEnum.GLOBAL);
+            // item.setFromAccountId(globalReserveAccount.getId());
+            // item.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            // item.setToAccountId(globalEscrowAccount.getId());
+            // transaction.getItems().add(item);
+            //
+            // } else if (newCriterionReservedCriterion < 0) { // release funds
+            // globalEscrowAccount.setBalanceAvailable(
+            // globalEscrowAccount.getBalanceAvailable()
+            // .subtract(BigDecimal.valueOf(newCriterionReservedCriterion)));
+            // transaction.setMemo("release funds");
+            //
+            // var item = new TransactionItemEntity();
+            // item.setTransaction(transaction);
+            // item.setAmount(BigDecimal.valueOf(newCriterionReservedCriterion));
+            // item.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            // item.setFromAccountId(globalEscrowAccount.getId());
+            // item.setToAccountType(AccountTypeEnum.GLOBAL);
+            // item.setToAccountId(globalReserveAccount.getId());
+            // transaction.getItems().add(item);
+            // }
+
+            // 5. Lock user funds
+            userAccount.lockFunds(BigDecimal.valueOf(betOdd.getStake()));
+            var userLockFundsTXI = new TransactionItemEntity();
+            userLockFundsTXI.setTransaction(transaction);
+            userLockFundsTXI.setAmount(BigDecimal.valueOf(betOdd.getStake()));
+            userLockFundsTXI.setFromAccountType(AccountTypeEnum.USER_WALLET);
+            userLockFundsTXI.setFromAccountId(userAccount.getId());
+            userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
+
+            globalEscrowAccount.setBalanceAvailable(
+                    globalEscrowAccount.getBalanceAvailable().add(BigDecimal.valueOf(betOdd.getStake())));
+
+            transaction.getItems().add(userLockFundsTXI);
+
+            // 6. create betSlipItem
+            var betSlipItem = new BetSlipItemEntity();
+            betSlipItem.setOdd(realOdd);
+            betSlipItem.setStake(betOdd.getStake());
+            betSlipItem.setPotentialPayout(betOddPayout);
+            betSlipItem.setOddHistory(realOdd.getLastOddHistory());
+            betSlipItem.setOddValueAtPlacement(betOdd.getOddValueAtPlacement());
+            betSlipItem.setBetSlip(betSlip);
+            betSlip.getItems().add(betSlipItem);
+
+            criterionRepository.save(criterion);
+        }
+
+        // 7. Update betSlip projections
+        betSlip.updateProjections();
+
+        // 8. save
+        var bet = betSlipRepository.save(betSlip);
+        transactionRepository.save(transaction);
+
+        return bet;
+    }
+}

@@ -1,5 +1,6 @@
 package com.betolyn.features.betting.criterion;
 
+import com.betolyn.features.betting.betslips.BetSlipItemEntity;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.shared.baseEntity.BaseEntity;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 import org.json.JSONPropertyIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,13 +27,21 @@ public class CriterionEntity extends BaseEntity {
     @NotNull
     private String name;
 
+    private Double totalBetsCount = 0.0;
+    private Double totalStakesVolume = 0.0;
+    private Double reservedLiability = 0.0;
+    private Double maxReservedLiability = null;
+
+    @NotNull
+    private Boolean allowMultipleWinners = false;
+
     @NotNull
     private boolean allowMultipleOdds = true;
 
-    @Column(nullable = false) // it's optional to pass it as param
+    @Column(nullable = false)
     private boolean isStandalone;
 
-    @Column(nullable = false) // it's optional to pass it as param
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private CriterionStatusEnum status;
@@ -40,8 +50,8 @@ public class CriterionEntity extends BaseEntity {
     @JoinColumn(name = "match_entity_id")
     private MatchEntity match;
 
-    @OneToMany(mappedBy = "criterion")
-    private List<OddEntity> odds;
+    @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
+    private List<OddEntity> odds = new ArrayList<>();
 
     /**
      * Ensures that the flag "isStandalone" is properly saved

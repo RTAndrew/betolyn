@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.odds;
+package com.betolyn.features.betting.odds.exceptions;
 
 import com.betolyn.shared.exceptions.BusinessRuleException;
 

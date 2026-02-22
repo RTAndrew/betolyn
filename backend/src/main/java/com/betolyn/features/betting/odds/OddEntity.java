@@ -20,6 +20,13 @@ public class OddEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private Integer totalBetsCount = 0;
+    @Column(nullable = false)
+    private Double totalStakesVolume = 0.0;
+    @Column(nullable = false)
+    private Double potentialPayoutVolume = 0.0;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "last_odd_history_id")
     @JsonIgnoreProperties("odd") // avoid self reference lastOdd <-> odd

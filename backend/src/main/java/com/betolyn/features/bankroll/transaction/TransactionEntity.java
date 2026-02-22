@@ -28,7 +28,6 @@ import java.util.List;
 @Table(name = "transactions")
 public class TransactionEntity extends BaseEntity {
 
-    @Column(nullable = false)
     private String memo;
 
     @Column(nullable = false)

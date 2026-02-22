@@ -32,11 +32,20 @@ const editOddSlip = (matchId: string, data: Partial<IBet> & { oddId: string }) =
   notifyListenersForOddId(data.oddId);
 };
 
-const removeOddSlip = (matchId: string, oddId: string, notify = true) => {
-  const copy = { ...slip.value };
-  delete copy[matchId];
-  slip.value = copy;
-  notify && notifyListenersForOddId(oddId);
+const removeOddSlip = (matchId: string, oddId: string) => {
+  const matchBets = slip.value?.[matchId] ?? [];
+
+  if (matchBets.length === 1) {
+    const copy = { ...slip.value };
+    delete copy[matchId];
+    slip.value = copy;
+  } else {
+    slip.value = {
+      ...slip.value,
+      [matchId]: matchBets.filter((b) => b.oddId !== oddId),
+    };
+  }
+  notifyListenersForOddId(oddId);
 };
 
 /**
@@ -46,26 +55,17 @@ const removeOddSlip = (matchId: string, oddId: string, notify = true) => {
  * @returns void
  */
 const addBetToSlip = (matchId: string, bet: IBet) => {
-  const matchBets = slip.value[matchId];
+  const matchBets = slip.value?.[matchId] ?? [];
 
-  const existingBet = matchBets?.find((b) => b.oddId === bet.oddId);
-  if (existingBet) {
-    // If the bet is the only bet in the match, delete the match completely
-    if (matchBets.length === 1) {
-      removeOddSlip(matchId, bet.oddId, false);
-    } else {
-      slip.value = {
-        ...slip.value,
-        [matchId]: matchBets.filter((b) => b.oddId !== bet.oddId),
-      };
-    }
-    notifyListenersForOddId(bet.oddId);
+  const betExists = matchBets?.find((b) => b.oddId === bet.oddId);
+  if (betExists) {
+    removeOddSlip(matchId, bet.oddId);
     return;
   }
 
   slip.value = {
     ...slip.value,
-    [matchId]: [...(matchBets || []), bet],
+    [matchId]: [...matchBets, bet],
   };
   notifyListenersForOddId(bet.oddId);
 };
@@ -85,16 +85,16 @@ const notifyListenersForOddId = (oddId: string) => {
   oddIdListeners.get(oddId)?.forEach((cb) => cb());
 };
 
-const subscribeToOddId = (oddId: string, onStoreChange: () => void): (() => void) => {
+const subscribeToOddId = (oddId: string, onStateChange: () => void): (() => void) => {
   // 1. Check if the oddId is already in the map, otherwise create a new set
   if (!oddIdListeners.has(oddId)) oddIdListeners.set(oddId, new Set());
 
   // 2. Add the listener to the set
-  oddIdListeners.get(oddId)?.add(onStoreChange);
+  oddIdListeners.get(oddId)?.add(onStateChange);
 
   // 3. Return a function to unsubscribe the listener
   return () => {
-    oddIdListeners.get(oddId)?.delete(onStoreChange);
+    oddIdListeners.get(oddId)?.delete(onStateChange);
   };
 };
 

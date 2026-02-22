@@ -2,9 +2,8 @@ package com.betolyn.features.betting.odds.updateoddvalue;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.odds.OddEntity;
-import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.betting.odds.OddSystemEvent;
-import com.betolyn.features.betting.odds.SaveAndSyncOddUseCase;
+import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import com.betolyn.shared.exceptions.InternalServerException;

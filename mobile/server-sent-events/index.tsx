@@ -4,7 +4,7 @@ import ListenerFactory from './event-listeners/sse-listener-factory';
 import { AppState } from 'react-native';
 
 const connectToStream = () => {
-  const eventSource = new EventSource('http://192.168.178.76:8080/stream');
+  const eventSource = new EventSource('http://192.168.178.192:8080/stream');
 
   eventSource.addEventListener('close', () => console.log('[SSE] Disconnected from the stream'));
   eventSource.addEventListener('open', () => console.log('[SSE] Connected to the stream'));

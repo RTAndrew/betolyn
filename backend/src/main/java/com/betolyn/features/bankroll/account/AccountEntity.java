@@ -58,9 +58,9 @@ public class AccountEntity extends BaseEntity {
      * @throws BusinessRuleException if ownerType is SYSTEM or amount is not positive or exceeds available balance
      */
     public void lockFunds(BigDecimal amount) {
-        if (ownerType == AccountOwnerTypeEnum.SYSTEM) {
-            throw new BusinessRuleException("SYSTEM_ACCOUNT_LOCK_FUNDS_NOT_ALLOWED","SYSTEM accounts cannot lock funds");
-        }
+//        if (ownerType == AccountOwnerTypeEnum.SYSTEM) {
+//            throw new BusinessRuleException("SYSTEM_ACCOUNT_LOCK_FUNDS_NOT_ALLOWED","SYSTEM accounts cannot lock funds");
+//        }
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessRuleException("INVALID_AMOUNT","Amount must be positive");
         }
@@ -69,5 +69,19 @@ public class AccountEntity extends BaseEntity {
         }
         this.balanceAvailable = this.balanceAvailable.subtract(amount);
         this.balanceReserved = this.balanceReserved.add(amount);
+    }
+
+    public void releaseFunds(BigDecimal amount) {
+//        if (ownerType == AccountOwnerTypeEnum.SYSTEM) {
+//            throw new BusinessRuleException("SYSTEM_ACCOUNT_LOCK_FUNDS_NOT_ALLOWED","SYSTEM accounts cannot lock funds");
+//        }
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessRuleException("INVALID_AMOUNT","Amount must be positive");
+        }
+        if (balanceReserved.compareTo(amount) < 0) {
+            throw new BusinessRuleException("INSUFFICIENT_AVAILABLE_BALANCE","Insufficient available balance");
+        }
+        this.balanceAvailable = this.balanceAvailable.add(amount);
+        this.balanceReserved = this.balanceReserved.subtract(amount);
     }
 }
