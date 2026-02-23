@@ -36,8 +36,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           <View style={styles.teamWrapper}>
             <Team name={'Home'} imageUrl={match.homeTeam.badgeUrl} direction="row-reverse" />
             <ThemedText style={{ color: '#C7D1E7', fontWeight: '900' }}>
-              {' '}
-              {match.homeTeamScore} : {match.awayTeamScore}{' '}
+              {match.homeTeamScore} : {match.awayTeamScore}
             </ThemedText>
             <Team name={'Away'} imageUrl={match.awayTeam.badgeUrl} direction="row" />
           </View>

@@ -13,6 +13,7 @@ public class CriterionDTO {
     private String id;
     private String name;
     private boolean allowMultipleOdds;
+    private boolean allowMultipleWinners;
     private boolean isStandalone;
 
     private MatchDTO match;

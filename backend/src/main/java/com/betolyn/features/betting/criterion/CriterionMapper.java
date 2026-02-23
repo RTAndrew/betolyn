@@ -29,6 +29,7 @@ public interface CriterionMapper {
             dto.setStatus(odd.getStatus());
             dto.setName(odd.getName());
             dto.setId(odd.getId());
+            dto.setIsWinner(odd.getIsWinner());
             oddsDTO.add(dto);
         }
 

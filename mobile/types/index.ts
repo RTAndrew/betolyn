@@ -30,6 +30,7 @@ export interface ICriterion {
   match: IMatch;
   isStandalone: boolean;
   allowMultipleOdds: boolean;
+  allowMultipleWinners: boolean;
   status: `${CriterionStatusEnum}`;
 }
 
@@ -63,6 +64,7 @@ export interface IOdd {
   id: string;
   name: string;
   value: number;
+  isWinner?: boolean;
   status: `${EOddStatus}`;
   direction?: 'UP' | 'DOWN';
 }

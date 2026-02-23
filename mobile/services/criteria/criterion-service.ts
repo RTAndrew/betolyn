@@ -28,6 +28,11 @@ export interface ICreateCriterionOddRequest {
   status?: EOddStatus;
 }
 
+export interface IWinningOutcome {
+  id: string;
+  isWinner?: boolean;
+}
+
 export class CriterionService {
   public static async findAllCriteria() {
     const data = await getRequest<ICriterion[]>('/criteria');
@@ -68,5 +73,12 @@ export class CriterionService {
 
   public static async suspend(criterionId: string) {
     return await patchRequest<ICriterion>(`/criteria/${criterionId}/suspend`);
+  }
+
+  public static async selectWinningOutcomes(criterionId: string, data: IWinningOutcome[]) {
+    return await postRequest<ICriterion, IWinningOutcome[]>(
+      `/criteria/${criterionId}/winning-outcomes`,
+      data
+    );
   }
 }

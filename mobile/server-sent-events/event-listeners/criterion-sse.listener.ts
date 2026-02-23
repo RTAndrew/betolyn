@@ -35,7 +35,7 @@ class CriterionSseListener implements ISseListener {
         break;
       }
 
-      case 'criterionPublished':
+      case 'criterionPublished': {
         const criterion = eventPayload as unknown as ICriterionChangeEvent;
         DataSync.updateCriteria([
           {
@@ -44,6 +44,13 @@ class CriterionSseListener implements ISseListener {
           },
         ]);
         break;
+      }
+
+      case 'criterionUpdated': {
+        const criterion = eventPayload as unknown as ICriterion;
+        DataSync.updateCriteria([criterion]);
+        break;
+      }
 
       default:
         console.log('[SSE] Unhandled criterion event:', eventName);

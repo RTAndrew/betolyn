@@ -39,15 +39,10 @@ const Team = ({ name, score, isSelected, onValueChange }: TeamProps) => {
         color={isSelected ? '#3CC5A4' : 'white'}
         value={isSelected}
         onValueChange={(value) => onValueChange(value)}
-        style={checkboxStyle.root}
       />
     </View>
   );
 };
-
-const checkboxStyle = StyleSheet.create({
-  root: {},
-});
 
 const teamStyle = StyleSheet.create({
   root: {

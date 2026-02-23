@@ -6,6 +6,7 @@ export type BottomSheetType =
   | 'match-update-score'
   | 'criterion-action'
   | 'criterion-reprice-update-odds'
+  | 'criterion-select-winner'
   | 'criterion-lock-and-result'
   | 'criterion-suspend'
   | 'criterion-create-odd'

@@ -9,6 +9,7 @@ import lombok.Data;
 public class BetSlipItemDTO {
     private String matchId;
     private String criterionId;
+    private String oddId;
     private String lastOddHistoryId;
 
     private Double stake;

@@ -2,6 +2,7 @@ import {
   IRepriceOddsRequest,
   IUpdateCriterionStatusRequest,
   ICreateCriterionRequest,
+  IWinningOutcome,
   CriterionService,
 } from './criterion-service';
 import { queryClient } from '@/utils/react-query';
@@ -22,6 +23,11 @@ interface ISuspendCriterionVariables {
 
 interface ICreateCriterionVariables {
   variables: ICreateCriterionRequest;
+}
+
+interface ISelectWinningOutcomesVariables {
+  criterionId: string;
+  odds: IWinningOutcome[];
 }
 
 export const useRepriceCriterionOdds = () => {
@@ -73,6 +79,18 @@ export const usePublishCriterion = () => {
   const mutation = useMutation(
     {
       mutationFn: (criterionId: string) => CriterionService.publish(criterionId),
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useSelectWinningOutcomes = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: ISelectWinningOutcomesVariables) =>
+        CriterionService.selectWinningOutcomes(data.criterionId, data.odds),
     },
     queryClient
   );

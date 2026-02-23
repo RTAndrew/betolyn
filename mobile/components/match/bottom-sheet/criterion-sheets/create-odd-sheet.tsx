@@ -8,7 +8,7 @@ import { Button } from '@/components/button';
 import { useCreateOdd } from '@/services';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
 import { NumberInput } from '@/components/forms';
-import Checkbox from '@/components/forms/switch';
+import Switch from '@/components/forms/switch';
 
 type ValidationSuccess = { success: true; name: string; value: number };
 type ValidationFailure = { success: false; nameError: string | null; valueError: string | null };
@@ -114,7 +114,7 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
           errorMessage={valueError}
         />
 
-        <Checkbox
+        <Switch
           label="Create as a draft?"
           description="Draft outcomes are not visible to users until they are published."
           value={isDraft}

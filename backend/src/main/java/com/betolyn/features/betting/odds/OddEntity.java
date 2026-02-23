@@ -21,6 +21,9 @@ public class OddEntity extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
+    private Boolean isWinner = false;
+
+    @Column(nullable = false)
     private Integer totalBetsCount = 0;
     @Column(nullable = false)
     private Double totalStakesVolume = 0.0;

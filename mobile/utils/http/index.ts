@@ -10,9 +10,10 @@ import { ApiError } from './api-error';
 import { SafeStorage } from '../safe-storage';
 import { authStore } from '@/stores/auth.store';
 import { constants } from '@/constants';
+import { env } from '@/constants/env';
 
 const api = axios.create({
-  baseURL: `http://192.168.178.192:8080`,
+  baseURL: env.backendApiUrl,
   withCredentials: false,
   headers: {
     Accept: 'application/json',

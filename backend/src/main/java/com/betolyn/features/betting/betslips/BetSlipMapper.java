@@ -25,16 +25,17 @@ public interface BetSlipMapper {
         for (var item : items) {
             var dto = new BetSlipItemDTO();
             dto.setStake(item.getStake());
+            dto.setStatus(item.getStatus());
+            dto.setVoidReason(item.getVoidReason());
             dto.setPotentialPayout(item.getPotentialPayout());
             dto.setOddValueAtPlacement(item.getOddValueAtPlacement());
-            dto.setVoidReason(item.getVoidReason());
-            dto.setStatus(item.getStatus());
 
             if (item.getOddHistory() != null) {
                 dto.setLastOddHistoryId(item.getOddHistory().getId());
             }
 
             if (item.getOdd() != null && item.getOdd().getCriterion() != null) {
+                dto.setOddId(item.getOdd().getId());
                 dto.setCriterionId(item.getOdd().getCriterion().getId());
 
                 var match = item.getOdd().getCriterion().getMatch();
