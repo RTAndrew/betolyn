@@ -74,10 +74,20 @@ cd backend && ./mvnw spring-boot:run
 
 ## 🛠️ Available Commands
 
-- `make dev-mobile` - Start the Expo development server
-- `make dev-backend` - Start the Spring Boot development server
-- `make install-mobile` - Install mobile app dependencies
-- `make install-backend` - Install backend dependencies
+Run `make help` to list all targets and their descriptions.
+
+| Command | Description |
+|---------|-------------|
+| `make dev-mobile` | Start the Expo development server |
+| `make dev-backend` | Start the Spring Boot development server |
+| `make dev` | Alias for `dev-mobile` (default development command) |
+| `make dev-seed` | Run the database seeder (requires backend running on port 8080) |
+| `make db-reset` | Reset the database: kill 8080, start backend with profile `reset` (schema drop + recreate), run seed, then stop backend. Use after schema changes. Next backend run should be without the `reset` profile. |
+| `make install-mobile` | Install mobile app dependencies |
+| `make install-backend` | Install backend dependencies |
+| `make setup` | Install all dependencies (mobile + backend) |
+| `make clean` | Remove build artifacts and dependencies (node_modules, backend/target) |
+| `make help` | Show all available make targets |
 
 ## 🤝 Contributing
 
