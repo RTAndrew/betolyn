@@ -71,10 +71,15 @@ const addBetToSlip = (matchId: string, bet: IBet) => {
 };
 
 const betType = signal<'single' | 'parlay'>('single');
+const parlayStake = signal(0);
+const setParlayStake = (value: number) => {
+  parlayStake.value = value;
+};
+const slip = signal<TBetSlip>({});
+
 const updateBetType = (type: 'single' | 'parlay') => {
   betType.value = type;
 };
-const slip = signal<TBetSlip>({});
 
 /** Per-oddId listeners for useSyncExternalStore;
  * only notified when that odd is added/removed/edited.
@@ -106,15 +111,20 @@ const subscribeToOddId = (oddId: string, onStateChange: () => void): (() => void
 };
 
 const totalPotentialPayout = computed(() => {
-  return Object.keys(slip.value).reduce((acc, matchId) => {
-    const bets = slip.value[matchId];
-    return acc + bets.reduce((acc, bet) => acc + bet.stake * bet.oddAtPlacement, 0);
-  }, 0);
+  const allBets = Object.values(slip.value).flat();
+
+  if (betType.value === 'parlay') {
+    if (allBets.length === 0) return 0;
+    const productOfOdds = allBets.reduce((acc, bet) => acc * bet.oddAtPlacement, 1);
+    return parlayStake.value * productOfOdds;
+  }
+
+  return allBets.reduce((acc, bet) => acc + bet.stake * bet.oddAtPlacement, 0);
 });
 
 const totalBets = computed(() => Object.keys(slip.value).length);
 
-const totatStake = computed(() =>
+const totalStake = computed(() =>
   Object.keys(slip.value).reduce((acc, matchId) => {
     const bets = slip.value[matchId];
     return acc + bets.reduce((acc, bet) => acc + bet.stake, 0);
@@ -129,6 +139,7 @@ const getBetByOddId = (oddId: string) => {
 
 const clearSlip = () => {
   slip.value = {};
+  parlayStake.value = 0;
   notifyListenersForOddId();
 };
 
@@ -139,9 +150,11 @@ export const betSlipStore = {
   totalBets,
   bets: slip,
   totalPotentialPayout,
-  totatStake,
+  totalStake,
   betType,
   updateBetType,
+  parlayStake,
+  setParlayStake,
   getBetByOddId,
   subscribeToOddId,
   clearSlip,

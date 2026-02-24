@@ -11,7 +11,7 @@ import { ScrollView } from 'react-native-actions-sheet';
 
 const BetSlipFooter = () => {
   useSignals();
-  const { totalPotentialPayout, totalBets, totatStake } = betSlipStore;
+  const { totalPotentialPayout, totalBets, totalStake, parlayStake, setParlayStake } = betSlipStore;
   const { betType, updateBetType } = betSlipStore;
 
   return (
@@ -27,9 +27,9 @@ const BetSlipFooter = () => {
         </View>
 
         {betType.value === 'single' ? (
-          <ThemedText style={styles.amount}> ${totatStake.value.toFixed(2)} </ThemedText>
+          <ThemedText style={styles.amount}> ${totalStake.value.toFixed(2)} </ThemedText>
         ) : (
-          <NumberInput value={0} onChange={(value) => {}} />
+          <NumberInput value={parlayStake.value} onChange={setParlayStake} />
         )}
       </View>
 
