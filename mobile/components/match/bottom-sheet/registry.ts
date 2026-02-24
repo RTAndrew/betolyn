@@ -1,6 +1,6 @@
 import { CriterionBulkRepriceOddsSheet } from './criterion-sheets/bulk-reprice-odds-sheet';
 import { CriterionActionSheet } from './criterion-sheets/criterion-action-sheet';
-import { CriterionSelectWinningOutcomeSheet } from './criterion-sheets/select-winner-sheet';
+import { CriterionSelectWinningOutcomeSheet } from './criterion-sheets/select-winning-odds-sheet';
 import { CreateOddSheet } from './criterion-sheets/create-odd-sheet';
 import { CriterionLockAndResultSheet } from './criterion-sheets/lock-and-result-sheet';
 import { CriterionSuspendSheet } from './criterion-sheets/criterion-suspend-sheet';

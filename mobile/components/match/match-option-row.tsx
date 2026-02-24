@@ -10,7 +10,7 @@ export interface MatchOptionRowControlProps {
 
 interface MatchOptionRowProps {
   title: string;
-  value: number;
+  value?: number;
   onValueChange?: (value: number) => void;
   style?: ViewStyle;
   children: React.ReactNode | ((props: MatchOptionRowControlProps) => React.ReactNode);
@@ -29,9 +29,10 @@ export const MatchOptionRow = ({
   children,
   onValueChange,
 }: MatchOptionRowProps) => {
-  const scoreRef = useRef<number>(value);
+  const scoreRef = useRef<number>(value ?? 0);
 
   const inputStatus = useMemo(() => {
+    if (value === undefined) return undefined;
     const isIncreasing = value > scoreRef.current;
     const isDecreasing = value < scoreRef.current;
     const status: 'success' | 'error' | undefined = isIncreasing
@@ -43,21 +44,27 @@ export const MatchOptionRow = ({
   }, [value]);
 
   useEffect(() => {
-    onValueChange?.(scoreRef.current);
+    if (value !== undefined) {
+      onValueChange?.(scoreRef.current);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const rightContent =
-    typeof children === 'function' ? children({ value, status: inputStatus?.status }) : children;
+    typeof children === 'function'
+      ? children({ value: value ?? 0, status: inputStatus?.status })
+      : children;
 
   return (
     <View style={[styles.root, style]}>
       <View style={styles.body}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <ThemedText style={styles.value}>{scoreRef.current}</ThemedText>
-          {inputStatus?.isIncreasing && <CaretUp width={10} height={10} color="#3CC5A4" />}
-          {inputStatus?.isDecreasing && <CaretDown width={10} height={10} color="#F80069" />}
-        </View>
+        {value !== undefined && (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <ThemedText style={styles.value}>{scoreRef.current}</ThemedText>
+            {inputStatus?.isIncreasing && <CaretUp width={10} height={10} color="#3CC5A4" />}
+            {inputStatus?.isDecreasing && <CaretDown width={10} height={10} color="#F80069" />}
+          </View>
+        )}
         <ThemedText ellipsizeMode="tail" style={styles.title}>
           {title}
         </ThemedText>

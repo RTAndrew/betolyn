@@ -83,7 +83,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
-          text="Select winning outcome"
+          text="Select winning outcomes"
           icon={<DollarEuro width={28} height={28} color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-select-winner', data: criterion });

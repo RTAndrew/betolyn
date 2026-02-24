@@ -1,4 +1,4 @@
-.PHONY: help dev-mobile dev-backend install-mobile install-backend clean reset-db
+.PHONY: help dev-mobile dev-backend dev-seed install-mobile install-backend clean reset-db db-reset
 
 help: ## Show this help message
 	@echo "Available commands:"
@@ -40,6 +40,11 @@ setup: install-mobile install-backend ## Setup the entire project (install all d
 
 dev: dev-mobile ## Alias for dev-mobile (default development command)
 
+db-seed: ## Run the database seeder (requires backend on port 8080)
+	@echo "Starting Database Seeder..."
+	@cd $(CURDIR)/seed && node seed.js
+	@echo "Database Seeder complete! "
+
 db-reset: ## Reset the database (drop schema, recreate via Hibernate, run seed)
 	@echo "Resetting database (kill 8080, run backend with profile reset, seed, kill 8080)..."
 	@-lsof -ti:8080 | xargs kill 2>/dev/null || true
@@ -54,7 +59,7 @@ db-reset: ## Reset the database (drop schema, recreate via Hibernate, run seed)
 		sleep 2; \
 	done
 	@echo "Running seed..."
-	@cd $(CURDIR)/seed && node seed.js
+	@$(MAKE) -C $(CURDIR) db-seed
 	@echo "Stopping backend..."
 	@-lsof -ti:8080 | xargs kill 2>/dev/null || true
 	@echo "Reset complete. Next run: start backend without profile so ddl-auto stays create-only."

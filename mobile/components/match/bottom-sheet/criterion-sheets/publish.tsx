@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { usePublishCriterion } from '@/services/criteria/criterion-mutation';
-import { IMatchCriteriaResponse } from '@/services';
+import { IMatchCriteriaResponse, IWinningOutcome, useSelectWinningOutcomes } from '@/services';
+import { GenericSelectWinningOddsSheet } from './generic-select-winning-odds-sheet';
+import { Button } from '@/components/button';
 
 export const PublishCriterionSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();
   const { mutateAsync: publishCriterion, isPending } = usePublishCriterion();
+  const { mutateAsync: selectWinningOutcomes } = useSelectWinningOutcomes();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [outcomes, setOutcomes] = useState<IWinningOutcome[]>([]);
 
   if (!currentSheet?.data) {
     return <> Error: No odd data found </>;
@@ -16,22 +21,40 @@ export const PublishCriterionSheet = ({ visible = false }: ISheet) => {
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
 
   const handleConfirm = async () => {
-    await publishCriterion(criterion.id, {
-      onSuccess: () => {
-        closeAll();
-      },
+    await selectWinningOutcomes({
+      criterionId: criterion.id,
+      odds: outcomes,
     });
+    await publishCriterion(criterion.id);
+    closeAll();
   };
 
+  if (showConfirm) {
+    return (
+      <BottomSheet.ModalConfirmation
+        visible={visible}
+        onClose={() => {
+          setShowConfirm(false);
+          closeAll();
+        }}
+        onConfirm={handleConfirm}
+        onCancelText="Discard"
+        title={`Publish the market "${criterion.name}"?`}
+        description={`The market will be published along with the ${outcomes.length} winning outcomes.`}
+        onConfirmText={isPending ? 'Publishing...' : 'Publish'}
+      />
+    );
+  }
+
   return (
-    <BottomSheet.ModalConfirmation
+    <GenericSelectWinningOddsSheet
       visible={visible}
       onClose={closeAll}
-      onConfirm={handleConfirm}
-      onCancelText="Cancel"
-      title="Publish this odd?"
-      description="Users will be able to see and bet on it."
-      onConfirmText={isPending ? 'Publishing...' : 'Publish'}
-    />
+      title="Select Winner"
+      criterion={criterion}
+      onChange={setOutcomes}
+    >
+      <Button.Root onPress={() => setShowConfirm(true)}>Next</Button.Root>
+    </GenericSelectWinningOddsSheet>
   );
 };
