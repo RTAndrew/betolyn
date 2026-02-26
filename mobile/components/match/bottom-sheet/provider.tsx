@@ -5,7 +5,7 @@ import { MatchBottomSheetContext, useMatchBottomSheet } from './context';
 import { SHEET_REGISTRY } from './registry';
 
 interface MatchBottomSheetProviderProps {
-  match: IMatch;
+  match: Omit<IMatch, 'mainCriterion'>;
 }
 
 export const MatchSheets = () => {

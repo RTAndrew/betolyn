@@ -1,6 +1,6 @@
 import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
 import { IMatchCriteriaResponse } from '../matches/matches-services';
-import { CriterionStatusEnum, EOddStatus, ICriterion } from '@/types';
+import { CriterionStatusEnum, EOddStatus, ICriterion, IOdd } from '@/types';
 import { DataSync } from '@/components/server-sent-events/data-sync';
 
 export interface IRepriceOddsRequest {
@@ -41,7 +41,7 @@ export class CriterionService {
   }
 
   public static async findCriterionById(criterionId: string) {
-    const data = await getRequest<ICriterion>(`/criteria/${criterionId}`);
+    const data = await getRequest<ICriterion & { odds: IOdd[] }>(`/criteria/${criterionId}`);
     DataSync.updateCriteria([data.data]);
     return data;
   }

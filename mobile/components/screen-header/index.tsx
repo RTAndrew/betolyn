@@ -96,8 +96,8 @@ const ScreenHeader = ({
   description,
   children,
   style,
-  iconContainerColor = '#485164',
-  iconColor = '#485164',
+  iconContainerColor = '#61687E',
+  iconColor = 'white',
 }: ScreenHeaderProps) => {
   const insets = useSafeAreaInsets();
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 16,
-    paddingVertical: 16,
+    paddingVertical: 6,
   },
   headerIcon: {
     alignItems: 'center',
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 100,
-    backgroundColor: '#red',
+    backgroundColor: 'red',
   },
   actionContainer: {
     gap: 8,
@@ -151,7 +151,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#C7D1E7',
   },
-
   quickActions: {
     flexDirection: 'row',
     backgroundColor: 'rgba(199,209,231, 0.5)',

@@ -13,6 +13,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch } from '@/services';
 import { hexToRgba } from '@/utils/hex-rgba';
 import { router, useLocalSearchParams } from 'expo-router';
+
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -61,43 +62,44 @@ const MatchSettings = () => {
         </ScreenHeader>
 
         <SafeHorizontalView style={styles.root}>
-          <DonutChart
-            style={styles.chart}
-            size={220}
-            strokeWidth={15}
-            segments={[
-              { value: 57, color: '#F3CA41' },
-              { value: 100, color: hexToRgba('#F3CA41', 0.5) },
-            ]}
-            label={
-              <View style={styles.chartLabel}>
-                <ThemedText type="default" style={styles.chartLabelPercent}>
-                  57%
-                </ThemedText>
-                <ThemedText type="subtitle" style={styles.chartLabelSecondary}>
-                  $1,590 / $3,000
-                </ThemedText>
-              </View>
-            }
-          />
+          <View style={styles.health}>
+            <DonutChart
+              size={220}
+              strokeWidth={15}
+              segments={[
+                { value: 57, color: '#F3CA41' },
+                { value: 100, color: hexToRgba('#F3CA41', 0.5) },
+              ]}
+              label={
+                <View style={styles.chartLabel}>
+                  <ThemedText type="default" style={styles.chartLabelPercent}>
+                    57%
+                  </ThemedText>
+                  <ThemedText type="subtitle" style={styles.chartLabelSecondary}>
+                    $1,590 / $3,000
+                  </ThemedText>
+                </View>
+              }
+            />
 
-          <Stats.Group
-            style={styles.stats}
-            items={[
-              {
-                title: 'P/L',
-                description: '$25.11',
-              },
-              {
-                title: 'Bets',
-                description: '19',
-              },
-              {
-                title: 'Vol.',
-                description: '$589',
-              },
-            ]}
-          />
+            <Stats.Group
+              style={styles.stats}
+              items={[
+                {
+                  title: 'P/L',
+                  description: '$25.11',
+                },
+                {
+                  title: 'Bets',
+                  description: '19',
+                },
+                {
+                  title: 'Vol.',
+                  description: '$589',
+                },
+              ]}
+            />
+          </View>
 
           <Settings.ItemGroup>
             <Settings.Item
@@ -108,7 +110,8 @@ const MatchSettings = () => {
             <Settings.Item
               title="Cartões Amarelos"
               subtitle="Main Market"
-              suffixIcon={<Tag.Active title="Active" />}
+              description={<Tag.Active title="Active" />}
+              onPress={() => router.push(`/criteria/${match.mainCriterion?.id}/settings`)}
             />
           </Settings.ItemGroup>
 
@@ -142,14 +145,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  health: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 18,
+    marginVertical: 24,
+  },
   stats: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
-  },
-  chart: {
-    paddingVertical: 12,
   },
   chartLabel: {
     alignItems: 'center',

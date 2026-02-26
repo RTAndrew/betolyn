@@ -149,13 +149,13 @@ export default function CreateCriterion() {
             <ScreenHeader
               type="close"
               title="New Market"
-              iconColor="#61687E"
+              iconColor="white"
               style={styles.header}
               description={subtitle}
               onClose={() => router.back()}
             />
 
-            <SafeHorizontalView style={{ backgroundColor: '#485164' }}>
+            <SafeHorizontalView style={{ backgroundColor: '#485164', paddingTop: 16 }}>
               <Wizard
                 activeIndex={activeStep}
                 steps={[{ label: 'Market' }, { label: 'Outcomes' }]}

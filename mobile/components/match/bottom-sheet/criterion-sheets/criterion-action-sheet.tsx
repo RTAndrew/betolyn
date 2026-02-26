@@ -1,10 +1,20 @@
 import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { View } from 'react-native';
-import { Add, DollarEuro, Eye, LockClosed, MoneyHand, Trash, Trophy } from '@/components/icons';
+import {
+  Add,
+  DollarEuro,
+  Eye,
+  LockClosed,
+  MoneyHand,
+  Settings,
+  Trash,
+  Trophy,
+} from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+import { router } from 'expo-router';
 
 export const CriterionActionSheet = ({ visible = false }: ISheet) => {
   const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();
@@ -75,10 +85,18 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         )}
 
         <BottomSheet.ActionOption
-          text="Add outcome"
+          text="Create outcome"
           icon={<Add width={28} height={28} color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-create-odd', data: criterion });
+          }}
+        />
+
+        <BottomSheet.ActionOption
+          text="Settings"
+          icon={<Settings width={28} height={28} color="white" />}
+          onPress={() => {
+            router.push(`/criteria/${criterion.id}/settings`);
           }}
         />
 

@@ -18,10 +18,13 @@ const Switch = ({ label, value, description, onChange, switchStyle }: SwitchProp
 
   return (
     <Pressable style={styles.container} onPress={() => handleChange()}>
-      <View style={styles.header}>
-        {label && <ThemedText style={styles.label}>{label}</ThemedText>}
-        {description && <ThemedText style={styles.description}>{description}</ThemedText>}
-      </View>
+      {label ||
+        (description && (
+          <View style={styles.header}>
+            {label && <ThemedText style={styles.label}>{label}</ThemedText>}
+            {description && <ThemedText style={styles.description}>{description}</ThemedText>}
+          </View>
+        ))}
 
       <View style={styles.switchContainer}>
         <ReactNativeUISwitch

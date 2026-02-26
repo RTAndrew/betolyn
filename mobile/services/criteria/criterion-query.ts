@@ -1,6 +1,6 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { CriterionService } from './criterion-service';
-import { ICriterion } from '@/types';
+import { ICriterion, IOdd } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions, queryClient } from '@/utils/react-query';
 
@@ -14,7 +14,7 @@ export const getAllCriteriaQueryOptions = () => {
 };
 
 export const getCriterionByIdQueryOptions = ({ criterionId }: { criterionId: string }) => {
-  return queryOptions<IApiResponse<ICriterion>, IApiResponse>({
+  return queryOptions<IApiResponse<ICriterion & { odds: IOdd[] }>, IApiResponse>({
     queryKey: ['criterion', criterionId],
     queryFn: async () => await CriterionService.findCriterionById(criterionId),
   });

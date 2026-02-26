@@ -21,14 +21,16 @@ export interface SettingsItemProps {
   suffixIcon?: true | ReactNode;
 }
 
-const renderNode = (node: ReactNode, style: object, wrap = false) =>
-  typeof node === 'string' ? (
-    <ThemedText style={style} numberOfLines={wrap ? undefined : 1}>
-      {node}
-    </ThemedText>
-  ) : (
-    node
-  );
+const renderNode = (node: ReactNode, style: object, wrap = false) => {
+  if (typeof node === 'string' || typeof node === 'number') {
+    return (
+      <ThemedText style={style} numberOfLines={wrap ? undefined : 1}>
+        {node}
+      </ThemedText>
+    );
+  }
+  return node;
+};
 
 const SettingsItem = ({
   suffixIcon = true,

@@ -159,11 +159,11 @@ const MatchPage = () => {
           contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
         >
           <ScreenHeader
-            iconColor="#C7D1E7"
             type="down"
-            onClose={() => router.back()}
             safeArea={false}
-            style={{ backgroundColor: '#495064' }}
+            iconContainerColor="#495064"
+            onClose={() => router.back()}
+            style={{ backgroundColor: '#495064', ...(Platform.OS === 'ios' && { paddingTop: 16 }) }}
           >
             <ScreenHeader.QuickActions style={{ backgroundColor: '#495064' }}>
               <ScreenHeader.Icon onPress={() => refetch()}>
