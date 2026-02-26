@@ -125,7 +125,7 @@ const OpenMatchBottomSheet = () => {
   const { pushSheet } = useMatchBottomSheet();
   return (
     <ScreenHeader.Icon onPress={() => pushSheet({ type: 'match-action' })}>
-      <MoreVertical width={24} height={24} />
+      <MoreVertical />
     </ScreenHeader.Icon>
   );
 };

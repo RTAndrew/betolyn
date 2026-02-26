@@ -32,7 +32,11 @@ const Tag = ({ title, icon, borderColor, backgroundColor, textColor, style }: Ta
   </View>
 );
 
-const ActiveTag = ({ title, icon }: Pick<TagProps, 'title' | 'icon'>) => {
+interface ActiveTagProps extends Pick<TagProps, 'icon'> {
+  title?: string;
+}
+
+const ActiveTag = ({ title = 'Active', icon }: ActiveTagProps) => {
   return (
     <Tag
       icon={icon}

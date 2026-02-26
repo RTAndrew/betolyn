@@ -64,6 +64,7 @@ export interface IOdd {
   id: string;
   name: string;
   value: number;
+  matchId: string;
   isWinner?: boolean;
   status: `${EOddStatus}`;
   direction?: 'UP' | 'DOWN';

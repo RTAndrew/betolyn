@@ -86,9 +86,7 @@ const BottomSheetHeader = (props: BottomSheetHeaderProps) => {
 
       <Title title={title} description={description} />
 
-      {onClose && (
-        <CloseFilled width={24} height={24} color="#272F3D" fill="white" onPress={onClose} />
-      )}
+      {onClose && <CloseFilled color="#272F3D" fill="white" onPress={onClose} />}
     </SafeHorizontalView>
   );
 };

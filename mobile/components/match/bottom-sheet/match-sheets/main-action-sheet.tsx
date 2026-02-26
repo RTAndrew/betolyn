@@ -2,7 +2,14 @@ import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { Add, SoccerBall, TimeHistory, TrendingLines, TimerOff } from '@/components/icons';
+import {
+  Add,
+  SoccerBall,
+  TimeHistory,
+  TrendingLines,
+  TimerOff,
+  Settings,
+} from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { router } from 'expo-router';
@@ -27,7 +34,7 @@ const Team = ({
 };
 
 export const MainActionSheet = ({ visible = false }: ISheet) => {
-  const { match, pushSheet, closeAll } = useMatchBottomSheet();
+  const { match, pushSheet, closeAll, goBack } = useMatchBottomSheet();
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
@@ -49,27 +56,28 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}
-          icon={<SoccerBall width={28} height={28} color="white" />}
+          icon={<SoccerBall color="white" />}
         />
+        <BottomSheet.ActionOption text="Reschedule" icon={<TimeHistory color="white" />} />
+        <BottomSheet.ActionOption text="View all markets" icon={<TrendingLines color="white" />} />
         <BottomSheet.ActionOption
-          text="Reschedule"
-          icon={<TimeHistory width={28} height={28} color="white" />}
-        />
-        <BottomSheet.ActionOption
-          text="View all markets"
-          icon={<TrendingLines width={28} height={28} color="white" />}
+          text="Settings"
+          onPress={() => {
+            goBack();
+            router.push(`/matches/${match.id}/settings`);
+          }}
+          icon={<Settings color="white" />}
         />
         <BottomSheet.ActionOption
           text="Add market"
           onPress={() => {
-            closeAll();
             router.push(`/matches/${match.id}/create-criterion`);
           }}
-          icon={<Add width={28} height={28} color="white" />}
+          icon={<Add color="white" />}
         />
         <BottomSheet.ActionOption
           text="End match"
-          icon={<TimerOff width={28} height={28} color="white" />}
+          icon={<TimerOff color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-end-match' });
           }}

@@ -10,18 +10,19 @@ import { Settings } from '@/components/settings';
 import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
-import { useGetCriterionById } from '@/services';
-import { ICriterion } from '@/types';
+import { useGetMatch, useGetOddById } from '@/services';
+import { IMatch } from '@/types';
+import { hexToRgba } from '@/utils/hex-rgba';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
+const OpenMatchBottomSheetIcon = ({ match }: { match: IMatch }) => {
   const { pushSheet } = useMatchBottomSheet();
   return (
     <ScreenHeader.QuickActions>
       <ScreenHeader.Icon
-        onPress={() => pushSheet({ type: 'criterion-action', data: criterion })}
+        onPress={() => pushSheet({ type: 'odd-action', data: match })}
         style={{ backgroundColor: '#61687E' }}
       >
         <MoreVertical />
@@ -30,25 +31,36 @@ const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
   );
 };
 
-const CriterionSettings = () => {
-  const { criterionId } = useLocalSearchParams();
-  const { data, isPending, error } = useGetCriterionById({ criterionId: criterionId as string });
+const OddSettings = () => {
+  const { oddId } = useLocalSearchParams();
+  const { data, isPending, error } = useGetOddById({ oddId: oddId as string });
+  const {
+    data: matchData,
+    isPending: matchIsPending,
+    error: matchError,
+  } = useGetMatch({
+    matchId: data?.data.matchId ?? '',
+    queryOptions: {
+      enabled: Boolean(data?.data.matchId),
+    },
+  });
 
-  if (isPending) return <ThemedText>Loading...</ThemedText>;
-  if (error || !data) return <ThemedText>Error loading criterion</ThemedText>;
-  const criterion = data.data;
-  if (!criterion) return <ThemedText>Criterion not found</ThemedText>;
+  if (isPending || matchIsPending) return <ThemedText>Loading...</ThemedText>;
+  if (error || !data || matchError) return <ThemedText>Error loading criterion</ThemedText>;
+  const odd = data.data;
+  const match = matchData.data;
+  if (!odd || !match) return <ThemedText>Criterion not found</ThemedText>;
 
   return (
-    <MatchBottomSheetProvider match={criterion.match}>
+    <MatchBottomSheetProvider match={match}>
       <ScreenWrapper safeArea={false} backgroundColor="#485164">
         <ScreenHeader
           iconColor="white"
-          title={criterion.name}
+          title={odd.name}
           onClose={() => router.back()}
           iconContainerColor="#61687E"
         >
-          <OpenMatchBottomSheetIcon criterion={criterion} />
+          <OpenMatchBottomSheetIcon match={match} />
         </ScreenHeader>
 
         <SafeHorizontalView style={styles.root}>
@@ -74,7 +86,7 @@ const CriterionSettings = () => {
               style={styles.stats}
               items={[
                 {
-                  title: 'P/L',
+                  title: 'Pot. Payout',
                   description: '$25.11',
                 },
                 {
@@ -91,26 +103,51 @@ const CriterionSettings = () => {
                 },
               ]}
             />
+
+            <SegmentedProgressBar
+              segments={[
+                { value: 25, color: '#C7D1E7' },
+                { value: 75, color: hexToRgba('#C7D1E7', 0.5) },
+              ]}
+              topLabel={
+                <ThemedText type="default" style={{ color: '#A8A8A8' }}>
+                  $250 / $1,000
+                </ThemedText>
+              }
+              bottomLabel={
+                <ThemedText type="defaultSemiBold" style={{ color: 'white' }}>
+                  25% Market Share
+                </ThemedText>
+              }
+            />
           </View>
 
-          <Settings.Item
-            title={`${criterion.match.homeTeam.name} vs ${criterion.match.awayTeam.name}`}
-            subtitle="Match"
-            description={<Tag.Live />}
-            onPress={() => router.push(`/matches/${criterion.match.id}`)}
-          />
+          <Settings.ItemGroup>
+            <Settings.Item
+              title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
+              subtitle="Event"
+              description={<Tag.Live />}
+              onPress={() => router.push(`/matches/${match.id}`)}
+            />
+
+            <Settings.Item
+              title={odd.criterion.name}
+              subtitle="Market"
+              description={<Tag.Active />}
+              onPress={() => router.push(`/criteria/${odd.criterion.id}/settings`)}
+            />
+          </Settings.ItemGroup>
 
           <Settings.ItemGroup>
             <Settings.Item
               title="Allow multiple outcomes"
               subtitle="Multiple bets on the same outcome are allowed."
-              suffixIcon={<Switch value={criterion.allowMultipleOdds} onChange={() => {}} />}
+              suffixIcon={<Switch value={odd.criterion.allowMultipleOdds} onChange={() => {}} />}
             />
 
             <Settings.Item
-              title="Allow multiple winners"
-              subtitle="Multiple outcomes will be chosen as winners."
-              suffixIcon={<Switch value={criterion.allowMultipleWinners} onChange={() => {}} />}
+              title="Winning Outcome"
+              suffixIcon={<Switch value={odd.isWinner ?? false} onChange={() => {}} />}
             />
 
             <Settings.Item
@@ -118,24 +155,6 @@ const CriterionSettings = () => {
               subtitle="When the match starts, the criterion will be published automatically."
               suffixIcon={<Switch value={false} onChange={() => {}} />}
             />
-          </Settings.ItemGroup>
-
-          <Settings.ItemGroup title="Outcomes">
-            {criterion.odds.map((odd) => (
-              <Settings.Item
-                onPress={() => router.push(`/odds/${odd.id}/settings`)}
-                key={odd.id}
-                title={
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                    <ThemedText style={{ color: '#F3CA41', fontWeight: 600 }}>
-                      {odd.value}
-                    </ThemedText>
-                    <ThemedText type="default">{odd.name}</ThemedText>
-                  </View>
-                }
-                description="30"
-              />
-            ))}
           </Settings.ItemGroup>
         </SafeHorizontalView>
       </ScreenWrapper>
@@ -159,7 +178,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
+    marginTop: 18,
+    marginBottom: 22,
   },
 });
 
-export default CriterionSettings;
+export default OddSettings;

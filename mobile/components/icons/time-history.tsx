@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import type { SvgProps } from 'react-native-svg';
 
-const TimeHistory = ({ width = 12, height = 12, color = 'white', ...props }: SvgProps) => {
+const TimeHistory = ({ width = 24, height = 24, color = 'white', ...props }: SvgProps) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
       <Path

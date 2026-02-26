@@ -25,7 +25,7 @@ const OpenMatchBottomSheetIcon = () => {
         onPress={() => pushSheet({ type: 'match-action' })}
         style={{ backgroundColor: '#61687E' }}
       >
-        <MoreVertical width={24} height={24} />
+        <MoreVertical />
       </ScreenHeader.Icon>
     </ScreenHeader.QuickActions>
   );

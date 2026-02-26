@@ -78,11 +78,11 @@ const CloseIcon = ({
   };
 
   const icon = useMemo(() => {
-    if (type === 'down') return <Down width={24} height={24} color={iconColor} />;
+    if (type === 'down') return <Down color={iconColor} />;
 
-    if (type === 'back') return <Down width={18} height={18} color={iconColor} />;
+    if (type === 'back') return <Down width={24} height={24} color={iconColor} />;
 
-    return <Close width={18} height={18} color={iconColor} />;
+    return <Close width={24} height={24} color={iconColor} />;
   }, [type, iconColor]);
 
   return <Container>{icon}</Container>;
