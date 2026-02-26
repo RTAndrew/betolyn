@@ -1,6 +1,5 @@
 package com.betolyn.features.betting.criterion;
 
-import com.betolyn.features.betting.betslips.BetSlipItemEntity;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.shared.baseEntity.BaseEntity;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-import org.json.JSONPropertyIgnore;
 
 import java.util.ArrayList;
 import java.util.List;

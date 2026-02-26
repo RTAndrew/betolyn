@@ -1,9 +1,8 @@
 import Collapsible from '@/components/collapsible/index';
 import { OddButton } from '@/components/odd-button';
-import ScreenTopBar from '@/components/screen-topbar';
 import { ThemedView } from '@/components/ThemedView';
 import { useGetMatch, useGetMatchCriteria } from '@/services/matches/match-query';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -17,6 +16,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
+import ScreenHeader from '@/components/screen-header';
+import { MoreVertical, Sync, Settings } from '@/components/icons';
 
 interface MatchTeamProps {
   name: string;
@@ -120,6 +121,15 @@ const Section = ({ children, style }: ViewProps) => {
   );
 };
 
+const OpenMatchBottomSheet = () => {
+  const { pushSheet } = useMatchBottomSheet();
+  return (
+    <ScreenHeader.Icon onPress={() => pushSheet({ type: 'match-action' })}>
+      <MoreVertical width={24} height={24} />
+    </ScreenHeader.Icon>
+  );
+};
+
 const MatchPage = () => {
   const { id } = useLocalSearchParams();
   const { data: result, refetch, isLoading, isError } = useGetMatch({ matchId: id as string });
@@ -148,8 +158,25 @@ const MatchPage = () => {
           nestedScrollEnabled={Platform.OS === 'android'}
           contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
         >
-          <ScreenTopBar style={{ backgroundColor: '#495064' }} />
-          <Text onPress={() => refetch()}> Refreshe </Text>
+          <ScreenHeader
+            iconColor="#C7D1E7"
+            type="down"
+            onClose={() => router.back()}
+            safeArea={false}
+            style={{ backgroundColor: '#495064' }}
+          >
+            <ScreenHeader.QuickActions style={{ backgroundColor: '#495064' }}>
+              <ScreenHeader.Icon onPress={() => refetch()}>
+                <Sync />
+              </ScreenHeader.Icon>
+
+              <ScreenHeader.Icon onPress={() => router.replace(`/matches/${id}/settings`)}>
+                <Settings />
+              </ScreenHeader.Icon>
+
+              <OpenMatchBottomSheet />
+            </ScreenHeader.QuickActions>
+          </ScreenHeader>
 
           <ThemedView style={{ backgroundColor: '#495064' }}>
             {/* Highlight */}

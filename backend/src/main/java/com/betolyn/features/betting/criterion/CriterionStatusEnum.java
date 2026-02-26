@@ -5,7 +5,7 @@ public enum CriterionStatusEnum {
     ACTIVE,
     SETTLED, // Hidden from Live Feed + Paid Out/Lost.
     EXPIRED, // Possibly updated (only for OddHistory)
-    // // TODO: move to OddHistory (as archivd?)
+    // // TODO: move to OddHistory (as archived?)
     // the idea is that later on there may be timeout based on TIME
     // and number of bets made (total or during a certain period - hot bets)
     SUSPENDED, // Visible + Not Clickable (Locked)

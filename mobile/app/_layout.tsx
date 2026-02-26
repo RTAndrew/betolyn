@@ -1,15 +1,16 @@
 import { queryClient } from '@/utils/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
-import StreamEventSource from '@/server-sent-events';
+import StreamEventSource from '@/components/server-sent-events';
 import { useEffect, useState } from 'react';
 import { hydrateAuthStore } from '@/stores/auth.store';
+import * as SplashScreen from 'expo-splash-screen';
 
 if (__DEV__) {
   require('../reactotron-config');
@@ -30,7 +31,12 @@ export default function RootLayout() {
     } catch (error) {
     } finally {
       setIsHydrated(false);
-      SplashScreen.hideAsync();
+      try {
+        await SplashScreen.hideAsync();
+      } catch {
+        // No native splash screen registered (e.g. iOS Expo Go or view controller not ready).
+        // App can continue without hiding the splash.
+      }
     }
   };
 
@@ -79,6 +85,7 @@ export default function RootLayout() {
                   gestureDirection: 'vertical',
                   gestureEnabled: true,
                   sheetAllowedDetents: [1],
+                  animationDuration: 130,
                 }}
               />
 

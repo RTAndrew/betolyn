@@ -1,7 +1,7 @@
 import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { View } from 'react-native';
-import { Add, DollarEuro, Eye, LockClosed, MoneyHand, Trash } from '@/components/icons';
+import { Add, DollarEuro, Eye, LockClosed, MoneyHand, Trash, Trophy } from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
@@ -84,7 +84,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           text="Select winning outcomes"
-          icon={<DollarEuro width={28} height={28} color="white" />}
+          icon={<Trophy width={28} height={28} color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-select-winner', data: criterion });
           }}

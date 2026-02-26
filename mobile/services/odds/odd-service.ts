@@ -1,6 +1,6 @@
 import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
 import { IOdd as IOdd, EOddStatus, ICriterion } from '@/types';
-import { DataSync } from '@/server-sent-events/data-sync';
+import { DataSync } from '@/components/server-sent-events/data-sync';
 
 export interface IUpdateOddStatusRequest {
   status: EOddStatus;

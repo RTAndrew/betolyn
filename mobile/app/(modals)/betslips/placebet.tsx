@@ -2,7 +2,7 @@ import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { ThemedText } from '@/components/ThemedText';
 import { IPlaceBetRequest, usePlaceBet } from '@/services';
-import { useTimeElapsed } from '@/src/hooks/use-time-elapsed-messages';
+import { useTimeElapsed } from '@/hooks/use-time-elapsed-messages';
 import { betSlipStore } from '@/stores/bet-slip.store';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';

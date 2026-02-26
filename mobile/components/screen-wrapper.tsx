@@ -8,7 +8,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
@@ -23,8 +23,10 @@ const WithSafeArea = ({
   backgroundColor,
   safeArea = true,
 }: PropsWithChildren<{ backgroundColor: string; safeArea?: boolean }>) => {
+  const insets = useSafeAreaInsets();
+
   if (safeArea) {
-    return <SafeAreaView style={{ flex: 1, backgroundColor }}>{children}</SafeAreaView>;
+    return <View style={{ flex: 1, backgroundColor, paddingTop: insets.top }}>{children}</View>;
   }
 
   return <View style={{ flex: 1, backgroundColor }}>{children}</View>;
@@ -48,7 +50,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           {scrollable ? (
             <ScrollView
-              contentContainerStyle={{ flexGrow: 1 }}
+              contentContainerStyle={{ flexGrow: 1, paddingBottom: 72 }}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >

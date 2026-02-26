@@ -41,6 +41,7 @@ const BottomSheet = ({
       gestureEnabled
       onClose={onClose}
       ref={actionSheetRef}
+      openAnimationConfig={{ duration: 250 }}
       indicatorStyle={[styles.indicator, indicatorStyle]}
       containerStyle={{ ...styles.container, ...(containerStyle as object) }}
       {...props}

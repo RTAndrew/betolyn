@@ -16,3 +16,8 @@ export { default as CaretUp } from './caret-up';
 export { default as CaretDown } from './caret-down';
 export { default as Trash } from './trash';
 export { default as LockClosed } from './lock-closed';
+export { default as Sync } from './sync';
+export { default as TimerOff } from './timer-off';
+export { default as Trophy } from './trophy';
+export { default as Settings } from './settings';
+export { default as Right } from './right';

@@ -1,26 +1,39 @@
-import React, { PropsWithChildren } from 'react';
-import { Pressable, StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native';
+import React, { PropsWithChildren, useMemo } from 'react';
+import {
+  Pressable,
+  PressableProps,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SafeHorizontalView from '../safe-horizontal-view';
-import { Close } from '../icons';
+import { Close, Down } from '../icons';
 import { ThemedText } from '../ThemedText';
 
 interface ScreenHeaderProps extends HeaderProps {
   onClose?: () => void;
   safeArea?: boolean;
-  style?: StyleProp<ViewStyle>;
-  type?: 'close' | 'back';
   iconColor?: string;
+  iconContainerColor?: string;
+  style?: StyleProp<ViewStyle>;
+  type?: 'close' | 'back' | 'down';
 }
 
-interface IconContainerProps extends PropsWithChildren {
+interface IconContainerProps extends PropsWithChildren<PressableProps> {
   onPress: () => void;
   color?: string;
 }
 
-const IconContainer = ({ children, onPress, color = '#485164' }: IconContainerProps) => {
+const IconContainer = ({ children, onPress, color = '#485164', ...props }: IconContainerProps) => {
   return (
-    <Pressable style={[styles.headerIcon, { backgroundColor: color }]} onPress={onPress}>
+    <Pressable
+      {...props}
+      style={StyleSheet.flatten([styles.headerIcon, { backgroundColor: color }, props.style])}
+      onPress={onPress}
+    >
       {children}
     </Pressable>
   );
@@ -28,24 +41,51 @@ const IconContainer = ({ children, onPress, color = '#485164' }: IconContainerPr
 
 const QuickActions = ({ children, style, ...props }: PropsWithChildren<ViewProps>) => {
   return (
-    <View style={[styles.quickActions, style]} {...props}>
+    <View style={StyleSheet.flatten([styles.quickActions, style])} {...props}>
       {children}
     </View>
   );
 };
 
 interface HeaderProps extends PropsWithChildren {
-  title?: string;
+  title?: React.ReactNode;
   description?: React.ReactNode;
 }
 
 const Header = ({ title, description }: HeaderProps) => {
   return (
     <View style={styles.header}>
-      <ThemedText type="subtitle">{title}</ThemedText>
+      {typeof title === 'string' ? <ThemedText type="subtitle">{title}</ThemedText> : title}
       {description && <ThemedText style={styles.headerDescription}>{description}</ThemedText>}
     </View>
   );
+};
+
+const CloseIcon = ({
+  iconColor,
+  iconContainerColor,
+  onClose,
+  type,
+}: Pick<ScreenHeaderProps, 'iconColor' | 'iconContainerColor' | 'onClose' | 'type'>) => {
+  const Container = ({ children }: PropsWithChildren) => {
+    if (!onClose) return <></>;
+
+    return (
+      <IconContainer color={iconContainerColor} onPress={onClose}>
+        {children}
+      </IconContainer>
+    );
+  };
+
+  const icon = useMemo(() => {
+    if (type === 'down') return <Down width={24} height={24} color={iconColor} />;
+
+    if (type === 'back') return <Down width={18} height={18} color={iconColor} />;
+
+    return <Close width={18} height={18} color={iconColor} />;
+  }, [type, iconColor]);
+
+  return <Container>{icon}</Container>;
 };
 
 const ScreenHeader = ({
@@ -56,6 +96,7 @@ const ScreenHeader = ({
   description,
   children,
   style,
+  iconContainerColor = '#485164',
   iconColor = '#485164',
 }: ScreenHeaderProps) => {
   const insets = useSafeAreaInsets();
@@ -63,11 +104,12 @@ const ScreenHeader = ({
   return (
     <SafeHorizontalView style={[styles.root, { paddingTop: safeArea ? insets.top : 0 }, style]}>
       <View style={styles.headerContainer}>
-        {onClose && (
-          <IconContainer color={iconColor} onPress={onClose}>
-            <Close width={18} height={18} color="white" />
-          </IconContainer>
-        )}
+        <CloseIcon
+          iconContainerColor={iconContainerColor}
+          iconColor={iconColor}
+          onClose={onClose}
+          type={type}
+        />
 
         {(title || description) && <Header title={title} description={description} />}
 
@@ -93,12 +135,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: '#61687E',
+    borderRadius: 100,
+    backgroundColor: '#red',
   },
   actionContainer: {
+    gap: 8,
     flexDirection: 'row',
-    gap: 16,
   },
   header: {
     flexDirection: 'column',
@@ -112,12 +154,9 @@ const styles = StyleSheet.create({
 
   quickActions: {
     flexDirection: 'row',
-    borderWidth: 2,
-    borderColor: 'rgba(199,209,231, 0.5)',
+    backgroundColor: 'rgba(199,209,231, 0.5)',
     borderRadius: 100,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    gap: 16,
+    gap: 8,
   },
 });
 

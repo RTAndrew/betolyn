@@ -55,8 +55,7 @@ const NormalButton = ({
           destructive && styles.destructive,
         ]}
       >
-        {' '}
-        {children}{' '}
+        {children}
       </ThemedText>
     </TouchableOpacity>
   );
