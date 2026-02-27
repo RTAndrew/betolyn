@@ -10,4 +10,6 @@ import lombok.Data;
 public class UpdateMatchStatusRequestDTO {
     @NotNull
     private MatchStatusEnum status;
+
+    private Boolean suspendAllCriteria;
 }

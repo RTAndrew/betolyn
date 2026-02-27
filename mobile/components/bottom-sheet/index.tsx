@@ -95,6 +95,7 @@ const ModalConfirmation = ({
   onConfirm,
   onClose,
   title,
+  children,
   ...props
 }: ModalConfirmationProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -119,6 +120,8 @@ const ModalConfirmation = ({
         {description && (
           <ThemedText style={modalConfirmationStyles.description}>{description}</ThemedText>
         )}
+
+        {children}
 
         <View style={modalConfirmationStyles.actions}>
           {onConfirm && (

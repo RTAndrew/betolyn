@@ -2,7 +2,6 @@ package com.betolyn.features.betting.criterion.suspendcriterion;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
-import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SuspendCriterionUC implements IUseCase<String, CriterionEntity> {
     private final FindCriterionByIdUC findCriterionByIdUC;
-    private final CriterionRepository criterionRepository;
     private final OddRepository oddRepository;
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final CriterionSystemEvent criterionSystemEvent;
@@ -35,7 +33,6 @@ public class SuspendCriterionUC implements IUseCase<String, CriterionEntity> {
             throw new BusinessRuleException("ALREADY_SUSPENDED", "Criterion is already suspended");
         }
         foundCriterion.setStatus(CriterionStatusEnum.SUSPENDED);
-        var savedCriterion = criterionRepository.save(foundCriterion);
 
         var odds = oddRepository.findAllByCriterionId(criterionId);
         var active = odds.stream().filter(o -> o.getStatus() == OddStatusEnum.ACTIVE).toList();
@@ -46,16 +43,19 @@ public class SuspendCriterionUC implements IUseCase<String, CriterionEntity> {
 
         var affectedOddIds = active.stream().map(o -> o.getId()).toList();
         var eventDTO = new CriterionStatusChangedEventDTO(
-                savedCriterion.getId(),
-                savedCriterion.getMatch().getId(),
-                savedCriterion.getStatus(),
+                foundCriterion.getId(),
+                        foundCriterion.getMatch().getId(),
+                foundCriterion.getStatus(),
                 affectedOddIds
         );
+
         criterionSystemEvent.publish(this, "criterionSuspended", eventDTO);
+
         if (!active.isEmpty()) {
-            oddSystemEvent.publish(this, "oddStatusChanged", new OddStatusChangedEventDTO(affectedOddIds, OddStatusEnum.SUSPENDED));
+            oddSystemEvent.publish(this, "oddStatusChanged",
+                    new OddStatusChangedEventDTO(affectedOddIds, OddStatusEnum.SUSPENDED));
         }
 
-        return savedCriterion;
+        return foundCriterion;
     }
 }

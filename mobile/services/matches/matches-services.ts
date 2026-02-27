@@ -32,6 +32,7 @@ export interface IRescheduleMatchRequest {
 
 export interface IUpdateMatchStatusRequest {
   status: MatchStatusEnum;
+  suspendAllCriteria?: boolean;
 }
 
 export class MatchesService {
