@@ -19,11 +19,15 @@ const BetSlips = () => {
     <View style={styles.root}>
       <Pressable>
         <ScreenHeader safeArea title="Bet Slips">
-          <Pressable onPress={() => clearSlip()}>
-            <ScreenHeader.QuickActions>
-              <Trash width={18} height={18} color="white" />
-            </ScreenHeader.QuickActions>
-          </Pressable>
+          <ScreenHeader.QuickActions style={{ backgroundColor: 'transparent' }}>
+            <ScreenHeader.Icon
+              color="white"
+              onPress={() => clearSlip()}
+              style={{ backgroundColor: 'transparent' }}
+            >
+              <Trash color="white" />
+            </ScreenHeader.Icon>
+          </ScreenHeader.QuickActions>
         </ScreenHeader>
       </Pressable>
 
@@ -31,6 +35,7 @@ const BetSlips = () => {
         contentContainerStyle={{
           flexGrow: 1,
           gap: 18,
+          marginTop: 18,
           paddingBottom: Platform.OS === 'ios' ? 200 : 130,
         }}
         data={Object.keys(bets.value)}

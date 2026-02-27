@@ -8,11 +8,7 @@
 ## 📱 Prototype Showcase
 
 <div align="center">
-  <img src="assets/prototypes/home_screen.png" alt="Home Screen" width="150" />
-  <img src="assets/prototypes/chatroom_groups.png" alt="Chatroom Groups" width="182" />
-  <img src="assets/prototypes/match_day_admin.png" alt="Match Day Admin" width="150" />
-  <img src="assets/prototypes/category_drawer_sports.png" alt="Category Drawer Sports" width="150" />
-  <img src="assets/prototypes/chatroom_add_bet_admin.png" alt="Chatroom Add Bet Admin" width="150" />
+  <img src="assets/prototypes/iphone.png" alt="Home Screen" />
 </div>
 
 <br />

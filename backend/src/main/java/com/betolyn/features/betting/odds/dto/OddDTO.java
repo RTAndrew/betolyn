@@ -10,7 +10,7 @@ import lombok.Data;
 public class OddDTO {
     private String id;
     private String matchId;
-    
+
     private String name;
     private double value;
     private Boolean isWinner = false;

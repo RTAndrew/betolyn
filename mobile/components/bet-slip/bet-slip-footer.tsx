@@ -42,8 +42,7 @@ const BetSlipFooter = () => {
         disabled={totalBets.value === 0}
         onPress={() => router.push('/betslips/placebet')}
       >
-        {' '}
-        Place Bet{' '}
+        Place Bet
       </Button.Root>
     </ScrollView>
   );
