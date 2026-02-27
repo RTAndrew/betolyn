@@ -7,7 +7,8 @@ import ScreenHeader from '@/components/screen-header';
 import BetSlipFooter from '../../../components/bet-slip/bet-slip-footer';
 import BottomSheet from '@/components/bottom-sheet';
 import BetSlipCard from '../../../components/bet-slip/bet-slip-card';
-import { Trash } from '@/components/icons';
+import { Eye, Trash } from '@/components/icons';
+import { router } from 'expo-router';
 
 const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 60;
 
@@ -19,13 +20,20 @@ const BetSlips = () => {
     <View style={styles.root}>
       <Pressable>
         <ScreenHeader safeArea title="Bet Slips">
-          <ScreenHeader.QuickActions style={{ backgroundColor: 'transparent' }}>
+          <ScreenHeader.QuickActions style={{ backgroundColor: '#485164' }}>
             <ScreenHeader.Icon
               color="white"
               onPress={() => clearSlip()}
               style={{ backgroundColor: 'transparent' }}
             >
               <Trash color="white" />
+            </ScreenHeader.Icon>
+            <ScreenHeader.Icon
+              color="white"
+              onPress={() => router.push('/betslips/history')}
+              style={{ backgroundColor: 'transparent' }}
+            >
+              <Eye color="white" />
             </ScreenHeader.Icon>
           </ScreenHeader.QuickActions>
         </ScreenHeader>

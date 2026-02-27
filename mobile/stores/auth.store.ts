@@ -1,5 +1,5 @@
 import { constants } from '@/constants';
-import { AuthService } from '@/services';
+import { AuthService, MeService } from '@/services';
 import { IUser } from '@/types';
 import { SafeStorage } from '@/utils/safe-storage';
 import { computed, signal } from '@preact/signals-react';
@@ -29,7 +29,7 @@ export const hydrateAuthStore = async () => {
     return;
   }
 
-  const { data, error } = await AuthService.getMe();
+  const { data, error } = await MeService.getMe();
   if (error) {
     await handleLogout();
     return;

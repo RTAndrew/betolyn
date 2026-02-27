@@ -24,6 +24,7 @@ public interface BetSlipMapper {
         List<BetSlipItemDTO> slipItemDTOS = new ArrayList<>();
         for (var item : items) {
             var dto = new BetSlipItemDTO();
+            dto.setId(item.getId());
             dto.setStake(item.getStake());
             dto.setStatus(item.getStatus());
             dto.setVoidReason(item.getVoidReason());

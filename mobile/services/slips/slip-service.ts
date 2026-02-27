@@ -14,6 +14,6 @@ export interface IPlaceBetRequest {
 
 export class SlipService {
   public static async placeBet(data: IPlaceBetRequest) {
-    return await postRequest<IBetSlip, IPlaceBetRequest>('/slips', data);
+    return await postRequest<IBetSlip, IPlaceBetRequest>('/bets', data);
   }
 }

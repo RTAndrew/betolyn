@@ -1,6 +1,5 @@
-package com.betolyn.features.auth.me;
+package com.betolyn.features.me;
 
-import com.betolyn.features.auth.AuthApiPaths;
 import com.betolyn.features.auth.AuthMapper;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.auth.signin.SignInResponseDTO;
@@ -19,10 +18,9 @@ public class Me {
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
     private final AuthMapper authMapper;
 
-    @RequestMapping(AuthApiPaths.ME)
+    @RequestMapping(MeApiPaths.ME)
     public ResponseEntity<@NotNull ApiResponse<SignInResponseDTO>> validateSession() throws BadRequestException {
         var loggedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new);
-
 
         var responseDTO = authMapper.toSignInResponse(loggedUser.session());
         return ResponseEntity.ok(ApiResponse.success("User session is valid", responseDTO));

@@ -7,10 +7,6 @@ import {
 } from '../app/auth/signup/types';
 
 export class AuthService {
-  public static async getMe() {
-    return await getRequest<SignInResponseDTO>('/me');
-  }
-
   public static async signIn(requestDTO: SignInRequestDTO) {
     return await postRequest<SignInResponseDTO, SignInRequestDTO>('/auth/signin', requestDTO);
   }

@@ -57,7 +57,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
               <View style={{ flex: 1 }}>{children}</View>
             </ScrollView>
           ) : (
-            <View style={{ flex: 1 }}>{children}</View>
+            <View>{children}</View>
           )}
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

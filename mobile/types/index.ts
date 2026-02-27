@@ -75,10 +75,25 @@ export type EBetSlipType = 'SINGLE' | 'PARLAY';
 export interface IBetSlip {
   id: string;
   status: string;
-  items: unknown[];
+  items: IBetSlipItem[];
   totalStake: number;
   type: `${EBetSlipType}`;
   totalItemsCount: number;
   totalPotentialPayout: number;
   totalCumulativeOdds?: number;
+}
+
+export type IBetSlipItemStatus = 'PENDING' | 'LOST' | 'WON' | 'VOIDED';
+
+export interface IBetSlipItem {
+  id: string;
+  oddId: string;
+  stake: number;
+  status: `${IBetSlipItemStatus}`;
+  matchId: string;
+  criterionId: string;
+  lastOddHistoryId: string;
+  potentialPayout: number;
+  voidReason: string | null;
+  oddValueAtPlacement: number;
 }

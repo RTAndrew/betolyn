@@ -1,4 +1,6 @@
 export * from './auth-service';
+export * from './me-service';
+export * from './me/me-query';
 export * from './odds/odd-service';
 export * from './odds/odd-mutation';
 export * from './odds/odd-query';

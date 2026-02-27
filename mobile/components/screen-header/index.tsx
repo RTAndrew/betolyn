@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SafeHorizontalView from '../safe-horizontal-view';
-import { Close, Down } from '../icons';
+import { Close, Down, Left } from '../icons';
 import { ThemedText } from '../ThemedText';
 
 interface ScreenHeaderProps extends HeaderProps {
@@ -80,7 +80,7 @@ const CloseIcon = ({
   const icon = useMemo(() => {
     if (type === 'down') return <Down color={iconColor} />;
 
-    if (type === 'back') return <Down width={24} height={24} color={iconColor} />;
+    if (type === 'back') return <Left width={24} height={24} color={iconColor} />;
 
     return <Close width={24} height={24} color={iconColor} />;
   }, [type, iconColor]);
