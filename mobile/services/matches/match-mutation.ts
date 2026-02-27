@@ -34,6 +34,10 @@ interface IUpdateMatchStatusVariables {
   variables: IUpdateMatchStatusRequest;
 }
 
+interface ISuspendAllMatchCriteriaVariables {
+  matchId: string;
+}
+
 export const useUpdateMatchScore = () => {
   const mutation = useMutation(
     {
@@ -116,6 +120,26 @@ export const useUpdateMatchStatus = () => {
       mutationFn: (data: IUpdateMatchStatusVariables) =>
         MatchesService.updateMatchStatus(data.matchId, data.variables),
       onSuccess: (data, variables) => {
+        queryClient.refetchQueries({
+          queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
+        });
+        queryClient.refetchQueries({
+          queryKey: getMatchesQueryOptions().queryKey,
+        });
+      },
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useSuspendAllMatchCriteria = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: ISuspendAllMatchCriteriaVariables) =>
+        MatchesService.suspendAllMatchCriteria(data.matchId),
+      onSuccess: (_data, variables) => {
         queryClient.refetchQueries({
           queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
         });

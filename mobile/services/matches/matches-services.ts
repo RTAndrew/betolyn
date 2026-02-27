@@ -83,4 +83,8 @@ export class MatchesService {
   public static async updateMatchStatus(matchId: string, data: IUpdateMatchStatusRequest) {
     return await putRequest<IMatch, IUpdateMatchStatusRequest>(`/matches/${matchId}/status`, data);
   }
+
+  public static async suspendAllMatchCriteria(matchId: string) {
+    return await patchRequest<void, void>(`/matches/${matchId}/suspend-all-criteria`, undefined);
+  }
 }
