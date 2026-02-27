@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CreateEventHeader from './components/create-event-header';
 import { router } from 'expo-router';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 
 type TScreen = 'search-matches' | 'select-criteria' | 'create-odds';
 
@@ -60,7 +61,7 @@ const CreateChannelEvent = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#61687E' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.greyLight }}>
       <CreateEventHeader onClose={() => popScreen()} type={screen.length > 1 ? 'back' : 'close'} />
       {renderScreen()}
     </SafeAreaView>

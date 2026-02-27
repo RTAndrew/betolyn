@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
 import { authStore } from '@/stores/auth.store';
+import { colors } from '@/constants/colors';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React from 'react';
@@ -51,10 +52,10 @@ const styles = StyleSheet.create({
 
     width: 42,
     height: 42,
-    backgroundColor: '#7E87F1',
+    backgroundColor: colors.terciary,
     borderRadius: '100%',
     borderWidth: 1,
-    borderColor: '#C7D1E7',
+    borderColor: colors.greyLighter,
   },
   userBadgeText: {
     color: '#fff',

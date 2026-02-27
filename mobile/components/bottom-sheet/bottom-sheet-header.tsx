@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { colors } from '@/constants/colors';
 import { ThemedText } from '../ThemedText';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { CloseFilled } from '../icons';
@@ -86,7 +87,7 @@ const BottomSheetHeader = (props: BottomSheetHeaderProps) => {
 
       <Title title={title} description={description} />
 
-      {onClose && <CloseFilled color="#272F3D" fill="white" onPress={onClose} />}
+      {onClose && <CloseFilled color={colors.greyDark} fill={colors.white} onPress={onClose} />}
     </SafeHorizontalView>
   );
 };
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 24,
     borderBottomWidth: 0.3,
-    borderBottomColor: '#C7D1E7',
+    borderBottomColor: colors.greyLighter,
   },
   titleContainer: {
     flexDirection: 'column',
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   description: {
     marginTop: 4,
     fontSize: 12,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
 });
 

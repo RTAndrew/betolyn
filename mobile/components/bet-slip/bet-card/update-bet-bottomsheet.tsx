@@ -8,6 +8,7 @@ import { IOddWithCriterion } from '@/services';
 import { IMatch } from '@/types';
 import { Button } from '@/components/button';
 import { betSlipStore } from '@/stores/bet-slip.store';
+import { colors } from '@/constants/colors';
 
 interface TeamProps {
   name: string;
@@ -78,7 +79,7 @@ const teamStyle = StyleSheet.create({
   },
   teamScore: {
     fontWeight: '700',
-    color: '#F3CA41',
+    color: colors.complementary,
   },
 });
 
@@ -171,10 +172,10 @@ const styles = StyleSheet.create({
   },
   teamScoreName: {
     fontSize: 12,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
   teamScoreValue: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     fontWeight: '700',
   },
 });

@@ -2,6 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import React from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Switch as ReactNativeUISwitch } from 'react-native-ui-lib';
+import { colors } from '@/constants/colors';
 
 interface SwitchProps {
   label?: string;
@@ -29,8 +30,8 @@ const Switch = ({ label, value, description, onChange, switchStyle }: SwitchProp
 
       <View style={styles.switchContainer}>
         <ReactNativeUISwitch
-          onColor="#3CC5A4"
-          offColor="#485164"
+          onColor={colors.primary}
+          offColor={colors.greyMedium}
           value={value}
           style={switchStyle}
           onValueChange={onChange}
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 12,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     lineHeight: 18,
   },
 });

@@ -12,6 +12,7 @@ import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionById } from '@/services';
 import { ICriterion } from '@/types';
+import { colors } from '@/constants/colors';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -22,7 +23,7 @@ const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
     <ScreenHeader.QuickActions>
       <ScreenHeader.Icon
         onPress={() => pushSheet({ type: 'criterion-action', data: criterion })}
-        style={{ backgroundColor: '#61687E' }}
+        style={{ backgroundColor: colors.greyLight }}
       >
         <MoreVertical />
       </ScreenHeader.Icon>
@@ -41,12 +42,12 @@ const CriterionSettings = () => {
 
   return (
     <MatchBottomSheetProvider match={criterion.match}>
-      <ScreenWrapper safeArea={false} backgroundColor="#485164">
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
         <ScreenHeader
-          iconColor="white"
+          iconColor={colors.white}
           title={criterion.name}
           onClose={() => router.back()}
-          iconContainerColor="#61687E"
+          iconContainerColor={colors.greyLight}
         >
           <OpenMatchBottomSheetIcon criterion={criterion} />
         </ScreenHeader>
@@ -127,7 +128,7 @@ const CriterionSettings = () => {
                 key={odd.id}
                 title={
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                    <ThemedText style={{ color: '#F3CA41', fontWeight: 600 }}>
+                    <ThemedText style={{ color: colors.complementary, fontWeight: 600 }}>
                       {odd.value}
                     </ThemedText>
                     <ThemedText type="default">{odd.name}</ThemedText>

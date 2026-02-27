@@ -2,6 +2,7 @@ import { ThemedView } from '@/components/ThemedView';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { colors } from '@/constants/colors';
 
 interface CreateEventHeaderProps {
   onClose: () => void;
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerIcon: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
     width: 40,
     height: 40,
     borderRadius: 20,

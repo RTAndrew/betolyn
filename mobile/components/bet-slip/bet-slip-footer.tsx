@@ -3,6 +3,7 @@ import { ButtonTab } from '@/components/button-tab';
 import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import { betSlipStore } from '@/stores/bet-slip.store';
+import { colors } from '@/constants/colors';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React from 'react';
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 40,
-    color: '#F3CA41',
+    color: colors.complementary,
     fontWeight: '700',
   },
 });

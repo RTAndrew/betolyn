@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput as _TextInput, TextInputProps, TextStyle } from 'react-native';
 import { useMemo, useState } from 'react';
+import { colors } from '@/constants/colors';
 import BaseField, { BaseFieldProps } from '../base-field';
 
 interface InputProps extends TextInputProps, Omit<BaseFieldProps, 'children'> {
@@ -45,12 +46,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 2,
     borderRadius: 5,
-    color: 'white',
+    color: colors.white,
     borderColor: '#8791A5',
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
   focused: {
-    borderColor: '#7E87F1',
+    borderColor: colors.terciary,
   },
 });
 
@@ -59,10 +60,10 @@ const errorStyles = StyleSheet.create({
     borderColor: '#FA8C16',
   },
   error: {
-    borderColor: '#F80069',
+    borderColor: colors.secondary,
   },
   success: {
-    borderColor: '#3CC5A4',
+    borderColor: colors.primary,
   },
 });
 

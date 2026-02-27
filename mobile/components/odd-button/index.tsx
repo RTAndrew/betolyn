@@ -9,6 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { colors } from '@/constants/colors';
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
 import { useGetOddById } from '@/services/odds/odd-query';
@@ -115,7 +116,7 @@ const disabledOddButtonStyles = StyleSheet.create({
     backgroundColor: '#55556E',
   },
   text: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     fontWeight: '600',
   },
 });
@@ -133,7 +134,7 @@ const getDynamicOddStyles = (variant: OddBaseButtonProps['variant']): IGetDynami
       },
       text: {
         ...oddsStyles.oddText,
-        color: '#272F3D',
+        color: colors.greyDark,
       },
     };
   }
@@ -239,23 +240,23 @@ const oddsStyles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#F3C942',
+    borderColor: colors.complementary,
     borderRadius: 100,
     paddingVertical: 5,
     paddingHorizontal: 20,
   },
   solid: {
-    backgroundColor: '#F3C942',
+    backgroundColor: colors.complementary,
   },
   outline: {
     borderStyle: 'solid',
   },
   dashed: {
     borderStyle: 'dashed',
-    borderColor: '#F3C942',
+    borderColor: colors.complementary,
   },
   oddText: {
-    color: '#F3C942',
+    color: colors.complementary,
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',

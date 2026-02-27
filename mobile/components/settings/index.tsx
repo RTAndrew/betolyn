@@ -1,12 +1,13 @@
 import { Right } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { hexToRgba } from '@/utils/hex-rgba';
 import React, { cloneElement, isValidElement, ReactNode } from 'react';
 import { type ViewStyle, Pressable, StyleSheet, View } from 'react-native';
 
-const BACKGROUND_COLOR = '#61687E';
-const BORDER_COLOR = '#485164';
-const MUTED_TEXT_COLOR = hexToRgba('#C7D1E7', 0.7);
+const BACKGROUND_COLOR = colors.greyLight;
+const BORDER_COLOR = colors.greyMedium;
+const MUTED_TEXT_COLOR = hexToRgba(colors.greyLighter, 0.8);
 const BORDER_RADIUS = 12;
 const ITEM_PADDING_V = 12;
 const ITEM_PADDING_H = 16;
@@ -47,7 +48,7 @@ const SettingsItem = ({
   const content = (
     <View style={styles.component}>
       <View style={styles.body}>
-        {renderNode(title, styles.title)}
+        {renderNode(title, styles.title, true)}
         {hasSubtitle && (
           <View style={styles.subtitleRow}>{renderNode(subtitle, styles.subtitle, true)}</View>
         )}
@@ -133,8 +134,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ITEM_PADDING_H,
   },
   groupTitle: {
-    fontSize: 12,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     fontWeight: '600',
   },
   groupItemWrap: {},
@@ -171,14 +171,13 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   title: {
-    color: 'white',
+    color: colors.white,
     fontWeight: '600',
   },
   subtitleRow: {
     marginTop: 2,
   },
   subtitle: {
-    fontSize: 12,
     color: MUTED_TEXT_COLOR,
   },
   footer: {
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
   },
   footerDescription: {
     fontSize: 14,
-    color: hexToRgba('#C7D1E7', 0.7),
+    color: colors.greyLighter50,
   },
   arrow: {
     flexShrink: 0,

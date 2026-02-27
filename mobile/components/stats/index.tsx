@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
-import { hexToRgba } from '@/utils/hex-rgba';
 import React, { ReactNode } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { colors } from '@/constants/colors';
 
 export interface StatItem {
   title: ReactNode;
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   statTitle: {
-    color: hexToRgba('#C7D1E7', 0.6),
+    color: colors.greyLighter50,
     fontWeight: '500',
   },
   statDescription: {

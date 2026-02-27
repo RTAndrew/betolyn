@@ -2,6 +2,7 @@ import { MatchEventSmallCard } from '@/components/match-event-small-card';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch } from '@/services';
 import { IBet } from '@/stores/bet-slip.store';
+import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
 import React, { PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -42,12 +43,12 @@ export default BetSlipCard;
 const styles = StyleSheet.create({
   root: {
     borderRadius: 8,
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   body: {
     flexDirection: 'column',
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
 });

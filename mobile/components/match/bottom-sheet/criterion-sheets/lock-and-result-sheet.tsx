@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/ThemedText';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
 import { Checkbox } from 'react-native-ui-lib';
+import { colors } from '@/constants/colors';
 interface TeamProps {
   name: string;
   score: number;
@@ -35,8 +36,8 @@ const Team = ({ name, score, isSelected, onValueChange }: TeamProps) => {
 
       <Checkbox
         borderRadius={100}
-        iconColor="#61687E"
-        color={isSelected ? '#3CC5A4' : 'white'}
+        iconColor={colors.greyLight}
+        color={isSelected ? colors.primary : colors.white}
         value={isSelected}
         onValueChange={(value) => onValueChange(value)}
       />
@@ -61,7 +62,7 @@ const teamStyle = StyleSheet.create({
   },
   teamScore: {
     fontWeight: '700',
-    color: '#F3CA41',
+    color: colors.complementary,
   },
 });
 

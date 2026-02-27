@@ -3,6 +3,7 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import BetCard from '@/components/bet-card';
+import { colors } from '@/constants/colors';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import { mockAPI } from '@/mock';
@@ -62,7 +63,7 @@ const ChannelId = () => {
         </ThemedView>
       </View>
 
-      <ThemedView style={{ flex: 1, backgroundColor: '#61687E' }}>
+      <ThemedView style={{ flex: 1, backgroundColor: colors.greyLight }}>
         {matches.map((match, index) => (
           <BetCard
             key={index}
@@ -77,7 +78,7 @@ const ChannelId = () => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
   header: {
     flexDirection: 'row',

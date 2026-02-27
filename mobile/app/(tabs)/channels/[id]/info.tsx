@@ -6,6 +6,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '@/constants/colors';
 
 const ParticipantCard = ({ member }: { member: IChannelMember }) => {
   const handlePress = () => {
@@ -46,7 +47,7 @@ const Info = () => {
 
   return (
     <ParallaxScrollView
-      backgroundColor="#485164"
+      backgroundColor={colors.greyMedium}
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <View
@@ -119,15 +120,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 0.25,
-    borderBottomColor: '#C7D1E7',
+    borderBottomColor: colors.greyLighter,
   },
   participantName: {
     fontWeight: '600',
-    color: 'white',
+    color: colors.white,
   },
   participantRole: {
     fontSize: 12,
-    color: 'white',
+    color: colors.white,
   },
   participantBody: {
     flexDirection: 'row',
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   },
   participantGains: {
     fontSize: 12,
-    color: 'white',
+    color: colors.white,
   },
 
   headerBodyWrapper: {
@@ -159,12 +160,12 @@ const styles = StyleSheet.create({
   headerBodyTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
+    color: colors.white,
     marginBottom: 8,
   },
   headerBodyDescription: {
     fontSize: 10,
-    color: 'white',
+    color: colors.white,
   },
   channelInfo: {
     flexDirection: 'column',
@@ -173,10 +174,10 @@ const styles = StyleSheet.create({
   },
   channelInfoText: {
     fontSize: 10,
-    color: 'white',
+    color: colors.white,
   },
   participants: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
     paddingVertical: 16,
     gap: 5,
     flex: 1,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
   },
   participantsNumber: {
     fontWeight: 'bold',
-    color: '#F3CA41',
+    color: colors.complementary,
   },
 });
 

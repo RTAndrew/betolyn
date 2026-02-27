@@ -7,6 +7,7 @@ import { ISheet } from '../index';
 import { NumberInput } from '@/components/forms';
 import { Button } from '@/components/button';
 import { useUpdateMatchScore } from '@/services/matches/match-mutation';
+import { colors } from '@/constants/colors';
 
 interface TeamProps {
   name: string;
@@ -72,7 +73,7 @@ const teamStyle = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
   inputAction: {
     fontSize: 24,
@@ -82,9 +83,9 @@ const teamStyle = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '900',
     fontSize: 16,
-    color: 'white',
+    color: colors.white,
 
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
 });
 

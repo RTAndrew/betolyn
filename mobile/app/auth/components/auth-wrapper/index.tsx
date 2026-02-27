@@ -6,6 +6,7 @@ import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { colors } from '@/constants/colors';
 interface AuthWrapperProps {
   type?: 'signup' | 'login';
 }
@@ -38,7 +39,7 @@ export const AuthForm = ({ children }: PropsWithChildren) => {
 
 const AuthWrapper = ({ children, type = 'signup' }: PropsWithChildren<AuthWrapperProps>) => {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#61687E' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.greyLight }}>
       <KeyboardAwareScrollView>
         <SafeAreaView style={{ flex: 1 }}>
           <SafeHorizontalView>

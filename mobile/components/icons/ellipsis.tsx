@@ -1,8 +1,9 @@
 import React from 'react';
 import Svg, { Circle, Path } from 'react-native-svg';
 import type { SvgProps } from 'react-native-svg';
+import { colors } from '@/constants/colors';
 
-const Ellipsis = ({ width = 24, height = 24, color = '#485164', ...props }: SvgProps) => {
+const Ellipsis = ({ width = 24, height = 24, color = colors.greyMedium, ...props }: SvgProps) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 12 12" fill="none" {...props}>
       <Circle cx="6" cy="6" r="5" stroke={color} strokeWidth={2} />

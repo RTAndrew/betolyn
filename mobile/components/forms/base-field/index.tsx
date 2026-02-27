@@ -1,4 +1,5 @@
 import { StyleSheet, View, ViewStyle } from 'react-native';
+import { colors } from '@/constants/colors';
 import { ThemedText } from '../../ThemedText';
 
 export interface BaseFieldProps {
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
   errorMessage: {
     fontSize: 12,
     marginTop: 5,
-    color: '#F80069',
+    color: colors.secondary,
   },
 });
 

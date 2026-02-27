@@ -12,6 +12,7 @@ import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch, useGetOddById } from '@/services';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 import { hexToRgba } from '@/utils/hex-rgba';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -23,7 +24,7 @@ const OpenMatchBottomSheetIcon = ({ match }: { match: IMatch }) => {
     <ScreenHeader.QuickActions>
       <ScreenHeader.Icon
         onPress={() => pushSheet({ type: 'odd-action', data: match })}
-        style={{ backgroundColor: '#61687E' }}
+        style={{ backgroundColor: colors.greyLight }}
       >
         <MoreVertical />
       </ScreenHeader.Icon>
@@ -53,12 +54,12 @@ const OddSettings = () => {
 
   return (
     <MatchBottomSheetProvider match={match}>
-      <ScreenWrapper safeArea={false} backgroundColor="#485164">
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
         <ScreenHeader
-          iconColor="white"
+          iconColor={colors.white}
           title={odd.name}
           onClose={() => router.back()}
-          iconContainerColor="#61687E"
+          iconContainerColor={colors.greyLight}
         >
           <OpenMatchBottomSheetIcon match={match} />
         </ScreenHeader>
@@ -106,8 +107,8 @@ const OddSettings = () => {
 
             <SegmentedProgressBar
               segments={[
-                { value: 25, color: '#C7D1E7' },
-                { value: 75, color: hexToRgba('#C7D1E7', 0.5) },
+                { value: 25, color: colors.greyLighter },
+                { value: 75, color: colors.greyLighter50 },
               ]}
               topLabel={
                 <ThemedText type="default" style={{ color: '#A8A8A8' }}>
@@ -115,7 +116,7 @@ const OddSettings = () => {
                 </ThemedText>
               }
               bottomLabel={
-                <ThemedText type="defaultSemiBold" style={{ color: 'white' }}>
+                <ThemedText type="defaultSemiBold" style={{ color: colors.white }}>
                   25% Market Share
                 </ThemedText>
               }

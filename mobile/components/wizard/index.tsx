@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Wizard as WizardComponent, WizardStepProps, WizardStepStates } from 'react-native-ui-lib';
 import { Image, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
+import { colors } from '@/constants/colors';
 import { Add } from '../icons';
 
 interface IWizardStep {
@@ -32,29 +33,29 @@ const getStyleConfig = (
       return {
         labelStyle: styles?.activeStyle?.labelStyle,
         color: styles?.activeStyle?.color ?? 'white',
-        circleColor: '#485164',
+        circleColor: colors.greyMedium,
         connectorStyle: {
           borderColor: 'red',
         },
       };
     case WizardStepStates.DISABLED:
       return {
-        circleColor: '#61687E',
+        circleColor: colors.greyLight,
         connectorStyle: {
-          borderColor: '#61687E',
+          borderColor: colors.greyLight,
         },
         indexLabelStyle: {
-          color: 'white',
+          color: colors.white,
         },
-        color: styles?.disabledStyle?.color ?? '#61687E',
+        color: styles?.disabledStyle?.color ?? colors.greyLight,
         labelStyle: styles?.disabledStyle?.labelStyle,
-        circleBackgroundColor: styles?.disabledStyle?.circleBackgroundColor ?? '#61687E',
+        circleBackgroundColor: styles?.disabledStyle?.circleBackgroundColor ?? colors.greyLight,
       };
     default:
       return {
         labelStyle: styles?.disabledStyle?.labelStyle,
-        circleColor: styles?.disabledStyle?.circleColor ?? '#61687E',
-        circleBackgroundColor: styles?.disabledStyle?.circleBackgroundColor ?? '#61687E',
+        circleColor: styles?.disabledStyle?.circleColor ?? colors.greyLight,
+        circleBackgroundColor: styles?.disabledStyle?.circleBackgroundColor ?? colors.greyLight,
       };
   }
 };
@@ -82,8 +83,8 @@ const Wizard = ({ activeIndex, steps, onStepChange, activeStyle, disabledStyle }
       activeConfig={{
         state: WizardStepStates.ENABLED,
         labelStyle: styles.activeLabel,
-        color: activeStyle?.color ?? '#F3CA41',
-        circleColor: activeStyle?.circleColor ?? '#F3CA41',
+        color: activeStyle?.color ?? colors.complementary,
+        circleColor: activeStyle?.circleColor ?? colors.complementary,
         connectorStyle: {
           height: 1,
           backgroundColor: 'red',
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
   },
   activeLabel: {
-    color: '#F3CA41',
+    color: colors.complementary,
     fontWeight: '600',
   },
 });

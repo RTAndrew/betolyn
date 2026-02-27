@@ -2,6 +2,7 @@ import Collapsible from '@/components/collapsible/index';
 import { OddButton } from '@/components/odd-button';
 import { ThemedView } from '@/components/ThemedView';
 import { useGetMatch, useGetMatchCriteria } from '@/services/matches/match-query';
+import { colors } from '@/constants/colors';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import {
@@ -31,9 +32,9 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
 
   if (isLoading)
     return (
-      <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
+      <ThemedView style={{ backgroundColor: colors.greyMedium, paddingHorizontal: 0 }}>
         <Section>
-          <ActivityIndicator size="large" color="#C7D1E7" />
+          <ActivityIndicator size="large" color={colors.greyLighter} />
         </Section>
       </ThemedView>
     );
@@ -41,7 +42,7 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
   if (isError || !criteria || criteria.length === 0) return <></>;
 
   return (
-    <ThemedView style={{ backgroundColor: '#495064', paddingHorizontal: 0 }}>
+    <ThemedView style={{ backgroundColor: colors.greyMedium, paddingHorizontal: 0 }}>
       <Section style={{ paddingVertical: 0 }}>
         {criteria.map((criteria, index) => (
           <Collapsible
@@ -110,7 +111,7 @@ const Section = ({ children, style }: ViewProps) => {
       style={[
         {
           paddingVertical: 20,
-          borderColor: '#C7D1E7',
+          borderColor: colors.greyLighter,
           borderTopWidth: 0.25,
         },
         style,
@@ -149,7 +150,7 @@ const MatchPage = () => {
 
   return (
     <MatchBottomSheetProvider match={match}>
-      <SafeAreaView style={{ backgroundColor: '#61687E', flex: 1 }}>
+      <SafeAreaView style={{ backgroundColor: colors.greyLight, flex: 1 }}>
         <ScrollView
           scrollEventThrottle={16}
           stickyHeaderIndices={[0]}
@@ -161,11 +162,14 @@ const MatchPage = () => {
           <ScreenHeader
             type="down"
             safeArea={false}
-            iconContainerColor="#495064"
+            iconContainerColor={colors.greyMedium}
             onClose={() => router.back()}
-            style={{ backgroundColor: '#495064', ...(Platform.OS === 'ios' && { paddingTop: 16 }) }}
+            style={{
+              backgroundColor: colors.greyMedium,
+              ...(Platform.OS === 'ios' && { paddingTop: 16 }),
+            }}
           >
-            <ScreenHeader.QuickActions style={{ backgroundColor: '#495064' }}>
+            <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
               <ScreenHeader.Icon onPress={() => refetch()}>
                 <Sync />
               </ScreenHeader.Icon>
@@ -178,7 +182,7 @@ const MatchPage = () => {
             </ScreenHeader.QuickActions>
           </ScreenHeader>
 
-          <ThemedView style={{ backgroundColor: '#495064' }}>
+          <ThemedView style={{ backgroundColor: colors.greyMedium }}>
             {/* Highlight */}
             <View
               style={{
@@ -187,7 +191,7 @@ const MatchPage = () => {
                 paddingVertical: 30,
               }}
             >
-              <Text style={{ color: '#C7D1E7', marginBottom: 10 }}>UFC</Text>
+              <Text style={{ color: colors.greyLighter, marginBottom: 10 }}>UFC</Text>
 
               <View
                 style={{
@@ -201,7 +205,7 @@ const MatchPage = () => {
                   style={{
                     fontSize: 20,
                     fontWeight: 'bold',
-                    color: 'white',
+                    color: colors.white,
                     transform: [{ translateY: 35 }],
                   }}
                 >
@@ -238,8 +242,10 @@ const MatchPage = () => {
 
             {/* RealTime Bet Odds */}
             <Section>
-              <Text style={{ color: '#C7D1E7', marginBottom: 5 }}>Critérios em tempo real</Text>
-              <Text style={{ color: 'white', marginBottom: 10, fontWeight: '600' }}>
+              <Text style={{ color: colors.greyLighter, marginBottom: 5 }}>
+                Critérios em tempo real
+              </Text>
+              <Text style={{ color: colors.white, marginBottom: 10, fontWeight: '600' }}>
                 Quem irá vencer por Knockout?
               </Text>
             </Section>

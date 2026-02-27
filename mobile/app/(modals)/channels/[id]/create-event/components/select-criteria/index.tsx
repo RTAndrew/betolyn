@@ -1,6 +1,7 @@
 import { Ellipsis } from '@/components/icons';
 import { ThemedView } from '@/components/ThemedView';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -39,7 +40,7 @@ const CriteriaItem = ({ isCreate = false, criteria, onPress }: CriteriaItemProps
       <Text style={criteriaItemStyles.criteriaItemText}>{criteria}</Text>
 
       <View>
-        <Ellipsis color="#485164" width={12} height={12} />
+        <Ellipsis color={colors.greyMedium} width={12} height={12} />
       </View>
     </TouchableOpacity>
   );
@@ -72,7 +73,7 @@ const ChannelSelectCriteria = ({ match, onSelectCriteria }: ChannelSelectCriteri
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   criteriaList: {
     flexDirection: 'column',
@@ -104,7 +105,7 @@ const criteriaItemStyles = StyleSheet.create({
   },
   criteriaItemText: {
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.white,
   },
 });
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { useSignals } from '@preact/signals-react/runtime';
 import { betSlipStore } from '@/stores/bet-slip.store';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { colors } from '@/constants/colors';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import BetSlipFooter from '../../../components/bet-slip/bet-slip-footer';
@@ -20,7 +21,7 @@ const BetSlips = () => {
     <View style={styles.root}>
       <Pressable>
         <ScreenHeader safeArea title="Bet Slips">
-          <ScreenHeader.QuickActions style={{ backgroundColor: '#485164' }}>
+          <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
             <ScreenHeader.Icon
               color="white"
               onPress={() => clearSlip()}
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   root: {
     position: 'relative',
     flex: 1,
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   sheetWrapper: {
     position: 'absolute',
@@ -91,11 +92,11 @@ const styles = StyleSheet.create({
   sheetContainer: {
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    backgroundColor: '#262F3D',
+    backgroundColor: colors.greyDark,
     paddingVertical: 12,
   },
   indicator: {
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
 });
 

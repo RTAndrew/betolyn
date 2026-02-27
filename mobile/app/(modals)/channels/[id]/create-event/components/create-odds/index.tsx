@@ -4,9 +4,9 @@ import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet';
 import { OddBaseButton } from '@/components/odd-button';
 import { ThemedView } from '@/components/ThemedView';
 import { IMatch } from '@/types';
-import React, { useEffect, useRef, useState } from 'react';
+import { colors } from '@/constants/colors';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
-import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 
 interface InputProps extends Omit<TextInputProps, 'placeholder'> {
   label: string;
@@ -46,7 +46,7 @@ const FormSheet = ({ onSubmit, visible = true, onClose }: FormProps) => {
 
   const handleCreateOdd = () => {
     onSubmit({ probability, minimumAmount, maximumAmount });
-    onClose();
+    onClose?.();
   };
 
   return (
@@ -54,7 +54,7 @@ const FormSheet = ({ onSubmit, visible = true, onClose }: FormProps) => {
       gestureEnabled
       visible={visible}
       onClose={onClose}
-      containerStyle={{ backgroundColor: '#61687E' }}
+      containerStyle={{ backgroundColor: colors.greyLight }}
     >
       <ThemedView style={styles.oddForm}>
         <Input
@@ -145,14 +145,14 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: colors.white,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#C7D1E7',
+    borderBottomColor: colors.greyLighter,
     paddingBottom: 5,
   },
   oddList: {
@@ -162,15 +162,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   input: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
     borderRadius: 5,
     borderWidth: 1,
-    color: 'white',
+    color: colors.white,
     borderColor: '#8791A5',
     padding: 10,
   },
   inputTitle: {
-    color: 'white',
+    color: colors.white,
     marginBottom: 5,
   },
   oddForm: {
@@ -190,15 +190,15 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
+    color: colors.white,
   },
   footerButtonText: {
-    color: 'white',
+    color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   confirmationText: {
-    color: 'white',
+    color: colors.white,
     textAlign: 'center',
   },
   confirmationButtonWrapper: {

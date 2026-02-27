@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
+import { colors } from '@/constants/colors';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 import BottomSheetHeader from './bottom-sheet-header';
 import BottomSheetActionOption from './bottom-sheet-action-option';
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingVertical: 8,
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   indicator: {
     width: 45,
@@ -126,7 +127,7 @@ const ModalConfirmation = ({
         <View style={modalConfirmationStyles.actions}>
           {onConfirm && (
             <Button.Root
-              style={{ backgroundColor: destructive ? '#F80069' : '#7E87F1' }}
+              style={{ backgroundColor: destructive ? colors.secondary : colors.terciary }}
               onPress={handleConfirm}
             >
               {isLoading ? <ActivityIndicator size="small" color="white" /> : onConfirmText}

@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
 import { ThemedText } from '../ThemedText';
 
 interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
@@ -15,7 +16,7 @@ export const GradientButton = ({ children, style, disabled, ...props }: Touchabl
   return (
     <TouchableOpacity disabled={disabled} style={[disabled && styles.disabled]} {...props}>
       <LinearGradient
-        colors={['#7E87F1', '#3CC5A4']}
+        colors={[colors.terciary, colors.primary]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={[styles.root, style]}
@@ -76,12 +77,12 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   solid: {
-    backgroundColor: '#7E87F1',
+    backgroundColor: colors.terciary,
   },
   outline: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#7E87F1',
+    borderColor: colors.terciary,
     fontWeight: '900',
   },
   variantText: {

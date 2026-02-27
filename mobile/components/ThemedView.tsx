@@ -1,4 +1,5 @@
 import { View, type ViewProps } from 'react-native';
+import { colors } from '@/constants/colors';
 
 export type ThemedViewProps = ViewProps & {
   lightColor?: string;
@@ -17,7 +18,7 @@ export function ThemedView({
     <View
       style={[
         {
-          backgroundColor: '#61687E',
+          backgroundColor: colors.greyLight,
           paddingHorizontal: withHorizontalPadding ? 10 : 0,
         },
         style,

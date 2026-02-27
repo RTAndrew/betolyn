@@ -2,6 +2,7 @@ import { IChannel } from '@/mock/matches';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '@/constants/colors';
 
 const ChannelCard = ({ channel }: { channel: IChannel }) => {
   return (
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     height: 'auto',
 
     borderBottomWidth: 0.25,
-    borderBottomColor: '#C7D1E7',
+    borderBottomColor: colors.greyLighter,
   },
   image: {
     width: 45,
@@ -59,14 +60,14 @@ const styles = StyleSheet.create({
     // transform: [{ scale: 0.8 }],
   },
   name: {
-    color: '#fff',
+    color: colors.white,
   },
   description: {
     fontSize: 10,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
   time: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 10,
   },
   descriptionAndTime: {
@@ -77,8 +78,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderRadius: 100,
     fontWeight: '600',
-    color: '#61687E',
-    backgroundColor: '#FFF7D6',
+    color: colors.greyLight,
+    backgroundColor: colors.complementary2,
     paddingVertical: 2,
     paddingHorizontal: 5,
   },

@@ -1,6 +1,7 @@
 import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { colors } from '@/constants/colors';
 import { ThemedText } from '@/components/ThemedText';
 import {
   Add,
@@ -42,7 +43,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.SafeHorizontalView style={{ width: '100%' }}>
           <View style={styles.teamWrapper}>
             <Team name={'Home'} imageUrl={match.homeTeam.badgeUrl} direction="row-reverse" />
-            <ThemedText style={{ color: '#C7D1E7', fontWeight: '900' }}>
+            <ThemedText style={{ color: colors.greyLighter, fontWeight: '900' }}>
               {match.homeTeamScore} : {match.awayTeamScore}
             </ThemedText>
             <Team name={'Away'} imageUrl={match.awayTeam.badgeUrl} direction="row" />
@@ -90,7 +91,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
 const styles = StyleSheet.create({
   teamName: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     fontSize: 12,
   },
   teamWrapper: {

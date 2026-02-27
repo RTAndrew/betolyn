@@ -2,6 +2,7 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionById, useGetMatch, useGetOddById } from '@/services';
 import { IBetSlipItem, IBetSlipItemStatus } from '@/types';
+import { colors } from '@/constants/colors';
 import React from 'react';
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
 
@@ -22,7 +23,7 @@ const getStatusColor = (status: `${IBetSlipItemStatus}`) => {
   if (status === 'PENDING') return '#E8C547';
   if (status === 'WON') return '#00C853';
   if (status === 'LOST') return '#FF0000';
-  return '#61687E';
+  return colors.greyLight;
 };
 
 export interface SingleBetCardHistoryProps {
@@ -58,7 +59,7 @@ const SingleBetCardHistory = ({ bet }: SingleBetCardHistoryProps) => {
     return (
       <View style={styles.card}>
         <View style={styles.logos}>
-          <ActivityIndicator size="small" color="#C7D1E7" />
+          <ActivityIndicator size="small" color={colors.greyLighter} />
         </View>
         <View style={styles.body}>
           <View style={styles.skeletonLine} />
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
     borderRadius: 8,
     paddingVertical: 12,
     gap: 12,
@@ -145,14 +146,14 @@ const styles = StyleSheet.create({
     padding: 2,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: '#485164',
-    backgroundColor: '#485164',
+    borderColor: colors.greyMedium,
+    backgroundColor: colors.greyMedium,
   },
   logoOverlap: {
     marginTop: -6,
   },
   logoPlaceholder: {
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   body: {
     flex: 1,
@@ -162,10 +163,10 @@ const styles = StyleSheet.create({
   },
   oddName: {
     fontWeight: '400',
-    color: '#fff',
+    color: colors.white,
   },
   secondaryText: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     marginTop: 2,
   },
   footer: {
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
   },
   stake: {
     fontSize: 16,
-    color: '#fff',
+    color: colors.white,
     fontWeight: '700',
   },
   oddsRow: {
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   skeletonLine: {
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
     borderRadius: 4,
   },
 });

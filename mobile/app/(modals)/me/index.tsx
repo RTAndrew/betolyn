@@ -3,6 +3,7 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import { ThemedText } from '@/components/ThemedText';
 import { authStore } from '@/stores/auth.store';
+import { colors } from '@/constants/colors';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React from 'react';
@@ -35,7 +36,7 @@ export default Me;
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
   logoutButton: {
     marginTop: 56,

@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 import React from 'react';
 import { Image, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -78,16 +79,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
-    backgroundColor: '#272F3D',
+    backgroundColor: colors.greyDark,
   },
   teamName: {
     fontSize: 12,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     fontWeight: '400',
   },
   matchScore: {
     fontSize: 12,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     marginHorizontal: 10,
     fontWeight: '600',
   },

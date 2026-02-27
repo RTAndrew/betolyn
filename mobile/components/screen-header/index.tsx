@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '@/constants/colors';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { Close, Down, Left } from '../icons';
 import { ThemedText } from '../ThemedText';
@@ -27,7 +28,12 @@ interface IconContainerProps extends PropsWithChildren<PressableProps> {
   color?: string;
 }
 
-const IconContainer = ({ children, onPress, color = '#485164', ...props }: IconContainerProps) => {
+const IconContainer = ({
+  children,
+  onPress,
+  color = colors.greyMedium,
+  ...props
+}: IconContainerProps) => {
   return (
     <Pressable
       {...props}
@@ -96,7 +102,7 @@ const ScreenHeader = ({
   description,
   children,
   style,
-  iconContainerColor = '#61687E',
+  iconContainerColor = colors.greyLight,
   iconColor = 'white',
 }: ScreenHeaderProps) => {
   const insets = useSafeAreaInsets();
@@ -149,7 +155,7 @@ const styles = StyleSheet.create({
   },
   headerDescription: {
     fontSize: 14,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
   quickActions: {
     flexDirection: 'row',

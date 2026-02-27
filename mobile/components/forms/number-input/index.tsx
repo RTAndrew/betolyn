@@ -3,6 +3,7 @@ import { StyleSheet, View, ViewStyle, TextStyle, Pressable } from 'react-native'
 import TextInput from '../text-input';
 import BaseField, { BaseFieldProps } from '../base-field';
 import { Add, Subtract } from '@/components/icons';
+import { colors } from '@/constants/colors';
 
 interface NumberInputProps extends Omit<BaseFieldProps, 'children'> {
   value: number;
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderRadius: 10,
     paddingVertical: 2,
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
   pressableButton: {
     padding: 12,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
     color: 'white',
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
 });
 

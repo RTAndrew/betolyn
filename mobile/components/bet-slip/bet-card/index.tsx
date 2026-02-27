@@ -3,6 +3,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useGetOddById } from '@/services';
 import { IBet } from '@/stores/bet-slip.store';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { UpdateBetBottomsheet } from './update-bet-bottomsheet';
 import { useState } from 'react';
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderBottomWidth: 1,
-    borderBottomColor: '#61687E',
+    borderBottomColor: colors.greyLight,
   },
   value: {
     flexDirection: 'row',
@@ -74,11 +75,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   divider: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
     marginHorizontal: 4,
   },
   lowPriorityText: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
   stake: {
     fontSize: 16,

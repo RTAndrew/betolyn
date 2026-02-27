@@ -1,6 +1,7 @@
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { IPlaceBetRequest, usePlaceBet } from '@/services';
 import { useTimeElapsed } from '@/hooks/use-time-elapsed-messages';
 import { betSlipStore } from '@/stores/bet-slip.store';
@@ -69,7 +70,7 @@ const PlaceBet = () => {
   }, []);
 
   return (
-    <ScreenWrapper safeArea={false} backgroundColor="#61687E">
+    <ScreenWrapper safeArea={false} backgroundColor={colors.greyLight}>
       {
         <ScreenHeader
           style={{ opacity: !isProcessing || isSuccess || isPastMaxTime ? 1 : 0 }}

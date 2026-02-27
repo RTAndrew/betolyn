@@ -1,14 +1,14 @@
 import { ThemedView } from '@/components/ThemedView';
 import BetCard from '@/components/bet-card';
 import { useGetMatches } from '@/services/matches/match-query';
-
+import { colors } from '@/constants/colors';
 import { ActivityIndicator, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeScreenHeader from '../../components/home-screen-header';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#61687E' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.greyLight }}>
       <ScrollView style={{ flex: 1 }}>
         <ThemedView style={{ flex: 1 }}>{children}</ThemedView>
       </ScrollView>

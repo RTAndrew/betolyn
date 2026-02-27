@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, TouchableOpacityProps } from 'react-native';
 import React, { useState } from 'react';
+import { colors } from '@/constants/colors';
 import { IconSymbol } from '../ui/IconSymbol';
 
 interface CollapsibleProps extends TouchableOpacityProps {
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     padding: 10,
-    backgroundColor: '#495064',
+    backgroundColor: colors.greyMedium,
   },
   title: {
     color: 'white',
@@ -47,6 +48,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   body: {
-    backgroundColor: '#61687E',
+    backgroundColor: colors.greyLight,
   },
 });

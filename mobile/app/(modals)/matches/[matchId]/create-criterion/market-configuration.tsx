@@ -4,6 +4,7 @@ import { useState, forwardRef, useImperativeHandle } from 'react';
 import TextInput from '@/components/forms/text-input';
 import Switch from '@/components/forms/switch';
 import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types';
+import { colors } from '@/constants/colors';
 
 export interface IMarketConfigurationFormData {
   name: string;
@@ -64,11 +65,11 @@ const MarketConfiguration = forwardRef<
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#61687E' }}>
+    <View style={{ flex: 1, backgroundColor: colors.greyLight }}>
       <View style={styles.formContainer}>
         <View style={{ marginBottom: 16 }}>
           <ThemedText type="title">Market Configuration</ThemedText>
-          <ThemedText style={{ color: '#C7D1E7' }} type="default">
+          <ThemedText style={{ color: colors.greyLighter }} type="default">
             If this criterion is intended to be used as a main criterion, create short names (e.g.
             W, L, D, Home, Away) for higher visibility.
           </ThemedText>
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   header: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
   descriptionInput: {
     height: 100,
@@ -132,18 +133,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   activeLabel: {
-    color: '#F3CA41',
+    color: colors.complementary,
     fontWeight: '600',
   },
   inactiveLabel: {
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
   activeIndexLabel: {
-    color: '#F3CA41',
+    color: colors.complementary,
     fontWeight: '600',
   },
   inactiveIndexLabel: {
-    color: '#FFFFFF',
+    color: colors.white,
   },
   formContainer: {
     gap: 16,

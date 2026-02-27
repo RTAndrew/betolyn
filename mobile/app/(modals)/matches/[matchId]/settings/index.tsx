@@ -11,11 +11,13 @@ import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch } from '@/services';
+import { colors } from '@/constants/colors';
 import { hexToRgba } from '@/utils/hex-rgba';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import MatchSettingsCriteriaList from '@/screens/matches/settings/criteria';
 
 const OpenMatchBottomSheetIcon = () => {
   const { pushSheet } = useMatchBottomSheet();
@@ -23,7 +25,7 @@ const OpenMatchBottomSheetIcon = () => {
     <ScreenHeader.QuickActions>
       <ScreenHeader.Icon
         onPress={() => pushSheet({ type: 'match-action' })}
-        style={{ backgroundColor: '#61687E' }}
+        style={{ backgroundColor: colors.greyLight }}
       >
         <MoreVertical />
       </ScreenHeader.Icon>
@@ -43,10 +45,10 @@ const MatchSettings = () => {
   const match = result.data;
   return (
     <MatchBottomSheetProvider match={match}>
-      <ScreenWrapper safeArea={false} backgroundColor="#485164">
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
         <ScreenHeader
-          iconContainerColor="#61687E"
-          iconColor="white"
+          iconContainerColor={colors.greyLight}
+          iconColor={colors.white}
           onClose={() => router.back()}
           title={
             <View style={styles.matchEventSmallCard}>
@@ -67,8 +69,8 @@ const MatchSettings = () => {
               size={220}
               strokeWidth={15}
               segments={[
-                { value: 57, color: '#F3CA41' },
-                { value: 100, color: hexToRgba('#F3CA41', 0.5) },
+                { value: 57, color: colors.complementary },
+                { value: 100, color: hexToRgba(colors.complementary, 0.5) },
               ]}
               label={
                 <View style={styles.chartLabel}>
@@ -123,10 +125,7 @@ const MatchSettings = () => {
           />
 
           <Settings.ItemGroup title="Markets">
-            <Settings.Item title="Sergio Ramos" description="30" />
-            <Settings.Item title="Sergio Ramos" description="30" />
-            <Settings.Item title="Sergio Ramos" description="30" />
-            <Settings.Item title="Sergio Ramos" description="30" />
+            <MatchSettingsCriteriaList matchId={match.id} />
           </Settings.ItemGroup>
         </SafeHorizontalView>
       </ScreenWrapper>
@@ -165,13 +164,13 @@ const styles = StyleSheet.create({
   chartLabelPercent: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#FACC15',
+    color: colors.complementary,
   },
   chartLabelSecondary: {
-    color: hexToRgba('#C7D1E7', 0.5),
+    color: colors.greyLighter50,
   },
   badgeActive: {
-    backgroundColor: '#3CC5A4',
+    backgroundColor: colors.primary,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 100,
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: 'white',
+    color: colors.white,
   },
   marketSuffix: {
     flexDirection: 'row',
@@ -188,7 +187,7 @@ const styles = StyleSheet.create({
   },
   marketSuffixValue: {
     fontSize: 14,
-    color: '#C7D1E7',
+    color: colors.greyLighter,
   },
   chevronRight: {
     transform: [{ rotate: '-90deg' }],

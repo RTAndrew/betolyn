@@ -4,6 +4,7 @@ import ScreenWrapper from '@/components/screen-wrapper';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMyBets } from '@/services/me/me-query';
 import { IBetSlipItem } from '@/types';
+import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
 import React, { PropsWithChildren } from 'react';
 import { ActivityIndicator, FlatList, Platform, View } from 'react-native';
@@ -11,9 +12,9 @@ import SingleBetCardHistory from './single-bet-card-history';
 
 const Header = ({ children }: PropsWithChildren) => {
   return (
-    <ScreenWrapper scrollable={false} safeArea={false} backgroundColor="#61687E">
+    <ScreenWrapper scrollable={false} safeArea={false} backgroundColor={colors.greyLight}>
       <ScreenHeader
-        iconContainerColor="#485164"
+        iconContainerColor={colors.greyMedium}
         type="back"
         onClose={() => router.back()}
         safeArea
@@ -52,9 +53,9 @@ const BetSlipHistoryScreen = () => {
 
   return (
     <>
-      <View style={{ backgroundColor: '#61687E' }}>
+      <View style={{ backgroundColor: colors.greyLight }}>
         <ScreenHeader
-          iconContainerColor="#485164"
+          iconContainerColor={colors.greyMedium}
           type="back"
           onClose={() => router.back()}
           safeArea

@@ -2,6 +2,7 @@ import BetCard from '@/components/bet-card';
 import { ThemedView } from '@/components/ThemedView';
 import { useGetMatches } from '@/services';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -22,7 +23,7 @@ const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
   }
   return (
     <ScrollView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: '#61687E' }}>
+      <View style={{ flex: 1, backgroundColor: colors.greyLight }}>
         <ThemedView>
           <View style={{ marginBottom: 16 }}>
             <TextInput placeholder="Search" style={styles.input} placeholderTextColor="#BFBFBF" />
@@ -41,15 +42,15 @@ const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
     borderRadius: 5,
     borderWidth: 1,
-    color: 'white',
+    color: colors.white,
     borderColor: '#8791A5',
     padding: 10,
   },
   inputTitle: {
-    color: 'white',
+    color: colors.white,
     marginBottom: 5,
   },
   inputIcon: {

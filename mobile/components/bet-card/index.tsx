@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { OddButton } from '../odd-button';
 import { IMatch } from '@/types';
+import { colors } from '@/constants/colors';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
@@ -34,7 +35,7 @@ const Team = ({ name, imageUrl, score }: TeamProps) => {
         <Text className="team-name">{name}</Text>
       </View>
 
-      <Text style={{ color: '#C7D1E7' }}>{score}</Text>
+      <Text style={{ color: colors.greyLighter }}>{score}</Text>
     </View>
   );
 };
@@ -103,7 +104,7 @@ const BetCardChild = ({ match, onPress }: BetCardProps) => {
 
             <View style={styles.betInfo}>
               <View style={styles.divider} />
-              <Text style={{ color: '#C7D1E7' }}>100</Text>
+              <Text style={{ color: colors.greyLighter }}>100</Text>
             </View>
           </View>
 
@@ -121,10 +122,10 @@ export default BetCard;
 
 const styles = StyleSheet.create({
   container: {
-    color: 'white',
+    color: colors.white,
     paddingVertical: 10,
     borderBottomWidth: 0.3,
-    borderBottomColor: '#C7D1E7',
+    borderBottomColor: colors.greyLighter,
     flexDirection: 'column',
   },
   content: {
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     width: 0.3,
     marginHorizontal: 10,
     height: '90%',
-    backgroundColor: '#C7D1E7',
+    backgroundColor: colors.greyLighter,
   },
   oddsWrapper: {
     marginLeft: 50,

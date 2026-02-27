@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { CaretDown, CaretUp } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 
 export interface MatchOptionRowControlProps {
   value: number;
@@ -61,8 +62,10 @@ export const MatchOptionRow = ({
         {value !== undefined && (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <ThemedText style={styles.value}>{scoreRef.current}</ThemedText>
-            {inputStatus?.isIncreasing && <CaretUp width={10} height={10} color="#3CC5A4" />}
-            {inputStatus?.isDecreasing && <CaretDown width={10} height={10} color="#F80069" />}
+            {inputStatus?.isIncreasing && <CaretUp width={10} height={10} color={colors.primary} />}
+            {inputStatus?.isDecreasing && (
+              <CaretDown width={10} height={10} color={colors.secondary} />
+            )}
           </View>
         )}
         <ThemedText ellipsizeMode="tail" style={styles.title}>
@@ -94,6 +97,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#F3CA41',
+    color: colors.complementary,
   },
 });

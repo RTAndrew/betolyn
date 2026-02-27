@@ -8,6 +8,7 @@ import { MatchOptionRow } from '../../match-option-row';
 import Checkbox from 'react-native-ui-lib/src/components/checkbox';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 
 export interface GenericSelectWinningOddsSheetProps {
   visible: boolean;
@@ -107,7 +108,7 @@ export const GenericSelectWinningOddsSheet = ({
               <Checkbox
                 borderRadius={100}
                 iconColor="white"
-                color={allSelected ? '#3CC5A4' : '#8791A5'}
+                color={allSelected ? colors.primary : '#8791A5'}
                 value={allSelected}
                 onValueChange={handleSelectAll}
               />
@@ -130,7 +131,7 @@ export const GenericSelectWinningOddsSheet = ({
               <Checkbox
                 borderRadius={100}
                 iconColor="white"
-                color={isWinner(odd.id) ? '#3CC5A4' : '#8791A5'}
+                color={isWinner(odd.id) ? colors.primary : '#8791A5'}
                 value={isWinner(odd.id)}
                 onValueChange={() => handleWinnerChange(odd.id)}
               />
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
 
   selectedWinner: {
-    borderColor: '#3CC5A4',
+    borderColor: colors.primary,
     backgroundColor: 'rgba(54, 211, 153, 0.12)',
   },
   unselectedWinner: {
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     height: 0.3,
     marginVertical: 8,
     borderWidth: 0,
-    backgroundColor: '#C7D1E7',
+    backgroundColor: colors.greyLighter,
   },
   warningText: {
     marginBottom: 12,

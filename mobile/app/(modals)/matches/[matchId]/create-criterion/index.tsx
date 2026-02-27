@@ -1,6 +1,7 @@
 import ScreenHeader from '@/components/screen-header';
 import { ThemedText } from '@/components/ThemedText';
 import { useCreateCriterion, useGetMatch } from '@/services';
+import { colors } from '@/constants/colors';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View, Platform, Alert } from 'react-native';
 import { useMemo, useState, useRef } from 'react';
@@ -134,7 +135,7 @@ export default function CreateCriterion() {
 
   return (
     <>
-      <View style={{ flex: 1, backgroundColor: '#61687E' }}>
+      <View style={{ flex: 1, backgroundColor: colors.greyLight }}>
         <KeyboardAvoidingView
           style={styles.root}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -155,7 +156,7 @@ export default function CreateCriterion() {
               onClose={() => router.back()}
             />
 
-            <SafeHorizontalView style={{ backgroundColor: '#485164', paddingTop: 16 }}>
+            <SafeHorizontalView style={{ backgroundColor: colors.greyMedium, paddingTop: 16 }}>
               <Wizard
                 activeIndex={activeStep}
                 steps={[{ label: 'Market' }, { label: 'Outcomes' }]}
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   header: {
-    backgroundColor: '#485164',
+    backgroundColor: colors.greyMedium,
   },
   descriptionInput: {
     height: 100,
