@@ -71,6 +71,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Add market"
           onPress={() => {
+            goBack();
             router.push(`/matches/${match.id}/create-criterion`);
           }}
           icon={<Add color="white" />}

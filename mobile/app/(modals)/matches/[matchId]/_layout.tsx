@@ -4,9 +4,9 @@ import React from 'react';
 const FormSheetLayout = () => {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="settings/index" options={{ headerShown: false }} />
-      <Stack.Screen name="create-criterion/index" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
+      <Stack.Screen name="settings" options={{ headerShown: false }} />
+      <Stack.Screen name="create-criterion" options={{ headerShown: false }} />
     </Stack>
   );
 };

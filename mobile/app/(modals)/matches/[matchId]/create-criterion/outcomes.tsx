@@ -59,14 +59,14 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
       setName('');
       setValue(0);
       setErrors({});
-      onClose();
+      onClose?.();
     }
   };
 
   const handleRemoveOdd = () => {
     if (!outcome?.id) return;
     onRemove(outcome.id);
-    onClose();
+    onClose?.();
   };
 
   const updateName = (text: string) => {
