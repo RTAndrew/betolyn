@@ -1,5 +1,5 @@
 import Switch from '@/components/forms/switch';
-import { MoreVertical } from '@/components/icons';
+import { MoreVertical, Trophy } from '@/components/icons';
 import { useMatchBottomSheet } from '@/components/match/bottom-sheet/context';
 import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet/provider';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
@@ -124,8 +124,8 @@ const CriterionSettings = () => {
           <Settings.ItemGroup title="Outcomes">
             {criterion.odds.map((odd) => (
               <Settings.Item
-                onPress={() => router.push(`/odds/${odd.id}/settings`)}
                 key={odd.id}
+                onPress={() => router.push(`/odds/${odd.id}/settings`)}
                 title={
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                     <ThemedText style={{ color: colors.complementary, fontWeight: 600 }}>
@@ -134,7 +134,7 @@ const CriterionSettings = () => {
                     <ThemedText type="default">{odd.name}</ThemedText>
                   </View>
                 }
-                description="30"
+                description={odd.isWinner && <Trophy width={18} height={18} />}
               />
             ))}
           </Settings.ItemGroup>

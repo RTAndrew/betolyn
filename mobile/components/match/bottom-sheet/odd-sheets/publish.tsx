@@ -4,6 +4,9 @@ import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
 import { usePublishOdd } from '@/services/odds/odd-mutation';
+import { CriterionStatusEnum } from '@/types';
+
+const isCriterionActive = (status?: string) => status === CriterionStatusEnum.ACTIVE;
 
 export const PublishOddSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();
@@ -14,8 +17,10 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
   }
 
   const odd = currentSheet?.data as IOddSheetData;
+  const criterionActive = isCriterionActive(odd.criterion?.status);
 
   const handleConfirm = async () => {
+    if (!criterionActive) return;
     await publishOdd(odd.id, {
       onSuccess: () => {
         closeAll();
@@ -27,10 +32,14 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
     <BottomSheet.ModalConfirmation
       visible={visible}
       onClose={closeAll}
-      onConfirm={handleConfirm}
+      onConfirm={criterionActive ? handleConfirm : undefined}
       onCancelText="Cancel"
       title="Publish this odd?"
-      description="Users will be able to see and bet on it."
+      description={
+        criterionActive
+          ? 'Users will be able to see and bet on it.'
+          : 'The criterion must be ACTIVE before this odd can be published.'
+      }
       onConfirmText={isPending ? 'Publishing...' : 'Publish'}
     />
   );

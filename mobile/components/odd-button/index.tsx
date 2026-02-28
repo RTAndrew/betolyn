@@ -16,7 +16,8 @@ import { useGetOddById } from '@/services/odds/odd-query';
 import { betSlipStore } from '@/stores/bet-slip.store';
 import { useMemo } from 'react';
 import { useSubscribeSlipOdd } from '@/stores/slip-store/use-subscribe-slip-odd';
-
+import { Lock } from '../icons';
+import { hexToRgba } from '@/utils/hex-rgba';
 interface OddButtonProps extends TouchableOpacityProps, Omit<OddBaseButtonProps, 'value' | 'name'> {
   odd: IOdd;
   criterion: Omit<ICriterion, 'match'>;
@@ -29,14 +30,16 @@ interface OddBaseButtonProps extends TouchableOpacityProps {
   value?: number;
   name: string;
   id?: string;
+  locked?: boolean;
 }
 
 export const OddBaseButton = ({
+  variant = 'outline',
   showValue = true,
   showName = true,
+  locked = false,
   value,
   name,
-  variant = 'outline',
   style,
   ...rest
 }: OddBaseButtonProps) => {
@@ -56,30 +59,42 @@ export const OddBaseButton = ({
         <View
           style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}
         >
-          {!showName && (
-            <Text style={[oddsStyles.oddText, getDynamicOddStyles(variant).text, customTextStyle]}>
-              {value}
-            </Text>
-          )}
-
-          {showName && (
+          {locked ? (
+            <Lock width={16} height={16} color={hexToRgba(colors.greyLighter, 0.7)} />
+          ) : (
             <>
-              <Text
-                style={[
-                  oddsStyles.oddText,
-                  { fontSize: 12 },
-                  getDynamicOddStyles(variant).text,
-                  customTextStyle,
-                ]}
-              >
-                {name}
-              </Text>
-              {showValue && value && (
+              {!showName && (
                 <Text
                   style={[oddsStyles.oddText, getDynamicOddStyles(variant).text, customTextStyle]}
                 >
-                  ({value})
+                  {value}
                 </Text>
+              )}
+
+              {showName && (
+                <>
+                  <Text
+                    style={[
+                      oddsStyles.oddText,
+                      { fontSize: 12 },
+                      getDynamicOddStyles(variant).text,
+                      customTextStyle,
+                    ]}
+                  >
+                    {name}
+                  </Text>
+                  {showValue && value && (
+                    <Text
+                      style={[
+                        oddsStyles.oddText,
+                        getDynamicOddStyles(variant).text,
+                        customTextStyle,
+                      ]}
+                    >
+                      ({value})
+                    </Text>
+                  )}
+                </>
               )}
             </>
           )}
@@ -179,8 +194,7 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
 
   const { data, isPending, error } = useGetOddById({ oddId: props.odd.id });
   const odd = data?.data;
-  const isDisabled =
-    odd?.status === 'SUSPENDED' || criterion.status === 'SUSPENDED' || odd?.status === 'DRAFT';
+  const isDisabled = criterion.status !== 'ACTIVE' || odd?.status !== 'ACTIVE';
 
   const handleOnPress = () => {
     if (isDisabled || !odd) return;
@@ -224,6 +238,7 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
       {...props}
     >
       <OddBaseButton
+        locked={isDisabled}
         variant={buttonVariant}
         value={odd.value}
         name={odd.name}

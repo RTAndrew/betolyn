@@ -278,12 +278,14 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
 
             // 6. create betSlipItem
             var betSlipItem = new BetSlipItemEntity();
+            betSlipItem.setBetSlip(betSlip);
+            betSlipItem.setCriterionId(realOdd.getCriterion().getId());
+            betSlipItem.setMatchId(realOdd.getCriterion().getMatch().getId());
             betSlipItem.setOdd(realOdd);
             betSlipItem.setStake(betOdd.getStake());
             betSlipItem.setPotentialPayout(betOddPayout);
             betSlipItem.setOddHistory(realOdd.getLastOddHistory());
             betSlipItem.setOddValueAtPlacement(betOdd.getOddValueAtPlacement());
-            betSlipItem.setBetSlip(betSlip);
             betSlip.getItems().add(betSlipItem);
 
             criterionRepository.save(criterion);

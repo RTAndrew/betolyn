@@ -22,3 +22,4 @@ export { default as Trophy } from './trophy';
 export { default as Settings } from './settings';
 export { default as Right } from './right';
 export { default as Left } from './left';
+export { default as Lock } from './lock';

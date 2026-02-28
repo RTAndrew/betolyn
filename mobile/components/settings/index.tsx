@@ -164,6 +164,9 @@ const styles = StyleSheet.create({
 
     minWidth: 0,
   },
+  prefixIcon: {
+    flexShrink: 0,
+  },
   body: {
     flex: 1,
     gap: 2,
@@ -187,8 +190,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   footerDescription: {
-    fontSize: 14,
-    color: colors.greyLighter50,
+    color: MUTED_TEXT_COLOR,
   },
   arrow: {
     flexShrink: 0,

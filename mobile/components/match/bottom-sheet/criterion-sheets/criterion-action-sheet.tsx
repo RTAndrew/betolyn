@@ -33,12 +33,10 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
   };
 
   const canPublish = () => {
-    if (criterion.status === 'ACTIVE') return false;
-    if (criterion.status === 'VOID') return false;
-    if (criterion.status === 'EXPIRED') return false;
-    if (criterion.status === 'SETTLED') return false;
+    if (criterion.status === 'SUSPENDED') return true;
+    if (criterion.status === 'DRAFT') return true;
 
-    return true;
+    return false;
   };
 
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
@@ -50,43 +48,41 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
           text="Cancel & Refund"
+          icon={<Trash color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}
-          icon={<Trash width={28} height={28} color="white" />}
         />
 
         <BottomSheet.ActionOption
           text="Lock & Result"
-          icon={<MoneyHand width={28} height={28} color="white" />}
+          icon={<MoneyHand color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-lock-and-result', data: criterion });
           }}
         />
 
-        {canPublish() && (
-          <BottomSheet.ActionOption
-            text="Publish"
-            icon={<Eye width={28} height={28} color="white" />}
-            onPress={() => {
-              pushSheet({ type: 'criterion-publish', data: criterion });
-            }}
-          />
-        )}
+        <BottomSheet.ActionOption
+          disabled={!canPublish()}
+          text="Publish"
+          icon={<Eye color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'criterion-publish', data: criterion });
+          }}
+        />
 
-        {canSuspend() && (
-          <BottomSheet.ActionOption
-            text="Suspend all outcomes"
-            icon={<LockClosed width={28} height={28} color="white" />}
-            onPress={() => {
-              pushSheet({ type: 'criterion-suspend', data: criterion });
-            }}
-          />
-        )}
+        <BottomSheet.ActionOption
+          disabled={!canSuspend()}
+          text="Suspend all outcomes"
+          icon={<LockClosed color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'criterion-suspend', data: criterion });
+          }}
+        />
 
         <BottomSheet.ActionOption
           text="Create outcome"
-          icon={<Add width={28} height={28} color="white" />}
+          icon={<Add color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-create-odd', data: criterion });
           }}
@@ -94,7 +90,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           text="Settings"
-          icon={<Settings width={28} height={28} color="white" />}
+          icon={<Settings color="white" />}
           onPress={() => {
             router.push(`/criteria/${criterion.id}/settings`);
           }}
@@ -102,7 +98,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           text="Select winning outcomes"
-          icon={<Trophy width={28} height={28} color="white" />}
+          icon={<Trophy color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-select-winner', data: criterion });
           }}
@@ -110,7 +106,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           text="Reprice all outcomes"
-          icon={<DollarEuro width={28} height={28} color="white" />}
+          icon={<DollarEuro color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-reprice-update-odds', data: criterion });
           }}

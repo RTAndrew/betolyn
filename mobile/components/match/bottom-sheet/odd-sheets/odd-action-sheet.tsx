@@ -1,19 +1,19 @@
 import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { View } from 'react-native';
-import { DollarEuro, Eye, LockClosed, MoneyHand, Trash } from '@/components/icons';
+import { DollarEuro, Eye, LockClosed, Trash } from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
 import { CriterionStatusEnum, EOddStatus } from '@/types';
 
 const canPublishOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${CriterionStatusEnum}`) => {
-  if (criterionStatus === 'SUSPENDED') return false;
-  if (criterionStatus === 'DRAFT') return false;
+  // console.log('oddStatus', oddStatus);
+  console.log('criterionStatus', criterionStatus);
+  if (criterionStatus !== 'ACTIVE') return false;
 
-  if (oddStatus === 'ACTIVE') return false;
-  if (oddStatus === 'SETTLED') return false;
-  if (oddStatus === 'VOID') return false;
+  const ALLOWED_STATUSES: `${EOddStatus}`[] = ['SUSPENDED', 'DRAFT'];
+  if (!ALLOWED_STATUSES.includes(oddStatus)) return false;
 
   return true;
 };
@@ -22,6 +22,7 @@ const canSuspendOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${Criterion
   if (criterionStatus === 'DRAFT') return false;
 
   if (oddStatus === 'SUSPENDED') return false;
+  if (oddStatus === 'SETTLED') return false;
   if (oddStatus === 'DRAFT') return true;
 
   return true;
@@ -49,30 +50,24 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
           }}
           icon={<Trash width={28} height={28} color="white" />}
         />
+
         <BottomSheet.ActionOption
-          text="Edit"
-          icon={<MoneyHand width={28} height={28} color="white" />}
+          disabled={!canPublishOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
+          text="Publish"
+          icon={<Eye width={28} height={28} color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'odd-publish', data: odd });
+          }}
         />
 
-        {canPublishOdd(odd.status, odd.criterion?.status ?? 'ACTIVE') && (
-          <BottomSheet.ActionOption
-            text="Publish"
-            icon={<Eye width={28} height={28} color="white" />}
-            onPress={() => {
-              pushSheet({ type: 'odd-publish', data: odd });
-            }}
-          />
-        )}
-
-        {canSuspendOdd(odd.status, odd.criterion?.status ?? 'ACTIVE') && (
-          <BottomSheet.ActionOption
-            text="Suspend"
-            icon={<LockClosed width={28} height={28} color="white" />}
-            onPress={() => {
-              pushSheet({ type: 'odd-suspend', data: odd });
-            }}
-          />
-        )}
+        <BottomSheet.ActionOption
+          disabled={!canSuspendOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
+          text="Suspend"
+          icon={<LockClosed width={28} height={28} color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'odd-suspend', data: odd });
+          }}
+        />
 
         <BottomSheet.ActionOption
           text="Reprice"

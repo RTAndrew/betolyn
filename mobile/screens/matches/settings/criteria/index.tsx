@@ -1,3 +1,4 @@
+import { Trophy } from '@/components/icons';
 import { Settings } from '@/components/settings';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatchCriteria } from '@/services';
@@ -13,7 +14,7 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
   const { data, isPending, error } = useGetMatchCriteria({
     matchId,
     queryOptions: {
-      networkMode: 'online',
+      refetchOnMount: 'always',
     },
   });
 
@@ -22,14 +23,16 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
   if (error || !data) return <ThemedText>Error loading criteria</ThemedText>;
 
   const criteria = data.data;
+
   return (
     <>
       {criteria.map((criterion) => (
         <Settings.Item
           key={criterion.id}
           title={criterion.name}
-          onPress={() => router.push(`/criteria/${criterion.id}/settings`)}
+          subtitle={'No winner'}
           description={criterion.odds.length.toString()}
+          onPress={() => router.push(`/criteria/${criterion.id}/settings`)}
         />
       ))}
     </>

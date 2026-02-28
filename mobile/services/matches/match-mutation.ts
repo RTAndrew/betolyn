@@ -8,7 +8,11 @@ import {
 } from './matches-services';
 import { queryClient } from '@/utils/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { getMatchQueryOptions, getMatchesQueryOptions } from './match-query';
+import {
+  getMatchQueryOptions,
+  getMatchCriteriaQueryOptions,
+  getMatchesQueryOptions,
+} from './match-query';
 
 interface IUpdateMatchScoreVariables {
   matchId: string;
@@ -122,6 +126,29 @@ export const useUpdateMatchStatus = () => {
         queryClient.refetchQueries({
           queryKey: getMatchesQueryOptions().queryKey,
         });
+      },
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useSettleMatch = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (matchId: string) => MatchesService.settleMatch(matchId),
+      onSuccess: (_, matchId) => {
+        queryClient.invalidateQueries({
+          queryKey: getMatchQueryOptions({ matchId }).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: getMatchCriteriaQueryOptions({ matchId }).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: getMatchesQueryOptions().queryKey,
+        });
+        queryClient.invalidateQueries({ queryKey: ['me', 'bets'] });
       },
     },
     queryClient

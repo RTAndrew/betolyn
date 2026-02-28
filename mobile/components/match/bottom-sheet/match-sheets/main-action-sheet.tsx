@@ -10,6 +10,7 @@ import {
   TrendingLines,
   TimerOff,
   Settings,
+  MoneyHand,
 } from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
@@ -61,6 +62,15 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         />
         <BottomSheet.ActionOption text="Reschedule" icon={<TimeHistory color="white" />} />
         <BottomSheet.ActionOption text="View all markets" icon={<TrendingLines color="white" />} />
+
+        <BottomSheet.ActionOption
+          text="Settle match"
+          icon={<MoneyHand color="white" />}
+          onPress={() => {
+            pushSheet({ type: 'match-settle-match' });
+          }}
+        />
+
         <BottomSheet.ActionOption
           text="Settings"
           onPress={() => {

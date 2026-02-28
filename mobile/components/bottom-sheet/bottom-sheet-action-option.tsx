@@ -7,12 +7,20 @@ export interface BottomSheetActionOptionProps
   extends Omit<TouchableOpacityProps, 'children' | 'activeOpacity'> {
   text: string;
   icon?: React.ReactNode;
+  disabled?: boolean;
 }
 
-const BottomSheetActionOption = ({ text, icon, ...props }: BottomSheetActionOptionProps) => {
+const BottomSheetActionOption = ({
+  text,
+  icon,
+  disabled,
+  ...props
+}: BottomSheetActionOptionProps) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} {...props}>
-      <BottomSheetSafeHorizontalView style={styles.actionOption}>
+    <TouchableOpacity activeOpacity={0.8} disabled={disabled} {...props}>
+      <BottomSheetSafeHorizontalView
+        style={StyleSheet.flatten([styles.actionOption, disabled && styles.disabled])}
+      >
         {icon}
         <ThemedText style={styles.actionOptionText}>{text}</ThemedText>
       </BottomSheetSafeHorizontalView>
@@ -29,6 +37,9 @@ const styles = StyleSheet.create({
   },
   actionOptionText: {
     color: 'white',
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
 

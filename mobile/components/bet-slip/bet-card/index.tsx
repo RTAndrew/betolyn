@@ -1,12 +1,13 @@
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetOddById } from '@/services';
-import { IBet } from '@/stores/bet-slip.store';
+import { betSlipStore, IBet } from '@/stores/bet-slip.store';
 import { IMatch } from '@/types';
 import { colors } from '@/constants/colors';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { UpdateBetBottomsheet } from './update-bet-bottomsheet';
 import { useState } from 'react';
+import { Lock } from '@/components/icons';
 
 interface BetCardProps {
   bet: IBet;
@@ -28,6 +29,7 @@ export const BetCard = ({ bet, border = true, match }: BetCardProps) => {
   }
 
   const odd = data?.data;
+  const isLocked = odd?.criterion?.status !== 'ACTIVE' || odd?.status !== 'ACTIVE';
   return (
     <>
       {isBottomSheetVisible && (
@@ -40,17 +42,49 @@ export const BetCard = ({ bet, border = true, match }: BetCardProps) => {
         />
       )}
 
-      <Pressable onPress={() => setIsBottomSheetVisible(true)}>
-        <SafeHorizontalView style={[styles.root, border && styles.border]}>
+      <Pressable
+        onPress={() => {
+          if (!isLocked) {
+            setIsBottomSheetVisible(true);
+            return;
+          }
+
+          Alert.alert(
+            'Outcome Locked',
+            'The outcome is no longer available. Remove it to continue placing bets.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              {
+                text: 'Remove',
+                style: 'destructive',
+                onPress: () => {
+                  betSlipStore.removeOddSlip(match.id, bet.oddId);
+                },
+              },
+            ]
+          );
+        }}
+      >
+        <SafeHorizontalView
+          style={[styles.root, border && styles.border, isLocked && styles.disabled]}
+        >
           <View>
             <ThemedText>{odd?.name}</ThemedText>
             <ThemedText style={styles.lowPriorityText}>{odd?.criterion?.name} </ThemedText>
           </View>
 
           <View style={styles.value}>
-            <ThemedText style={styles.lowPriorityText}>{bet.oddAtPlacement}</ThemedText>
-            <ThemedText style={[styles.divider, styles.lowPriorityText]}>•</ThemedText>
-            <ThemedText style={styles.stake}>${bet.stake}</ThemedText>
+            {isLocked ? (
+              <>
+                <Lock color={colors.greyLighter} />
+              </>
+            ) : (
+              <>
+                <ThemedText style={styles.lowPriorityText}>{bet.oddAtPlacement}</ThemedText>
+                <ThemedText style={[styles.divider, styles.lowPriorityText]}>•</ThemedText>
+                <ThemedText style={styles.stake}>${bet.stake}</ThemedText>
+              </>
+            )}
           </View>
         </SafeHorizontalView>
       </Pressable>
@@ -63,7 +97,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   border: {
     borderBottomWidth: 1,
@@ -83,7 +117,11 @@ const styles = StyleSheet.create({
   },
   stake: {
     fontSize: 16,
-
+    color: colors.complementary2,
     fontWeight: '700',
+  },
+  disabled: {
+    opacity: 0.5,
+    position: 'relative',
   },
 });

@@ -19,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 import ScreenHeader from '@/components/screen-header';
 import { MoreVertical, Sync, Settings } from '@/components/icons';
+import { ThemedText } from '@/components/ThemedText';
 
 interface MatchTeamProps {
   name: string;
@@ -219,6 +220,7 @@ const MatchPage = () => {
 
             {/* Main Bet */}
             {match.mainCriterion &&
+              match.mainCriterion.status === 'ACTIVE' &&
               match.mainCriterion.odds.length &&
               match.mainCriterion.odds.length > 0 && (
                 <Section
@@ -251,7 +253,15 @@ const MatchPage = () => {
             </Section>
           </ThemedView>
 
-          <MatchCriteria matchId={match.id} />
+          {match.status === 'ENDED' ? (
+            <ThemedText
+              style={{ color: colors.greyLighter, textAlign: 'center', paddingVertical: 20 }}
+            >
+              Match ended
+            </ThemedText>
+          ) : (
+            <MatchCriteria matchId={match.id} />
+          )}
         </ScrollView>
       </SafeAreaView>
     </MatchBottomSheetProvider>

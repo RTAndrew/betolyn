@@ -21,6 +21,7 @@ export interface IMatch {
   startTime: string;
   endTime: string | null;
   createdBy: string;
+  status?: `${MatchStatusEnum}`;
   mainCriterion?: ICriterion & { odds: IOdd[] };
 }
 
@@ -31,6 +32,12 @@ export interface ICriterion {
   isStandalone: boolean;
   allowMultipleOdds: boolean;
   allowMultipleWinners: boolean;
+
+  totalBetsCount: number;
+  totalStakesVolume: number;
+  reservedLiability: number;
+  maxReservedLiability?: number;
+
   status: `${CriterionStatusEnum}`;
 }
 

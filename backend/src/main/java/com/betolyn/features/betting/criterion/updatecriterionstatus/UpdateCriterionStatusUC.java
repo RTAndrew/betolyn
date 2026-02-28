@@ -20,7 +20,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusParam, CriterionEntity> {
     private static final Set<CriterionStatusEnum> ALLOWED_STATUSES = Set.of(
-            CriterionStatusEnum.EXPIRED,
             CriterionStatusEnum.ACTIVE, // TODO: remove this from here, and perhaps create a /cancel for voiding
             CriterionStatusEnum.VOID);
 

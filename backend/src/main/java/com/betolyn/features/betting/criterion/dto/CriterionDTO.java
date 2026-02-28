@@ -16,6 +16,11 @@ public class CriterionDTO {
     private boolean allowMultipleWinners;
     private boolean isStandalone;
 
+    private Double totalBetsCount;
+    private Double totalStakesVolume;
+    private Double reservedLiability;
+    private Double maxReservedLiability;
+
     private MatchDTO match;
     private CriterionStatusEnum status;
 

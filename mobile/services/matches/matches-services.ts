@@ -84,4 +84,8 @@ export class MatchesService {
   public static async updateMatchStatus(matchId: string, data: IUpdateMatchStatusRequest) {
     return await putRequest<IMatch, IUpdateMatchStatusRequest>(`/matches/${matchId}/status`, data);
   }
+
+  public static async settleMatch(matchId: string) {
+    return await postRequest<null, Record<string, never>>(`/matches/${matchId}/settle`, {});
+  }
 }

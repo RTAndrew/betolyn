@@ -1,9 +1,11 @@
 package com.betolyn.features.betting.odds.updateoddstatus;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.*;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
-import com.betolyn.features.betting.odds.exceptions.OddCannotUpdateToDraftException;
+import com.betolyn.features.betting.odds.exceptions.OddCannotBeActiveWhenCriterionNotActiveException;
+import com.betolyn.features.betting.odds.exceptions.OddStatusUpdateNotAllowedException;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
 import com.betolyn.shared.exceptions.InternalServerException;
@@ -16,6 +18,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UpdateOddStatusUC implements IUseCase<UpdateOddStatusParam, OddEntity> {
+    private static final List<OddStatusEnum> ALLOWED_STATUSES = List.of(OddStatusEnum.ACTIVE, OddStatusEnum.SUSPENDED);
+
     private final FindOddByIdUC findOddByIdUC;
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final OddSystemEvent oddSystemEvent;
@@ -26,8 +30,11 @@ public class UpdateOddStatusUC implements IUseCase<UpdateOddStatusParam, OddEnti
         var foundOdd = findOddByIdUC.execute(param.oddId());
         var newStatus = param.requestDTO().getStatus();
 
-        if (newStatus == OddStatusEnum.DRAFT) {
-            throw new OddCannotUpdateToDraftException();
+        if (!ALLOWED_STATUSES.contains(newStatus)) {
+            throw new OddStatusUpdateNotAllowedException();
+        }
+        if (newStatus == OddStatusEnum.ACTIVE && foundOdd.getCriterion().getStatus() != CriterionStatusEnum.ACTIVE) {
+            throw new OddCannotBeActiveWhenCriterionNotActiveException();
         }
 
         foundOdd.setStatus(newStatus);

@@ -5,6 +5,7 @@ package com.betolyn.features.bankroll.transaction;
  */
 public enum TransactionReferenceTypeEnum {
     BET_SLIP,
+    MATCH,
     MARKET,
     CHANNEL,
     USER

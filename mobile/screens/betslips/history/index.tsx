@@ -53,7 +53,7 @@ const BetSlipHistoryScreen = () => {
 
   return (
     <>
-      <View style={{ backgroundColor: colors.greyLight }}>
+      <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
         <ScreenHeader
           iconContainerColor={colors.greyMedium}
           type="back"

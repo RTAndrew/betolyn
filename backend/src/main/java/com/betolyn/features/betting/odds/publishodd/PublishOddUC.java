@@ -1,6 +1,7 @@
 package com.betolyn.features.betting.odds.publishodd;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.*;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.betting.odds.exceptions.OddCannotPublishException;
@@ -30,6 +31,10 @@ public class PublishOddUC implements IUseCase<String, OddEntity> {
         var foundOdd = findOddByIdUC.execute(oddId);
 
         if (!ALLOWED_CRITERION_STATUSES.contains(foundOdd.getStatus())) {
+            throw new OddCannotPublishException();
+        }
+
+        if (foundOdd.getCriterion().getStatus() != CriterionStatusEnum.ACTIVE) {
             throw new OddCannotPublishException();
         }
 

@@ -79,7 +79,8 @@ public class AccountEntity extends BaseEntity {
             throw new BusinessRuleException("INVALID_AMOUNT","Amount must be positive");
         }
         if (balanceReserved.compareTo(amount) < 0) {
-            throw new BusinessRuleException("INSUFFICIENT_AVAILABLE_BALANCE","Insufficient available balance");
+            throw new BusinessRuleException("INSUFFICIENT_RESERVED_BALANCE_TO_RELEASE",
+                    "Insufficient reserved balance to release");
         }
         this.balanceAvailable = this.balanceAvailable.add(amount);
         this.balanceReserved = this.balanceReserved.subtract(amount);

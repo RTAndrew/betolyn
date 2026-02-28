@@ -46,7 +46,8 @@ export const useGetMatches = ({ queryOptions }: IQueryOptions<typeof getMatchesQ
 
 export const useGetMatchCriteria = ({
   matchId,
+  queryOptions,
 }: { matchId: string } & IQueryOptions<typeof getMatchCriteriaQueryOptions>) => {
   const query = getMatchCriteriaQueryOptions({ matchId });
-  return useQuery(query);
+  return useQuery({ ...query, ...queryOptions });
 };

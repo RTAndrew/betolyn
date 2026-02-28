@@ -20,7 +20,7 @@ function formatCurrency(value: number): string {
 }
 
 const getStatusColor = (status: `${IBetSlipItemStatus}`) => {
-  if (status === 'PENDING') return '#E8C547';
+  if (status === 'PENDING') return colors.complementary2;
   if (status === 'WON') return '#00C853';
   if (status === 'LOST') return '#FF0000';
   return colors.greyLight;
