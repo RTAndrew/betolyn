@@ -30,11 +30,12 @@ class _DataSync {
 
       if (match.mainCriterion) {
         const criterion = match.mainCriterion;
-        odds.concat(
-          match.mainCriterion.odds.map((odd) => ({
+
+        criterion.odds.forEach((odd) =>
+          odds.push({
             ...odd,
             criterion,
-          }))
+          })
         );
       }
 
