@@ -25,8 +25,11 @@ public class CriterionEntity extends BaseEntity {
     @NotNull
     private String name;
 
+    @Column(nullable = false)
     private Double totalBetsCount = 0.0;
+    @Column(nullable = false)
     private Double totalStakesVolume = 0.0;
+    @Column(nullable = false)
     private Double reservedLiability = 0.0;
     private Double maxReservedLiability = null;
 

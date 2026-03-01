@@ -63,6 +63,10 @@ public class GetOddMetricsUC {
             }
             return totalOddVolume;
         }
+        if (totalOddVolume == 0) {
+            return 0.0; // no bets yet on this odd
+        }
+
         // Live: Potential P/L = Total Market Stakes − (Odd Stake × Odd Price)
         return totalCriterionVolume - (totalOddVolume * odd.getValue());
     }
