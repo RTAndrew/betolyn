@@ -14,12 +14,20 @@ import {
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+import { useGetCriterionById } from '@/services/criteria/criterion-query';
 import { router } from 'expo-router';
 
 export const CriterionActionSheet = ({ visible = false }: ISheet) => {
   const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();
+  const sheetCriterion = currentSheet?.data as IMatchCriteriaResponse | undefined;
+  const criterionId = sheetCriterion?.id;
+  const { data: criterionRes } = useGetCriterionById({
+    criterionId: criterionId ?? '',
+    queryOptions: { enabled: !!criterionId },
+  });
+  const criterion = (criterionId && criterionRes?.data) ?? sheetCriterion;
 
-  if (!currentSheet?.data) {
+  if (!criterion) {
     return <> Error: No criterion data found </>;
   }
 
@@ -38,8 +46,6 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
     return false;
   };
-
-  const criterion = currentSheet?.data as IMatchCriteriaResponse;
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>

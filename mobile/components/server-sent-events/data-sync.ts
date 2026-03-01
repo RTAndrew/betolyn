@@ -57,7 +57,7 @@ class _DataSync {
     let allOdds: WithRequiredId<IOdd>[] = [];
 
     for (const criterion of criteria) {
-      // 1. Update single criterion query
+      // 1. Update criterion query (all criteria list)
       const criteriaKey = getAllCriteriaQueryOptions();
       queryClient.setQueryData(criteriaKey.queryKey, (lastCriteria) => {
         const data = (lastCriteria?.data ?? []).reduce((acc, value) => {
@@ -80,6 +80,12 @@ class _DataSync {
           data,
         } as IApiResponse<ICriterion[]>;
       });
+
+      // 1.2 Update criterion-by-id query (so useGetCriterionById stays in sync)
+      const criterionByIdKey = getCriterionByIdQueryOptions({ criterionId: criterion.id });
+      queryClient.setQueryData(criterionByIdKey.queryKey, (last) =>
+        last?.data ? { ...last, data: patch(last.data, criterion) } : last
+      );
 
       // 2. Update Match Criterion Query
       if (criterion.match?.id) {

@@ -45,6 +45,17 @@ class CriterionSseListener implements ISseListener {
         break;
       }
 
+      case 'criterionSuspended': {
+        const criterion = eventPayload as unknown as ICriterionChangeEvent;
+        DataSync.updateCriteria([
+          {
+            id: criterion.criterionId,
+            status: criterion.status,
+          },
+        ]);
+        break;
+      }
+
       case 'criterionUpdated': {
         const criterion = eventPayload as unknown as ICriterion;
         DataSync.updateCriteria([criterion]);

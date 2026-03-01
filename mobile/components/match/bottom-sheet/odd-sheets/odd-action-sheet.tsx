@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BottomSheet from '@/components/bottom-sheet';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { DollarEuro, Eye, LockClosed, Trash } from '@/components/icons';
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
 import { CriterionStatusEnum, EOddStatus } from '@/types';
+import { useGetOddById } from '@/services/odds/odd-query';
+import { colors } from '@/constants/colors';
 
 const canPublishOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${CriterionStatusEnum}`) => {
-  // console.log('oddStatus', oddStatus);
-  console.log('criterionStatus', criterionStatus);
   if (criterionStatus !== 'ACTIVE') return false;
 
   const ALLOWED_STATUSES: `${EOddStatus}`[] = ['SUSPENDED', 'DRAFT'];
@@ -30,12 +30,29 @@ const canSuspendOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${Criterion
 
 export const OddActionSheet = ({ visible = false }: ISheet) => {
   const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();
+  const sheetOdd = currentSheet?.data as IOddSheetData | undefined;
 
-  if (!currentSheet?.data) {
+  const { data: oddRes, isPending } = useGetOddById({
+    oddId: sheetOdd?.id ?? '',
+    queryOptions: { refetchOnMount: 'always' },
+  });
+  const odd = oddRes?.data ?? sheetOdd;
+
+  if (isPending) {
+    return (
+      <BottomSheet onClose={closeAll} visible={visible}>
+        <BottomSheet.Header
+          title={sheetOdd?.name ?? ''}
+          description={sheetOdd?.criterion?.name ?? ''}
+        />
+
+        <ActivityIndicator size="large" color={colors.greyLighter} />
+      </BottomSheet>
+    );
+  }
+  if (!odd) {
     return <> Error: No odd data found </>;
   }
-
-  const odd = currentSheet?.data as IOddSheetData;
 
   const description = odd.criterion?.name ?? 'Odd';
   return (

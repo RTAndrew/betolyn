@@ -30,7 +30,10 @@ export const useGetAllOdds = ({ queryOptions }: IQueryOptions<typeof getAllOddsQ
   return useQuery({ ...query, ...queryOptions });
 };
 
-export const useGetOddById = ({ oddId }: { oddId: string }) => {
+export const useGetOddById = ({
+  oddId,
+  queryOptions,
+}: { oddId: string } & IQueryOptions<typeof getOddByIdQueryOptions>) => {
   const query = getOddByIdQueryOptions({ oddId });
-  return useQuery(query);
+  return useQuery({ ...query, ...queryOptions });
 };
