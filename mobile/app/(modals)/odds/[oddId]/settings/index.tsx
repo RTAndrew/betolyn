@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginTop: 18,
-    marginBottom: 22,
   },
 });
 

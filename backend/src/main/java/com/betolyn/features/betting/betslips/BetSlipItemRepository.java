@@ -37,4 +37,14 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             @Param("matchId") String matchId,
             @Param("slipStatus") BetSlipStatusEnum slipStatus,
             @Param("itemStatus") BetSlipItemStatusEnum itemStatus);
+
+    /**
+     * Returns (sum of totalStakesVolume of SETTLED criteria for match, sum of potentialPayout for WON items for match).
+     * Used to compute match-level realized P/L = stakes - payouts (null when no settled criteria).
+     */
+    @Query(value = """
+            SELECT (SELECT COALESCE(SUM(c.total_stakes_volume), 0) FROM criteria c WHERE c.match_entity_id = :matchId AND c.status = 'SETTLED'),
+                   (SELECT COALESCE(SUM(i.potential_payout), 0) FROM bet_slip_items i WHERE i.match_id = :matchId AND i.status = 'WON')
+            """, nativeQuery = true)
+    List<Object[]> getSettledMatchStakesAndPayouts(@Param("matchId") String matchId);
 }

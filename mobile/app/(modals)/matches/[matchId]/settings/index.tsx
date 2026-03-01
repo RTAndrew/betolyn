@@ -1,4 +1,3 @@
-import { DonutChart } from '@/components/donut-chart';
 import Switch from '@/components/forms/switch';
 import { MoreVertical } from '@/components/icons';
 import { MatchEventSmallCard } from '@/components/match-event-small-card';
@@ -7,17 +6,16 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Settings } from '@/components/settings';
-import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch } from '@/services';
 import { colors } from '@/constants/colors';
-import { hexToRgba } from '@/utils/hex-rgba';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MatchSettingsCriteriaList from '@/screens/matches/settings/criteria';
+import MatchMetrics from '@/screens/matches/settings/match-metrics';
 
 const OpenMatchBottomSheetIcon = () => {
   const { pushSheet } = useMatchBottomSheet();
@@ -65,42 +63,7 @@ const MatchSettings = () => {
 
         <SafeHorizontalView style={styles.root}>
           <View style={styles.health}>
-            <DonutChart
-              size={220}
-              strokeWidth={15}
-              segments={[
-                { value: 57, color: colors.complementary },
-                { value: 100, color: hexToRgba(colors.complementary, 0.5) },
-              ]}
-              label={
-                <View style={styles.chartLabel}>
-                  <ThemedText type="default" style={styles.chartLabelPercent}>
-                    57%
-                  </ThemedText>
-                  <ThemedText type="subtitle" style={styles.chartLabelSecondary}>
-                    $1,590 / $3,000
-                  </ThemedText>
-                </View>
-              }
-            />
-
-            <Stats.Group
-              style={styles.stats}
-              items={[
-                {
-                  title: 'P/L',
-                  description: '$25.11',
-                },
-                {
-                  title: 'Bets',
-                  description: '19',
-                },
-                {
-                  title: 'Vol.',
-                  description: '$589',
-                },
-              ]}
-            />
+            <MatchMetrics matchId={match.id} style={styles.stats} />
           </View>
 
           <Settings.ItemGroup>
@@ -156,18 +119,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
-  },
-  chartLabel: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  chartLabelPercent: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: colors.complementary,
-  },
-  chartLabelSecondary: {
-    color: colors.greyLighter50,
   },
   badgeActive: {
     backgroundColor: colors.primary,

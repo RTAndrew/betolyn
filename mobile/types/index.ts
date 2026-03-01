@@ -56,6 +56,16 @@ export interface ICriterionMetrics {
   profitAndLosses: ICriterionProfitAndLoss;
 }
 
+export interface IMatchMetrics {
+  totalVolume: number;
+  reservedLiability: number;
+  maxReservedLiability: number | null;
+  riskLevel: number;
+  totalCriteriaCount: number;
+  totalBetCount: number;
+  profitAndLosses: number | null;
+}
+
 export enum MatchStatusEnum {
   SCHEDULED = 'SCHEDULED',
   LIVE = 'LIVE',

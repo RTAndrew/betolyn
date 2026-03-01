@@ -3,9 +3,10 @@ import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionMetrics } from '@/services';
 import { CriterionStatusEnum } from '@/types';
-import { colors } from '@/constants/colors';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { getRiskLevelColor } from '@/utils/risk-level-color';
+import { hexToRgba } from '@/utils/hex-rgba';
 
 function formatCurrency(value: number): string {
   return `$${value.toFixed(2)}`;
@@ -30,16 +31,6 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
     ? Math.min(100, (reservedLiability / maxReservedLiability) * 100)
     : 0;
   const availableSegmentValue = hasMax ? Math.max(0, 100 - riskSegmentValue) : 100;
-  const getRiskLevelColor = (riskLevel: number) => {
-    if (riskLevel >= 0 && riskLevel < 60) {
-      return colors.primary; // Green
-    } else if (riskLevel >= 60 && riskLevel < 85) {
-      return colors.complementary2; // Yellow
-    } else if (riskLevel >= 85) {
-      return colors.secondary; // Red
-    }
-    return colors.primary; // Default to green
-  };
 
   if (metricsPending) {
     return (
@@ -55,17 +46,19 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
     <View style={styles.health}>
       <SegmentedProgressBar
         segments={[
-          { value: riskSegmentValue, color: getRiskLevelColor(riskLevel) },
-          { value: availableSegmentValue, color: '#00BF80' },
+          { value: riskSegmentValue, color: '#00BF80' },
+          { value: availableSegmentValue, color: hexToRgba(getRiskLevelColor(riskLevel), 0.5) },
         ]}
         topLabel={
           <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-            {formatCurrency(reservedLiability)} L {' / '} {formatCurrency(maxReservedLiability)} Max
-            L
+            {formatCurrency(reservedLiability)} exp. {' / '} {formatCurrency(maxReservedLiability)}{' '}
+            max. exp.
           </ThemedText>
         }
         bottomLabel={
-          <ThemedText type="defaultSemiBold" style={{ color: getRiskLevelColor(riskLevel) }}>
+          <ThemedText
+            style={StyleSheet.flatten([styles.riskLevel, { color: getRiskLevelColor(riskLevel) }])}
+          >
             {riskLevel.toFixed(0)}% Risk Level
           </ThemedText>
         }
@@ -114,13 +107,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
-    marginVertical: 24,
+    marginVertical: 22,
   },
   stats: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
+    marginTop: 18,
+  },
+  riskLevel: {
+    fontWeight: '600',
   },
 });
 

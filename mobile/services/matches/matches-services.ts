@@ -1,5 +1,12 @@
 import { DataSync } from '@/components/server-sent-events/data-sync';
-import { ICriterion, IMatch, IOdd, MatchStatusEnum } from '@/types';
+import {
+  CriterionStatusEnum,
+  ICriterion,
+  IMatch,
+  IMatchMetrics,
+  IOdd,
+  MatchStatusEnum,
+} from '@/types';
 import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
 
 export interface IMatchCriteriaResponse extends ICriterion {
@@ -50,10 +57,19 @@ export class MatchesService {
     return data;
   }
 
-  public static async getMatchCriteria(matchId: string) {
-    const result = await getRequest<IMatchCriteriaResponse[]>(`/matches/${matchId}/criteria`);
+  public static async getMatchCriteria(
+    matchId: string,
+    queryParams?: { status?: CriterionStatusEnum[] }
+  ) {
+    const result = await getRequest<IMatchCriteriaResponse[]>(`/matches/${matchId}/criteria`, {
+      params: queryParams,
+    });
     DataSync.updateCriteria(result.data);
     return result;
+  }
+
+  public static async getMatchMetrics(matchId: string) {
+    return await getRequest<IMatchMetrics>(`/matches/${matchId}/metrics`);
   }
 
   public static async createMatch(data: ICreateMatchRequest) {

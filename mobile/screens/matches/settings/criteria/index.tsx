@@ -1,7 +1,7 @@
-import { Trophy } from '@/components/icons';
 import { Settings } from '@/components/settings';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatchCriteria } from '@/services';
+import { CriterionStatusEnum } from '@/types';
 import { router } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
@@ -13,6 +13,15 @@ interface MatchSettingsCriteriaListProps {
 const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) => {
   const { data, isPending, error } = useGetMatchCriteria({
     matchId,
+    queryParams: {
+      status: [
+        CriterionStatusEnum.SETTLED,
+        CriterionStatusEnum.ACTIVE,
+        CriterionStatusEnum.DRAFT,
+        CriterionStatusEnum.SUSPENDED,
+        CriterionStatusEnum.VOID,
+      ],
+    },
     queryOptions: {
       refetchOnMount: 'always',
     },

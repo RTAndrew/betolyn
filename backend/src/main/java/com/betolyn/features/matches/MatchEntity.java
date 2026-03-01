@@ -27,6 +27,7 @@ public class MatchEntity extends AuditableEntity {
     private String startTime;
     private String endTime;
 
+    @Column(nullable = false)
     private Double reservedLiability = 0.0;
     private Double maxReservedLiability = null;
 

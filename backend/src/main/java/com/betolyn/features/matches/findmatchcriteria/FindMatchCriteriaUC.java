@@ -9,6 +9,7 @@ import com.betolyn.shared.exceptions.EntityNotfoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -19,7 +20,12 @@ public class FindMatchCriteriaUC implements IUseCase<String, List<CriterionEntit
 
     @Override
     public List<CriterionEntity> execute(String matchId) throws EntityNotfoundException {
+        return execute(matchId, List.of(CriterionStatusEnum.ACTIVE, CriterionStatusEnum.SUSPENDED));
+    }
+
+    public List<CriterionEntity> execute(String matchId, Collection<CriterionStatusEnum> statuses)
+            throws EntityNotfoundException {
         matchRepository.findById(matchId).orElseThrow(EntityNotfoundException::new); // TODO: Add a custom exception for criteria not found
-        return criterionRepository.findAllByMatchId(matchId, List.of(CriterionStatusEnum.ACTIVE, CriterionStatusEnum.SUSPENDED));
+        return criterionRepository.findAllByMatchId(matchId, statuses);
     }
 }

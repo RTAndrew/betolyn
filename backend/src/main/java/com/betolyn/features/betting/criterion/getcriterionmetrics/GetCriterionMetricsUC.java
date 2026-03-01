@@ -32,9 +32,8 @@ public class GetCriterionMetricsUC {
         Double totalBetsCount = criterion.getTotalBetsCount();
         double totalStakesVolume = criterion.getTotalStakesVolume();
 
-        // Potential P/L = Total Stakes - max(All Potential Payouts); maxPayout = reservedLiability + totalStakesVolume
-        // or Total Stakes − max(All Potential Payouts)
-        double potentialPL = totalStakesVolume - (reservedLiability + totalStakesVolume);
+        // Worst-case P/L: max payout = reservedLiability + totalStakesVolume, so P/L = totalStakesVolume - maxPayout = -reservedLiability
+        double potentialPL = -reservedLiability;
 
         Double realizedPL = null;
         if (criterion.getStatus() == CriterionStatusEnum.SETTLED) {
