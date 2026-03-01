@@ -41,6 +41,21 @@ export interface ICriterion {
   status: `${CriterionStatusEnum}`;
 }
 
+export interface ICriterionProfitAndLoss {
+  potentialPL: number;
+  realizedPL: number | null;
+}
+
+export interface ICriterionMetrics {
+  criterionName: string;
+  reservedLiability: number;
+  maxReservedLiability: number | null;
+  riskLevel: number | null;
+  totalBetsCount: number;
+  totalStakesVolume: number;
+  profitAndLosses: ICriterionProfitAndLoss;
+}
+
 export enum MatchStatusEnum {
   SCHEDULED = 'SCHEDULED',
   LIVE = 'LIVE',
@@ -75,6 +90,19 @@ export interface IOdd {
   isWinner?: boolean;
   status: `${EOddStatus}`;
   direction?: 'UP' | 'DOWN';
+  totalBetsCount: number;
+  totalStakesVolume: number;
+  potentialPayoutVolume: number;
+}
+
+export interface IOddMetrics {
+  odd: IOdd & { criterion: Omit<ICriterion, 'match'> };
+  totalCriterionVolume: number;
+  totalOddVolume: number;
+  marketShare: number;
+  profitAndLosses: number;
+  averageStake: number;
+  totalBetsCount: number;
 }
 
 export type EBetSlipType = 'SINGLE' | 'PARLAY';

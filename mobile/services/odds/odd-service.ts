@@ -1,5 +1,5 @@
 import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
-import { IOdd as IOdd, EOddStatus, ICriterion } from '@/types';
+import { IOdd, IOddMetrics, EOddStatus, ICriterion } from '@/types';
 import { DataSync } from '@/components/server-sent-events/data-sync';
 
 export interface IUpdateOddStatusRequest {
@@ -31,6 +31,14 @@ export class OddService {
   public static async findOddById(oddId: string) {
     const data = await getRequest<IOddWithCriterion>(`/odds/${oddId}`);
     DataSync.updateOdds([data.data]);
+    return data;
+  }
+
+  public static async findOddMetrics(oddId: string) {
+    const data = await getRequest<IOddMetrics>(`/odds/${oddId}/metrics`);
+    if (data.data?.odd) {
+      DataSync.updateOdds([data.data.odd]);
+    }
     return data;
   }
 

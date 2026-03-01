@@ -10,20 +10,21 @@ import { Settings } from '@/components/settings';
 import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
-import { useGetMatch, useGetOddById } from '@/services';
-import { IMatch } from '@/types';
+import { useGetMatch, useGetOddMetrics } from '@/services';
+import { CriterionStatusEnum, IOdd } from '@/types';
 import { colors } from '@/constants/colors';
-import { hexToRgba } from '@/utils/hex-rgba';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const OpenMatchBottomSheetIcon = ({ match }: { match: IMatch }) => {
+const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
+
+const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {
   const { pushSheet } = useMatchBottomSheet();
   return (
     <ScreenHeader.QuickActions>
       <ScreenHeader.Icon
-        onPress={() => pushSheet({ type: 'odd-action', data: match })}
+        onPress={() => pushSheet({ type: 'odd-action', data: odd })}
         style={{ backgroundColor: colors.greyLight }}
       >
         <MoreVertical />
@@ -34,23 +35,27 @@ const OpenMatchBottomSheetIcon = ({ match }: { match: IMatch }) => {
 
 const OddSettings = () => {
   const { oddId } = useLocalSearchParams();
-  const { data, isPending, error } = useGetOddById({ oddId: oddId as string });
+  const { data: metricsData, isPending, error } = useGetOddMetrics({ oddId: oddId as string });
   const {
     data: matchData,
     isPending: matchIsPending,
     error: matchError,
   } = useGetMatch({
-    matchId: data?.data.matchId ?? '',
+    matchId: metricsData?.data?.odd?.matchId ?? '',
     queryOptions: {
-      enabled: Boolean(data?.data.matchId),
+      enabled: Boolean(metricsData?.data?.odd?.matchId),
     },
   });
 
   if (isPending || matchIsPending) return <ThemedText>Loading...</ThemedText>;
-  if (error || !data || matchError) return <ThemedText>Error loading criterion</ThemedText>;
-  const odd = data.data;
-  const match = matchData.data;
-  if (!odd || !match) return <ThemedText>Criterion not found</ThemedText>;
+  if (error || !metricsData || matchError) return <ThemedText>Error loading odd</ThemedText>;
+  const metrics = metricsData.data;
+  const odd = metrics?.odd;
+  const match = matchData?.data;
+  if (!metrics || !odd || !match) return <ThemedText>Odd not found</ThemedText>;
+
+  const isSettled = odd.criterion?.status === CriterionStatusEnum.SETTLED;
+  const marketSharePct = Math.round(metrics.marketShare);
 
   return (
     <MatchBottomSheetProvider match={match}>
@@ -61,24 +66,25 @@ const OddSettings = () => {
           onClose={() => router.back()}
           iconContainerColor={colors.greyLight}
         >
-          <OpenMatchBottomSheetIcon match={match} />
+          <OpenMatchBottomSheetIcon odd={odd} />
         </ScreenHeader>
 
         <SafeHorizontalView style={styles.root}>
           <View style={styles.health}>
             <SegmentedProgressBar
               segments={[
-                { value: 75, color: '#FF0080' },
-                { value: 25, color: '#00BF80' },
+                { value: marketSharePct, color: colors.greyLighter },
+                { value: 100 - marketSharePct, color: colors.greyLighter50 },
               ]}
               topLabel={
                 <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-                  $790 / $2,000
+                  {formatCurrency(metrics.totalOddVolume)} /{' '}
+                  {formatCurrency(metrics.totalCriterionVolume)}
                 </ThemedText>
               }
               bottomLabel={
-                <ThemedText type="defaultSemiBold" style={{ color: '#FF0080' }}>
-                  75% Risk Level
+                <ThemedText type="defaultSemiBold" style={{ color: colors.white }}>
+                  {marketSharePct}% Market Share
                 </ThemedText>
               }
             />
@@ -87,39 +93,22 @@ const OddSettings = () => {
               style={styles.stats}
               items={[
                 {
-                  title: 'Pot. Payout',
-                  description: '$25.11',
+                  title: isSettled ? 'P/L' : 'Pot. Payout',
+                  description: formatCurrency(metrics.profitAndLosses),
                 },
                 {
                   title: 'Avg. Stake',
-                  description: '19',
+                  description: formatCurrency(metrics.averageStake),
                 },
                 {
                   title: 'Bets',
-                  description: '89',
+                  description: String(metrics.totalBetsCount),
                 },
                 {
                   title: 'Vol.',
-                  description: '$589',
+                  description: formatCurrency(metrics.totalOddVolume),
                 },
               ]}
-            />
-
-            <SegmentedProgressBar
-              segments={[
-                { value: 25, color: colors.greyLighter },
-                { value: 75, color: colors.greyLighter50 },
-              ]}
-              topLabel={
-                <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-                  $250 / $1,000
-                </ThemedText>
-              }
-              bottomLabel={
-                <ThemedText type="defaultSemiBold" style={{ color: colors.white }}>
-                  25% Market Share
-                </ThemedText>
-              }
             />
           </View>
 

@@ -1,6 +1,6 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 import { CriterionService } from './criterion-service';
-import { ICriterion, IOdd } from '@/types';
+import { ICriterion, ICriterionMetrics, IOdd } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions, queryClient } from '@/utils/react-query';
 
@@ -20,6 +20,13 @@ export const getCriterionByIdQueryOptions = ({ criterionId }: { criterionId: str
   });
 };
 
+export const getCriterionMetricsQueryOptions = ({ criterionId }: { criterionId: string }) => {
+  return queryOptions<IApiResponse<ICriterionMetrics>, IApiResponse>({
+    queryKey: ['criterion', criterionId, 'metrics'],
+    queryFn: async () => await CriterionService.getCriterionMetrics(criterionId),
+  });
+};
+
 // QUERIES
 
 export const useGetAllCriteria = ({
@@ -34,5 +41,13 @@ export const useGetCriterionById = ({
   queryOptions,
 }: { criterionId: string } & IQueryOptions<typeof getCriterionByIdQueryOptions>) => {
   const query = getCriterionByIdQueryOptions({ criterionId });
+  return useQuery({ ...query, ...queryOptions }, queryClient);
+};
+
+export const useGetCriterionMetrics = ({
+  criterionId,
+  queryOptions,
+}: { criterionId: string } & IQueryOptions<typeof getCriterionMetricsQueryOptions>) => {
+  const query = getCriterionMetricsQueryOptions({ criterionId });
   return useQuery({ ...query, ...queryOptions }, queryClient);
 };

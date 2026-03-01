@@ -10,8 +10,12 @@ import { Settings } from '@/components/settings';
 import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
-import { useGetCriterionById } from '@/services';
+import { useGetCriterionById, useGetCriterionMetrics } from '@/services';
 import { ICriterion } from '@/types';
+
+function formatCurrency(value: number): string {
+  return `$${value.toFixed(2)}`;
+}
 import { colors } from '@/constants/colors';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -34,11 +38,24 @@ const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
 const CriterionSettings = () => {
   const { criterionId } = useLocalSearchParams();
   const { data, isPending, error } = useGetCriterionById({ criterionId: criterionId as string });
+  const { data: metricsData, isPending: metricsPending } = useGetCriterionMetrics({
+    criterionId: criterionId as string,
+  });
 
   if (isPending) return <ThemedText>Loading...</ThemedText>;
   if (error || !data) return <ThemedText>Error loading criterion</ThemedText>;
   const criterion = data.data;
   if (!criterion) return <ThemedText>Criterion not found</ThemedText>;
+
+  const metrics = metricsData?.data;
+  const reservedLiability = metrics?.reservedLiability ?? 0;
+  const maxReservedLiability = metrics?.maxReservedLiability ?? 0;
+  const riskLevel = metrics?.riskLevel ?? 0;
+  const hasMax = maxReservedLiability > 0;
+  const riskSegmentValue = hasMax
+    ? Math.min(100, (reservedLiability / maxReservedLiability) * 100)
+    : 0;
+  const availableSegmentValue = hasMax ? Math.max(0, 100 - riskSegmentValue) : 100;
 
   return (
     <MatchBottomSheetProvider match={criterion.match}>
@@ -54,44 +71,55 @@ const CriterionSettings = () => {
 
         <SafeHorizontalView style={styles.root}>
           <View style={styles.health}>
-            <SegmentedProgressBar
-              segments={[
-                { value: 75, color: '#FF0080' },
-                { value: 25, color: '#00BF80' },
-              ]}
-              topLabel={
-                <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-                  $790 / $2,000
-                </ThemedText>
-              }
-              bottomLabel={
-                <ThemedText type="defaultSemiBold" style={{ color: '#FF0080' }}>
-                  75% Risk Level
-                </ThemedText>
-              }
-            />
+            {metricsPending ? (
+              <ThemedText type="default" style={{ color: '#A8A8A8' }}>
+                Loading metrics...
+              </ThemedText>
+            ) : (
+              <>
+                <SegmentedProgressBar
+                  segments={[
+                    { value: riskSegmentValue, color: '#FF0080' },
+                    { value: availableSegmentValue, color: '#00BF80' },
+                  ]}
+                  topLabel={
+                    <ThemedText type="default" style={{ color: '#A8A8A8' }}>
+                      {formatCurrency(reservedLiability)} / {formatCurrency(maxReservedLiability)}
+                    </ThemedText>
+                  }
+                  bottomLabel={
+                    <ThemedText type="defaultSemiBold" style={{ color: '#FF0080' }}>
+                      {riskLevel.toFixed(0)}% Risk Level
+                    </ThemedText>
+                  }
+                />
 
-            <Stats.Group
-              style={styles.stats}
-              items={[
-                {
-                  title: 'P/L',
-                  description: '$25.11',
-                },
-                {
-                  title: 'Avg. Stake',
-                  description: '19',
-                },
-                {
-                  title: 'Bets',
-                  description: '89',
-                },
-                {
-                  title: 'Vol.',
-                  description: '$589',
-                },
-              ]}
-            />
+                <Stats.Group
+                  style={styles.stats}
+                  items={[
+                    {
+                      title: 'Potential P/L (Worst Case)',
+                      description: formatCurrency(metrics?.profitAndLosses?.potentialPL ?? 0),
+                    },
+                    {
+                      title: 'Realized P/L (After Settlement)',
+                      description:
+                        metrics?.profitAndLosses?.realizedPL != null
+                          ? formatCurrency(metrics.profitAndLosses.realizedPL)
+                          : 'N/A',
+                    },
+                    {
+                      title: 'Bets',
+                      description: String(metrics?.totalBetsCount ?? 0),
+                    },
+                    {
+                      title: 'Vol.',
+                      description: formatCurrency(metrics?.totalStakesVolume ?? 0),
+                    },
+                  ]}
+                />
+              </>
+            )}
           </View>
 
           <Settings.Item

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import BottomSheet from '@/components/bottom-sheet';
 import { ActivityIndicator, View } from 'react-native';
 import { DollarEuro, Eye, LockClosed, Trash } from '@/components/icons';
@@ -87,6 +87,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
+          disabled={odd.status === 'SETTLED' || odd.criterion?.status === 'SETTLED'}
           text="Reprice"
           icon={<DollarEuro width={28} height={28} color="white" />}
           onPress={() => {
