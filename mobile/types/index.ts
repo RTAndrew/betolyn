@@ -41,11 +41,6 @@ export interface ICriterion {
   status: `${CriterionStatusEnum}`;
 }
 
-export interface ICriterionProfitAndLoss {
-  potentialPL: number;
-  realizedPL: number | null;
-}
-
 export interface ICriterionMetrics {
   criterionName: string;
   reservedLiability: number;
@@ -53,7 +48,7 @@ export interface ICriterionMetrics {
   riskLevel: number | null;
   totalBetsCount: number;
   totalStakesVolume: number;
-  profitAndLosses: ICriterionProfitAndLoss;
+  profitAndLosses: number | null;
 }
 
 export interface IMatchMetrics {
@@ -110,7 +105,7 @@ export interface IOddMetrics {
   totalCriterionVolume: number;
   totalOddVolume: number;
   marketShare: number;
-  profitAndLosses: number;
+  profitAndLosses: number | null;
   averageStake: number;
   totalBetsCount: number;
 }

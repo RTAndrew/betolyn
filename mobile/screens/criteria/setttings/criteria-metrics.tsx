@@ -46,7 +46,7 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
     <View style={styles.health}>
       <SegmentedProgressBar
         segments={[
-          { value: riskSegmentValue, color: '#00BF80' },
+          { value: riskSegmentValue, color: getRiskLevelColor(riskLevel) },
           { value: availableSegmentValue, color: hexToRgba(getRiskLevelColor(riskLevel), 0.5) },
         ]}
         topLabel={
@@ -67,17 +67,13 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
       <Stats.Group
         style={styles.stats}
         items={[
-          // {
-          //   title: 'P/L (Worst Case)',
-          //   description: formatCurrency(metrics?.profitAndLosses?.potentialPL ?? 0),
-          // },
           ...(criterionStatus === CriterionStatusEnum.SETTLED
             ? [
                 {
                   title: 'P/L',
                   description:
-                    metrics?.profitAndLosses?.realizedPL != null
-                      ? formatCurrency(metrics.profitAndLosses.realizedPL)
+                    metrics?.profitAndLosses != null
+                      ? formatCurrency(metrics.profitAndLosses)
                       : 'N/A',
                 },
               ]

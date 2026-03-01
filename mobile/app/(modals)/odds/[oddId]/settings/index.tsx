@@ -11,13 +11,12 @@ import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatch, useGetOddMetrics } from '@/services';
-import { CriterionStatusEnum, IOdd } from '@/types';
+import { IOdd } from '@/types';
 import { colors } from '@/constants/colors';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-
-const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
+import { formatKNumber } from '@/utils/format-k-number';
 
 const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {
   const { pushSheet } = useMatchBottomSheet();
@@ -54,7 +53,6 @@ const OddSettings = () => {
   const match = matchData?.data;
   if (!metrics || !odd || !match) return <ThemedText>Odd not found</ThemedText>;
 
-  const isSettled = odd.criterion?.status === CriterionStatusEnum.SETTLED;
   const marketSharePct = Math.round(metrics.marketShare);
 
   return (
@@ -78,8 +76,8 @@ const OddSettings = () => {
               ]}
               topLabel={
                 <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-                  {formatCurrency(metrics.totalOddVolume)} /{' '}
-                  {formatCurrency(metrics.totalCriterionVolume)}
+                  {formatKNumber(metrics.totalOddVolume, true)} /{' '}
+                  {formatKNumber(metrics.totalCriterionVolume, true)}
                 </ThemedText>
               }
               bottomLabel={
@@ -92,13 +90,12 @@ const OddSettings = () => {
             <Stats.Group
               style={styles.stats}
               items={[
-                {
-                  title: isSettled ? 'P/L' : 'Pot. Payout',
-                  description: formatCurrency(metrics.profitAndLosses),
-                },
+                ...(metrics.profitAndLosses != null
+                  ? [{ title: 'P/L', description: formatKNumber(metrics.profitAndLosses, true) }]
+                  : []),
                 {
                   title: 'Avg. Stake',
-                  description: formatCurrency(metrics.averageStake),
+                  description: formatKNumber(metrics.averageStake, true),
                 },
                 {
                   title: 'Bets',
@@ -106,7 +103,7 @@ const OddSettings = () => {
                 },
                 {
                   title: 'Vol.',
-                  description: formatCurrency(metrics.totalOddVolume),
+                  description: formatKNumber(metrics.totalOddVolume, true),
                 },
               ]}
             />

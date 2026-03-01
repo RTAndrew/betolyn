@@ -5,7 +5,6 @@ import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.criterion.dto.CriterionMetricsDTO;
-import com.betolyn.features.betting.criterion.dto.CriterionProfitAndLossDTO;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,22 +31,14 @@ public class GetCriterionMetricsUC {
         Double totalBetsCount = criterion.getTotalBetsCount();
         double totalStakesVolume = criterion.getTotalStakesVolume();
 
-        // Worst-case P/L: max payout = reservedLiability + totalStakesVolume, so P/L = totalStakesVolume - maxPayout = -reservedLiability
-        double potentialPL = -reservedLiability;
-
-        Double realizedPL = null;
+        Double profitAndLosses = null;
         if (criterion.getStatus() == CriterionStatusEnum.SETTLED) {
             Double totalPaidToWinners = betSlipItemRepository.sumPotentialPayoutByCriterionIdAndStatus(
                     criterionId, BetSlipItemStatusEnum.WON);
             if (totalPaidToWinners != null) {
-                realizedPL = totalStakesVolume - totalPaidToWinners;
+                profitAndLosses = totalStakesVolume - totalPaidToWinners;
             }
         }
-
-        CriterionProfitAndLossDTO profitAndLosses = CriterionProfitAndLossDTO.builder()
-                .potentialPL(potentialPL)
-                .realizedPL(realizedPL)
-                .build();
 
         return CriterionMetricsDTO.builder()
                 .criterionName(criterion.getName())

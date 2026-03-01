@@ -16,5 +16,6 @@ public class CriterionMetricsDTO {
     private Double riskLevel;
     private Double totalBetsCount;
     private Double totalStakesVolume;
-    private CriterionProfitAndLossDTO profitAndLosses;
+    /** Realized P/L (after settlement); null when not settled. */
+    private Double profitAndLosses;
 }

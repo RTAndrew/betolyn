@@ -33,7 +33,9 @@ public class GetOddMetricsUC {
                 ? (totalOddVolume / totalCriterionVolume) * 100
                 : 0.0;
 
-        double profitAndLosses = computeProfitAndLosses(criterion, odd, totalOddVolume);
+        Double profitAndLosses = criterion.getStatus() == CriterionStatusEnum.SETTLED
+                ? computeProfitAndLosses(odd, totalOddVolume)
+                : null;
 
         double averageStake = Objects.requireNonNullElse(
                 betSlipItemRepository.averageStakeByOddId(oddId), 0.0);
@@ -51,23 +53,11 @@ public class GetOddMetricsUC {
                 .build();
     }
 
-    private double computeProfitAndLosses(CriterionEntity criterion, OddEntity odd, double totalOddVolume) {
-        CriterionStatusEnum status = criterion.getStatus();
-        if (status == CriterionStatusEnum.VOID) {
-            return 0.0;
+    private double computeProfitAndLosses(OddEntity odd, double totalOddVolume) {
+        if (Boolean.TRUE.equals(odd.getIsWinner())) {
+            // Odd-level P/L: stakes on this odd minus payouts to winners on this odd
+            return totalOddVolume - (totalOddVolume * odd.getValue());
         }
-        if (status == CriterionStatusEnum.SETTLED) {
-            if (Boolean.TRUE.equals(odd.getIsWinner())) {
-                // Odd-level P/L: stakes on this odd minus payouts to winners on this odd
-                return totalOddVolume - (totalOddVolume * odd.getValue());
-            }
-            return totalOddVolume;
-        }
-        if (totalOddVolume == 0) {
-            return 0.0; // no bets yet on this odd
-        }
-
-        // Live: Potential P/L for this odd if it wins = stakes on this odd − (stakes × odd price)
-        return totalOddVolume - (totalOddVolume * odd.getValue());
+        return totalOddVolume;
     }
 }
