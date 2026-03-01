@@ -33,10 +33,11 @@ public class GetCriterionMetricsUC {
 
         Double profitAndLosses = null;
         if (criterion.getStatus() == CriterionStatusEnum.SETTLED) {
+            Double settledStakes = betSlipItemRepository.sumStakeByCriterionIdExcludingVoided(criterionId);
             Double totalPaidToWinners = betSlipItemRepository.sumPotentialPayoutByCriterionIdAndStatus(
                     criterionId, BetSlipItemStatusEnum.WON);
-            if (totalPaidToWinners != null) {
-                profitAndLosses = totalStakesVolume - totalPaidToWinners;
+            if (settledStakes != null && totalPaidToWinners != null) {
+                profitAndLosses = settledStakes - totalPaidToWinners;
             }
         }
 

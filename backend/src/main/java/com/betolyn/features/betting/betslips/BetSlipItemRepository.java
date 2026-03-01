@@ -18,6 +18,24 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             @Param("criterionId") String criterionId,
             @Param("status") BetSlipItemStatusEnum status);
 
+    @Query(value = """
+            SELECT COALESCE(SUM(i.stake), 0) FROM bet_slip_items i
+            WHERE i.odd_id = :oddId AND i.status <> 'VOIDED'
+            """, nativeQuery = true)
+    Double sumStakeByOddIdExcludingVoided(@Param("oddId") String oddId);
+
+    @Query(value = """
+            SELECT COALESCE(SUM(i.potential_payout), 0) FROM bet_slip_items i
+            WHERE i.odd_id = :oddId AND i.status = 'WON'
+            """, nativeQuery = true)
+    Double sumPotentialPayoutByOddIdWhereWon(@Param("oddId") String oddId);
+
+    @Query(value = """
+            SELECT COALESCE(SUM(i.stake), 0) FROM bet_slip_items i
+            WHERE i.criterion_id = :criterionId AND i.status <> 'VOIDED'
+            """, nativeQuery = true)
+    Double sumStakeByCriterionIdExcludingVoided(@Param("criterionId") String criterionId);
+
     @Query("""
             SELECT AVG(i.stake) FROM BetSlipItemEntity i
             WHERE i.odd.id = :oddId
@@ -39,11 +57,12 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             @Param("itemStatus") BetSlipItemStatusEnum itemStatus);
 
     /**
-     * Returns (sum of totalStakesVolume of SETTLED criteria for match, sum of potentialPayout for WON items for match).
+     * Returns (sum of stake from items for match where criterion is SETTLED and item is not VOIDED, sum of potentialPayout for WON items for match).
      * Used to compute match-level realized P/L = stakes - payouts (null when no settled criteria).
+     * EXISTS is required so we only count stakes on settled criteria; otherwise we would include stakes on PENDING criteria and distort match P/L.
      */
     @Query(value = """
-            SELECT (SELECT COALESCE(SUM(c.total_stakes_volume), 0) FROM criteria c WHERE c.match_entity_id = :matchId AND c.status = 'SETTLED'),
+            SELECT (SELECT COALESCE(SUM(i.stake), 0) FROM bet_slip_items i WHERE i.match_id = :matchId AND i.status <> 'VOIDED' AND EXISTS (SELECT 1 FROM criteria c WHERE c.id = i.criterion_id AND c.match_entity_id = :matchId AND c.status = 'SETTLED')),
                    (SELECT COALESCE(SUM(i.potential_payout), 0) FROM bet_slip_items i WHERE i.match_id = :matchId AND i.status = 'WON')
             """, nativeQuery = true)
     List<Object[]> getSettledMatchStakesAndPayouts(@Param("matchId") String matchId);

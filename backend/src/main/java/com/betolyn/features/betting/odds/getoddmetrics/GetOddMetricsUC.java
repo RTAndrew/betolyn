@@ -26,16 +26,21 @@ public class GetOddMetricsUC {
         CriterionEntity criterion = odd.getCriterion();
 
         double totalCriterionVolume = criterion.getTotalStakesVolume();
-        double totalOddVolume = odd.getTotalStakesVolume();
+        double totalOddVolume = Objects.requireNonNullElse(
+                betSlipItemRepository.sumStakeByOddIdExcludingVoided(oddId), 0.0);
         int totalBetsCount = odd.getTotalBetsCount();
 
         double marketShare = totalCriterionVolume > 0
                 ? (totalOddVolume / totalCriterionVolume) * 100
                 : 0.0;
 
-        Double profitAndLosses = criterion.getStatus() == CriterionStatusEnum.SETTLED
-                ? computeProfitAndLosses(odd, totalOddVolume)
-                : null;
+        Double profitAndLosses = null;
+        if (criterion.getStatus() == CriterionStatusEnum.SETTLED) {
+            Double totalPaidToWinners = betSlipItemRepository.sumPotentialPayoutByOddIdWhereWon(oddId);
+            if (totalPaidToWinners != null) {
+                profitAndLosses = totalOddVolume - totalPaidToWinners;
+            }
+        }
 
         double averageStake = Objects.requireNonNullElse(
                 betSlipItemRepository.averageStakeByOddId(oddId), 0.0);
@@ -51,13 +56,5 @@ public class GetOddMetricsUC {
                 .averageStake(averageStake)
                 .totalBetsCount(totalBetsCount)
                 .build();
-    }
-
-    private double computeProfitAndLosses(OddEntity odd, double totalOddVolume) {
-        if (Boolean.TRUE.equals(odd.getIsWinner())) {
-            // Odd-level P/L: stakes on this odd minus payouts to winners on this odd
-            return totalOddVolume - (totalOddVolume * odd.getValue());
-        }
-        return totalOddVolume;
     }
 }
