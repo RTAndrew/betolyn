@@ -1,12 +1,13 @@
-import { ThemedText } from '@/components/ThemedText';
-import { authStore } from '@/stores/auth.store';
-import { colors } from '@/constants/colors';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+
+import { ThemedText } from '@/components/ThemedText';
 import { constants } from '@/constants';
+import { colors } from '@/constants/colors';
+import { authStore } from '@/stores/auth.store';
 
 const HomeHeader = () => {
   useSignals();

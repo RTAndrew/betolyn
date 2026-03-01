@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { G, Path, Defs, SvgProps } from 'react-native-svg';
+
 import { colors } from '@/constants/colors';
 
 const LogoComplete2 = ({ width = 159, height = 38, ...props }: SvgProps) => (

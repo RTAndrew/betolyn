@@ -5,12 +5,13 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-import { IApiResponse } from './types';
-import { ApiError } from './api-error';
-import { SafeStorage } from '../safe-storage';
-import { authStore } from '@/stores/auth.store';
 import { constants } from '@/constants';
 import { env } from '@/constants/env';
+import { authStore } from '@/stores/auth.store';
+
+import { SafeStorage } from '../safe-storage';
+import { ApiError } from './api-error';
+import { IApiResponse } from './types';
 
 const api = axios.create({
   baseURL: env.backendApiUrl,

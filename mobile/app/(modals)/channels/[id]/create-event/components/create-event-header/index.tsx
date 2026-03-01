@@ -1,7 +1,8 @@
-import { ThemedView } from '@/components/ThemedView';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+
+import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
 
 interface CreateEventHeaderProps {

@@ -1,6 +1,8 @@
+import { router } from 'expo-router';
 import React from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { View } from 'react-native';
+
+import BottomSheet from '@/components/bottom-sheet';
 import {
   Add,
   DollarEuro,
@@ -11,11 +13,11 @@ import {
   Trash,
   Trophy,
 } from '@/components/icons';
+import { useGetCriterionById } from '@/services/criteria/criterion-query';
+import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { useGetCriterionById } from '@/services/criteria/criterion-query';
-import { router } from 'expo-router';
 
 export const CriterionActionSheet = ({ visible = false }: ISheet) => {
   const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();

@@ -1,7 +1,8 @@
+import { ICriterion } from '@/types';
+
 import { DataSync } from '../data-sync';
 import { ISseEvent } from './sse-listener-factory';
 import { ISseListener } from './types';
-import { ICriterion } from '@/types';
 
 type TPayload = ISseEvent<ICriterionChangeEvent>;
 interface ICriterionChangeEvent {
@@ -30,7 +31,7 @@ class CriterionSseListener implements ISseListener {
       case 'criterionStatusChanged':
       case 'criterionCreated': {
         const { match } = eventPayload as unknown as ICriterion;
-        match && DataSync.refreshMatchData(match.id);
+        if (match) DataSync.refreshMatchData(match.id);
         break;
       }
 

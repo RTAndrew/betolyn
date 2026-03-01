@@ -1,8 +1,9 @@
-import { ThemedText } from '@/components/ThemedText';
-import { hexToRgba } from '@/utils/hex-rgba';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { type ReactNode } from 'react';
 import { type StyleProp, type ViewStyle, StyleSheet, View } from 'react-native';
+
+import { ThemedText } from '@/components/ThemedText';
+import { hexToRgba } from '@/utils/hex-rgba';
 
 const LiveTag = () => (
   <LinearGradient

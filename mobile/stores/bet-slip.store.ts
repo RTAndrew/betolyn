@@ -1,5 +1,6 @@
-import { patch } from '@/utils/object';
 import { computed, signal } from '@preact/signals-react';
+
+import { patch } from '@/utils/object';
 
 type TBetSlip = Record<string, IBet[]>;
 

@@ -1,8 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { CriterionService } from './criterion-service';
+
 import { ICriterion, ICriterionMetrics, IOdd } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions, queryClient } from '@/utils/react-query';
+
+import { CriterionService } from './criterion-service';
 
 // QUERIES OPTIONS
 

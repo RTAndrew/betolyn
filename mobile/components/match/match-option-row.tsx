@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
+
 import { CaretDown, CaretUp } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';

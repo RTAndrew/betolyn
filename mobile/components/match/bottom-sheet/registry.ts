@@ -1,19 +1,19 @@
 import { CriterionBulkRepriceOddsSheet } from './criterion-sheets/bulk-reprice-odds-sheet';
-import { CriterionActionSheet } from './criterion-sheets/criterion-action-sheet';
-import { CriterionSelectWinningOutcomeSheet } from './criterion-sheets/select-winning-odds-sheet';
 import { CreateOddSheet } from './criterion-sheets/create-odd-sheet';
-import { CriterionLockAndResultSheet } from './criterion-sheets/lock-and-result-sheet';
+import { CriterionActionSheet } from './criterion-sheets/criterion-action-sheet';
 import { CriterionSuspendSheet } from './criterion-sheets/criterion-suspend-sheet';
+import { CriterionLockAndResultSheet } from './criterion-sheets/lock-and-result-sheet';
+import { PublishCriterionSheet } from './criterion-sheets/publish';
+import { CriterionSelectWinningOutcomeSheet } from './criterion-sheets/select-winning-odds-sheet';
 import { EndMatchSheet } from './match-sheets/end-match-sheet';
 import { MainActionSheet } from './match-sheets/main-action-sheet';
 import { SettleMatchSheet } from './match-sheets/settle-match-sheet';
 import UpdateMatchScoreSheet from './match-sheets/update-match-score';
 import { OddActionSheet } from './odd-sheets/odd-action-sheet';
 import { OddRepriceSheet } from './odd-sheets/odd-reprice-sheet';
+import { PublishOddSheet } from './odd-sheets/publish';
 import { SuspendOddSheet } from './odd-sheets/suspend-odd-sheet';
 import { BottomSheetType } from './types';
-import { PublishOddSheet } from './odd-sheets/publish';
-import { PublishCriterionSheet } from './criterion-sheets/publish';
 
 export interface ISheet {
   visible?: boolean;

@@ -1,5 +1,5 @@
-import { postRequest } from '@/utils/http';
 import { EBetSlipType, IBetSlip } from '@/types';
+import { postRequest } from '@/utils/http';
 
 export interface IPlaceBetItem {
   oddId: string;

@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
-import EventSource from 'react-native-sse';
-import ListenerFactory from './event-listeners/sse-listener-factory';
 import { AppState } from 'react-native';
+import EventSource from 'react-native-sse';
+
 import { env } from '@/constants/env';
+
+import ListenerFactory from './event-listeners/sse-listener-factory';
 
 const connectToStream = () => {
   const eventSource = new EventSource(`${env.backendApiUrl}/stream`);

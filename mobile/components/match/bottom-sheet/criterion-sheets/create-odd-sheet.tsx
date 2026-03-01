@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+
 import BottomSheet from '@/components/bottom-sheet';
-import { useMatchBottomSheet } from '../context';
-import { ISheet } from '../index';
-import TextInput from '@/components/forms/text-input';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Button } from '@/components/button';
-import { useCreateOdd } from '@/services';
-import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
 import { NumberInput } from '@/components/forms';
 import Switch from '@/components/forms/switch';
+import TextInput from '@/components/forms/text-input';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { useCreateOdd } from '@/services';
+import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+
+import { useMatchBottomSheet } from '../context';
+import { ISheet } from '../index';
 
 type ValidationSuccess = { success: true; name: string; value: number };
 type ValidationFailure = { success: false; nameError: string | null; valueError: string | null };

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import ChannelSearchMatches from './components/channel-search-matches';
-import ChannelSelectCriteria from './components/select-criteria';
-import ChannelCreateOdds from './components/create-odds';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import CreateEventHeader from './components/create-event-header';
 import { router } from 'expo-router';
-import { IMatch } from '@/types';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { colors } from '@/constants/colors';
+import { IMatch } from '@/types';
+
+import ChannelSearchMatches from './components/channel-search-matches';
+import CreateEventHeader from './components/create-event-header';
+import ChannelCreateOdds from './components/create-odds';
+import ChannelSelectCriteria from './components/select-criteria';
 
 type TScreen = 'search-matches' | 'select-criteria' | 'create-odds';
 
@@ -44,7 +46,7 @@ const CreateChannelEvent = () => {
         return (
           <ChannelSelectCriteria
             match={selectedMatch}
-            onSelectCriteria={(criteria) => {
+            onSelectCriteria={(_criteria) => {
               pushScreen('create-odds');
             }}
           />

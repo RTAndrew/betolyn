@@ -1,16 +1,18 @@
-import { ThemedText } from '@/components/ThemedText';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types';
-import { OddBaseButton } from '@/components/odd-button';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { EOddStatus, IOdd } from '@/types';
+
 import BottomSheet, { BottomSheetProps } from '@/components/bottom-sheet';
-import TextInput from '@/components/forms/text-input';
-import { NumberInput } from '@/components/forms';
 import { Button } from '@/components/button';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { NumberInput } from '@/components/forms';
 import Switch from '@/components/forms/switch';
+import TextInput from '@/components/forms/text-input';
+import { OddBaseButton } from '@/components/odd-button';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { ThemedText } from '@/components/ThemedText';
+import { EOddStatus, IOdd } from '@/types';
 import { randomUUID } from '@/utils/random-uuid';
+
+import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types';
 
 export interface ICreateCriterionOdds extends Pick<IOdd, 'name' | 'value' | 'id'> {
   status: `${EOddStatus.ACTIVE}` | `${EOddStatus.DRAFT}`;

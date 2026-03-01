@@ -1,13 +1,15 @@
+import { useState } from 'react';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
+
+import { Lock } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { useGetOddById } from '@/services';
 import { betSlipStore, IBet } from '@/stores/bet-slip.store';
 import { IMatch } from '@/types';
-import { colors } from '@/constants/colors';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+
 import { UpdateBetBottomsheet } from './update-bet-bottomsheet';
-import { useState } from 'react';
-import { Lock } from '@/components/icons';
 
 interface BetCardProps {
   bet: IBet;

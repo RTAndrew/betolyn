@@ -1,9 +1,11 @@
-import { ThemedView } from '@/components/ThemedView';
-import BetCard from '@/components/bet-card';
-import { useGetMatches } from '@/services/matches/match-query';
-import { colors } from '@/constants/colors';
 import { ActivityIndicator, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import BetCard from '@/components/bet-card';
+import { ThemedView } from '@/components/ThemedView';
+import { colors } from '@/constants/colors';
+import { useGetMatches } from '@/services/matches/match-query';
+
 import HomeScreenHeader from '../../components/home-screen-header';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => {

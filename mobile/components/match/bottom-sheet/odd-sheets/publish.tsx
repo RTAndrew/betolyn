@@ -1,10 +1,12 @@
 import React from 'react';
+
 import BottomSheet from '@/components/bottom-sheet';
+import { usePublishOdd } from '@/services/odds/odd-mutation';
+import { CriterionStatusEnum } from '@/types';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
-import { usePublishOdd } from '@/services/odds/odd-mutation';
-import { CriterionStatusEnum } from '@/types';
 
 const isCriterionActive = (status?: string) => status === CriterionStatusEnum.ACTIVE;
 

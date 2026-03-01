@@ -1,14 +1,15 @@
 import React, { useRef, useState } from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { Image, StyleSheet, View } from 'react-native';
-import { NumberInput } from '@/components/forms';
-import { ThemedText } from '@/components/ThemedText';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
-import { IOddWithCriterion } from '@/services';
-import { IMatch } from '@/types';
+
+import BottomSheet from '@/components/bottom-sheet';
 import { Button } from '@/components/button';
-import { betSlipStore } from '@/stores/bet-slip.store';
+import { NumberInput } from '@/components/forms';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { IOddWithCriterion } from '@/services';
+import { betSlipStore } from '@/stores/bet-slip.store';
+import { IMatch } from '@/types';
 
 interface TeamProps {
   name: string;

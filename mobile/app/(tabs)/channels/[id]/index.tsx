@@ -1,14 +1,14 @@
-import { ThemedView } from '@/components/ThemedView';
-import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-import BetCard from '@/components/bet-card';
-import { colors } from '@/constants/colors';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import BetCard from '@/components/bet-card';
+import { ThemedView } from '@/components/ThemedView';
+import { colors } from '@/constants/colors';
 import { mockAPI } from '@/mock';
 import { useGetMatches } from '@/services';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ChannelId = () => {
   const { id } = useLocalSearchParams();

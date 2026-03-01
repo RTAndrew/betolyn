@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { StyleProp, StyleSheet, TextStyle } from 'react-native';
 import { Wizard as WizardComponent, WizardStepProps, WizardStepStates } from 'react-native-ui-lib';
-import { Image, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
+
 import { colors } from '@/constants/colors';
-import { Add } from '../icons';
 
 interface IWizardStep {
   label: string;
@@ -70,7 +70,13 @@ const getStepState = (
   return activeIndex === idx ? WizardStepStates.ENABLED : WizardStepStates.DISABLED;
 };
 
-const Wizard = ({ activeIndex, steps, onStepChange, activeStyle, disabledStyle }: WizardProps) => {
+const Wizard = ({
+  activeIndex,
+  steps,
+  onStepChange: _onStepChange,
+  activeStyle,
+  disabledStyle,
+}: WizardProps) => {
   const [activeIndexState, setActiveIndexState] = useState(activeIndex ?? 0);
 
   useEffect(() => {

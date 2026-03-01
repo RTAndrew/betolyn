@@ -1,8 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { IMatchCriteriaResponse, MatchesService } from './matches-services';
+
 import { CriterionStatusEnum, IMatch, IMatchMetrics } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
+
+import { IMatchCriteriaResponse, MatchesService } from './matches-services';
 
 // QUERIES OPTIONS
 

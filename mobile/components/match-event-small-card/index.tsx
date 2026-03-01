@@ -1,8 +1,9 @@
-import { ThemedText } from '@/components/ThemedText';
-import { IMatch } from '@/types';
-import { colors } from '@/constants/colors';
 import React from 'react';
 import { Image, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
+
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+import { IMatch } from '@/types';
 
 const Team = ({
   name,

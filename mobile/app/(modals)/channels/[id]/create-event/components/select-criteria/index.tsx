@@ -1,9 +1,10 @@
-import { Ellipsis } from '@/components/icons';
-import { ThemedView } from '@/components/ThemedView';
-import { IMatch } from '@/types';
-import { colors } from '@/constants/colors';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import { Ellipsis } from '@/components/icons';
+import { ThemedView } from '@/components/ThemedView';
+import { colors } from '@/constants/colors';
+import { IMatch } from '@/types';
 
 const criterias = [
   'Cartões amarelos',

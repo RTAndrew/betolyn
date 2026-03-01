@@ -1,3 +1,7 @@
+import { router, useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+
 import Switch from '@/components/forms/switch';
 import { MoreVertical } from '@/components/icons';
 import { useMatchBottomSheet } from '@/components/match/bottom-sheet/context';
@@ -10,12 +14,9 @@ import { Settings } from '@/components/settings';
 import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { useGetMatch, useGetOddMetrics } from '@/services';
 import { IOdd } from '@/types';
-import { colors } from '@/constants/colors';
-import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { formatKNumber } from '@/utils/format-k-number';
 
 const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {

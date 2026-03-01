@@ -1,8 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { TeamService } from './team-service';
+
 import { ITeam } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
+
+import { TeamService } from './team-service';
 
 // QUERIES OPTIONS
 

@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+
 import { IApiResponse } from './types';
 
 interface IApiError {

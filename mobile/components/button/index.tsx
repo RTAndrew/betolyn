@@ -1,7 +1,9 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { PropsWithChildren } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { colors } from '@/constants/colors';
+
 import { ThemedText } from '../ThemedText';
 
 interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {

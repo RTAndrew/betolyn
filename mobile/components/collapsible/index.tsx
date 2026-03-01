@@ -1,6 +1,8 @@
-import { View, Text, TouchableOpacity, StyleSheet, TouchableOpacityProps } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, TouchableOpacityProps } from 'react-native';
+
 import { colors } from '@/constants/colors';
+
 import { IconSymbol } from '../ui/IconSymbol';
 
 interface CollapsibleProps extends TouchableOpacityProps {

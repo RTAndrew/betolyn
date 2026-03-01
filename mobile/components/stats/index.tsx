@@ -1,6 +1,7 @@
-import { ThemedText } from '@/components/ThemedText';
 import React, { ReactNode } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
+
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 
 export interface StatItem {

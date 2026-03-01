@@ -1,9 +1,10 @@
+import React, { cloneElement, isValidElement, ReactNode } from 'react';
+import { type ViewStyle, Pressable, StyleSheet, View } from 'react-native';
+
 import { Right } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { hexToRgba } from '@/utils/hex-rgba';
-import React, { cloneElement, isValidElement, ReactNode } from 'react';
-import { type ViewStyle, Pressable, StyleSheet, View } from 'react-native';
 
 const BACKGROUND_COLOR = colors.greyLight;
 const BORDER_COLOR = colors.greyMedium;

@@ -1,10 +1,12 @@
-import { ThemedText } from '@/components/ThemedText';
-import { StyleSheet, View } from 'react-native';
 import { useState, forwardRef, useImperativeHandle } from 'react';
-import TextInput from '@/components/forms/text-input';
+import { StyleSheet, View } from 'react-native';
+
 import Switch from '@/components/forms/switch';
-import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types';
+import TextInput from '@/components/forms/text-input';
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+
+import { ICreateCriterionScreen, ICreateCriterionScreenRef } from './types';
 
 export interface IMarketConfigurationFormData {
   name: string;

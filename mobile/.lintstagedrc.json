@@ -1,4 +1,3 @@
 {
-  "*.+(js|jsx|ts|tsx)": ["prettier --write"],
-  "*.+(json|md)": ["prettier --write"]
+  "*.{js,jsx,ts,tsx}": ["oxfmt --no-error-on-unmatched-pattern", "npm run lint:fix"]
 }

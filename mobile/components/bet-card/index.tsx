@@ -8,10 +8,12 @@ import {
   Text as _Text,
   TextProps as _TextProps,
 } from 'react-native';
-import { OddButton } from '../odd-button';
-import { IMatch } from '@/types';
-import { colors } from '@/constants/colors';
+
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
+import { colors } from '@/constants/colors';
+import { IMatch } from '@/types';
+
+import { OddButton } from '../odd-button';
 
 const Text = ({ children, style, ...props }: _TextProps) => {
   return (

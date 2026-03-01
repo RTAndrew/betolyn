@@ -9,9 +9,11 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { colors } from '@/constants/colors';
-import SafeHorizontalView from '../safe-horizontal-view';
+
 import { Close, Down, Left } from '../icons';
+import SafeHorizontalView from '../safe-horizontal-view';
 import { ThemedText } from '../ThemedText';
 
 interface ScreenHeaderProps extends HeaderProps {

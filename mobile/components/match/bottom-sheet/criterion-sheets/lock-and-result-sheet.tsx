@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { Checkbox } from 'react-native-ui-lib';
+
+import BottomSheet from '@/components/bottom-sheet';
+import { Button } from '@/components/button';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { ThemedText } from '@/components/ThemedText';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
-import { Button } from '@/components/button';
-import { Checkbox } from 'react-native-ui-lib';
-import { colors } from '@/constants/colors';
 interface TeamProps {
   name: string;
   score: number;

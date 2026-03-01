@@ -1,13 +1,15 @@
-import BottomSheet from '@/components/bottom-sheet';
 import React, { useMemo, useRef, useState } from 'react';
-import { useMatchBottomSheet } from '../context';
 import { Image, StyleSheet, View } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ISheet } from '../index';
-import { NumberInput } from '@/components/forms';
+
+import BottomSheet from '@/components/bottom-sheet';
 import { Button } from '@/components/button';
-import { useUpdateMatchScore } from '@/services/matches/match-mutation';
+import { NumberInput } from '@/components/forms';
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { useUpdateMatchScore } from '@/services/matches/match-mutation';
+
+import { useMatchBottomSheet } from '../context';
+import { ISheet } from '../index';
 
 interface TeamProps {
   name: string;

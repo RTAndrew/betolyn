@@ -1,13 +1,14 @@
-import { Button } from '@/components/button';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
-import ScreenHeader from '@/components/screen-header';
-import { ThemedText } from '@/components/ThemedText';
-import { authStore } from '@/stores/auth.store';
-import { colors } from '@/constants/colors';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
+
+import { Button } from '@/components/button';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import ScreenHeader from '@/components/screen-header';
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+import { authStore } from '@/stores/auth.store';
 
 const Me = () => {
   useSignals();

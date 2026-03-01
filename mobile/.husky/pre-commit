@@ -1,1 +1,1 @@
-cd mobile && npm run format && npm run lint && git add .
+cd mobile && npm run format && npm run lint:fix && git add .

@@ -1,9 +1,11 @@
 import React from 'react';
+
 import BottomSheet from '@/components/bottom-sheet';
+import { useSuspendOdd } from '@/services/odds/odd-mutation';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
-import { useSuspendOdd } from '@/services/odds/odd-mutation';
 
 export const SuspendOddSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();

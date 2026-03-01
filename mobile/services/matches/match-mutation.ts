@@ -1,3 +1,12 @@
+import { useMutation } from '@tanstack/react-query';
+
+import { queryClient } from '@/utils/react-query';
+
+import {
+  getMatchQueryOptions,
+  getMatchCriteriaQueryOptions,
+  getMatchesQueryOptions,
+} from './match-query';
 import {
   IUpdateMatchScoreRequest,
   ICreateMatchRequest,
@@ -6,13 +15,6 @@ import {
   IUpdateMatchStatusRequest,
   MatchesService,
 } from './matches-services';
-import { queryClient } from '@/utils/react-query';
-import { useMutation } from '@tanstack/react-query';
-import {
-  getMatchQueryOptions,
-  getMatchCriteriaQueryOptions,
-  getMatchesQueryOptions,
-} from './match-query';
 
 interface IUpdateMatchScoreVariables {
   matchId: string;

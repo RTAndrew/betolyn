@@ -1,10 +1,11 @@
 import { MessageEvent } from 'react-native-sse';
-import OddSseListener from './odd-sse.listener';
-import MatchSseListener from './match-sse.listener';
-import TeamSseListener from './team-sse.listener';
-import UserSseListener from './user-sse.listener';
+
 import CriterionSseListener from './criterion-sse.listener';
+import MatchSseListener from './match-sse.listener';
+import OddSseListener from './odd-sse.listener';
+import TeamSseListener from './team-sse.listener';
 import { ISseListener } from './types';
+import UserSseListener from './user-sse.listener';
 
 export interface ISseEvent<T extends object> {
   payload: T;

@@ -1,7 +1,8 @@
-import { ThemedText } from '@/components/ThemedText';
 import React from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Switch as ReactNativeUISwitch } from 'react-native-ui-lib';
+
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 
 interface SwitchProps {

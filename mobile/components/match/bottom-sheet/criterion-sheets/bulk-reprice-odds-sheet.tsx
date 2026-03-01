@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+
 import BottomSheet from '@/components/bottom-sheet';
+import { Button } from '@/components/button';
+import { NumberInput } from '@/components/forms';
+import { MatchOptionRow } from '@/components/match/match-option-row';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { useRepriceCriterionOdds } from '@/services';
+import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { NumberInput } from '@/components/forms';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
-import { Button } from '@/components/button';
-import { useRepriceCriterionOdds } from '@/services';
-import { MatchOptionRow } from '@/components/match/match-option-row';
 
 interface IOddValue {
   [key: string]: number;

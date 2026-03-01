@@ -1,12 +1,13 @@
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
+
 import BottomSheet, { BottomSheetProps } from '@/components/bottom-sheet';
 import { Button } from '@/components/button';
 import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet';
 import { OddBaseButton } from '@/components/odd-button';
 import { ThemedView } from '@/components/ThemedView';
-import { IMatch } from '@/types';
 import { colors } from '@/constants/colors';
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
+import { IMatch } from '@/types';
 
 interface InputProps extends Omit<TextInputProps, 'placeholder'> {
   label: string;

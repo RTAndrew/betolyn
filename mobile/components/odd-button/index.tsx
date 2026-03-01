@@ -1,4 +1,4 @@
-import { ICriterion, IOdd } from '@/types';
+import { useMemo } from 'react';
 import {
   Pressable,
   StyleProp,
@@ -9,15 +9,17 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+
 import { colors } from '@/constants/colors';
-import { useMatchBottomSheet } from '../match/bottom-sheet';
-import { IOddSheetData } from '../match/bottom-sheet/types';
 import { useGetOddById } from '@/services/odds/odd-query';
 import { betSlipStore } from '@/stores/bet-slip.store';
-import { useMemo } from 'react';
 import { useSubscribeSlipOdd } from '@/stores/slip-store/use-subscribe-slip-odd';
-import { Lock } from '../icons';
+import { ICriterion, IOdd } from '@/types';
 import { hexToRgba } from '@/utils/hex-rgba';
+
+import { Lock } from '../icons';
+import { useMatchBottomSheet } from '../match/bottom-sheet';
+import { IOddSheetData } from '../match/bottom-sheet/types';
 interface OddButtonProps extends TouchableOpacityProps, Omit<OddBaseButtonProps, 'value' | 'name'> {
   odd: IOdd;
   criterion: Omit<ICriterion, 'match'>;

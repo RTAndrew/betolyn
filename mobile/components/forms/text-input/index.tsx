@@ -1,6 +1,8 @@
-import { StyleSheet, TextInput as _TextInput, TextInputProps, TextStyle } from 'react-native';
 import { useMemo, useState } from 'react';
+import { StyleSheet, TextInput as _TextInput, TextInputProps, TextStyle } from 'react-native';
+
 import { colors } from '@/constants/colors';
+
 import BaseField, { BaseFieldProps } from '../base-field';
 
 interface InputProps extends TextInputProps, Omit<BaseFieldProps, 'children'> {

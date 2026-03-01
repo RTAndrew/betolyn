@@ -1,11 +1,13 @@
-import { MatchEventSmallCard } from '@/components/match-event-small-card';
-import { ThemedText } from '@/components/ThemedText';
-import { useGetMatch } from '@/services';
-import { IBet } from '@/stores/bet-slip.store';
-import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
 import React, { PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
+
+import { MatchEventSmallCard } from '@/components/match-event-small-card';
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+import { useGetMatch } from '@/services';
+import { IBet } from '@/stores/bet-slip.store';
+
 import { BetCard } from './bet-card';
 
 interface BetSlipCardProps {
@@ -13,7 +15,11 @@ interface BetSlipCardProps {
   bets: IBet[];
 }
 
-const BetSlipCard = ({ matchId, bets, children }: PropsWithChildren<BetSlipCardProps>) => {
+const BetSlipCard = ({
+  matchId,
+  bets,
+  children: _children,
+}: PropsWithChildren<BetSlipCardProps>) => {
   const { data, isPending, error } = useGetMatch({ matchId });
   const match = data?.data;
 

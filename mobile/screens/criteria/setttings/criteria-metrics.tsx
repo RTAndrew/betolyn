@@ -1,12 +1,13 @@
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+
 import { SegmentedProgressBar } from '@/components/segmented-progress-bar';
 import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionMetrics } from '@/services';
 import { CriterionStatusEnum } from '@/types';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { getRiskLevelColor } from '@/utils/risk-level-color';
 import { hexToRgba } from '@/utils/hex-rgba';
+import { getRiskLevelColor } from '@/utils/risk-level-color';
 
 function formatCurrency(value: number): string {
   return `$${value.toFixed(2)}`;

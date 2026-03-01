@@ -1,8 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { UserService } from './user-service';
+
 import { IUser } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
+
+import { UserService } from './user-service';
 
 // QUERIES OPTIONS
 

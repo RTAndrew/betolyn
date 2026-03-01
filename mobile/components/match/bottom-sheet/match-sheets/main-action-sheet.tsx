@@ -1,8 +1,8 @@
+import { router } from 'expo-router';
 import React from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { colors } from '@/constants/colors';
-import { ThemedText } from '@/components/ThemedText';
+
+import BottomSheet from '@/components/bottom-sheet';
 import {
   Add,
   SoccerBall,
@@ -12,9 +12,11 @@ import {
   Settings,
   MoneyHand,
 } from '@/components/icons';
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { router } from 'expo-router';
 
 const Team = ({
   name,

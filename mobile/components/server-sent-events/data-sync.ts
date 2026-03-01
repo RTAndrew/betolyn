@@ -176,10 +176,11 @@ class _DataSync {
       const criterionKey = getCriterionByIdQueryOptions({ criterionId });
       queryClient.invalidateQueries({ queryKey: criterionKey.queryKey });
 
-      matchId &&
+      if (matchId) {
         queryClient.invalidateQueries({
           queryKey: getMatchCriteriaQueryOptions({ matchId }).queryKey,
         });
+      }
     }
   }
 

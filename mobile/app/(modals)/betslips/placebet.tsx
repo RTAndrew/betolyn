@@ -1,16 +1,17 @@
-import ScreenHeader from '@/components/screen-header';
-import ScreenWrapper from '@/components/screen-wrapper';
-import { ThemedText } from '@/components/ThemedText';
-import { colors } from '@/constants/colors';
-import { IPlaceBetRequest, usePlaceBet } from '@/services';
-import { useTimeElapsed } from '@/hooks/use-time-elapsed-messages';
-import { betSlipStore } from '@/stores/bet-slip.store';
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
 import { Button } from '@/components/button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
+import ScreenHeader from '@/components/screen-header';
+import ScreenWrapper from '@/components/screen-wrapper';
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+import { useTimeElapsed } from '@/hooks/use-time-elapsed-messages';
+import { IPlaceBetRequest, usePlaceBet } from '@/services';
+import { betSlipStore } from '@/stores/bet-slip.store';
 import { ApiError } from '@/utils/http/api-error';
 
 const PlaceBet = () => {
@@ -53,7 +54,7 @@ const PlaceBet = () => {
       clearSlip();
 
       setIsSuccess(true);
-    } catch (err) {
+    } catch {
       // TODO: set errors to the bet slip
       // if (ApiError.isApiError(err)) {
       //   const error = err.error

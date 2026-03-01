@@ -1,12 +1,13 @@
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedView } from '@/components/ThemedView';
-import { mockAPI } from '@/mock';
-import { IChannelMember } from '@/mock/matches';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
+import { mockAPI } from '@/mock';
+import { IChannelMember } from '@/mock/matches';
 
 const ParticipantCard = ({ member }: { member: IChannelMember }) => {
   const handlePress = () => {

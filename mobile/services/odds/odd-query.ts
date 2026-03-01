@@ -1,8 +1,9 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { OddService } from './odd-service';
 
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
+
+import { OddService } from './odd-service';
 
 type IOdd = Awaited<ReturnType<typeof OddService.findOddById>>;
 type IAllOdds = Awaited<ReturnType<typeof OddService.findAllOdds>>;

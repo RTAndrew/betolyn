@@ -1,10 +1,11 @@
-import { constants } from '@/constants';
-import { AuthService, MeService } from '@/services';
-import { IUser } from '@/types';
-import { SafeStorage } from '@/utils/safe-storage';
 import { computed, signal } from '@preact/signals-react';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+
+import { constants } from '@/constants';
+import { MeService } from '@/services';
+import { IUser } from '@/types';
+import { SafeStorage } from '@/utils/safe-storage';
 
 interface IAuthStore extends IUser {
   token: string;

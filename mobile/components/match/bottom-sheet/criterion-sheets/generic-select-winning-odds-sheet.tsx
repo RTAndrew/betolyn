@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { useMatchBottomSheet } from '../context';
-import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { IWinningOutcome } from '@/services';
-import { MatchOptionRow } from '../../match-option-row';
 import Checkbox from 'react-native-ui-lib/src/components/checkbox';
+
+import BottomSheet from '@/components/bottom-sheet';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { IWinningOutcome } from '@/services';
+import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+
+import { MatchOptionRow } from '../../match-option-row';
+import { useMatchBottomSheet } from '../context';
 
 export interface GenericSelectWinningOddsSheetProps {
   visible: boolean;

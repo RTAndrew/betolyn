@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+
 import { ThemedText } from '../ThemedText';
 import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 
-export interface BottomSheetActionOptionProps
-  extends Omit<TouchableOpacityProps, 'children' | 'activeOpacity'> {
+export interface BottomSheetActionOptionProps extends Omit<
+  TouchableOpacityProps,
+  'children' | 'activeOpacity'
+> {
   text: string;
   icon?: React.ReactNode;
   disabled?: boolean;

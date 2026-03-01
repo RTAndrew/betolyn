@@ -1,5 +1,6 @@
-import { getRequest } from '@/utils/http';
 import { IBetSlip } from '@/types';
+import { getRequest } from '@/utils/http';
+
 import { SignInResponseDTO } from '../app/auth/signup/types';
 
 export class MeService {

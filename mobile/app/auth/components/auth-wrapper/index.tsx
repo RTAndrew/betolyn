@@ -1,11 +1,12 @@
+import { router } from 'expo-router';
+import React, { PropsWithChildren } from 'react';
+import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { LogoComplete2 } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
-import React, { PropsWithChildren } from 'react';
-import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { colors } from '@/constants/colors';
 interface AuthWrapperProps {
   type?: 'signup' | 'login';

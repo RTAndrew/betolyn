@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
+
 import { colors } from '@/constants/colors';
-import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
-import BottomSheetHeader from './bottom-sheet-header';
-import BottomSheetActionOption from './bottom-sheet-action-option';
-import { ThemedText } from '../ThemedText';
+
 import { Button } from '../button';
+import { ThemedText } from '../ThemedText';
+import BottomSheetActionOption from './bottom-sheet-action-option';
+import BottomSheetHeader from './bottom-sheet-header';
+import BottomSheetSafeHorizontalView from './bottom-sheet-safe-horizontal-view';
 
 export interface BottomSheetProps extends ActionSheetProps {
   title?: string;
@@ -19,7 +21,7 @@ const BottomSheet = ({
   containerStyle,
   indicatorStyle,
   visible = true,
-  minHeight,
+  minHeight: _minHeight,
   children,
   onClose,
   title,

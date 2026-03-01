@@ -1,3 +1,8 @@
+import { useMutation } from '@tanstack/react-query';
+
+import { queryClient } from '@/utils/react-query';
+
+import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from '../matches/match-query';
 import {
   IRepriceOddsRequest,
   IUpdateCriterionStatusRequest,
@@ -5,9 +10,6 @@ import {
   IWinningOutcome,
   CriterionService,
 } from './criterion-service';
-import { queryClient } from '@/utils/react-query';
-import { useMutation } from '@tanstack/react-query';
-import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from '../matches/match-query';
 
 interface IRepriceCriterionOddsVariables {
   criterionId: string;

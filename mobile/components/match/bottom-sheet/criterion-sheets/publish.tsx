@@ -1,9 +1,11 @@
 import React from 'react';
+
 import BottomSheet from '@/components/bottom-sheet';
+import { IMatchCriteriaResponse } from '@/services';
+import { usePublishCriterion } from '@/services/criteria/criterion-mutation';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { usePublishCriterion } from '@/services/criteria/criterion-mutation';
-import { IMatchCriteriaResponse } from '@/services';
 
 export const PublishCriterionSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();

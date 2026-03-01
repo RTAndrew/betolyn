@@ -1,13 +1,14 @@
+import React from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
 import { DonutChart } from '@/components/donut-chart';
 import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
-import { useGetMatchMetrics } from '@/services';
 import { colors } from '@/constants/colors';
+import { useGetMatchMetrics } from '@/services';
 import { formatKNumber } from '@/utils/format-k-number';
-import { getRiskLevelColor } from '@/utils/risk-level-color';
 import { hexToRgba } from '@/utils/hex-rgba';
-import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { getRiskLevelColor } from '@/utils/risk-level-color';
 
 export interface MatchMetricsProps {
   matchId: string;

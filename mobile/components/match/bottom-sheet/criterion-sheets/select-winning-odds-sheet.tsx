@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+
+import { Button } from '@/components/button';
+import { IWinningOutcome, useSelectWinningOutcomes } from '@/services';
+import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { IWinningOutcome, useSelectWinningOutcomes } from '@/services';
 import { GenericSelectWinningOddsSheet } from './generic-select-winning-odds-sheet';
-import { Button } from '@/components/button';
 
 export const CriterionSelectWinningOutcomeSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();

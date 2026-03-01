@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import AuthWrapper, { AuthForm } from '../components/auth-wrapper';
-import TextInput from '@/components/forms/text-input';
-import { GradientButton } from '@/components/button';
-import { AuthService } from '../../../services/auth-service';
-import { SafeStorage } from '@/utils/safe-storage';
-import { ApiError } from '@/utils/http/api-error';
 import { router } from 'expo-router';
+import React, { useState } from 'react';
+
+import { GradientButton } from '@/components/button';
+import TextInput from '@/components/forms/text-input';
 import { ThemedText } from '@/components/ThemedText';
 import { constants } from '@/constants';
 import { authStore } from '@/stores/auth.store';
+import { ApiError } from '@/utils/http/api-error';
+import { SafeStorage } from '@/utils/safe-storage';
+
+import { AuthService } from '../../../services/auth-service';
+import AuthWrapper, { AuthForm } from '../components/auth-wrapper';
 
 interface FormData {
   email: {

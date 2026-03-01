@@ -1,8 +1,3 @@
-import Collapsible from '@/components/collapsible/index';
-import { OddButton } from '@/components/odd-button';
-import { ThemedView } from '@/components/ThemedView';
-import { useGetMatch, useGetMatchCriteria } from '@/services/matches/match-query';
-import { colors } from '@/constants/colors';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import {
@@ -16,10 +11,16 @@ import {
   ViewProps,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
-import ScreenHeader from '@/components/screen-header';
+
+import Collapsible from '@/components/collapsible/index';
 import { MoreVertical, Sync, Settings } from '@/components/icons';
+import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
+import { OddButton } from '@/components/odd-button';
+import ScreenHeader from '@/components/screen-header';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { colors } from '@/constants/colors';
+import { useGetMatch, useGetMatchCriteria } from '@/services/matches/match-query';
 
 interface MatchTeamProps {
   name: string;

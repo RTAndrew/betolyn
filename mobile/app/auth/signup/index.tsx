@@ -1,11 +1,13 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
-import AuthWrapper, { AuthForm } from '../components/auth-wrapper';
+
 import { GradientButton } from '@/components/button';
 import TextInput from '@/components/forms/text-input';
 import { ThemedText } from '@/components/ThemedText';
-import { ApiError } from '@/utils/http/api-error';
-import { router } from 'expo-router';
 import { AuthService } from '@/services';
+import { ApiError } from '@/utils/http/api-error';
+
+import AuthWrapper, { AuthForm } from '../components/auth-wrapper';
 
 interface FormData {
   username: {

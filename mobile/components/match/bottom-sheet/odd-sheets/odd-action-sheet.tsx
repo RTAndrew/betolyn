@@ -1,13 +1,15 @@
 import React from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { ActivityIndicator, View } from 'react-native';
+
+import BottomSheet from '@/components/bottom-sheet';
 import { DollarEuro, Eye, LockClosed, Trash } from '@/components/icons';
+import { colors } from '@/constants/colors';
+import { useGetOddById } from '@/services/odds/odd-query';
+import { CriterionStatusEnum, EOddStatus } from '@/types';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 import { IOddSheetData } from '../types';
-import { CriterionStatusEnum, EOddStatus } from '@/types';
-import { useGetOddById } from '@/services/odds/odd-query';
-import { colors } from '@/constants/colors';
 
 const canPublishOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${CriterionStatusEnum}`) => {
   if (criterionStatus !== 'ACTIVE') return false;

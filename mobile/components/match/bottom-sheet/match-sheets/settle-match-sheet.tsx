@@ -1,13 +1,15 @@
+import { router } from 'expo-router';
 import React from 'react';
-import BottomSheet from '@/components/bottom-sheet';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
+
+import BottomSheet from '@/components/bottom-sheet';
+import { useSettleMatch } from '@/services/matches/match-mutation';
+import { useGetMatchCriteria } from '@/services/matches/match-query';
+import { MatchStatusEnum, CriterionStatusEnum } from '@/types';
+import { ApiError } from '@/utils/http/api-error';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { MatchStatusEnum, CriterionStatusEnum } from '@/types';
-import { useGetMatchCriteria } from '@/services/matches/match-query';
-import { useSettleMatch } from '@/services/matches/match-mutation';
-import { router } from 'expo-router';
-import { ApiError } from '@/utils/http/api-error';
 
 const MESSAGE_NOT_ENDED =
   'Match must be ended before you can settle. End the match first, then settle.';

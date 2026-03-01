@@ -1,17 +1,17 @@
-import { queryClient } from '@/utils/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { colors } from '@/constants/colors';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 import StreamEventSource from '@/components/server-sent-events';
-import { useEffect, useState } from 'react';
+import { colors } from '@/constants/colors';
 import { hydrateAuthStore } from '@/stores/auth.store';
-import * as SplashScreen from 'expo-splash-screen';
+import { queryClient } from '@/utils/react-query';
 
 if (__DEV__) {
   require('../reactotron-config');
@@ -29,7 +29,7 @@ export default function RootLayout() {
   const handleHydration = async () => {
     try {
       await hydrateAuthStore();
-    } catch (error) {
+    } catch {
     } finally {
       setIsHydrated(false);
       try {

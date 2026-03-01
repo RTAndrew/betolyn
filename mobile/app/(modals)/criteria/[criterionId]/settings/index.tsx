@@ -1,3 +1,7 @@
+import { router, useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+
 import Switch from '@/components/forms/switch';
 import { MoreVertical, Trophy } from '@/components/icons';
 import { useMatchBottomSheet } from '@/components/match/bottom-sheet/context';
@@ -8,13 +12,10 @@ import ScreenWrapper from '@/components/screen-wrapper';
 import { Settings } from '@/components/settings';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import CriteriaMetrics from '@/screens/criteria/setttings/criteria-metrics';
 import { useGetCriterionById } from '@/services';
 import { ICriterion } from '@/types';
-import { colors } from '@/constants/colors';
-import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 
 const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
   const { pushSheet } = useMatchBottomSheet();

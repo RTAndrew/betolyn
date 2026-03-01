@@ -1,11 +1,13 @@
+import { useMutation } from '@tanstack/react-query';
+
+import { queryClient } from '@/utils/react-query';
+
 import {
   IUpdateOddStatusRequest,
   IUpdateOddValueRequest,
   ICreateOddRequest,
   OddService,
 } from '../odds/odd-service';
-import { queryClient } from '@/utils/react-query';
-import { useMutation } from '@tanstack/react-query';
 
 interface IUpdateOddStatusVariables {
   oddId: string;

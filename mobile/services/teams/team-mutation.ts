@@ -1,7 +1,9 @@
-import { ICreateTeamRequest, TeamService } from './team-service';
-import { queryClient } from '@/utils/react-query';
 import { useMutation } from '@tanstack/react-query';
+
+import { queryClient } from '@/utils/react-query';
+
 import { getAllTeamsQueryOptions, getTeamByIdQueryOptions } from './team-query';
+import { ICreateTeamRequest, TeamService } from './team-service';
 
 interface ICreateTeamVariables {
   variables: ICreateTeamRequest;

@@ -1,15 +1,17 @@
-import React from 'react';
 import { useSignals } from '@preact/signals-react/runtime';
-import { betSlipStore } from '@/stores/bet-slip.store';
+import { router } from 'expo-router';
+import React from 'react';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
-import { colors } from '@/constants/colors';
+
+import BottomSheet from '@/components/bottom-sheet';
+import { Eye, Trash } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
-import BetSlipFooter from '../../../components/bet-slip/bet-slip-footer';
-import BottomSheet from '@/components/bottom-sheet';
+import { colors } from '@/constants/colors';
+import { betSlipStore } from '@/stores/bet-slip.store';
+
 import BetSlipCard from '../../../components/bet-slip/bet-slip-card';
-import { Eye, Trash } from '@/components/icons';
-import { router } from 'expo-router';
+import BetSlipFooter from '../../../components/bet-slip/bet-slip-footer';
 
 const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 60;
 

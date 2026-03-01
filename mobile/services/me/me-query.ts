@@ -1,8 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { MeService } from '../me-service';
-import { IBetSlip } from '@/types';
+
 import { SignInResponseDTO } from '@/app/auth/signup/types';
+import { IBetSlip } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
+
+import { MeService } from '../me-service';
 
 // QUERIES OPTIONS
 

@@ -1,10 +1,11 @@
-import BetCard from '@/components/bet-card';
-import { ThemedView } from '@/components/ThemedView';
-import { useGetMatches } from '@/services';
-import { IMatch } from '@/types';
-import { colors } from '@/constants/colors';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+
+import BetCard from '@/components/bet-card';
+import { ThemedView } from '@/components/ThemedView';
+import { colors } from '@/constants/colors';
+import { useGetMatches } from '@/services';
+import { IMatch } from '@/types';
 
 interface ChannelSearchMatchesProps {
   onMatchPress?: (match: IMatch) => void;

@@ -1,10 +1,11 @@
+import { router } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator } from 'react-native';
+
 import { Settings } from '@/components/settings';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatchCriteria } from '@/services';
 import { CriterionStatusEnum } from '@/types';
-import { router } from 'expo-router';
-import React from 'react';
-import { ActivityIndicator } from 'react-native';
 
 interface MatchSettingsCriteriaListProps {
   matchId: string;

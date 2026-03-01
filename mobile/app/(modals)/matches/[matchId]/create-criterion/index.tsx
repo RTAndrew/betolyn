@@ -1,19 +1,21 @@
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useState, useRef } from 'react';
+import { ScrollView, StyleSheet, View, Platform, Alert } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+
+import BottomSheet from '@/components/bottom-sheet';
+import { Button } from '@/components/button';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import { ThemedText } from '@/components/ThemedText';
-import { useCreateCriterion, useGetMatch } from '@/services';
+import Wizard from '@/components/wizard';
 import { colors } from '@/constants/colors';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View, Platform, Alert } from 'react-native';
-import { useMemo, useState, useRef } from 'react';
-import SafeHorizontalView from '@/components/safe-horizontal-view';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { useCreateCriterion, useGetMatch } from '@/services';
+import { CriterionStatusEnum, EOddStatus } from '@/types';
+
 import MarketConfiguration, { IMarketConfigurationFormData } from './market-configuration';
-import { Button } from '@/components/button';
 import CreateCriterionOutcomes, { ICreateCriterionOdds } from './outcomes';
 import { ICreateCriterionScreenRef } from './types';
-import Wizard from '@/components/wizard';
-import BottomSheet from '@/components/bottom-sheet';
-import { CriterionStatusEnum, EOddStatus } from '@/types';
 
 type TScreen = 'market-configuration' | 'outcomes';
 

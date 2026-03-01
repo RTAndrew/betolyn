@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+
 import BottomSheet from '@/components/bottom-sheet';
+import Switch from '@/components/forms/switch';
+import { useUpdateMatchStatus } from '@/services/matches/match-mutation';
+import { MatchStatusEnum } from '@/types';
+
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
-import { MatchStatusEnum } from '@/types';
-import { useUpdateMatchStatus } from '@/services/matches/match-mutation';
-import Switch from '@/components/forms/switch';
-import { StyleSheet, View } from 'react-native';
 
 export const EndMatchSheet = ({ visible = false }: ISheet) => {
   const { closeAll, match } = useMatchBottomSheet();

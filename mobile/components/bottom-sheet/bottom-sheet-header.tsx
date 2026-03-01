@@ -1,10 +1,12 @@
+import AntDesign from '@expo/vector-icons/AntDesign';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
+
 import { colors } from '@/constants/colors';
-import { ThemedText } from '../ThemedText';
-import SafeHorizontalView from '../safe-horizontal-view';
+
 import { CloseFilled } from '../icons';
+import SafeHorizontalView from '../safe-horizontal-view';
+import { ThemedText } from '../ThemedText';
 
 interface IHeaderWithChildren {
   title?: never;

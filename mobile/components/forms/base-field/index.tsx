@@ -1,5 +1,7 @@
 import { StyleSheet, View, ViewStyle } from 'react-native';
+
 import { colors } from '@/constants/colors';
+
 import { ThemedText } from '../../ThemedText';
 
 export interface BaseFieldProps {

@@ -1,37 +1,37 @@
 {
-	"python.defaultInterpreterPath": "./backend/.venv/bin/python",
-	"python.terminal.activateEnvironment": true,
-	"python.analysis.autoImportCompletions": true,
-	"python.analysis.typeCheckingMode": "basic",
-	"python.analysis.autoSearchPaths": true,
-	"python.analysis.extraPaths": ["./backend"],
-	"files.associations": {
-		"*.py": "python"
-	},
-	"python.linting.enabled": true,
-	"python.linting.pylintEnabled": false,
-	"python.linting.flake8Enabled": true,
-	"editor.formatOnSave": true,
-	"python.formatting.provider": "black",
 	"cursorpyright.analysis.autoImportCompletions": true,
 	"cursorpyright.analysis.autoSearchPaths": true,
 	"cursorpyright.analysis.extraPaths": ["./backend"],
 	"cursorpyright.analysis.typeCheckingMode": "basic",
+	"java.configuration.updateBuildConfiguration": "automatic",
+	"java.compile.nullAnalysis.mode": "automatic",
 
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "vscode.typescript-language-features"
+	// JavaScript/TypeScript
+	"editor.defaultFormatter": "oxc.oxc-vscode",
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "explicit",
+		"source.fixAll.oxc": "explicit",
+		"source.organizeImports": "explicit",
+		"source.sortMembers": "explicit"
+	},
+	"oxc.fixKind": "dangerous_fix_or_suggestion",
+	"oxc.fmt.configPath": ".oxfmtrc.json",
+	"[javascript]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"workbench.editor.customLabels.patterns": {
 		"**/**/index.js": "${dirname} → index.js",
 		"**/**/index.ts": "${dirname} → index.ts",
 		"**/**/index.tsx": "${dirname} → index.tsx",
 		"**/**/styles.tsx": "${dirname} → styles.tsx"
-	},
-	"java.configuration.updateBuildConfiguration": "automatic",
-	"java.compile.nullAnalysis.mode": "automatic"
+	}
 }
-
-

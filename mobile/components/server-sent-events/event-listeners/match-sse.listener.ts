@@ -1,7 +1,8 @@
+import { IMatch } from '@/types';
+
 import { DataSync } from '../data-sync';
 import { ISseEvent } from './sse-listener-factory';
 import { ISseListener } from './types';
-import { IMatch } from '@/types';
 
 type TPayload = ISseEvent<any>;
 

@@ -1,7 +1,7 @@
 import { ScrollView } from 'react-native';
 
-import { ThemedView } from '@/components/ThemedView';
 import ChannelCard from '@/components/channel-card';
+import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
 import { mockAPI } from '@/mock';
 

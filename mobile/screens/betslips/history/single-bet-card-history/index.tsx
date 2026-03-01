@@ -1,10 +1,11 @@
-import SafeHorizontalView from '@/components/safe-horizontal-view';
-import { ThemedText } from '@/components/ThemedText';
-import { useGetCriterionById, useGetMatch, useGetOddById } from '@/services';
-import { IBetSlipItem, IBetSlipItemStatus } from '@/types';
-import { colors } from '@/constants/colors';
 import React from 'react';
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
+
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
+import { useGetCriterionById, useGetMatch, useGetOddById } from '@/services';
+import { IBetSlipItem, IBetSlipItemStatus } from '@/types';
 
 function formatOdd(value: number): string {
   return value.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 });

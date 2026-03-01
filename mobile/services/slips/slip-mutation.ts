@@ -1,6 +1,8 @@
-import { IPlaceBetRequestDTO, SlipService } from './slip-service';
-import { queryClient } from '@/utils/react-query';
 import { useMutation } from '@tanstack/react-query';
+
+import { queryClient } from '@/utils/react-query';
+
+import { IPlaceBetRequestDTO, SlipService } from './slip-service';
 
 interface IPlaceBetVariables {
   variables: IPlaceBetRequestDTO;

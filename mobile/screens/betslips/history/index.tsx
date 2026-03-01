@@ -1,13 +1,15 @@
+import { router } from 'expo-router';
+import React, { PropsWithChildren } from 'react';
+import { ActivityIndicator, FlatList, Platform, View } from 'react-native';
+
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { useGetMyBets } from '@/services/me/me-query';
 import { IBetSlipItem } from '@/types';
-import { colors } from '@/constants/colors';
-import { router } from 'expo-router';
-import React, { PropsWithChildren } from 'react';
-import { ActivityIndicator, FlatList, Platform, View } from 'react-native';
+
 import SingleBetCardHistory from './single-bet-card-history';
 
 const Header = ({ children }: PropsWithChildren) => {
