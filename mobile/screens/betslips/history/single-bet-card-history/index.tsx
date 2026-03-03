@@ -144,10 +144,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 32,
     height: 32,
-    padding: 2,
+    // padding: 2,
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: colors.greyMedium,
+    // borderWidth: 1,
+    // borderColor: colors.greyMedium,
     backgroundColor: colors.greyMedium,
   },
   logoOverlap: {

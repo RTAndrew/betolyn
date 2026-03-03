@@ -21,7 +21,7 @@ const canPublishOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${Criterion
 };
 
 const canSuspendOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${CriterionStatusEnum}`) => {
-  if (criterionStatus === 'DRAFT') return false;
+  if (criterionStatus === 'DRAFT' || criterionStatus === 'SUSPENDED') return false;
 
   if (oddStatus === 'SUSPENDED') return false;
   if (oddStatus === 'SETTLED') return false;
@@ -39,6 +39,8 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
     queryOptions: { refetchOnMount: 'always' },
   });
   const odd = oddRes?.data ?? sheetOdd;
+
+  console.log('odd', oddRes?.data?.criterion);
 
   if (isPending) {
     return (

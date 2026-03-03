@@ -43,7 +43,7 @@ const ActiveTag = ({ title = 'Active', icon }: ActiveTagProps) => {
       icon={icon}
       title={title}
       textColor="#36D399"
-      borderColor="#36D399"
+      borderColor={hexToRgba('#36D399', 0.5)}
       backgroundColor={hexToRgba('#36D399', 0.12)}
     />
   );
