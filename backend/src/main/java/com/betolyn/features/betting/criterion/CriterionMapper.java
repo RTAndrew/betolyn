@@ -4,6 +4,7 @@ import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.shared.BaseMapperConfig;
+import com.betolyn.shared.MoneyMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -25,11 +26,13 @@ public interface CriterionMapper {
 
         for (var odd : odds) {
             var dto = new OddDTO();
-            dto.setValue(odd.getValue());
+            dto.setValue(MoneyMapper.oddPriceToBigDecimal(odd.getValue()));
             dto.setStatus(odd.getStatus());
             dto.setName(odd.getName());
             dto.setId(odd.getId());
             dto.setIsWinner(odd.getIsWinner());
+            dto.setTotalStakesVolume(MoneyMapper.betMoneyToBigDecimal(odd.getTotalStakesVolume()));
+            dto.setPotentialPayoutVolume(MoneyMapper.betMoneyToBigDecimal(odd.getPotentialPayoutVolume()));
             oddsDTO.add(dto);
         }
 
@@ -40,5 +43,10 @@ public interface CriterionMapper {
     @Mapping(source = "match.mainCriterion", target = "match.mainCriterion", ignore = true)
     CriterionDTO toCriterionDTO(CriterionEntity entity);
 
+    @Mapping(target = "totalStakesVolume", ignore = true)
+    @Mapping(target = "reservedLiability", ignore = true)
+    @Mapping(target = "maxReservedLiability", ignore = true)
+    @Mapping(target = "odds", ignore = true)
+    @Mapping(target = "match", ignore = true)
     CriterionEntity toCriterionEntity(CriterionDTO criterionDTO);
 }

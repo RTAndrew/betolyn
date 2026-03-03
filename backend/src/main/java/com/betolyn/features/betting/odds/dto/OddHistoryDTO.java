@@ -4,11 +4,13 @@ import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.user.UserDTO;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class OddHistoryDTO {
     private String id;
     private String name;
-    private double value;
+    private BigDecimal value;
     private OddStatusEnum status;
 //    private OddDTO odd; // this is not used in the OddDTO
     private UserDTO createdBy;

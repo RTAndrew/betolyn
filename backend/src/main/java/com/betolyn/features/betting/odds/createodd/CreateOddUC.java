@@ -1,6 +1,7 @@
 package com.betolyn.features.betting.odds.createodd;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.odds.*;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 record CreateOddEventDTO (String oddId, String criterionId, String matchId, OddStatusEnum status){}
@@ -36,7 +38,7 @@ public class CreateOddUC implements IUseCase<CreateOddRequestDTO, OddEntity> {
 
         OddEntity odd = new OddEntity();
         odd.setName(data.getName());
-        odd.setValue(data.getValue());
+        odd.setValue(new OddPrice(data.getValue()));
         odd.setStatus(data.getStatus());
 
         if (data.getCriterionId() != null) {

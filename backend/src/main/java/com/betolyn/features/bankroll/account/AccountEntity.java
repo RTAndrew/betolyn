@@ -3,8 +3,12 @@ package com.betolyn.features.bankroll.account;
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import com.betolyn.shared.exceptions.BusinessRuleException;
+import com.betolyn.shared.money.BetMoney;
+import com.betolyn.shared.money.BetMoneyAttributeConverter;
+import com.betolyn.shared.money.MoneyConstants;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,8 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-
-import java.math.BigDecimal;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -32,18 +35,20 @@ public class AccountEntity extends BaseEntity {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private AccountOwnerTypeEnum ownerType;
 
-    @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal balanceAvailable = BigDecimal.ZERO;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney balanceAvailable = BetMoney.zero();
 
-    @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal balanceReserved = BigDecimal.ZERO;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney balanceReserved = BetMoney.zero();
 
-    public AccountEntity(String ownerId, AccountOwnerTypeEnum ownerType, BigDecimal balanceAvailable,
-            BigDecimal balanceReserved) {
+    public AccountEntity(String ownerId, AccountOwnerTypeEnum ownerType, BetMoney balanceAvailable,
+            BetMoney balanceReserved) {
         this.ownerId = ownerId;
         this.ownerType = ownerType;
-        this.balanceAvailable = balanceAvailable != null ? balanceAvailable : BigDecimal.ZERO;
-        this.balanceReserved = balanceReserved != null ? balanceReserved : BigDecimal.ZERO;
+        this.balanceAvailable = Objects.requireNonNullElse(balanceAvailable, BetMoney.zero());
+        this.balanceReserved = Objects.requireNonNullElse(balanceReserved, BetMoney.zero());
     }
 
     @Override
@@ -57,32 +62,49 @@ public class AccountEntity extends BaseEntity {
      *
      * @throws BusinessRuleException if ownerType is SYSTEM or amount is not positive or exceeds available balance
      */
-    public void lockFunds(BigDecimal amount) {
-//        if (ownerType == AccountOwnerTypeEnum.SYSTEM) {
-//            throw new BusinessRuleException("SYSTEM_ACCOUNT_LOCK_FUNDS_NOT_ALLOWED","SYSTEM accounts cannot lock funds");
-//        }
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessRuleException("INVALID_AMOUNT","Amount must be positive");
+    public void lockFunds(BetMoney amount) {
+        if (amount == null || !amount.isGreaterThan(BetMoney.zero())) {
+            throw new BusinessRuleException("INVALID_AMOUNT", "Amount must be positive");
         }
-        if (balanceAvailable.compareTo(amount) < 0) {
-            throw new BusinessRuleException("INSUFFICIENT_AVAILABLE_BALANCE","Insufficient available balance");
+        if (balanceAvailable.isLessThan(amount)) {
+            throw new BusinessRuleException("INSUFFICIENT_AVAILABLE_BALANCE", "Insufficient available balance");
         }
         this.balanceAvailable = this.balanceAvailable.subtract(amount);
         this.balanceReserved = this.balanceReserved.add(amount);
     }
 
-    public void releaseFunds(BigDecimal amount) {
-//        if (ownerType == AccountOwnerTypeEnum.SYSTEM) {
-//            throw new BusinessRuleException("SYSTEM_ACCOUNT_LOCK_FUNDS_NOT_ALLOWED","SYSTEM accounts cannot lock funds");
-//        }
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessRuleException("INVALID_AMOUNT","Amount must be positive");
+    public void releaseFunds(BetMoney amount) {
+        if (amount == null || !amount.isGreaterThan(BetMoney.zero())) {
+            throw new BusinessRuleException("INVALID_AMOUNT", "Amount must be positive");
         }
-        if (balanceReserved.compareTo(amount) < 0) {
+        if (balanceReserved.isLessThan(amount)) {
             throw new BusinessRuleException("INSUFFICIENT_RESERVED_BALANCE_TO_RELEASE",
                     "Insufficient reserved balance to release");
         }
         this.balanceAvailable = this.balanceAvailable.add(amount);
+        this.balanceReserved = this.balanceReserved.subtract(amount);
+    }
+
+    /**
+     * Consumes reserved funds permanently (e.g. losing a bet) without returning them
+     * to available balance.
+     * Currently only USER accounts are allowed to lose stake via this method.
+     *
+     * @throws BusinessRuleException if amount is invalid, exceeds reserved balance,
+     *                               or ownerType is not USER.
+     */
+    public void consumeReservedStake(BetMoney amount) {
+        if (amount == null || !amount.isGreaterThan(BetMoney.zero())) {
+            throw new BusinessRuleException("INVALID_AMOUNT", "Amount must be positive");
+        }
+        if (this.ownerType != AccountOwnerTypeEnum.USER) {
+            throw new BusinessRuleException("INVALID_ACCOUNT_TYPE",
+                    "Only USER accounts can consume reserved stake via this operation");
+        }
+        if (balanceReserved.isLessThan(amount)) {
+            throw new BusinessRuleException("INSUFFICIENT_RESERVED_BALANCE_TO_CONSUME",
+                    "Insufficient reserved balance to consume");
+        }
         this.balanceReserved = this.balanceReserved.subtract(amount);
     }
 }

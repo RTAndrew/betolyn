@@ -1,1 +1,2 @@
-cd mobile && npm run format && npm run lint:fix && git add .
+cd mobile
+npx lint-staged

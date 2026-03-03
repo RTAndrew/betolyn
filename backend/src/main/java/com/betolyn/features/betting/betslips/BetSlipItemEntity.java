@@ -1,12 +1,13 @@
 package com.betolyn.features.betting.betslips;
 
-
 import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddHistoryEntity;
-import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.betolyn.shared.money.BetMoney;
+import com.betolyn.shared.money.BetMoneyAttributeConverter;
+import com.betolyn.shared.money.MoneyConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,19 +21,20 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 @Entity
 @Table(name = "bet_slip_items")
 public class BetSlipItemEntity extends AuditableEntity {
-    // denormalized to facilitate query
-    // no need to relationships
     @Column(nullable = false)
     private String matchId;
     @Column(nullable = false)
     private String criterionId;
 
-    @Column(nullable = false)
-    private Double stake;
-    @Column(nullable = false)
-    private Double potentialPayout;
-    @Column(nullable = false)
-    private Double oddValueAtPlacement;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney stake;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney potentialPayout;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = OddPriceAttributeConverter.class)
+    private OddPrice oddValueAtPlacement;
 
     private String voidReason;
 

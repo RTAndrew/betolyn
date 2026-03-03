@@ -8,6 +8,7 @@ import org.mapstruct.ReportingPolicy;
 @MapperConfig(
     componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        uses = { MoneyMapper.class }
 )
 public interface BaseMapperConfig { }

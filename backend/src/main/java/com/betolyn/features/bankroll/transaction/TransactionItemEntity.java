@@ -3,7 +3,11 @@ package com.betolyn.features.bankroll.transaction;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.betolyn.shared.money.BetMoney;
+import com.betolyn.shared.money.BetMoneyAttributeConverter;
+import com.betolyn.shared.money.MoneyConstants;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,8 +19,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -45,8 +47,9 @@ public class TransactionItemEntity extends BaseEntity {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private AccountTypeEnum toAccountType;
 
-    @Column(nullable = false, precision = 19, scale = 4)
-    private BigDecimal amount;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney amount;
 
     @Override
     protected EntityUUID getUUIDPrefix() {

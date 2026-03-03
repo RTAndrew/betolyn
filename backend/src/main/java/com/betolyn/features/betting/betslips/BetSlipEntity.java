@@ -1,20 +1,33 @@
 package com.betolyn.features.betting.betslips;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
-import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
-import jakarta.persistence.*;
+import com.betolyn.shared.money.BetMoney;
+import com.betolyn.shared.money.BetMoneyAttributeConverter;
+import com.betolyn.shared.money.MoneyConstants;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,16 +36,19 @@ import java.util.List;
 @Table(name = "bet_slips")
 public class BetSlipEntity extends AuditableEntity {
 
-    private Double totalCumulativeOdds;
+    @Column(precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    private BigDecimal totalCumulativeOdds;
 
     @Column(nullable = false)
     private Double totalItemsCount;
 
-    @Column(nullable = false)
-    private Double totalStake;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney totalStake;
 
-    @Column(nullable = false)
-    private Double totalPotentialPayout;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney totalPotentialPayout;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -50,16 +66,11 @@ public class BetSlipEntity extends AuditableEntity {
     @OneToMany(mappedBy = "betSlip", cascade = CascadeType.ALL)
     private List<BetSlipItemEntity> items = new ArrayList<>();
 
-    @Override
-    protected EntityUUID getUUIDPrefix() {
-        return new EntityUUID(12, "slip");
-    }
-
     @PreUpdate
-    /* Whenever creating a new BetSlip with manual `generateId()`,
-      call the function manually
-
-     */
+    // Note: we do NOT use @PrePersist here because bet slips are created with
+    // their ID generated and items populated before the initial save, and we
+    // explicitly call updateProjections() from the use case once all values are
+    // set.
     public void updateProjections() {
         var count = this.getItems().size();
         if (count == 0) {
@@ -68,14 +79,19 @@ public class BetSlipEntity extends AuditableEntity {
 
         setTotalItemsCount((double) count);
 
-        var totalStake = this.getItems().stream()
-                .mapToDouble(BetSlipItemEntity::getStake)
-                .sum();
-        setTotalStake(totalStake);
+        BetMoney totalStakeSum = this.getItems().stream()
+                .map(BetSlipItemEntity::getStake)
+                .reduce(BetMoney.zero(), BetMoney::add);
+        setTotalStake(totalStakeSum);
 
-        var totalPotentialPayout = this.getItems().stream()
-                .mapToDouble(BetSlipItemEntity::getPotentialPayout)
-                .sum();
-        setTotalPotentialPayout(totalPotentialPayout);
+        BetMoney totalPayoutSum = this.getItems().stream()
+                .map(BetSlipItemEntity::getPotentialPayout)
+                .reduce(BetMoney.zero(), BetMoney::add);
+        setTotalPotentialPayout(totalPayoutSum);
+    }
+
+    @Override
+    protected EntityUUID getUUIDPrefix() {
+        return new EntityUUID(12, "slip");
     }
 }

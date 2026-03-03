@@ -2,10 +2,9 @@ package com.betolyn.features.betting.odds.createodd;
 
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
 
-import java.util.Optional;
+import java.math.BigDecimal;
 
 @Data
 public class CreateOddRequestDTO {
@@ -13,7 +12,7 @@ public class CreateOddRequestDTO {
     private String name;
 
     @NotNull
-    private double value = 0.1;
+    private BigDecimal value;
 
     @NotNull
     private String criterionId;

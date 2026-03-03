@@ -27,11 +27,11 @@ import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
+import com.betolyn.shared.money.BetMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +102,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
 
         // 1. VOID (refund)
         for (BetSlipItemEntity item : voidedItems) {
-            BigDecimal stake = BigDecimal.valueOf(item.getStake());
+            BetMoney stake = item.getStake();
             String ownerId = item.getBetSlip().getCreatedBy().getId();
             AccountEntity userAccount = userAccountByOwnerId.computeIfAbsent(ownerId, findAccountByOwnerIdUC::execute);
 
@@ -126,11 +126,11 @@ public class SettleMatchUC implements IUseCase<String, Void> {
                 continue;
             }
 
-            BigDecimal stake = BigDecimal.valueOf(item.getStake());
+            BetMoney stake = item.getStake();
             String ownerId = item.getBetSlip().getCreatedBy().getId();
             AccountEntity userAccount = userAccountByOwnerId.computeIfAbsent(ownerId, findAccountByOwnerIdUC::execute);
 
-            userAccount.setBalanceReserved(userAccount.getBalanceReserved().subtract(stake));
+            userAccount.consumeReservedStake(stake);
             globalEscrow.setBalanceAvailable(globalEscrow.getBalanceAvailable().subtract(stake));
             globalReserve.setBalanceAvailable(globalReserve.getBalanceAvailable().add(stake));
             item.setStatus(BetSlipItemStatusEnum.LOST);
@@ -152,18 +152,16 @@ public class SettleMatchUC implements IUseCase<String, Void> {
                 continue;
             }
 
-            double stake = item.getStake();
-            double potentialPayout = item.getPotentialPayout();
-            double profit = potentialPayout - stake;
-            BigDecimal stakeBd = BigDecimal.valueOf(stake);
-            BigDecimal profitBd = BigDecimal.valueOf(profit);
+            BetMoney stakeMoney = item.getStake();
+            BetMoney potentialPayoutMoney = item.getPotentialPayout();
+            BetMoney profit = potentialPayoutMoney.subtract(stakeMoney);
             String ownerId = item.getBetSlip().getCreatedBy().getId();
             AccountEntity userAccount = userAccountByOwnerId.computeIfAbsent(ownerId, findAccountByOwnerIdUC::execute);
 
-            userAccount.releaseFunds(stakeBd);
-            userAccount.setBalanceAvailable(userAccount.getBalanceAvailable().add(profitBd));
-            globalEscrow.setBalanceAvailable(globalEscrow.getBalanceAvailable().subtract(stakeBd));
-            globalReserve.setBalanceAvailable(globalReserve.getBalanceAvailable().subtract(profitBd));
+            userAccount.releaseFunds(stakeMoney);
+            userAccount.setBalanceAvailable(userAccount.getBalanceAvailable().add(profit));
+            globalEscrow.setBalanceAvailable(globalEscrow.getBalanceAvailable().subtract(stakeMoney));
+            globalReserve.setBalanceAvailable(globalReserve.getBalanceAvailable().subtract(profit));
             item.setStatus(BetSlipItemStatusEnum.WON);
             item.getOdd().setStatus(OddStatusEnum.SETTLED);
 
@@ -173,7 +171,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
             txi.setFromAccountType(AccountTypeEnum.GLOBAL);
             txi.setToAccountId(userAccount.getId());
             txi.setToAccountType(AccountTypeEnum.USER_WALLET);
-            txi.setAmount(profitBd);
+            txi.setAmount(profit);
             transaction.getItems().add(txi);
         }
 

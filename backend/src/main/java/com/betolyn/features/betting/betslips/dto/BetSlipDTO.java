@@ -5,19 +5,20 @@ import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
 import com.betolyn.features.user.UserDTO;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class BetSlipDTO {
 
-    private Double totalCumulativeOdds;
+    private BigDecimal totalCumulativeOdds;
 
     private Double totalItemsCount;
 
-    private Double totalStake;
+    private BigDecimal totalStake;
 
-    private Double totalPotentialPayout;
+    private BigDecimal totalPotentialPayout;
 
     private BetSlipTypeEnum type = BetSlipTypeEnum.SINGLE;
 

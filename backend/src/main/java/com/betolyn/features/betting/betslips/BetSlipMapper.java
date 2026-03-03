@@ -4,6 +4,7 @@ package com.betolyn.features.betting.betslips;
 import com.betolyn.features.betting.betslips.dto.BetSlipDTO;
 import com.betolyn.features.betting.betslips.dto.BetSlipItemDTO;
 import com.betolyn.shared.BaseMapperConfig;
+import com.betolyn.shared.MoneyMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -25,11 +26,11 @@ public interface BetSlipMapper {
         for (var item : items) {
             var dto = new BetSlipItemDTO();
             dto.setId(item.getId());
-            dto.setStake(item.getStake());
+            dto.setStake(MoneyMapper.betMoneyToBigDecimal(item.getStake()));
             dto.setStatus(item.getStatus());
             dto.setVoidReason(item.getVoidReason());
-            dto.setPotentialPayout(item.getPotentialPayout());
-            dto.setOddValueAtPlacement(item.getOddValueAtPlacement());
+            dto.setPotentialPayout(MoneyMapper.betMoneyToBigDecimal(item.getPotentialPayout()));
+            dto.setOddValueAtPlacement(MoneyMapper.oddPriceToBigDecimal(item.getOddValueAtPlacement()));
 
             if (item.getOddHistory() != null) {
                 dto.setLastOddHistoryId(item.getOddHistory().getId());
@@ -51,5 +52,6 @@ public interface BetSlipMapper {
 
 
     @Mapping(source = "items", target = "items", qualifiedByName = "oddEntityToOddDTO")
+    @Mapping(target = "totalCumulativeOdds", source = "totalCumulativeOdds")
     BetSlipDTO toBetSlipDTO(BetSlipEntity betSlip);
 }

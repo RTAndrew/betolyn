@@ -1,5 +1,7 @@
 package com.betolyn.features.betting.criterion.dto;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CriterionMetricsDTO {
     private String criterionName;
-    private Double reservedLiability;
-    private Double maxReservedLiability;
+    private BigDecimal reservedLiability;
+    private BigDecimal maxReservedLiability;
     private Double riskLevel;
-    private Double totalBetsCount;
-    private Double totalStakesVolume;
+    private Integer totalBetsCount;
+    private BigDecimal totalStakesVolume;
     /** Realized P/L (after settlement); null when not settled. */
-    private Double profitAndLosses;
+    private BigDecimal profitAndLosses;
 }

@@ -9,9 +9,11 @@ import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.features.betting.odds.dto.OddMetricsDTO;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
+import com.betolyn.shared.money.BetMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Service
@@ -21,36 +23,46 @@ public class GetOddMetricsUC {
     private final OddMapper oddMapper;
     private final BetSlipItemRepository betSlipItemRepository;
 
+    private static double safeRatio(BetMoney numerator, BetMoney denominator) {
+        if (denominator == null || denominator.isZero()) {
+            return 0.0;
+        }
+        if (numerator == null || numerator.isZero()) {
+            return 0.0;
+        }
+        return numerator.divide(denominator).doubleValue() * 100;
+    }
+
     public OddMetricsDTO execute(String oddId) throws EntityNotfoundException {
         OddEntity odd = findOddByIdUC.execute(oddId);
         CriterionEntity criterion = odd.getCriterion();
 
-        double totalCriterionVolume = criterion.getTotalStakesVolume();
-        double totalOddVolume = Objects.requireNonNullElse(
-                betSlipItemRepository.sumStakeByOddIdExcludingVoided(oddId), 0.0);
+        BetMoney totalCriterionVolume = criterion.getTotalStakesVolume();
+        BigDecimal totalOddVolumeBd = betSlipItemRepository.sumStakeByOddIdExcludingVoided(oddId);
+        BetMoney totalOddVolume = BetMoney.of(Objects.requireNonNullElse(totalOddVolumeBd, BigDecimal.ZERO));
         int totalBetsCount = odd.getTotalBetsCount();
 
-        double marketShare = totalCriterionVolume > 0
-                ? (totalOddVolume / totalCriterionVolume) * 100
-                : 0.0;
+        double marketShare = safeRatio(totalOddVolume, totalCriterionVolume);
 
-        Double profitAndLosses = null;
+        BigDecimal profitAndLosses = null;
         if (criterion.getStatus() == CriterionStatusEnum.SETTLED) {
-            Double totalPaidToWinners = betSlipItemRepository.sumPotentialPayoutByOddIdWhereWon(oddId);
+            BigDecimal totalPaidToWinners = betSlipItemRepository.sumPotentialPayoutByOddIdWhereWon(oddId);
             if (totalPaidToWinners != null) {
-                profitAndLosses = totalOddVolume - totalPaidToWinners;
+                profitAndLosses = totalOddVolume.subtract(BetMoney.of(totalPaidToWinners)).toBigDecimal();
             }
         }
 
-        double averageStake = Objects.requireNonNullElse(
-                betSlipItemRepository.averageStakeByOddId(oddId), 0.0);
+        BigDecimal averageStake = Objects.requireNonNullElse(
+                betSlipItemRepository.averageStakeByOddId(oddId),
+                BigDecimal.ZERO
+        );
 
         OddDTO oddDTO = oddMapper.toOddDTO(odd);
 
         return OddMetricsDTO.builder()
                 .odd(oddDTO)
-                .totalCriterionVolume(totalCriterionVolume)
-                .totalOddVolume(totalOddVolume)
+                .totalCriterionVolume(totalCriterionVolume.toBigDecimal())
+                .totalOddVolume(totalOddVolume.toBigDecimal())
                 .marketShare(marketShare)
                 .profitAndLosses(profitAndLosses)
                 .averageStake(averageStake)

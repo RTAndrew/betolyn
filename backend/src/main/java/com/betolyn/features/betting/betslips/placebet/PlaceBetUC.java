@@ -1,16 +1,32 @@
 package com.betolyn.features.betting.betslips.placebet;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
 import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalEscrowAccountUC;
-import com.betolyn.features.bankroll.transaction.*;
+import com.betolyn.features.bankroll.transaction.TransactionEntity;
+import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
+import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
+import com.betolyn.features.bankroll.transaction.TransactionRepository;
+import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
 import com.betolyn.features.betting.betslips.BetSlipEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemEntity;
 import com.betolyn.features.betting.betslips.BetSlipMapper;
 import com.betolyn.features.betting.betslips.BetSlipRepository;
 import com.betolyn.features.betting.betslips.DuplicateOddsInBetSlipException;
+import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.betslips.dto.BetSlipDTO;
 import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
 import com.betolyn.features.betting.criterion.CriterionEntity;
@@ -22,82 +38,13 @@ import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
+import com.betolyn.shared.money.BetMoney;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
-/**
- * Rejection reason
- *
- *
- *
- */
-
-record OddRejected(String oddId, String matchId, String rejectionReason) {
-}
-
-record OddAccepted(PlaceBetItemParam betItem, OddEntity odd) {
-}
-
-record PlaceBetUCResponse(BetSlipDTO bet, List<OddRejected> rejectedOdds) {
-}
 
 @Service
 @RequiredArgsConstructor
 public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCResponse> {
-    private final FindOddByIdUC findOddByIdUC;
-    private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
-    private final TransactionRepository transactionRepository;
-    private final BetSlipRepository betSlipRepository;
-    private final CriterionRepository criterionRepository;
-    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
-    private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
-    private final FindMatchCriteriaUC findMatchCriteriaUC;
-    private final BetSlipMapper betSlipMapper;
-
-
-    private static double calculateCriterionReservedLiabilityDelta(CriterionEntity criterion) {
-        List<Double> criterionLiabilities = new ArrayList<>();
-        for (var criterionOdd : criterion.getOdds()) {
-            // marketLiability = odd.potentialPayoutVolume - criterion.totalStakesVolume
-            var liability = criterionOdd.getPotentialPayoutVolume() - criterion.getTotalStakesVolume();
-            if (liability < 0) {
-                liability = 0;
-            }
-
-            criterionLiabilities.add(liability);
-        }
-
-        return Collections.max(criterionLiabilities);
-    }
-
-    /**
-     * matchReservedLiability = MAX(criterion1, criterion2, ... , criterion3)
-     *
-     * @param criterion - current criterion already edited
-     */
-    private static Double calculateMatchReservedLiability(List<CriterionEntity> matchCriteria,
-            CriterionEntity criterion, double newCriterionReservedCriterion) {
-        List<Double> matchCriteriaLiabilities = new ArrayList<>();
-        for (var matchCriterion : matchCriteria) {
-            if (Objects.equals(matchCriterion.getId(), criterion.getId())) {
-                matchCriteriaLiabilities.add(newCriterionReservedCriterion);
-            } else {
-                matchCriteriaLiabilities.add(matchCriterion.getReservedLiability());
-            }
-        }
-        return Collections.max(matchCriteriaLiabilities);
-    }
-
     public static void throwIfExistsDuplicatedOddsInBetSlip(PlaceBetRequestDTO paramDTO) {
         Set<String> acceptedOddIds = new HashSet<>();
         List<Object> rejectedOdds = new ArrayList<>();
@@ -113,8 +60,50 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             throw new DuplicateOddsInBetSlipException(rejectedOdds);
         }
     }
+    private static BetMoney calculateCriterionReservedLiabilityDelta(CriterionEntity criterion) {
+        BetMoney maxLiability = BetMoney.zero();
+        for (var criterionOdd : criterion.getOdds()) {
+            // marketLiability = odd.potentialPayoutVolume - criterion.totalStakesVolume
+            // if marketLiability < 0, then liability = 0 (profit for the house)
+
+            BetMoney liability = criterionOdd.getPotentialPayoutVolume().subtract(criterion.getTotalStakesVolume());
+            if (liability.isLessThan(BetMoney.zero())) {
+                liability = BetMoney.zero();
+            }
+            if (liability.isGreaterThan(maxLiability)) {
+                maxLiability = liability;
+            }
+        }
+        return maxLiability;
+    }
+    private static BetMoney calculateMatchReservedLiability(List<CriterionEntity> matchCriteria,
+            CriterionEntity criterion, BetMoney newCriterionReservedLiability) {
+        BetMoney maxLiability = BetMoney.zero();
+        for (var matchCriterion : matchCriteria) {
+            BetMoney liability = Objects.equals(matchCriterion.getId(), criterion.getId())
+                    ? newCriterionReservedLiability
+                    : matchCriterion.getReservedLiability();
+            if (liability != null && liability.isGreaterThan(maxLiability)) {
+                maxLiability = liability;
+            }
+        }
+        return maxLiability;
+    }
+    private final FindOddByIdUC findOddByIdUC;
+    private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
+    private final TransactionRepository transactionRepository;
 
 
+    private final BetSlipRepository betSlipRepository;
+
+    private final CriterionRepository criterionRepository;
+
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+
+
+    private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
+    private final FindMatchCriteriaUC findMatchCriteriaUC;
+    private final BetSlipMapper betSlipMapper;
     @SuppressWarnings("D")
     @Override
     @Transactional
@@ -147,8 +136,8 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             // in case it did not receive yet (e.g: match terminated...)
             var odd = findOddByIdUC.execute(betItem.getOddId());
 
-            if (betItem.getOddValueAtPlacement() < odd.getValue()) {
-                // perhaps allow the user to opt for new odd price changes
+            // perhaps allow the user to opt for new odd price changes?!
+            if (betItem.getOddValueAtPlacement().compareTo(odd.getValue().toBigDecimal()) < 0) {
                 oddRejectedList.add(
                         new OddRejected(odd.getId(), odd.getCriterion().getMatch().getId(), "Odd value changed"));
             } else if (odd.getStatus() != OddStatusEnum.ACTIVE
@@ -160,7 +149,7 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
                 // since the price is now higher or equal than the realOdd.value
                 // the bet placement must be set to the realOdd.value
                 // Because it is still favorable to the user to bet at lower price
-                betItem.setOddValueAtPlacement(odd.getValue());
+                betItem.setOddValueAtPlacement(odd.getValue().toBigDecimal());
                 oddList.add(
                         new OddAccepted(betItem, odd));
             }
@@ -186,22 +175,23 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         // 3. Criterion and Odd projection recalculation
         for (var odd : oddList) {
             var betOdd = odd.betItem();
-            Double betOddPayout = betOdd.getStake() * betOdd.getOddValueAtPlacement();
+            BetMoney stakeMoney = BetMoney.of(betOdd.getStake());
+            BetMoney betOddPayout = stakeMoney.multiply(betOdd.getOddValueAtPlacement());
 
             // 3.2 Update odd projection
             var realOdd = odd.odd();
             realOdd.setTotalBetsCount(realOdd.getTotalBetsCount() + 1);
-            realOdd.setTotalStakesVolume(realOdd.getTotalStakesVolume() + betOdd.getStake());
-            realOdd.setPotentialPayoutVolume(realOdd.getPotentialPayoutVolume() + betOddPayout);
+            realOdd.setTotalStakesVolume(realOdd.getTotalStakesVolume().add(stakeMoney));
+            realOdd.setPotentialPayoutVolume(realOdd.getPotentialPayoutVolume().add(betOddPayout));
 
             // 3.3 Update criterion projection
             var criterion = realOdd.getCriterion();
             criterion.setTotalBetsCount(criterion.getTotalBetsCount() + 1);
-            criterion.setTotalStakesVolume(criterion.getTotalStakesVolume() + betOdd.getStake());
+            criterion.setTotalStakesVolume(criterion.getTotalStakesVolume().add(stakeMoney));
 
-            // 3.4 recalculate market liability for each criterion.odd
-            var newCriterionReservedCriterion = calculateCriterionReservedLiabilityDelta(criterion);
-            criterion.setReservedLiability(newCriterionReservedCriterion);
+            // 3.4 recalculate market liability for each criterion.odds
+            var newCriterionReservedLiability = calculateCriterionReservedLiabilityDelta(criterion);
+            criterion.setReservedLiability(newCriterionReservedLiability);
 
             // 3.5 recalculate match projections
             // TODO: for standalone criterion, there will be no match associated with it
@@ -209,15 +199,15 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             var newMatchReservedLiability = calculateMatchReservedLiability(
                     matchCriteria,
                     criterion,
-                    newCriterionReservedCriterion);
+                    newCriterionReservedLiability);
 
             if (criterion.getMaxReservedLiability() != null
-                    && newCriterionReservedCriterion > criterion.getMaxReservedLiability()) {
+                    && newCriterionReservedLiability.isGreaterThan(criterion.getMaxReservedLiability())) {
                 throw new RuntimeException("Criterion does not have sufficient liquidity");
             }
 
-            if (criterion.getMatch().getMaxReservedLiability() != null &&
-                    newMatchReservedLiability > criterion.getMatch().getMaxReservedLiability()) {
+            if (criterion.getMatch().getMaxReservedLiability() != null
+                    && newMatchReservedLiability.isGreaterThan(criterion.getMatch().getMaxReservedLiability())) {
                 throw new RuntimeException("Match does not have sufficient liquidity");
             }
 
@@ -262,17 +252,17 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             // }
 
             // 5. Lock user funds
-            userAccount.lockFunds(BigDecimal.valueOf(betOdd.getStake()));
+            userAccount.lockFunds(stakeMoney);
             var userLockFundsTXI = new TransactionItemEntity();
             userLockFundsTXI.setTransaction(transaction);
-            userLockFundsTXI.setAmount(BigDecimal.valueOf(betOdd.getStake()));
+            userLockFundsTXI.setAmount(stakeMoney);
             userLockFundsTXI.setFromAccountType(AccountTypeEnum.USER_WALLET);
             userLockFundsTXI.setFromAccountId(userAccount.getId());
             userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
             userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
 
             globalEscrowAccount.setBalanceAvailable(
-                    globalEscrowAccount.getBalanceAvailable().add(BigDecimal.valueOf(betOdd.getStake())));
+                    globalEscrowAccount.getBalanceAvailable().add(stakeMoney));
 
             transaction.getItems().add(userLockFundsTXI);
 
@@ -282,10 +272,10 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             betSlipItem.setCriterionId(realOdd.getCriterion().getId());
             betSlipItem.setMatchId(realOdd.getCriterion().getMatch().getId());
             betSlipItem.setOdd(realOdd);
-            betSlipItem.setStake(betOdd.getStake());
+            betSlipItem.setStake(stakeMoney);
             betSlipItem.setPotentialPayout(betOddPayout);
             betSlipItem.setOddHistory(realOdd.getLastOddHistory());
-            betSlipItem.setOddValueAtPlacement(betOdd.getOddValueAtPlacement());
+            betSlipItem.setOddValueAtPlacement(new OddPrice(betOdd.getOddValueAtPlacement()));
             betSlip.getItems().add(betSlipItem);
 
             criterionRepository.save(criterion);
@@ -302,4 +292,13 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         var betDTO = betSlipMapper.toBetSlipDTO(bet);
         return new PlaceBetUCResponse(betDTO, oddRejectedList);
     }
+}
+
+record OddRejected(String oddId, String matchId, String rejectionReason) {
+}
+
+record OddAccepted(PlaceBetItemParam betItem, OddEntity odd) {
+}
+
+record PlaceBetUCResponse(BetSlipDTO bet, List<OddRejected> rejectedOdds) {
 }

@@ -5,16 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class OddMetricsDTO {
     private OddDTO odd;
-    private Double totalCriterionVolume;
-    private Double totalOddVolume;
+    private BigDecimal totalCriterionVolume;
+    private BigDecimal totalOddVolume;
     private Double marketShare;
-    private Double profitAndLosses;
-    private Double averageStake;
+    private BigDecimal profitAndLosses;
+    private BigDecimal averageStake;
     private Integer totalBetsCount;
 }

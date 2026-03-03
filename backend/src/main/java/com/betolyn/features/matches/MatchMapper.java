@@ -4,6 +4,7 @@ import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.shared.BaseMapperConfig;
+import com.betolyn.shared.MoneyMapper;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,11 @@ public interface MatchMapper {
         List<OddDTO> odds = criterion.getOdds().stream().map(odd -> {
             var oddDTO = new OddDTO();
             oddDTO.setId(odd.getId());
-            oddDTO.setValue(odd.getValue());
+            oddDTO.setValue(MoneyMapper.oddPriceToBigDecimal(odd.getValue()));
             oddDTO.setName(odd.getName());
             oddDTO.setStatus(odd.getStatus());
+            oddDTO.setTotalStakesVolume(MoneyMapper.betMoneyToBigDecimal(odd.getTotalStakesVolume()));
+            oddDTO.setPotentialPayoutVolume(MoneyMapper.betMoneyToBigDecimal(odd.getPotentialPayoutVolume()));
             return oddDTO;
         }).toList();
 
@@ -37,7 +40,11 @@ public interface MatchMapper {
         criterionDTO.setOdds(odds);
         criterionDTO.setStatus(criterion.getStatus());
         criterionDTO.setAllowMultipleOdds(criterion.getAllowMultipleOdds());
-        criterionDTO.setIsStandalone(criterionDTO.getIsStandalone());
+        criterionDTO.setIsStandalone(criterion.getIsStandalone());
+        criterionDTO.setTotalBetsCount(criterion.getTotalBetsCount());
+        criterionDTO.setTotalStakesVolume(MoneyMapper.betMoneyToBigDecimal(criterion.getTotalStakesVolume()));
+        criterionDTO.setReservedLiability(MoneyMapper.betMoneyToBigDecimal(criterion.getReservedLiability()));
+        criterionDTO.setMaxReservedLiability(MoneyMapper.betMoneyToBigDecimal(criterion.getMaxReservedLiability()));
 
         return criterionDTO;
     }
@@ -45,5 +52,8 @@ public interface MatchMapper {
     @Mapping(source = "mainCriterion", target = "mainCriterion", qualifiedByName = "mainCriterionEntityToMainCriterionDTO")
     MatchDTO toMatchDTO(MatchEntity entity);
 
+    @Mapping(target = "reservedLiability", ignore = true)
+    @Mapping(target = "maxReservedLiability", ignore = true)
+    @Mapping(target = "mainCriterion", ignore = true)
     MatchEntity toEntity(MatchDTO entity);
 }

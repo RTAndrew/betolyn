@@ -4,8 +4,8 @@ import com.betolyn.config.systemEvent.DefaultSystemEventNames;
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
-import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
+import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.betting.odds.bulkupdateodds.BulkUpdateOddsUC;
@@ -48,7 +48,7 @@ public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsPar
 
             tempOdd.setCriterion(criterion);
             tempOdd.setStatus(status);
-            tempOdd.setValue(odd.value());
+            tempOdd.setValue(new OddPrice(odd.value()));
             tempOdd.setId(odd.id());
 
             return tempOdd;

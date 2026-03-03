@@ -1,6 +1,7 @@
 package com.betolyn.features.betting.criterion.createcriterion;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.criterion.*;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.criterion.exceptions.MultipleOddsIsNotAllowedException;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -53,7 +55,7 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
         List<OddEntity> oddList = data.getOdds().stream().map(odd -> {
             var tempOdd = new OddEntity();
             tempOdd.setName(odd.getName());
-            tempOdd.setValue(odd.getValue());
+            tempOdd.setValue(new OddPrice(odd.getValue()));
             tempOdd.setCriterion(savedCriterion);
             tempOdd.setStatus(odd.getStatus() != null ? odd.getStatus() : OddStatusEnum.DRAFT);
 

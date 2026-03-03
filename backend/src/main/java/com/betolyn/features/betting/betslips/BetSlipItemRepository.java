@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, String> {
@@ -14,7 +15,7 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             SELECT COALESCE(SUM(i.potentialPayout), 0) FROM BetSlipItemEntity i
             WHERE i.criterionId = :criterionId AND i.status = :status
             """)
-    Double sumPotentialPayoutByCriterionIdAndStatus(
+    BigDecimal sumPotentialPayoutByCriterionIdAndStatus(
             @Param("criterionId") String criterionId,
             @Param("status") BetSlipItemStatusEnum status);
 
@@ -22,25 +23,25 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             SELECT COALESCE(SUM(i.stake), 0) FROM bet_slip_items i
             WHERE i.odd_id = :oddId AND i.status <> 'VOIDED'
             """, nativeQuery = true)
-    Double sumStakeByOddIdExcludingVoided(@Param("oddId") String oddId);
+    BigDecimal sumStakeByOddIdExcludingVoided(@Param("oddId") String oddId);
 
     @Query(value = """
             SELECT COALESCE(SUM(i.potential_payout), 0) FROM bet_slip_items i
             WHERE i.odd_id = :oddId AND i.status = 'WON'
             """, nativeQuery = true)
-    Double sumPotentialPayoutByOddIdWhereWon(@Param("oddId") String oddId);
+    BigDecimal sumPotentialPayoutByOddIdWhereWon(@Param("oddId") String oddId);
 
     @Query(value = """
             SELECT COALESCE(SUM(i.stake), 0) FROM bet_slip_items i
             WHERE i.criterion_id = :criterionId AND i.status <> 'VOIDED'
             """, nativeQuery = true)
-    Double sumStakeByCriterionIdExcludingVoided(@Param("criterionId") String criterionId);
+    BigDecimal sumStakeByCriterionIdExcludingVoided(@Param("criterionId") String criterionId);
 
     @Query("""
             SELECT AVG(i.stake) FROM BetSlipItemEntity i
             WHERE i.odd.id = :oddId
             """)
-    Double averageStakeByOddId(@Param("oddId") String oddId);
+    BigDecimal averageStakeByOddId(@Param("oddId") String oddId);
 
     @Query("""
             SELECT DISTINCT i FROM BetSlipItemEntity i

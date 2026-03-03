@@ -6,9 +6,11 @@ import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
+import com.betolyn.shared.money.BetMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,32 +21,40 @@ public class GetMatchMetricsUC {
         private final FindMatchCriteriaUC findMatchCriteriaUC;
         private final BetSlipItemRepository betSlipItemRepository;
 
+        private static double safeRatio(BetMoney numerator, BetMoney denominator) {
+                if (denominator == null || denominator.isZero()) {
+                        return 0.0;
+                }
+                if (numerator == null || numerator.isZero()) {
+                        return 0.0;
+                }
+                return numerator.divide(denominator).doubleValue() * 100;
+        }
+
         public MatchMetricsDTO execute(String matchId) throws EntityNotfoundException {
                 var match = findMatchByIdUC.execute(matchId);
-                double reservedLiability = Objects.requireNonNullElse(match.getReservedLiability(), 0.0);
-                Double maxReservedLiability = match.getMaxReservedLiability();
-                double riskLevel = maxReservedLiability != null && maxReservedLiability > 0
-                                ? (reservedLiability / maxReservedLiability) * 100
-                                : 0.0;
+                BetMoney reservedLiability = Objects.requireNonNullElse(match.getReservedLiability(), BetMoney.zero());
+                BetMoney maxReservedLiability = match.getMaxReservedLiability();
+                double riskLevel = safeRatio(reservedLiability, maxReservedLiability);
 
                 List<CriterionEntity> criteria = findMatchCriteriaUC.execute(
                                 matchId, List.of(CriterionStatusEnum.values()));
-                double totalVolume = criteria.stream()
-                                .mapToDouble(CriterionEntity::getTotalStakesVolume)
+                BetMoney totalVolume = criteria.stream()
+                                .map(CriterionEntity::getTotalStakesVolume)
+                                .reduce(BetMoney.zero(), BetMoney::add);
+                int totalBetCount = criteria.stream()
+                                .mapToInt(CriterionEntity::getTotalBetsCount)
                                 .sum();
-                long totalBetCount = Math.round(criteria.stream()
-                                .mapToDouble(c -> Objects.requireNonNullElse(c.getTotalBetsCount(), 0.0))
-                                .sum());
 
                 SettledStakesAndPayoutsDTO settled = getSettledStakesAndPayouts(matchId);
-                Double profitAndLosses = settled.settledStakes() == 0
+                BigDecimal profitAndLosses = settled.settledStakes().isZero()
                                 ? null
-                                : settled.settledStakes() - settled.totalPaidToWinners();
+                                : settled.settledStakes().subtract(settled.totalPaidToWinners()).toBigDecimal();
 
                 return MatchMetricsDTO.builder()
-                                .totalVolume(totalVolume)
-                                .reservedLiability(reservedLiability)
-                                .maxReservedLiability(maxReservedLiability)
+                                .totalVolume(totalVolume.toBigDecimal())
+                                .reservedLiability(reservedLiability.toBigDecimal())
+                                .maxReservedLiability(maxReservedLiability != null ? maxReservedLiability.toBigDecimal() : null)
                                 .riskLevel(riskLevel)
                                 .totalCriteriaCount(criteria.size())
                                 .totalBetCount(totalBetCount)
@@ -55,14 +65,14 @@ public class GetMatchMetricsUC {
         private SettledStakesAndPayoutsDTO getSettledStakesAndPayouts(String matchId) {
                 List<Object[]> rows = betSlipItemRepository.getSettledMatchStakesAndPayouts(matchId);
                 if (rows.isEmpty()) {
-                        return new SettledStakesAndPayoutsDTO(0.0, 0.0);
+                        return new SettledStakesAndPayoutsDTO(BetMoney.zero(), BetMoney.zero());
                 }
                 Object[] row = rows.get(0);
-                return new SettledStakesAndPayoutsDTO(
-                                ((Number) row[0]).doubleValue(),
-                                ((Number) row[1]).doubleValue());
+                BetMoney stakes = row[0] instanceof BigDecimal ? BetMoney.of((BigDecimal) row[0]) : BetMoney.of(((Number) row[0]).doubleValue());
+                BetMoney payouts = row[1] instanceof BigDecimal ? BetMoney.of((BigDecimal) row[1]) : BetMoney.of(((Number) row[1]).doubleValue());
+                return new SettledStakesAndPayoutsDTO(stakes, payouts);
         }
 
-        private record SettledStakesAndPayoutsDTO(double settledStakes, double totalPaidToWinners) {
+        private record SettledStakesAndPayoutsDTO(BetMoney settledStakes, BetMoney totalPaidToWinners) {
         }
 }

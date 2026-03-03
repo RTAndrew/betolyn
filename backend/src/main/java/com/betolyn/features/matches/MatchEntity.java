@@ -4,6 +4,9 @@ import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.betolyn.shared.money.BetMoney;
+import com.betolyn.shared.money.BetMoneyAttributeConverter;
+import com.betolyn.shared.money.MoneyConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,9 +30,12 @@ public class MatchEntity extends AuditableEntity {
     private String startTime;
     private String endTime;
 
-    @Column(nullable = false)
-    private Double reservedLiability = 0.0;
-    private Double maxReservedLiability = null;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney reservedLiability = BetMoney.zero();
+    @Column(precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney maxReservedLiability = null;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

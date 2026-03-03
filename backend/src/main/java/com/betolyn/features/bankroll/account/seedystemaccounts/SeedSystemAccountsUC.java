@@ -5,11 +5,11 @@ import com.betolyn.features.bankroll.BankrollConstants;
 import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountRepository;
 import com.betolyn.features.bankroll.account.AccountOwnerTypeEnum;
+import com.betolyn.shared.money.BetMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -33,14 +33,14 @@ public class SeedSystemAccountsUC implements IUseCaseNoParams<List<AccountEntity
                 .orElseGet(() -> accountRepository.save(new AccountEntity(
                         BankrollConstants.GLOBAL_RESERVE_ACCOUNT,
                         AccountOwnerTypeEnum.SYSTEM,
-                        BigDecimal.ZERO,
-                        BigDecimal.ZERO)));
+                        BetMoney.zero(),
+                        BetMoney.zero())));
         var escrow = accountRepository.findByOwnerId(BankrollConstants.GLOBAL_ESCROW_ACCOUNT)
                 .orElseGet(() -> accountRepository.save(new AccountEntity(
                         BankrollConstants.GLOBAL_ESCROW_ACCOUNT,
                         AccountOwnerTypeEnum.SYSTEM,
-                        BigDecimal.ZERO,
-                        BigDecimal.ZERO)));
+                        BetMoney.zero(),
+                        BetMoney.zero())));
         return List.of(reserve, escrow);
     }
 }

@@ -1,7 +1,10 @@
 package com.betolyn.features.betting.odds;
 
+import com.betolyn.features.betting.betslips.OddPrice;
+import com.betolyn.features.betting.betslips.OddPriceAttributeConverter;
 import com.betolyn.shared.baseEntity.AuditableEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.betolyn.shared.money.MoneyConstants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -9,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -23,7 +28,9 @@ public class OddHistoryEntity extends AuditableEntity {
     private String updateReason;
 
     @NotNull
-    private double value = 0.1;
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = OddPriceAttributeConverter.class)
+    private OddPrice value = new OddPrice(BigDecimal.valueOf(0.1));
 
     @NotNull
     @Enumerated(EnumType.STRING)

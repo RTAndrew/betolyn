@@ -1,6 +1,7 @@
 package com.betolyn.features.betting.odds.updateoddvalue;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
@@ -11,13 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 enum OddValueChangeDirection {
     UP,
     DOWN
 }
-record UpdateOddValueEventDTO(String oddId, OddValueChangeDirection direction, Double value){}
+record UpdateOddValueEventDTO(String oddId, OddValueChangeDirection direction, BigDecimal value){}
 
 @Service
 @RequiredArgsConstructor
@@ -32,21 +34,22 @@ public class UpdateOddValueUC implements IUseCase<UpdateOddValueParam, OddEntity
         OddValueChangeDirection oddValueChangeDirection;
         var foundOdd = findOddByIdUC.execute(param.oddId());
 
-        if(foundOdd.getValue() == param.requestDTO().getValue()) {
+        BigDecimal newValue = param.requestDTO().getValue();
+        if (foundOdd.getValue().toBigDecimal().compareTo(newValue) == 0) {
             throw new BusinessRuleException("INVALID_ODD_VALUE", "The odd value cannot be the same as the previous one");
         }
 
-        oddValueChangeDirection = param.requestDTO().getValue() > foundOdd.getValue()
+        oddValueChangeDirection = newValue.compareTo(foundOdd.getValue().toBigDecimal()) > 0
                 ? OddValueChangeDirection.UP
                 : OddValueChangeDirection.DOWN;
 
-        foundOdd.setValue(param.requestDTO().getValue());
+        foundOdd.setValue(new OddPrice(newValue));
         var savedOdd = saveAndSyncOddUseCase.execute(List.of(foundOdd)).stream().findFirst();
         if (savedOdd.isEmpty()) {
             throw new InternalServerException("It was not possible to save the entity");
         }
 
-        var eventDTO = new UpdateOddValueEventDTO(savedOdd.get().getId(),oddValueChangeDirection,  savedOdd.get().getValue());
+        var eventDTO = new UpdateOddValueEventDTO(savedOdd.get().getId(), oddValueChangeDirection, savedOdd.get().getValue().toBigDecimal());
         oddSystemEvent.publish(this, "oddValueChanged",eventDTO);
         return savedOdd.get();
     }

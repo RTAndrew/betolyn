@@ -5,11 +5,10 @@ import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountRepository;
 import com.betolyn.features.bankroll.account.AccountOwnerTypeEnum;
 import com.betolyn.features.user.UserEntity;
+import com.betolyn.shared.money.BetMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +22,8 @@ public class CreateAccountForUserUC implements IUseCase<UserEntity, AccountEntit
         var account = new AccountEntity(
                 user.getId(),
                 AccountOwnerTypeEnum.USER,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO);
+                BetMoney.zero(),
+                BetMoney.zero());
         return accountRepository.save(account);
     }
 }

@@ -10,11 +10,10 @@ import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
 import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionRepository;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
+import com.betolyn.shared.money.BetMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class MintCreditsUC implements IUseCase<MintCreditsParam, TransactionEnti
     @Override
     @Transactional
     public TransactionEntity execute(MintCreditsParam param) {
-        BigDecimal amount = param.getAmount();
+        BetMoney amount = BetMoney.of(param.getAmount());
 
         AccountEntity globalReserve = accountRepository.findByOwnerId(BankrollConstants.GLOBAL_RESERVE_ACCOUNT)
                 .orElseThrow(() -> new IllegalStateException("GLOBAL_RESERVE account not found; run bankroll seed first"));
