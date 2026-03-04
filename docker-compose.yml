@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: betolyn-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: betolyn
+      POSTGRES_USER: ${POSTGRES_USER:-betolyn}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-betolyn}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-betolyn} -d betolyn"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: betolyn-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: betolyn-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/betolyn
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-betolyn}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-betolyn}
+      SERVICES_REDIS_HOST: redis
+      SERVICES_REDIS_PORT: "6379"
+      APP_AUTH_JWTSECRET: ${APP_AUTH_JWTSECRET:-jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT}
+      APP_AUTH_SESSIONEXPIRATIONINDAYS: ${APP_AUTH_SESSIONEXPIRATIONINDAYS:-7}
+      APP_AUTH_COOKIESTOKENNAMEKEY: ${APP_AUTH_COOKIESTOKENNAMEKEY:-token}
+      APP_CORS_ALLOWEDORIGINS: ${APP_CORS_ALLOWEDORIGINS:-http://localhost:8001}
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health", "||", "exit", "1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+
+volumes:
+  postgres_data:
+  redis_data:

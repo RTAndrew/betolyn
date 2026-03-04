@@ -1,0 +1,16 @@
+# Profile used when running in Docker (docker-compose sets SPRING_PROFILES_ACTIVE=docker)
+# First deploy: if DB is empty, run once with SPRING_JPA_HIBERNATE_DDL_AUTO=create-only then switch to validate
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized

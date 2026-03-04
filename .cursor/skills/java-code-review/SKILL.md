@@ -128,6 +128,31 @@ Check for:
   - Excessive object creation inside tight loops (e.g., new `StringBuilder` or temporary objects per iteration).
   - Large collections held longer than necessary.
   - Missing initial capacities for collections when size is known or easily estimated.
+  - Look out for memory leaks where objects are no longer needed but still referenced, preventing garbage collection and potentially leading to `OutOfMemoryError` or hard-to-diagnose performance degradation.
+
+#### Look out for memory leaks
+
+Memory leaks happen when objects are no longer being used but are still referenced by the program. This means they cannot be garbage collected and will stay in memory until the program exits, which can lead to `OutOfMemoryError` exceptions or gradual performance degradation.
+
+Java’s garbage collector usually handles memory cleanup automatically, but leaks can still occur in several common cases:
+
+- **Unclosed resources**: Always ensure resources are closed after use, especially files, database connections, and network sockets. Prefer `try-with-resources` for `AutoCloseable` types, but at minimum verify that code closes resources reliably, for example:
+
+```java
+FileInputStream fis = new FileInputStream("file.txt");
+// do something with the file
+fis.close();
+```
+
+- **Overuse of static references**: Static variables live for the lifetime of the classloader. If they hold references to large object graphs, those objects will never be collected. Watch for static collections or caches that grow unbounded. For example:
+
+```java
+class Session {
+  static User[] users;
+}
+```
+
+In this example, the `users` array will stay in memory for the entire lifetime of the program. As the array grows, the application may run into memory issues unless entries are explicitly removed or the design is revised to avoid long-lived static state.
 - **String handling**
   - `String` concatenation in loops instead of using `StringBuilder`, `StringBuffer`, or stream collectors.
   - Unnecessary `String.format` in hot paths where simpler concatenation or builders suffice.
