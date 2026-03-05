@@ -1,0 +1,39 @@
+# Render Blueprint – no Docker Compose; single Web Service + Postgres + Redis
+# Deploy from repo root: Render uses this file to create the stack.
+# See backend/README.render.md for manual setup and env vars.
+
+services:
+  - type: web
+    runtime: docker
+    name: betolyn-backend
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: betolyn-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: betolyn-redis
+          property: connectionString
+      - key: APP_AUTH_JWTSECRET
+        generateValue: true
+      - key: APP_CORS_ALLOWEDORIGINS
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: docker
+
+  - type: keyvalue
+    name: betolyn-redis
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: allow all (use [] for internal only)
+    plan: free
+
+databases:
+  - name: betolyn-db
+    databaseName: betolyn
+    plan: free

@@ -1,6 +1,7 @@
 package com.betolyn.config.filters;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,12 +14,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityFilterConfig {
     private final AuthFilter authFilter;
+
+    @Value("${app.cors.allowedOrigins:*}")
+    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -51,7 +57,17 @@ public class SecurityFilterConfig {
     @Bean
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081"));
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        if (origins.contains("*")) {
+            configuration.addAllowedOriginPattern("*");
+        } else {
+            configuration.setAllowedOrigins(origins);
+        }
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
