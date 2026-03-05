@@ -40,8 +40,6 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
   });
   const odd = oddRes?.data ?? sheetOdd;
 
-  console.log('odd', oddRes?.data?.criterion);
-
   if (isPending) {
     return (
       <BottomSheet onClose={closeAll} visible={visible}>

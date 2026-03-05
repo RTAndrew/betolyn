@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import 'react-native-reanimated';
+
 import StreamEventSource from '@/components/server-sent-events';
 import { colors } from '@/constants/colors';
 import { hydrateAuthStore } from '@/stores/auth.store';
+import 'react-native-reanimated';
 import { queryClient } from '@/utils/react-query';
 
 if (__DEV__) {

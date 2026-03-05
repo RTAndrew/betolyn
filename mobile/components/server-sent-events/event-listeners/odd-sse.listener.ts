@@ -54,7 +54,6 @@ class OddSseListener implements ISseListener {
       }
 
       case 'oddCreated': {
-        console.log('oddCreated', eventPayload);
         const { criterionId, matchId } = eventPayload as IOddCreatedEvent;
 
         DataSync.refreshCriteriaData([criterionId], matchId);

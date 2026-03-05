@@ -6,10 +6,13 @@
  *
  * Requirements:
  * - Node.js 18+ (for native fetch support)
- * - Backend server running on http://localhost:8080
+ * - Backend server running (or set BASE_URL to your API URL)
  *
  * Usage:
  *   node seed.js
+ *   BASE_URL=http://localhost:8080 node seed.js
+ *
+ * Optional: create seed/.env with BASE_URL=... (install dotenv for .env support)
  *
  * Order of operations:
  * 0. Ensure bankroll system accounts (GLOBAL_RESERVE, GLOBAL_ESCROW)
@@ -23,7 +26,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const BASE_URL = "http://localhost:8080";
+// Load .env from seed directory if dotenv is available (e.g. npm install dotenv)
+try {
+	require("dotenv").config({ path: path.join(__dirname, ".env") });
+} catch  {}
+
+const BASE_URL =
+	process.env.BASE_URL || "localhost:8080";
 const SEED_DIR = path.join(__dirname);
 
 // Helper function to make API requests
@@ -119,7 +128,7 @@ async function seedUsers() {
 				createdUsers.push(response.data);
 				console.log(`✓ Created user: ${user.username} (${user.email})`);
 			}
-		} catch (error) {
+		} catch  {
 			// User might already exist, try to sign in instead
 			console.log(`⚠ User ${user.username} might already exist, skipping...`);
 		}
