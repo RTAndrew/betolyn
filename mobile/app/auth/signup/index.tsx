@@ -165,8 +165,8 @@ const SignupPage = () => {
           errorMessage={formData.confirmPassword.error}
           onChangeText={(text) => handleChange('confirmPassword', text)}
         />
-        <GradientButton onPress={handleSubmit}>
-          {loading ? 'Carregando...' : 'Criar conta'}
+        <GradientButton loading={loading} onPress={handleSubmit}>
+          Criar conta
         </GradientButton>
       </AuthForm>
     </AuthWrapper>

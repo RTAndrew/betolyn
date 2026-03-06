@@ -58,6 +58,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
   }
 
   const description = odd.criterion?.name ?? 'Odd';
+
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
       <BottomSheet.Header title={odd.name} description={description} />

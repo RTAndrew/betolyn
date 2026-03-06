@@ -37,8 +37,8 @@ export const CriterionSelectWinningOutcomeSheet = ({ visible = false }: ISheet) 
       criterion={criterion}
       onChange={setOutcomes}
     >
-      <Button.Root onPress={handleSave} disabled={isPending}>
-        {isPending ? 'Saving...' : 'Save'}
+      <Button.Root loading={isPending} onPress={handleSave}>
+        Save
       </Button.Root>
     </GenericSelectWinningOddsSheet>
   );

@@ -125,8 +125,8 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
-        <Button.Root onPress={handleSave} disabled={isPending}>
-          {isPending ? 'Saving...' : 'Save'}
+        <Button.Root loading={isPending} onPress={handleSave}>
+          Save
         </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>

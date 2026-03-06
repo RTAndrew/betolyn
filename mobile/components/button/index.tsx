@@ -1,6 +1,14 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { PropsWithChildren } from 'react';
-import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import { colors } from '@/constants/colors';
 
@@ -12,35 +20,55 @@ interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
   disabled?: boolean;
   style?: ViewStyle;
   color?: string;
+  loading?: boolean;
 }
 
-export const GradientButton = ({ children, style, disabled, ...props }: TouchableOpacityProps) => {
+const Loading = ({ color }: { color?: string }) => {
   return (
-    <TouchableOpacity disabled={disabled} style={[disabled && styles.disabled]} {...props}>
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="small" color={color ?? 'white'} />
+    </View>
+  );
+};
+
+export const GradientButton = ({
+  children,
+  style,
+  disabled,
+  loading,
+  ...props
+}: TouchableOpacityProps & { loading?: boolean }) => {
+  return (
+    <TouchableOpacity
+      disabled={loading || disabled}
+      style={[disabled && styles.disabled]}
+      {...props}
+    >
       <LinearGradient
-        colors={[colors.terciary, colors.primary]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={[styles.root, style]}
+        colors={[colors.terciary, colors.primary]}
       >
-        <Text style={styles.text}> {children} </Text>
+        {loading ? <Loading /> : <Text style={styles.text}> {children} </Text>}
       </LinearGradient>
     </TouchableOpacity>
   );
 };
 
 const NormalButton = ({
-  children,
-  style,
-  disabled,
   variant = 'solid',
-  color,
   destructive,
+  children,
+  disabled,
+  loading,
+  style,
+  color,
   ...props
 }: ButtonProps) => {
   return (
     <TouchableOpacity
-      disabled={disabled}
+      disabled={loading || disabled}
       style={[
         styles.root,
         disabled && styles.disabled,
@@ -53,12 +81,12 @@ const NormalButton = ({
       <ThemedText
         style={[
           styles.text,
-          variant === 'text' && styles.variantText,
           color && { color },
           destructive && styles.destructive,
+          variant === 'text' && styles.variantText,
         ]}
       >
-        {children}
+        {loading ? <Loading color={color} /> : children}
       </ThemedText>
     </TouchableOpacity>
   );
@@ -98,5 +126,10 @@ const styles = StyleSheet.create({
   },
   destructive: {
     color: '#FF0000',
+  },
+  loadingContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

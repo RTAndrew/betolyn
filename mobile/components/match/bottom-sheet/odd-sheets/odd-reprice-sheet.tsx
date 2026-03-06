@@ -48,8 +48,8 @@ export const OddRepriceSheet = ({ visible = false }: ISheet) => {
       </SafeHorizontalView>
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
-        <Button.Root onPress={handleUpdateOdd} disabled={isPending}>
-          {isPending ? 'Saving...' : 'Save'}
+        <Button.Root loading={isPending} onPress={handleUpdateOdd}>
+          Save
         </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>

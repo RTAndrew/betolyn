@@ -4,9 +4,11 @@ import React from 'react';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
+import { Button } from '@/components/button';
 import { Eye, Trash } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { betSlipStore } from '@/stores/bet-slip.store';
 
@@ -41,6 +43,10 @@ const BetSlips = () => {
           </ScreenHeader.QuickActions>
         </ScreenHeader>
       </Pressable>
+
+      <Button.Root loading>
+        <ThemedText>History</ThemedText>
+      </Button.Root>
 
       <FlatList
         contentContainerStyle={{

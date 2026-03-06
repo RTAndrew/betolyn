@@ -121,8 +121,8 @@ const LoginPage = () => {
           value={formData.password.value}
           onChangeText={(text) => handleChange('password', text)}
         />
-        <GradientButton onPress={handleSubmit}>
-          {loading ? 'Carregando...' : 'Entrar'}
+        <GradientButton loading={loading} onPress={handleSubmit}>
+          Entrar
         </GradientButton>
       </AuthForm>
     </AuthWrapper>

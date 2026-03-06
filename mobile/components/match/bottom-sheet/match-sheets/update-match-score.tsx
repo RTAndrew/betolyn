@@ -142,8 +142,8 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
           onScoreChange={(value) => handleScoreChange('away', value)}
         />
 
-        <Button.Root onPress={handleSubmit} style={styles.updateScoreButton}>
-          {isPending ? '...' : 'Update Score'}
+        <Button.Root loading={isPending} onPress={handleSubmit} style={styles.updateScoreButton}>
+          Update Score
         </Button.Root>
       </BottomSheet.SafeHorizontalView>
     </BottomSheet>
