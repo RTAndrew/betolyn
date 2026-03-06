@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
+import { ShimmerProvider } from 'react-native-fast-shimmer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -11,8 +12,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import StreamEventSource from '@/components/server-sent-events';
 import { colors } from '@/constants/colors';
 import { hydrateAuthStore } from '@/stores/auth.store';
-import 'react-native-reanimated';
 import { queryClient } from '@/utils/react-query';
+import 'react-native-reanimated';
 
 if (__DEV__) {
   require('../reactotron-config');
@@ -57,46 +58,48 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <StreamEventSource />
-        <SafeAreaProvider>
-          <KeyboardProvider>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="auth" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(modals)"
-                options={{
-                  headerShown: false,
-                  presentation: 'card',
-                  animation: 'fade_from_bottom',
-                  animationDuration: 130,
-                }}
-              />
+      <ShimmerProvider duration={1500}>
+        <QueryClientProvider client={queryClient}>
+          <StreamEventSource />
+          <SafeAreaProvider>
+            <KeyboardProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="auth" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(modals)"
+                  options={{
+                    headerShown: false,
+                    presentation: 'card',
+                    animation: 'fade_from_bottom',
+                    animationDuration: 130,
+                  }}
+                />
 
-              {/* This has to be here otherwise the form sheet will not work */}
-              <Stack.Screen
-                name="(form-sheet)"
-                options={{
-                  headerShown: false,
-                  presentation: 'formSheet',
-                  animation: 'slide_from_bottom',
-                  contentStyle: { height: '100%' },
-                  sheetElevation: 24,
-                  sheetGrabberVisible: false,
-                  gestureDirection: 'vertical',
-                  gestureEnabled: true,
-                  sheetAllowedDetents: [1],
-                  animationDuration: 130,
-                }}
-              />
+                {/* This has to be here otherwise the form sheet will not work */}
+                <Stack.Screen
+                  name="(form-sheet)"
+                  options={{
+                    headerShown: false,
+                    presentation: 'formSheet',
+                    animation: 'slide_from_bottom',
+                    contentStyle: { height: '100%' },
+                    sheetElevation: 24,
+                    sheetGrabberVisible: false,
+                    gestureDirection: 'vertical',
+                    gestureEnabled: true,
+                    sheetAllowedDetents: [1],
+                    animationDuration: 130,
+                  }}
+                />
 
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style={'light'} backgroundColor={colors.greyDark} />
-          </KeyboardProvider>
-        </SafeAreaProvider>
-      </QueryClientProvider>
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <StatusBar style={'light'} backgroundColor={colors.greyDark} />
+            </KeyboardProvider>
+          </SafeAreaProvider>
+        </QueryClientProvider>
+      </ShimmerProvider>
     </GestureHandlerRootView>
   );
 }

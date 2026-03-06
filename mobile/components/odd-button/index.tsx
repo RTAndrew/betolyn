@@ -20,6 +20,7 @@ import { hexToRgba } from '@/utils/hex-rgba';
 import { Lock } from '../icons';
 import { useMatchBottomSheet } from '../match/bottom-sheet';
 import { IOddSheetData } from '../match/bottom-sheet/types';
+import { OddButtonSkeleton } from '../skeleton/odd-button-skeleton';
 interface OddButtonProps extends TouchableOpacityProps, Omit<OddBaseButtonProps, 'value' | 'name'> {
   odd: IOdd;
   criterion: Omit<ICriterion, 'match'>;
@@ -219,7 +220,7 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
     return variant;
   }, [isDisabled, subscribeOdd, variant]);
 
-  if (isPending) return <Text> Loading... </Text>;
+  if (isPending) return <OddButtonSkeleton style={style} />;
   if (error) {
     console.log('error fetching odd', error);
     return <></>;

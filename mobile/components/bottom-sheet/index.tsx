@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 
 import { colors } from '@/constants/colors';
@@ -129,10 +129,11 @@ const ModalConfirmation = ({
         <View style={modalConfirmationStyles.actions}>
           {onConfirm && (
             <Button.Root
-              style={{ backgroundColor: destructive ? colors.secondary : colors.terciary }}
+              loading={isLoading}
               onPress={handleConfirm}
+              style={{ backgroundColor: destructive ? colors.secondary : colors.terciary }}
             >
-              {isLoading ? <ActivityIndicator size="small" color="white" /> : onConfirmText}
+              {onConfirmText}
             </Button.Root>
           )}
           <Button.Root variant="text" onPress={onClose}>

@@ -5,6 +5,9 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BetCard from '@/components/bet-card';
+import ScreenWrapper from '@/components/screen-wrapper';
+import { Skeleton } from '@/components/skeleton';
+import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
 import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
 import { mockAPI } from '@/mock';
@@ -23,7 +26,13 @@ const ChannelId = () => {
   }
 
   if (isPending) {
-    return <Text>Loading...</Text>;
+    return (
+      <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
+        <Skeleton.Group count={5} gap={0}>
+          <MatchCardSkeleton />
+        </Skeleton.Group>
+      </ScreenWrapper>
+    );
   }
 
   if (!matches || error) {

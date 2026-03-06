@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { DonutChart } from '@/components/donut-chart';
+import { MetricsBlockSkeleton } from '@/components/skeleton/metrics-block-skeleton';
 import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
@@ -23,11 +24,8 @@ const MatchMetrics = ({ matchId, style }: MatchMetricsProps) => {
 
   if (isPending) {
     return (
-      <View style={[styles.loading, style]}>
-        <ActivityIndicator size="small" color={colors.greyLighter} />
-        <ThemedText type="subtitle" style={styles.loadingText}>
-          Loading metrics…
-        </ThemedText>
+      <View style={style}>
+        <MetricsBlockSkeleton variant="match" />
       </View>
     );
   }
@@ -109,16 +107,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
-  },
-  loading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-  },
-  loadingText: {
-    color: colors.greyLighter,
   },
   chartLabel: {
     alignItems: 'center',

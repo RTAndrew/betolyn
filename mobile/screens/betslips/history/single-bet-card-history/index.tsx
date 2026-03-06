@@ -1,11 +1,14 @@
 import React from 'react';
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetCriterionById, useGetMatch, useGetOddById } from '@/services';
 import { IBetSlipItem, IBetSlipItemStatus } from '@/types';
+
+import { SingleBetCardHistorySkeleton } from './skeleton';
+import { styles } from './styles';
 
 function formatOdd(value: number): string {
   return value.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
@@ -57,29 +60,7 @@ const SingleBetCardHistory = ({ bet }: SingleBetCardHistoryProps) => {
   const isPending = matchPending || oddPending || criterionPending;
 
   if (isPending) {
-    return (
-      <View style={styles.card}>
-        <View style={styles.logos}>
-          <ActivityIndicator size="small" color={colors.greyLighter} />
-        </View>
-        <View style={styles.body}>
-          <View style={styles.skeletonLine} />
-          <View style={[styles.skeletonLine, { width: '60%', marginTop: 6 }]} />
-        </View>
-        <View style={styles.footer}>
-          <View style={[styles.skeletonLine, { width: 48 }]} />
-          <View style={[styles.skeletonLine, { width: 64, marginTop: 6 }]} />
-        </View>
-      </View>
-    );
-  }
-
-  if (matchError || oddError || criterionError) {
-    return (
-      <View style={styles.card}>
-        <ThemedText>Error loading bet</ThemedText>
-      </View>
-    );
+    return <SingleBetCardHistorySkeleton />;
   }
 
   const match = matchData?.data;
@@ -127,70 +108,3 @@ const SingleBetCardHistory = ({ bet }: SingleBetCardHistoryProps) => {
 };
 
 export default SingleBetCardHistory;
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.greyMedium,
-    borderRadius: 8,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  logos: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 32,
-    height: 32,
-    // padding: 2,
-    borderRadius: 15,
-    // borderWidth: 1,
-    // borderColor: colors.greyMedium,
-    backgroundColor: colors.greyMedium,
-  },
-  logoOverlap: {
-    marginTop: -6,
-  },
-  logoPlaceholder: {
-    backgroundColor: colors.greyLight,
-  },
-  body: {
-    flex: 1,
-    justifyContent: 'center',
-    minWidth: 0,
-    gap: 4,
-  },
-  oddName: {
-    fontWeight: '400',
-    color: colors.white,
-  },
-  secondaryText: {
-    color: colors.greyLighter,
-    marginTop: 2,
-  },
-  footer: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  stake: {
-    fontSize: 16,
-    color: colors.white,
-    fontWeight: '700',
-  },
-  oddsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-  potentialPayout: {
-    color: '#E8C547',
-    fontWeight: '600',
-  },
-  skeletonLine: {
-    backgroundColor: colors.greyLight,
-    borderRadius: 4,
-  },
-});

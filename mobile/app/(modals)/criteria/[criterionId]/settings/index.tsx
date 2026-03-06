@@ -10,6 +10,8 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Settings } from '@/components/settings';
+import { Skeleton } from '@/components/skeleton';
+import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-skeleton';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
@@ -35,7 +37,21 @@ const CriterionSettings = () => {
   const { criterionId } = useLocalSearchParams();
   const { data, isPending, error } = useGetCriterionById({ criterionId: criterionId as string });
 
-  if (isPending) return <ThemedText>Loading...</ThemedText>;
+  if (isPending) {
+    return (
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
+        <ScreenHeader
+          iconColor={colors.white}
+          onClose={() => router.back()}
+          iconContainerColor={colors.greyLight}
+          title={<Skeleton type="default" borderRadius={4} style={{ width: 140, height: 20 }} />}
+        />
+        <SafeHorizontalView style={styles.root}>
+          <SettingsScreenSkeleton />
+        </SafeHorizontalView>
+      </ScreenWrapper>
+    );
+  }
   if (error || !data) return <ThemedText>Error loading criterion</ThemedText>;
   const criterion = data.data;
   if (!criterion) return <ThemedText>Criterion not found</ThemedText>;

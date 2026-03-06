@@ -1,16 +1,18 @@
 import { router } from 'expo-router';
 import React, { PropsWithChildren } from 'react';
-import { ActivityIndicator, FlatList, Platform, View } from 'react-native';
+import { FlatList, Platform, View } from 'react-native';
 
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
+import { Skeleton } from '@/components/skeleton';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetMyBets } from '@/services/me/me-query';
 import { IBetSlipItem } from '@/types';
 
 import SingleBetCardHistory from './single-bet-card-history';
+import { SingleBetCardHistorySkeleton } from './single-bet-card-history/skeleton';
 
 const Header = ({ children }: PropsWithChildren) => {
   return (
@@ -33,7 +35,11 @@ const BetSlipHistoryScreen = () => {
   if (isPending) {
     return (
       <Header>
-        <ActivityIndicator size="large" color="#fff" />
+        <SafeHorizontalView style={{ marginTop: 18 }}>
+          <Skeleton.Group>
+            <SingleBetCardHistorySkeleton />
+          </Skeleton.Group>
+        </SafeHorizontalView>
       </Header>
     );
   }
@@ -57,11 +63,11 @@ const BetSlipHistoryScreen = () => {
     <>
       <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
         <ScreenHeader
-          iconContainerColor={colors.greyMedium}
-          type="back"
-          onClose={() => router.back()}
           safeArea
+          type="back"
           title="History"
+          onClose={() => router.back()}
+          iconContainerColor={colors.greyMedium}
         />
 
         <FlatList

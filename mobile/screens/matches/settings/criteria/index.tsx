@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
 
 import { Settings } from '@/components/settings';
+import { CriteriaListSkeleton } from '@/components/skeleton/criteria-list-skeleton';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatchCriteria } from '@/services';
 import { CriterionStatusEnum } from '@/types';
@@ -28,7 +28,7 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
     },
   });
 
-  if (isPending) return <ActivityIndicator size="large" />;
+  if (isPending) return <CriteriaListSkeleton />;
 
   if (error || !data) return <ThemedText>Error loading criteria</ThemedText>;
 

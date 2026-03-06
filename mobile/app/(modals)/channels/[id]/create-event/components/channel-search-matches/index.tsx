@@ -2,7 +2,9 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import BetCard from '@/components/bet-card';
-import { ThemedView } from '@/components/ThemedView';
+import ScreenWrapper from '@/components/screen-wrapper';
+import { Skeleton } from '@/components/skeleton';
+import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
 import { colors } from '@/constants/colors';
 import { useGetMatches } from '@/services';
 import { IMatch } from '@/types';
@@ -16,28 +18,34 @@ const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
   const matches = data?.data;
 
   if (isPending) {
-    return <Text>Loading...</Text>;
+    return (
+      <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
+        <View style={{ marginBottom: 16 }}>
+          <TextInput placeholder="Search" style={styles.input} placeholderTextColor="#BFBFBF" />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Skeleton.Group count={5} gap={0}>
+            <MatchCardSkeleton />
+          </Skeleton.Group>
+        </View>
+      </ScreenWrapper>
+    );
   }
 
   if (!matches || error) {
     return <Text>Error loading matches</Text>;
   }
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: colors.greyLight }}>
-        <ThemedView>
-          <View style={{ marginBottom: 16 }}>
-            <TextInput placeholder="Search" style={styles.input} placeholderTextColor="#BFBFBF" />
-          </View>
-        </ThemedView>
-
-        <ThemedView style={{ flex: 1, backgroundColor: 'transparent' }}>
-          {matches.map((match, index) => (
-            <BetCard onPress={(m) => onMatchPress?.(m)} key={index} match={match} />
-          ))}
-        </ThemedView>
+    <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
+      <View style={{ marginBottom: 16 }}>
+        <TextInput placeholder="Search" style={styles.input} placeholderTextColor="#BFBFBF" />
       </View>
-    </ScrollView>
+      <View style={{ flex: 1 }}>
+        {matches.map((match, index) => (
+          <BetCard onPress={(m) => onMatchPress?.(m)} key={index} match={match} />
+        ))}
+      </View>
+    </ScreenWrapper>
   );
 };
 

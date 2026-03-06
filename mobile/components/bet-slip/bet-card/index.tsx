@@ -3,6 +3,7 @@ import { Alert, Pressable, StyleSheet, View } from 'react-native';
 
 import { Lock } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { BetSlipBetCardSkeleton } from '@/components/skeleton/bet-slip-bet-card-skeleton';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetOddById } from '@/services';
@@ -23,7 +24,7 @@ export const BetCard = ({ bet, border = true, match }: BetCardProps) => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   if (isPending) {
-    return <ThemedText>Loading...</ThemedText>;
+    return <BetSlipBetCardSkeleton border={border} />;
   }
 
   if (!data || error) {

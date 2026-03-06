@@ -1,7 +1,9 @@
-import { ActivityIndicator, ScrollView, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import BetCard from '@/components/bet-card';
+import { Skeleton } from '@/components/skeleton';
+import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
 import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
 import { useGetMatches } from '@/services/matches/match-query';
@@ -24,7 +26,10 @@ export default function HomeScreen() {
   if (isPending) {
     return (
       <Wrapper>
-        <ActivityIndicator size="large" color="#fff" />
+        <HomeScreenHeader />
+        <Skeleton.Group count={5} gap={0}>
+          <MatchCardSkeleton />
+        </Skeleton.Group>
       </Wrapper>
     );
   }

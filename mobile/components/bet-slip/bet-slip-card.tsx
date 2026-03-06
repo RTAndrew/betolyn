@@ -3,6 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { MatchEventSmallCard } from '@/components/match-event-small-card';
+import { BetSlipCardSkeleton } from '@/components/skeleton/bet-slip-card-skeleton';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetMatch } from '@/services';
@@ -24,7 +25,7 @@ const BetSlipCard = ({
   const match = data?.data;
 
   if (isPending) {
-    return <ThemedText>Loading...</ThemedText>;
+    return <BetSlipCardSkeleton betCount={bets.length || 2} />;
   }
 
   if (!match || error) {

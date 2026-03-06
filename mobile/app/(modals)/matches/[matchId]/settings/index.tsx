@@ -10,6 +10,7 @@ import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Settings } from '@/components/settings';
+import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-skeleton';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
@@ -36,7 +37,20 @@ const MatchSettings = () => {
   const { data: result, isLoading, isError } = useGetMatch({ matchId: matchId as string });
   const [autoEnd, setAutoEnd] = useState(false);
 
-  if (isLoading) return <ThemedText>Loading...</ThemedText>;
+  if (isLoading) {
+    return (
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
+        <ScreenHeader
+          iconColor={colors.white}
+          onClose={() => router.back()}
+          iconContainerColor={colors.greyLight}
+        />
+        <SafeHorizontalView style={styles.root}>
+          <SettingsScreenSkeleton />
+        </SafeHorizontalView>
+      </ScreenWrapper>
+    );
+  }
   if (isError) return <ThemedText>Error loading match</ThemedText>;
   if (!result?.data) return <ThemedText>Match not found</ThemedText>;
 

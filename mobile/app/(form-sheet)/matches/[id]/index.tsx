@@ -1,22 +1,18 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  Platform,
-  ScrollView,
-  Text,
-  View,
-  ViewProps,
-} from 'react-native';
+import { Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Collapsible from '@/components/collapsible/index';
-import { MoreVertical, Sync, Settings } from '@/components/icons';
+import { MoreVertical, Settings, Sync } from '@/components/icons';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 import { OddButton } from '@/components/odd-button';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
+import {
+  MatchCriteriaSectionSkeleton,
+  MatchDetailSkeleton,
+} from '@/components/skeleton/match-detail-skeleton';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
@@ -34,11 +30,9 @@ const MatchCriteria = ({ matchId }: { matchId: string }) => {
 
   if (isLoading)
     return (
-      <ThemedView style={{ backgroundColor: colors.greyMedium, paddingHorizontal: 0 }}>
-        <Section>
-          <ActivityIndicator size="large" color={colors.greyLighter} />
-        </Section>
-      </ThemedView>
+      <SafeHorizontalView style={{ paddingHorizontal: 0 }}>
+        <MatchCriteriaSectionSkeleton />
+      </SafeHorizontalView>
     );
 
   if (isError || !criteria || criteria.length === 0) return <></>;
@@ -144,7 +138,26 @@ const MatchPage = () => {
   // https://github.com/software-mansion/react-native-screens/issues/2424
   const screenHeight = Platform.OS === 'android' ? Dimensions.get('window').height * 0.3 : 50;
 
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading) {
+    return (
+      <SafeAreaView style={{ backgroundColor: colors.greyLight, flex: 1 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}>
+          <ScreenHeader
+            type="down"
+            safeArea={false}
+            iconContainerColor={colors.greyMedium}
+            onClose={() => router.back()}
+            style={{
+              backgroundColor: colors.greyMedium,
+              ...(Platform.OS === 'ios' && { paddingTop: 16 }),
+            }}
+          />
+          <MatchDetailSkeleton />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
   if (isError) return <Text>Error loading match</Text>;
   if (!result?.data) return <Text>Match not found</Text>;
 
@@ -184,7 +197,7 @@ const MatchPage = () => {
             </ScreenHeader.QuickActions>
           </ScreenHeader>
 
-          <ThemedView style={{ backgroundColor: colors.greyMedium }}>
+          <SafeHorizontalView style={{ backgroundColor: colors.greyMedium }}>
             {/* Highlight */}
             <View
               style={{
@@ -252,7 +265,7 @@ const MatchPage = () => {
                 Quem irá vencer por Knockout?
               </Text>
             </Section>
-          </ThemedView>
+          </SafeHorizontalView>
 
           {match.status === 'ENDED' ? (
             <ThemedText

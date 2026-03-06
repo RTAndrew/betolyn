@@ -11,6 +11,7 @@ import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { SegmentedProgressBar } from '@/components/segmented-progress-bar';
 import { Settings } from '@/components/settings';
+import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-skeleton';
 import { Stats } from '@/components/stats';
 import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
@@ -47,7 +48,21 @@ const OddSettings = () => {
     },
   });
 
-  if (isPending || matchIsPending) return <ThemedText>Loading...</ThemedText>;
+  if (isPending || matchIsPending) {
+    return (
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
+        <ScreenHeader
+          iconColor={colors.white}
+          onClose={() => router.back()}
+          iconContainerColor={colors.greyLight}
+        />
+        <SafeHorizontalView style={styles.root}>
+          <SettingsScreenSkeleton variant="criterion" />
+        </SafeHorizontalView>
+      </ScreenWrapper>
+    );
+  }
+
   if (error || !metricsData || matchError) return <ThemedText>Error loading odd</ThemedText>;
   const metrics = metricsData.data;
   const odd = metrics?.odd;

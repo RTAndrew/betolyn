@@ -12,7 +12,7 @@ const isCriterionActive = (status?: string) => status === CriterionStatusEnum.AC
 
 export const PublishOddSheet = ({ visible = false }: ISheet) => {
   const { closeAll, currentSheet } = useMatchBottomSheet();
-  const { mutateAsync: publishOdd, isPending } = usePublishOdd();
+  const { mutateAsync: publishOdd } = usePublishOdd();
 
   if (!currentSheet?.data) {
     return <> Error: No odd data found </>;
@@ -34,6 +34,7 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
     <BottomSheet.ModalConfirmation
       visible={visible}
       onClose={closeAll}
+      onConfirmText={'Publish'}
       onConfirm={criterionActive ? handleConfirm : undefined}
       onCancelText="Cancel"
       title="Publish this odd?"
@@ -42,7 +43,6 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
           ? 'Users will be able to see and bet on it.'
           : 'The criterion must be ACTIVE before this odd can be published.'
       }
-      onConfirmText={isPending ? 'Publishing...' : 'Publish'}
     />
   );
 };

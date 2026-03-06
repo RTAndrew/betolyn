@@ -1,13 +1,13 @@
 import React, { PropsWithChildren } from 'react';
 import {
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
   Platform,
   StatusBar,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ScreenWrapperProps {
@@ -54,7 +54,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
-              <View style={{ flex: 1 }}>{children}</View>
+              {children}
             </ScrollView>
           ) : (
             <View>{children}</View>

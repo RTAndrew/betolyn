@@ -3,15 +3,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
-import {
-  Add,
-  SoccerBall,
-  TimeHistory,
-  TrendingLines,
-  TimerOff,
-  Settings,
-  MoneyHand,
-} from '@/components/icons';
+import { Add, MoneyHand, Settings, SoccerBall, TimeHistory, TimerOff } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 
@@ -63,7 +55,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           icon={<SoccerBall color="white" />}
         />
         <BottomSheet.ActionOption text="Reschedule" icon={<TimeHistory color="white" />} />
-        <BottomSheet.ActionOption text="View all markets" icon={<TrendingLines color="white" />} />
+        {/* <BottomSheet.ActionOption text="View all markets" icon={<TrendingLines color="white" />} /> */}
 
         <BottomSheet.ActionOption
           text="Settle match"
@@ -82,6 +74,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           icon={<Settings color="white" />}
         />
         <BottomSheet.ActionOption
+          disabled={match.status === 'ENDED'}
           text="Add market"
           onPress={() => {
             goBack();
@@ -91,6 +84,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         />
         <BottomSheet.ActionOption
           text="End match"
+          disabled={match.status === 'ENDED'}
           icon={<TimerOff color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-end-match' });

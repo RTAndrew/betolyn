@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { SegmentedProgressBar } from '@/components/segmented-progress-bar';
+import { MetricsBlockSkeleton } from '@/components/skeleton/metrics-block-skeleton';
 import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionMetrics } from '@/services';
@@ -36,9 +37,7 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
   if (metricsPending) {
     return (
       <View style={styles.health}>
-        <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-          Loading metrics...
-        </ThemedText>
+        <MetricsBlockSkeleton variant="criterion" />
       </View>
     );
   }
