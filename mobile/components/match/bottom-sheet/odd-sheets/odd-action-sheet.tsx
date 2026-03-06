@@ -1,8 +1,9 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
-import { DollarEuro, Eye, LockClosed, Trash } from '@/components/icons';
+import { DollarEuro, Eye, LockClosed, Settings, Trash } from '@/components/icons';
 import { colors } from '@/constants/colors';
 import { useGetOddById } from '@/services/odds/odd-query';
 import { CriterionStatusEnum, EOddStatus } from '@/types';
@@ -85,6 +86,15 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
           icon={<LockClosed color="white" />}
           onPress={() => {
             pushSheet({ type: 'odd-suspend', data: odd });
+          }}
+        />
+
+        <BottomSheet.ActionOption
+          text="Settings"
+          icon={<Settings color="white" />}
+          onPress={() => {
+            closeAll();
+            router.push(`/odds/${odd.id}/settings`);
           }}
         />
 
