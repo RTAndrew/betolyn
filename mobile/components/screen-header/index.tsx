@@ -88,24 +88,24 @@ const CloseIcon = ({
   const icon = useMemo(() => {
     if (type === 'down') return <Down color={iconColor} />;
 
-    if (type === 'back') return <Left width={24} height={24} color={iconColor} />;
+    if (type === 'back') return <Left color={iconColor} />;
 
-    return <Close width={24} height={24} color={iconColor} />;
+    return <Close color={iconColor} />;
   }, [type, iconColor]);
 
   return <Container>{icon}</Container>;
 };
 
 const ScreenHeader = ({
-  onClose,
-  type,
-  safeArea = true,
-  title,
-  description,
-  children,
-  style,
   iconContainerColor = colors.greyLight,
   iconColor = 'white',
+  safeArea = true,
+  description,
+  children,
+  onClose,
+  type,
+  title,
+  style,
 }: ScreenHeaderProps) => {
   const insets = useSafeAreaInsets();
 

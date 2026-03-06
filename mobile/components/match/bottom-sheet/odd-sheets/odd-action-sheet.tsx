@@ -64,16 +64,16 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
           text="Cancel & Refund"
+          icon={<Trash color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}
-          icon={<Trash width={28} height={28} color="white" />}
         />
 
         <BottomSheet.ActionOption
-          disabled={!canPublishOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
           text="Publish"
-          icon={<Eye width={28} height={28} color="white" />}
+          disabled={!canPublishOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
+          icon={<Eye color="white" />}
           onPress={() => {
             pushSheet({ type: 'odd-publish', data: odd });
           }}
@@ -82,7 +82,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           disabled={!canSuspendOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
           text="Suspend"
-          icon={<LockClosed width={28} height={28} color="white" />}
+          icon={<LockClosed color="white" />}
           onPress={() => {
             pushSheet({ type: 'odd-suspend', data: odd });
           }}
@@ -91,7 +91,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           disabled={odd.status === 'SETTLED' || odd.criterion?.status === 'SETTLED'}
           text="Reprice"
-          icon={<DollarEuro width={28} height={28} color="white" />}
+          icon={<DollarEuro color="white" />}
           onPress={() => {
             pushSheet({ type: 'odd-reprice', data: odd });
           }}
