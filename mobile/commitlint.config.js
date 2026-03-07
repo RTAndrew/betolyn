@@ -16,6 +16,7 @@ module.exports = {
         'revert',
         'ci',
         'build',
+        'release',
       ],
     ],
   },

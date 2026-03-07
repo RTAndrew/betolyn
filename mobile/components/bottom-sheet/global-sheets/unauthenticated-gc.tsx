@@ -5,26 +5,39 @@ import { SheetManager } from 'react-native-actions-sheet';
 
 import { Button } from '@/components/button';
 import EmptyState from '@/components/empty-state';
+import { NoUsersFound } from '@/components/illustrations';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { colors } from '@/constants/colors';
 
 import BottomSheet from '..';
 
 const UnauthenticatedGC = () => {
   return (
     <BottomSheet>
-      <EmptyState
-        title="Create an account."
-        description="Death markets, gossip, sports, custom betting channels and everything in between... BET ALL IN."
-      >
-        <Button.Root
-          style={styles.button}
-          onPress={() => {
-            router.push('/auth/login');
-            SheetManager.hide('unauthenticated');
-          }}
+      <SafeHorizontalView>
+        <EmptyState
+          title="Create an account"
+          description="BET ALL IN... Death markets, gossip, sports, custom betting channels and everything in between."
+          icon={
+            <NoUsersFound
+              width={150}
+              height={150}
+              fill={colors.greyLight}
+              color={colors.greyMedium}
+            />
+          }
         >
-          Sign in
-        </Button.Root>
-      </EmptyState>
+          <Button.Root
+            style={styles.button}
+            onPress={() => {
+              router.push('/auth/login');
+              SheetManager.hide('unauthenticated');
+            }}
+          >
+            Sign in
+          </Button.Root>
+        </EmptyState>
+      </SafeHorizontalView>
     </BottomSheet>
   );
 };
