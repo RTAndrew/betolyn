@@ -1,0 +1,22 @@
+meta {
+  name: setAllowMultipleWinners
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/criteria/crit_VbWwS5TeHCyC/allow-multiple-winners
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "allowMultipleWinners": false
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

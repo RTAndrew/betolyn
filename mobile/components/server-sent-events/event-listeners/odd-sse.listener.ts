@@ -60,6 +60,13 @@ class OddSseListener implements ISseListener {
         break;
       }
 
+      case 'oddUpdated': {
+        const odd = eventPayload as IOdd;
+
+        DataSync.updateOdds([odd]);
+        break;
+      }
+
       default:
         console.log('[SSE] Unhandled odd event:', eventName);
     }

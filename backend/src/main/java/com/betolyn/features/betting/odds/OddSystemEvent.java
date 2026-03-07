@@ -1,15 +1,17 @@
 package com.betolyn.features.betting.odds;
 
-import com.betolyn.config.systemEvent.ISystemEvent;
-import com.betolyn.config.systemEvent.SystemEvent;
-import com.betolyn.shared.sse.ServerSentEventEmitter;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import java.util.List;
+import com.betolyn.config.systemEvent.ISystemEvent;
+import com.betolyn.config.systemEvent.SystemEvent;
+import com.betolyn.shared.sse.ServerSentEventEmitter;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public final class OddSystemEvent implements ISystemEvent {
     }
 
     public void publishOddUpdate(Object source, OddEntity odd) {
-        var channelId = "oddUpdated:" + odd.getId();
+        var channelId = "oddUpdated";
         publish(source, channelId, oddMapper.toOddDTO(odd));
     }
 

@@ -8,4 +8,5 @@ public final class CriterionApiPaths {
     public static final String CRITERIA_SUSPEND = "/criteria/{criterionId}/suspend";
     public static final String CRITERIA_WINNING_OUTCOMES = "/criteria/{criterionId}/winning-outcomes";
     public static final String CRITERIA_METRICS = "/criteria/{criterionId}/metrics";
+    public static final String CRITERIA_ALLOW_MULTIPLE_WINNERS = "/criteria/{criterionId}/allow-multiple-winners";
 }

@@ -4,11 +4,11 @@ import { queryClient } from '@/utils/react-query';
 
 import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from '../matches/match-query';
 import {
+  CriterionService,
+  ICreateCriterionRequest,
   IRepriceOddsRequest,
   IUpdateCriterionStatusRequest,
-  ICreateCriterionRequest,
   IWinningOutcome,
-  CriterionService,
 } from './criterion-service';
 
 interface IRepriceCriterionOddsVariables {
@@ -30,6 +30,11 @@ interface ICreateCriterionVariables {
 interface ISelectWinningOutcomesVariables {
   criterionId: string;
   odds: IWinningOutcome[];
+}
+
+interface ISetAllowMultipleWinnersVariables {
+  criterionId: string;
+  allowMultipleWinners: boolean;
 }
 
 export const useRepriceCriterionOdds = () => {
@@ -93,6 +98,18 @@ export const useSelectWinningOutcomes = () => {
     {
       mutationFn: (data: ISelectWinningOutcomesVariables) =>
         CriterionService.selectWinningOutcomes(data.criterionId, data.odds),
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useSetAllowMultipleWinners = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: ISetAllowMultipleWinnersVariables) =>
+        CriterionService.setAllowMultipleWinners(data.criterionId, data.allowMultipleWinners),
     },
     queryClient
   );

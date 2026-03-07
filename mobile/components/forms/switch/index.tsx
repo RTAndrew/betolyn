@@ -1,19 +1,21 @@
 import React from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { Switch as ReactNativeUISwitch } from 'react-native-ui-lib';
+import {
+  Switch as ReactNativeUISwitch,
+  SwitchProps as ReactNativeUISwitchProps,
+} from 'react-native-ui-lib';
 
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 
-interface SwitchProps {
+interface SwitchProps extends Omit<ReactNativeUISwitchProps, 'onValueChange'> {
   label?: string;
-  value: boolean;
   description?: string;
   switchStyle?: StyleProp<ViewStyle>;
   onChange: (value: boolean) => void;
 }
 
-const Switch = ({ label, value, description, onChange, switchStyle }: SwitchProps) => {
+const Switch = ({ label, value, description, onChange, switchStyle, ...props }: SwitchProps) => {
   const handleChange = () => {
     onChange(!value);
   };
@@ -36,6 +38,7 @@ const Switch = ({ label, value, description, onChange, switchStyle }: SwitchProp
           value={value}
           style={switchStyle}
           onValueChange={onChange}
+          {...props}
         />
       </View>
     </Pressable>

@@ -3,9 +3,9 @@ import {
   getAllCriteriaQueryOptions,
   getCriterionByIdQueryOptions,
 } from '@/services/criteria/criterion-query';
-import { getMatchQueryOptions, getMatchCriteriaQueryOptions } from '@/services/matches/match-query';
+import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from '@/services/matches/match-query';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
-import { getOddByIdQueryOptions, getAllOddsQueryOptions } from '@/services/odds/odd-query';
+import { getAllOddsQueryOptions, getOddByIdQueryOptions } from '@/services/odds/odd-query';
 import { ICriterion, IMatch, IOdd } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { patch } from '@/utils/object';

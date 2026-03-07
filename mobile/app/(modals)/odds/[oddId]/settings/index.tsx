@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import Switch from '@/components/forms/switch';
 import { MoreVertical, Trophy } from '@/components/icons';
 import { useMatchBottomSheet } from '@/components/match/bottom-sheet/context';
 import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet/provider';
@@ -15,7 +14,7 @@ import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-sk
 import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
-import { useGetMatch, useGetOddMetrics } from '@/services';
+import { useGetMatch, useGetOddById, useGetOddMetrics } from '@/services';
 import { IOdd } from '@/types';
 import { formatKNumber } from '@/utils/format-k-number';
 import { getMatchStatusTag, getOddStatusTag } from '@/utils/get-entity-status-tag';
@@ -38,6 +37,12 @@ const OddSettings = () => {
   const { oddId } = useLocalSearchParams();
   const { data: metricsData, isPending, error } = useGetOddMetrics({ oddId: oddId as string });
   const {
+    data: oddData,
+    isPending: oddIsPending,
+    error: oddError,
+  } = useGetOddById({ oddId: oddId as string });
+  const odd = oddData?.data;
+  const {
     data: matchData,
     isPending: matchIsPending,
     error: matchError,
@@ -48,7 +53,7 @@ const OddSettings = () => {
     },
   });
 
-  if (isPending || matchIsPending) {
+  if (isPending || matchIsPending || oddIsPending) {
     return (
       <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
         <ScreenHeader
@@ -65,7 +70,6 @@ const OddSettings = () => {
 
   if (error || !metricsData || matchError) return <ThemedText>Error loading odd</ThemedText>;
   const metrics = metricsData.data;
-  const odd = metrics?.odd;
   const match = matchData?.data;
   if (!metrics || !odd || !match) return <ThemedText>Odd not found</ThemedText>;
 
@@ -159,20 +163,9 @@ const OddSettings = () => {
 
           <Settings.ItemGroup>
             <Settings.Item
-              title="Allow multiple outcomes"
-              subtitle="Multiple bets on the same outcome are allowed."
-              suffixIcon={<Switch value={odd.criterion.allowMultipleOdds} onChange={() => {}} />}
-            />
-
-            <Settings.Item
               title="Winning Outcome"
-              suffixIcon={<Switch value={odd.isWinner ?? false} onChange={() => {}} />}
-            />
-
-            <Settings.Item
-              title="Publish on kickoff"
-              subtitle="When the match starts, the criterion will be published automatically."
-              suffixIcon={<Switch value={false} onChange={() => {}} />}
+              description={odd.isWinner ? 'Yes' : 'No'}
+              suffixIcon={null}
             />
           </Settings.ItemGroup>
         </SafeHorizontalView>

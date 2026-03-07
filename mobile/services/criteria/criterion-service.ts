@@ -1,6 +1,6 @@
 import { DataSync } from '@/components/server-sent-events/data-sync';
 import { CriterionStatusEnum, EOddStatus, ICriterion, ICriterionMetrics, IOdd } from '@/types';
-import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
+import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
 
 import { IMatchCriteriaResponse } from '../matches/matches-services';
 
@@ -84,6 +84,13 @@ export class CriterionService {
     return await postRequest<ICriterion, IWinningOutcome[]>(
       `/criteria/${criterionId}/winning-outcomes`,
       data
+    );
+  }
+
+  public static async setAllowMultipleWinners(criterionId: string, allowMultipleWinners: boolean) {
+    return await postRequest<ICriterion, { allowMultipleWinners: boolean }>(
+      `/criteria/${criterionId}/allow-multiple-winners`,
+      { allowMultipleWinners }
     );
   }
 }
