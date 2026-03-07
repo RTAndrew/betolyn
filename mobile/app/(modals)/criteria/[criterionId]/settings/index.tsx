@@ -12,12 +12,12 @@ import ScreenWrapper from '@/components/screen-wrapper';
 import { Settings } from '@/components/settings';
 import { Skeleton } from '@/components/skeleton';
 import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-skeleton';
-import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import CriteriaMetrics from '@/screens/criteria/setttings/criteria-metrics';
 import { useGetCriterionById } from '@/services';
 import { ICriterion } from '@/types';
+import { getMatchStatusTag } from '@/utils/get-entity-status-tag';
 
 const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
   const { pushSheet } = useMatchBottomSheet();
@@ -74,7 +74,7 @@ const CriterionSettings = () => {
           <Settings.Item
             title={`${criterion.match.homeTeam.name} vs ${criterion.match.awayTeam.name}`}
             subtitle="Match"
-            description={<Tag.Live />}
+            description={getMatchStatusTag(criterion.match.status)}
             onPress={() => router.push(`/matches/${criterion.match.id}`)}
           />
 

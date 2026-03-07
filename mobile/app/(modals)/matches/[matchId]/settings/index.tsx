@@ -11,12 +11,12 @@ import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Settings } from '@/components/settings';
 import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-skeleton';
-import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import MatchSettingsCriteriaList from '@/screens/matches/settings/criteria';
 import MatchMetrics from '@/screens/matches/settings/match-metrics';
 import { useGetMatch } from '@/services';
+import { getMatchStatusTag, getOddStatusTag } from '@/utils/get-entity-status-tag';
 
 const OpenMatchBottomSheetIcon = () => {
   const { pushSheet } = useMatchBottomSheet();
@@ -84,12 +84,12 @@ const MatchSettings = () => {
             <Settings.Item
               title="24 October - 19:45"
               subtitle="Kick off"
-              suffixIcon={<Tag.Live />}
+              suffixIcon={getMatchStatusTag(match.status)}
             />
             <Settings.Item
               title="Cartões Amarelos"
               subtitle="Main Market"
-              description={<Tag.Active title="Active" />}
+              description={getOddStatusTag(match.mainCriterion?.status)}
               onPress={() => router.push(`/criteria/${match.mainCriterion?.id}/settings`)}
             />
           </Settings.ItemGroup>

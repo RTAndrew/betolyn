@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import Switch from '@/components/forms/switch';
-import { MoreVertical } from '@/components/icons';
+import { MoreVertical, Trophy } from '@/components/icons';
 import { useMatchBottomSheet } from '@/components/match/bottom-sheet/context';
 import { MatchBottomSheetProvider } from '@/components/match/bottom-sheet/provider';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
@@ -13,12 +13,12 @@ import { SegmentedProgressBar } from '@/components/segmented-progress-bar';
 import { Settings } from '@/components/settings';
 import { SettingsScreenSkeleton } from '@/components/skeleton/settings-screen-skeleton';
 import { Stats } from '@/components/stats';
-import Tag from '@/components/tags';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetMatch, useGetOddMetrics } from '@/services';
 import { IOdd } from '@/types';
 import { formatKNumber } from '@/utils/format-k-number';
+import { getMatchStatusTag, getOddStatusTag } from '@/utils/get-entity-status-tag';
 
 const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {
   const { pushSheet } = useMatchBottomSheet();
@@ -127,16 +127,32 @@ const OddSettings = () => {
 
           <Settings.ItemGroup>
             <Settings.Item
+              title={
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 0 }}>
+                  <ThemedText type="defaultSemiBold" style={{ color: colors.complementary }}>
+                    {' '}
+                    {odd.value}{' '}
+                  </ThemedText>
+                  <ThemedText>{'-'}</ThemedText>
+                  <ThemedText type="defaultSemiBold"> {odd.name} </ThemedText>
+                </View>
+              }
+              subtitle="Outcome"
+              description={getOddStatusTag(odd.status)}
+              suffixIcon={odd.isWinner && <Trophy />}
+            />
+
+            <Settings.Item
               title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
               subtitle="Event"
-              description={<Tag.Live />}
+              description={getMatchStatusTag(match.status)}
               onPress={() => router.push(`/matches/${match.id}`)}
             />
 
             <Settings.Item
               title={odd.criterion.name}
               subtitle="Market"
-              description={<Tag.Active />}
+              description={getOddStatusTag(odd.criterion.status)}
               onPress={() => router.push(`/criteria/${odd.criterion.id}/settings`)}
             />
           </Settings.ItemGroup>

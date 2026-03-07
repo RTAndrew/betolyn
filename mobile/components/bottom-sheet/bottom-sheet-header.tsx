@@ -16,7 +16,7 @@ interface IHeaderWithChildren {
 }
 
 interface IHeaderWithoutChildren {
-  title: string;
+  title: React.ReactNode;
   description?: React.ReactNode;
   onClose?: () => void;
   onPrevious?: () => void;
@@ -26,7 +26,7 @@ interface IHeaderWithoutChildren {
 export type BottomSheetHeaderProps = IHeaderWithChildren | IHeaderWithoutChildren;
 
 interface _TitleWithDescription {
-  title: string;
+  title: React.ReactNode;
   children?: never;
   description?: React.ReactNode;
 }

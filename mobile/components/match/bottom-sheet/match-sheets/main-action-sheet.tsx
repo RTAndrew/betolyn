@@ -6,6 +6,7 @@ import BottomSheet from '@/components/bottom-sheet';
 import { Add, MoneyHand, Settings, SoccerBall, TimeHistory, TimerOff } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { getMatchStatusTag } from '@/utils/get-entity-status-tag';
 
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
@@ -36,6 +37,9 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
     <BottomSheet onClose={closeAll} visible={visible}>
       <BottomSheet.Header>
         <BottomSheet.SafeHorizontalView style={{ width: '100%' }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
+            {getMatchStatusTag(match.status)}
+          </View>
           <View style={styles.teamWrapper}>
             <Team name={'Home'} imageUrl={match.homeTeam.badgeUrl} direction="row-reverse" />
             <ThemedText style={{ color: colors.greyLighter, fontWeight: '900' }}>

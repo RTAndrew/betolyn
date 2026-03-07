@@ -4,9 +4,11 @@ import { ActivityIndicator, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
 import { DollarEuro, Eye, LockClosed, Settings, Trash } from '@/components/icons';
+import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetOddById } from '@/services/odds/odd-query';
 import { CriterionStatusEnum, EOddStatus } from '@/types';
+import { getOddStatusTag } from '@/utils/get-entity-status-tag';
 
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
@@ -61,7 +63,15 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
-      <BottomSheet.Header title={odd.name} description={description} />
+      <BottomSheet.Header
+        title={
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <ThemedText type="defaultSemiBold"> {odd.name} </ThemedText>
+            {getOddStatusTag(odd.status)}
+          </View>
+        }
+        description={description}
+      />
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption

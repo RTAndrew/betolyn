@@ -1,9 +1,11 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { type ReactNode } from 'react';
-import { type StyleProp, type ViewStyle, StyleSheet, View } from 'react-native';
+import React, { useMemo, type ReactNode } from 'react';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { hexToRgba } from '@/utils/hex-rgba';
+
+import PlayFilled from '../icons/play-filled';
 
 const LiveTag = () => (
   <LinearGradient
@@ -12,7 +14,7 @@ const LiveTag = () => (
     end={{ x: 1, y: 0 }}
     style={[styles.root, { borderWidth: 0 }]}
   >
-    <View style={styles.liveDot} />
+    <PlayFilled width={12} height={12} />
     <ThemedText style={styles.text}>Live</ThemedText>
   </LinearGradient>
 );
@@ -21,17 +23,39 @@ export interface TagProps {
   title: string;
   textColor?: string;
   icon?: ReactNode;
+  /** If passed, it calculates the borderColor, textColor and backgroundColor */
+  color?: `#${string}`;
   borderColor?: string;
   backgroundColor?: string;
   style?: StyleProp<ViewStyle>;
 }
 
-const Tag = ({ title, icon, borderColor, backgroundColor, textColor, style }: TagProps) => (
-  <View style={[styles.root, { borderColor, backgroundColor }, style]}>
-    {icon}
-    <ThemedText style={[styles.text, { color: textColor }]}>{title}</ThemedText>
-  </View>
-);
+const Tag = ({ title, icon, style, color, ...props }: TagProps) => {
+  const { borderColor, backgroundColor, textColor } = useMemo(() => {
+    if (color) {
+      return {
+        borderColor: hexToRgba(color, 0.5),
+        backgroundColor: hexToRgba(color, 0.12),
+        textColor: color,
+      };
+    }
+
+    return {
+      borderColor: props.borderColor,
+      backgroundColor: props.backgroundColor,
+      textColor: props.textColor || 'white',
+    };
+  }, [props.backgroundColor, props.borderColor, props.textColor, color]);
+
+  return (
+    <View
+      style={[styles.root, { borderColor: borderColor, backgroundColor: backgroundColor }, style]}
+    >
+      {icon}
+      <ThemedText style={[styles.text, { color: textColor }]}>{title}</ThemedText>
+    </View>
+  );
+};
 
 interface ActiveTagProps extends Pick<TagProps, 'icon'> {
   title?: string;
@@ -58,13 +82,6 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 100,
     borderWidth: 1,
-  },
-  live: {},
-  liveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: 'white',
   },
   text: {
     fontSize: 12,

@@ -13,8 +13,10 @@ import {
   Trash,
   Trophy,
 } from '@/components/icons';
+import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionById } from '@/services/criteria/criterion-query';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
+import { getCriterionStatusTag } from '@/utils/get-entity-status-tag';
 
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
@@ -51,7 +53,15 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
-      <BottomSheet.Header title={criterion.name} description={'Criterion'} />
+      <BottomSheet.Header
+        title={
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <ThemedText type="defaultSemiBold"> {criterion.name} </ThemedText>
+            {getCriterionStatusTag(criterion.status)}
+          </View>
+        }
+        description={'Criterion'}
+      />
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
