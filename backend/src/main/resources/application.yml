@@ -25,4 +25,4 @@ app:
     cookiesTokenNameKey: "token"
     jwtSecret: "jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT"
   cors:
-    allowedOrigins: "http://localhost:8001"
+    allowedOrigins: "*"

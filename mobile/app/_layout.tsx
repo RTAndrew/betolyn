@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import GlobalSheetRegistry from '@/components/bottom-sheet/global-sheets/registry';
 import StreamEventSource from '@/components/server-sent-events';
 import { colors } from '@/constants/colors';
 import { hydrateAuthStore } from '@/stores/auth.store';
@@ -58,6 +59,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <GlobalSheetRegistry />
       <ShimmerProvider duration={1500}>
         <QueryClientProvider client={queryClient}>
           <StreamEventSource />

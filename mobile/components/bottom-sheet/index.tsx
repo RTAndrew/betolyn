@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
   root: {
     paddingTop: 10,
     paddingBottom: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   container: {
     paddingVertical: 8,

@@ -39,7 +39,12 @@ const IconContainer = ({
   return (
     <Pressable
       {...props}
-      style={StyleSheet.flatten([styles.headerIcon, { backgroundColor: color }, props.style])}
+      style={StyleSheet.flatten([
+        styles.headerIcon,
+        { backgroundColor: color },
+        props.style,
+        props.disabled && { opacity: 0.5 },
+      ])}
       onPress={onPress}
     >
       {children}

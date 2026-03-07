@@ -4,10 +4,12 @@ import React from 'react';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
+import EmptyState from '@/components/empty-state';
 import { Eye, Trash } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import { colors } from '@/constants/colors';
+import { authStore } from '@/stores/auth.store';
 import { betSlipStore } from '@/stores/bet-slip.store';
 
 import BetSlipCard from '../../../components/bet-slip/bet-slip-card';
@@ -33,6 +35,7 @@ const BetSlips = () => {
             </ScreenHeader.Icon>
             <ScreenHeader.Icon
               color="white"
+              disabled={!authStore.isLoggedIn.value}
               onPress={() => router.push('/betslips/history')}
               style={{ backgroundColor: 'transparent' }}
             >
@@ -42,22 +45,30 @@ const BetSlips = () => {
         </ScreenHeader>
       </Pressable>
 
-      <FlatList
-        contentContainerStyle={{
-          flexGrow: 1,
-          gap: 18,
-          marginTop: 18,
-          paddingBottom: Platform.OS === 'ios' ? 220 : 180,
-        }}
-        data={Object.keys(bets.value)}
-        renderItem={({ item }) => {
-          return (
-            <SafeHorizontalView key={item} style={{ flex: 1, gap: 18 }}>
-              <BetSlipCard matchId={item} bets={bets.value[item]} />
-            </SafeHorizontalView>
-          );
-        }}
-      />
+      {Object.keys(bets.value).length > 0 ? (
+        <FlatList
+          contentContainerStyle={{
+            flexGrow: 1,
+            gap: 18,
+            marginTop: 18,
+            paddingBottom: Platform.OS === 'ios' ? 220 : 180,
+          }}
+          data={Object.keys(bets.value)}
+          renderItem={({ item }) => {
+            return (
+              <SafeHorizontalView key={item} style={{ flex: 1, gap: 18 }}>
+                <BetSlipCard matchId={item} bets={bets.value[item]} />
+              </SafeHorizontalView>
+            );
+          }}
+        />
+      ) : (
+        <SafeHorizontalView>
+          <View style={{ marginTop: 100 }}>
+            <EmptyState.NoBets showButton={false} />
+          </View>
+        </SafeHorizontalView>
+      )}
 
       <View pointerEvents="box-none" style={[styles.sheetWrapper, { bottom: TAB_BAR_HEIGHT }]}>
         <BottomSheet

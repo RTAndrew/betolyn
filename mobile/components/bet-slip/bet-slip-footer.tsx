@@ -2,12 +2,13 @@ import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ScrollView } from 'react-native-actions-sheet';
+import { ScrollView, SheetManager } from 'react-native-actions-sheet';
 
 import { ButtonTab } from '@/components/button-tab';
 import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { authStore } from '@/stores/auth.store';
 import { betSlipStore } from '@/stores/bet-slip.store';
 
 import { Button } from '../button';
@@ -17,6 +18,14 @@ const BetSlipFooter = () => {
   useSignals();
   const { totalPotentialPayout, totalBets, totalStake, parlayStake, setParlayStake } = betSlipStore;
   const { betType, updateBetType } = betSlipStore;
+
+  const handlePlaceBet = () => {
+    if (!authStore.isLoggedIn.peek()) {
+      SheetManager.show('unauthenticated');
+      return;
+    }
+    router.push('/betslips/placebet');
+  };
 
   return (
     <ScrollView scrollEnabled={false} showsVerticalScrollIndicator={false}>
@@ -50,10 +59,7 @@ const BetSlipFooter = () => {
           options={['Single', 'Parlay']}
           onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')}
         />
-        <Button.Root
-          disabled={totalPotentialPayout.value === 0}
-          onPress={() => router.push('/betslips/placebet')}
-        >
+        <Button.Root onPress={handlePlaceBet} disabled={totalPotentialPayout.value === 0}>
           Place Bet
         </Button.Root>
       </SafeHorizontalView>
