@@ -4,12 +4,14 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-actions-sheet';
 
-import { Button } from '@/components/button';
 import { ButtonTab } from '@/components/button-tab';
 import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { betSlipStore } from '@/stores/bet-slip.store';
+
+import { Button } from '../button';
+import SafeHorizontalView from '../safe-horizontal-view';
 
 const BetSlipFooter = () => {
   useSignals();
@@ -17,35 +19,44 @@ const BetSlipFooter = () => {
   const { betType, updateBetType } = betSlipStore;
 
   return (
-    <ScrollView
-      scrollEnabled={false}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.root}
-    >
-      <View style={styles.details}>
-        <View style={{ flexDirection: 'column', gap: 10 }}>
-          <ThemedText>Bets: {totalBets.value}</ThemedText>
-          <ThemedText>Potential Payout: ${totalPotentialPayout.value.toFixed(2)}</ThemedText>
+    <ScrollView scrollEnabled={false} showsVerticalScrollIndicator={false}>
+      <SafeHorizontalView style={styles.root}>
+        <View style={styles.details}>
+          <View style={{ flexDirection: 'column', gap: 10 }}>
+            <ThemedText style={{ color: colors.greyLighter50 }} type="subtitle">
+              Bets: {totalBets.value}
+            </ThemedText>
+            {betType.value === 'single' ? (
+              <ThemedText style={{ color: colors.greyLighter50 }} type="subtitle">
+                Stake: ${totalStake.value.toFixed(2)}
+              </ThemedText>
+            ) : (
+              <ThemedText style={styles.amount}>
+                ${totalPotentialPayout.value.toFixed(2)}
+              </ThemedText>
+            )}
+          </View>
+
+          {betType.value === 'single' ? (
+            <ThemedText style={styles.amount}>${totalPotentialPayout.value.toFixed(2)}</ThemedText>
+          ) : (
+            <NumberInput value={parlayStake.value} onChange={setParlayStake} />
+          )}
         </View>
 
-        {betType.value === 'single' ? (
-          <ThemedText style={styles.amount}> ${totalStake.value.toFixed(2)} </ThemedText>
-        ) : (
-          <NumberInput value={parlayStake.value} onChange={setParlayStake} />
-        )}
-      </View>
-
-      <ButtonTab
-        activeIndex={betType.value === 'single' ? 0 : 1}
-        options={['Single', 'Parlay']}
-        onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')}
-      />
-      <Button.Root
-        disabled={totalBets.value === 0}
-        onPress={() => router.push('/betslips/placebet')}
-      >
-        Place Bet
-      </Button.Root>
+        <ButtonTab
+          style={styles.buttonTab}
+          activeIndex={betType.value === 'single' ? 0 : 1}
+          options={['Single', 'Parlay']}
+          onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')}
+        />
+        <Button.Root
+          disabled={totalPotentialPayout.value === 0}
+          onPress={() => router.push('/betslips/placebet')}
+        >
+          Place Bet
+        </Button.Root>
+      </SafeHorizontalView>
     </ScrollView>
   );
 };
@@ -54,7 +65,7 @@ const styles = StyleSheet.create({
   root: {
     flexDirection: 'column',
     gap: 12,
-    paddingHorizontal: 16,
+    marginBottom: 12,
   },
   details: {
     flexDirection: 'row',
@@ -64,8 +75,11 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontSize: 40,
-    color: colors.complementary,
     fontWeight: '700',
+    color: colors.complementary,
+  },
+  buttonTab: {
+    marginVertical: 8,
   },
 });
 

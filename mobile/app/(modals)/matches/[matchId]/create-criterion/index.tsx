@@ -1,12 +1,13 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState, useRef } from 'react';
-import { ScrollView, StyleSheet, View, Platform, Alert } from 'react-native';
+import { useMemo, useRef, useState } from 'react';
+import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import BottomSheet from '@/components/bottom-sheet';
 import { Button } from '@/components/button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
+import ScreenWrapper from '@/components/screen-wrapper';
 import { ThemedText } from '@/components/ThemedText';
 import Wizard from '@/components/wizard';
 import { colors } from '@/constants/colors';
@@ -124,7 +125,11 @@ export default function CreateCriterion() {
   }, [activeStep]);
 
   if (isPending) {
-    return <ThemedText>Loading...</ThemedText>;
+    return (
+      <ScreenWrapper backgroundColor={colors.greyLight}>
+        <ThemedText>Loading...</ThemedText>;
+      </ScreenWrapper>
+    );
   }
 
   if (error || !data) {
@@ -158,7 +163,7 @@ export default function CreateCriterion() {
               onClose={() => router.back()}
             />
 
-            <SafeHorizontalView style={{ backgroundColor: colors.greyMedium, paddingTop: 16 }}>
+            <SafeHorizontalView style={{ backgroundColor: colors.greyMedium, paddingTop: 22 }}>
               <Wizard
                 activeIndex={activeStep}
                 steps={[{ label: 'Market' }, { label: 'Outcomes' }]}
@@ -175,13 +180,11 @@ export default function CreateCriterion() {
               style={styles.button}
               onPress={() => setActiveStep((prev) => prev - 1)}
             >
-              {' '}
-              Previous{' '}
+              Previous
             </Button.Root>
           )}
           <Button.Root disabled={isNextButtonDisabled} style={styles.button} onPress={handleNext}>
-            {' '}
-            Next{' '}
+            Next
           </Button.Root>
         </SafeHorizontalView>
       </View>

@@ -18,7 +18,7 @@ const Team = ({
 }) => {
   return (
     <View style={{ flexDirection: direction, alignItems: 'center', gap: 10 }}>
-      <Image source={{ uri: imageUrl }} style={{ width: 30, height: 30 }} />
+      <Image source={{ uri: imageUrl }} style={{ width: 36, height: 36 }} />
       {showName && (
         <ThemedText style={styles.teamName} className="team-name">
           {name}

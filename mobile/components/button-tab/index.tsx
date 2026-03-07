@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  LayoutChangeEvent,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -15,6 +23,7 @@ export interface ButtonTabOption {
 export interface ButtonTabProps {
   activeIndex?: number;
   defaultIndex?: number;
+  style?: StyleProp<ViewStyle>;
   options: ButtonTabOption[] | string[];
   onIndexChange?: (index: number) => void;
 }
@@ -27,6 +36,7 @@ export function ButtonTab({
   options: rawOptions,
   defaultIndex = 0,
   onIndexChange,
+  style,
 }: ButtonTabProps) {
   const options = normalizeOptions(rawOptions);
   const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultIndex);
@@ -75,7 +85,7 @@ export function ButtonTab({
   }));
 
   return (
-    <View style={styles.container} onLayout={handleLayout}>
+    <View style={[styles.container, style]} onLayout={handleLayout}>
       {segmentWidth > 0 && (
         <Animated.View
           style={[

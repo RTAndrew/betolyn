@@ -35,7 +35,7 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
   const criteria = data.data;
 
   return (
-    <>
+    <Settings.ItemGroup>
       {criteria.map((criterion) => (
         <Settings.Item
           key={criterion.id}
@@ -45,7 +45,7 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
           onPress={() => router.push(`/criteria/${criterion.id}/settings`)}
         />
       ))}
-    </>
+    </Settings.ItemGroup>
   );
 };
 

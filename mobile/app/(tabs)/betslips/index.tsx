@@ -13,7 +13,7 @@ import { betSlipStore } from '@/stores/bet-slip.store';
 import BetSlipCard from '../../../components/bet-slip/bet-slip-card';
 import BetSlipFooter from '../../../components/bet-slip/bet-slip-footer';
 
-const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 80 : 60;
+const TAB_BAR_HEIGHT = Platform.OS === 'ios' ? 70 : 60;
 
 const BetSlips = () => {
   useSignals();
@@ -47,7 +47,7 @@ const BetSlips = () => {
           flexGrow: 1,
           gap: 18,
           marginTop: 18,
-          paddingBottom: Platform.OS === 'ios' ? 200 : 130,
+          paddingBottom: Platform.OS === 'ios' ? 220 : 180,
         }}
         data={Object.keys(bets.value)}
         renderItem={({ item }) => {
@@ -62,14 +62,14 @@ const BetSlips = () => {
       <View pointerEvents="box-none" style={[styles.sheetWrapper, { bottom: TAB_BAR_HEIGHT }]}>
         <BottomSheet
           isModal={false}
-          backgroundInteractionEnabled
           gestureEnabled
-          enableGesturesInScrollView
           closable={false}
-          snapPoints={[Platform.OS === 'ios' ? 38 : 14, 100]}
           initialSnapIndex={0}
-          containerStyle={styles.sheetContainer}
+          enableGesturesInScrollView
+          backgroundInteractionEnabled
           indicatorStyle={styles.indicator}
+          containerStyle={styles.sheetContainer}
+          snapPoints={[Platform.OS === 'ios' ? 45 : 16, 100]}
         >
           <BetSlipFooter />
         </BottomSheet>

@@ -72,13 +72,11 @@ const PlaceBet = () => {
 
   return (
     <ScreenWrapper safeArea={false} backgroundColor={colors.greyLight}>
-      {
-        <ScreenHeader
-          style={{ opacity: !isProcessing || isSuccess || isPastMaxTime ? 1 : 0 }}
-          type="close"
-          onClose={() => router.back()}
-        />
-      }
+      <ScreenHeader
+        style={{ opacity: !isProcessing || isSuccess || isPastMaxTime ? 1 : 0 }}
+        type="close"
+        onClose={() => router.back()}
+      />
 
       <SafeHorizontalView style={styles.container}>
         {isProcessing && (

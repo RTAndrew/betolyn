@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 
 import { colors } from '@/constants/colors';
@@ -33,7 +33,6 @@ const BottomSheet = ({
     const actionSheet = actionSheetRef.current;
     if (visible) {
       actionSheet?.show();
-      // TODO: change navigation bar color
     } else {
       actionSheet?.hide();
     }
@@ -60,7 +59,7 @@ const BottomSheet = ({
 const styles = StyleSheet.create({
   root: {
     paddingTop: 10,
-    paddingBottom: Platform.OS === 'ios' ? '10%' : '10%',
+    paddingBottom: 0,
   },
   container: {
     paddingVertical: 8,

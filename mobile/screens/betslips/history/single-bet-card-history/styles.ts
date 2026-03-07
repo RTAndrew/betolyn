@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.greyMedium,
   },
   logoOverlap: {
-    marginTop: -6,
+    marginTop: 2,
   },
   logoPlaceholder: {
     backgroundColor: colors.greyLight,
