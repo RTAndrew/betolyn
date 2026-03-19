@@ -18,6 +18,7 @@ import { useGetMatch, useGetOddById, useGetOddMetrics } from '@/services';
 import { IOdd } from '@/types';
 import { formatKNumber } from '@/utils/format-k-number';
 import { getMatchStatusTag, getOddStatusTag } from '@/utils/get-entity-status-tag';
+import { useMultiQueryState } from '@/utils/react-query/use-multi-query-state';
 
 const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {
   const { pushSheet } = useMatchBottomSheet();
@@ -35,25 +36,27 @@ const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {
 
 const OddSettings = () => {
   const { oddId } = useLocalSearchParams();
-  const { data: metricsData, isPending, error } = useGetOddMetrics({ oddId: oddId as string });
-  const {
-    data: oddData,
-    isPending: oddIsPending,
-    error: oddError,
-  } = useGetOddById({ oddId: oddId as string });
-  const odd = oddData?.data;
-  const {
-    data: matchData,
-    isPending: matchIsPending,
-    error: matchError,
-  } = useGetMatch({
-    matchId: metricsData?.data?.odd?.matchId ?? '',
+  const metricsQuery = useGetOddMetrics({ oddId: oddId as string });
+  const oddQuery = useGetOddById({ oddId: oddId as string });
+  const matchQuery = useGetMatch({
+    matchId: metricsQuery.data?.data?.odd?.matchId ?? '',
     queryOptions: {
-      enabled: Boolean(metricsData?.data?.odd?.matchId),
+      enabled: Boolean(metricsQuery.data?.data?.odd?.matchId),
     },
   });
 
-  if (isPending || matchIsPending || oddIsPending) {
+  const { data: metricsData, error: metricsError } = metricsQuery;
+  const odd = oddQuery.data?.data;
+  const { data: matchData, error: matchError } = matchQuery;
+
+  const { isInitialLoading: isPending } = useMultiQueryState([
+    { query: metricsQuery },
+    { query: oddQuery },
+    // Only block rendering on match details after matchId becomes known.
+    { query: matchQuery, requiredWhen: Boolean(metricsQuery.data?.data?.odd?.matchId) },
+  ]);
+
+  if (isPending) {
     return (
       <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
         <ScreenHeader
@@ -68,12 +71,12 @@ const OddSettings = () => {
     );
   }
 
-  if (error || !metricsData || matchError) return <ThemedText>Error loading odd</ThemedText>;
+  if (metricsError || !metricsData || matchError) return <ThemedText>Error loading odd</ThemedText>;
   const metrics = metricsData.data;
   const match = matchData?.data;
   if (!metrics || !odd || !match) return <ThemedText>Odd not found</ThemedText>;
 
-  const marketSharePct = Math.round(metrics.marketShare);
+  const marketSharePercentage = Math.round(metrics.marketShare);
 
   return (
     <MatchBottomSheetProvider match={match}>
@@ -91,8 +94,8 @@ const OddSettings = () => {
           <View style={styles.health}>
             <SegmentedProgressBar
               segments={[
-                { value: marketSharePct, color: colors.greyLighter },
-                { value: 100 - marketSharePct, color: colors.greyLighter50 },
+                { value: marketSharePercentage, color: colors.greyLighter },
+                { value: 100 - marketSharePercentage, color: colors.greyLighter50 },
               ]}
               topLabel={
                 <ThemedText type="default" style={{ color: '#A8A8A8' }}>
@@ -102,7 +105,7 @@ const OddSettings = () => {
               }
               bottomLabel={
                 <ThemedText type="defaultSemiBold" style={{ color: colors.white }}>
-                  {marketSharePct}% Market Share
+                  {marketSharePercentage}% Market Share
                 </ThemedText>
               }
             />

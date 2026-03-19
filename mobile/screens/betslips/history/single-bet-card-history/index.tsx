@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetCriterionById, useGetMatch, useGetOddById } from '@/services';
 import { IBetSlipItem, IBetSlipItemStatus } from '@/types';
+import { useMultiQueryState } from '@/utils/react-query';
 
 import { SingleBetCardHistorySkeleton } from './skeleton';
 import { styles } from './styles';
@@ -35,37 +36,29 @@ export interface SingleBetCardHistoryProps {
 }
 
 const SingleBetCardHistory = ({ bet }: SingleBetCardHistoryProps) => {
-  const {
-    data: matchData,
-    isPending: matchPending,
-    isError: matchError,
-  } = useGetMatch({
+  const matchQuery = useGetMatch({
     matchId: bet.matchId,
   });
 
-  const {
-    data: oddData,
-    isPending: oddPending,
-    isError: oddError,
-  } = useGetOddById({
+  const oddQuery = useGetOddById({
     oddId: bet.oddId,
   });
 
-  const {
-    data: criterionData,
-    isPending: criterionPending,
-    isError: criterionError,
-  } = useGetCriterionById({ criterionId: bet.criterionId });
+  const criterionQuery = useGetCriterionById({ criterionId: bet.criterionId });
 
-  const isPending = matchPending || oddPending || criterionPending;
+  const { isInitialLoading: isPending } = useMultiQueryState([
+    { query: matchQuery },
+    { query: oddQuery },
+    { query: criterionQuery },
+  ]);
 
   if (isPending) {
     return <SingleBetCardHistorySkeleton />;
   }
 
-  const match = matchData?.data;
-  const odd = oddData?.data;
-  const criterion = criterionData?.data;
+  const match = matchQuery.data?.data;
+  const odd = oddQuery.data?.data;
+  const criterion = criterionQuery.data?.data;
 
   const homeBadge = match?.homeTeam?.badgeUrl;
   const awayBadge = match?.awayTeam?.badgeUrl;
