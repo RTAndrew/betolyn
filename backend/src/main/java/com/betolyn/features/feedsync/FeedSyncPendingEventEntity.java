@@ -1,5 +1,7 @@
 package com.betolyn.features.feedsync;
 
+import java.time.Instant;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,8 +9,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
 
 /**
  * Event row queued because home/away {@link com.betolyn.features.teams.TeamEntity} rows were not in Betolyn yet.
