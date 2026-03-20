@@ -1,0 +1,4 @@
+name: baseUrl
+variables:
+  - name: baseUrl
+    value: http://localhost:8010

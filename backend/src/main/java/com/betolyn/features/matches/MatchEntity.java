@@ -24,6 +24,13 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 @Table(name = "matches")
 public class MatchEntity extends AuditableEntity {
 
+    /** ESPN event id for feed sync / dedupe (nullable for legacy rows). */
+    @Column(name = "espn_id", unique = true, length = 64)
+    private String espnId;
+
+    @Column(name = "venue_name", length = 300)
+    private String venueName;
+
     private boolean isOfficial = true;
     private String channelId;
 

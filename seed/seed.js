@@ -31,8 +31,19 @@ try {
 	require("dotenv").config({ path: path.join(__dirname, ".env") });
 } catch  {}
 
-const BASE_URL =
-	process.env.BASE_URL || "localhost:8080";
+/** Absolute origin for fetch(); Node requires a scheme (http:// or https://). */
+function normalizeBaseUrl(raw) {
+	const s = (raw || "http://localhost:8080").trim();
+	if (!s) {
+		return "http://localhost:8080";
+	}
+	if (/^https?:\/\//i.test(s)) {
+		return s.replace(/\/$/, "");
+	}
+	return `http://${s}`.replace(/\/$/, "");
+}
+
+const BASE_URL = normalizeBaseUrl(process.env.BASE_URL);
 const SEED_DIR = path.join(__dirname);
 
 // Helper function to make API requests

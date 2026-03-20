@@ -8,7 +8,7 @@ dev-mobile: ## Start the Expo development server
 	@echo "Starting Expo development server..."
 	cd mobile && npm start
 
-dev-backend: ## Start the Spring Boot development server
+dev-backend: ## Start the Spring Boot development server (ESPN ingestion API default: http://localhost:8010)
 	@echo "Starting Spring Boot development server..."
 	@if [ ! -f "backend/pom.xml" ]; then \
 		echo "Error: backend/pom.xml not found. Please ensure the Spring Boot project is properly set up."; \

@@ -1,14 +1,17 @@
 package com.betolyn.features.matches;
 
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
+
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.odds.dto.OddDTO;
 import com.betolyn.shared.BaseMapperConfig;
 import com.betolyn.shared.MoneyMapper;
-import org.mapstruct.*;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Mapper(config = BaseMapperConfig.class)
 @Component

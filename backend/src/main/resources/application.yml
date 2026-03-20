@@ -19,6 +19,22 @@ services:
     host: ${SERVICES_REDIS_HOST:localhost}
     port: ${SERVICES_REDIS_PORT:6379}
 
+betolyn:
+  feed-sync:
+    # false = scheduled sync is off; nothing runs at startup unless run-on-startup is true.
+    enabled: false
+    # One full sync when the app starts (manual / dev); does not require enabled: true
+    run-on-startup: false
+    base-url: ${ESPN_SERVICE_BASE_URL:http://localhost:8010}
+    cron: "0 */5 * * * *"
+    page-size: 100
+    trigger-ingest-for-pending-leagues: true
+    ingest-horizon-days: 7
+    max-sync-passes: 3
+  feed-shadow:
+    enabled: false
+    log-diffs: true
+
 app:
   auth:
     sessionExpirationInDays: 7
