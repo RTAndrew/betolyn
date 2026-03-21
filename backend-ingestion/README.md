@@ -1,5 +1,9 @@
 <!-- GitAds-Verify: 44FZ4IWPYGNOY6XFRMCK946T5LOIFT23 -->
 
+> **Betolyn ingestion (Django + Celery + sync API)**  
+> This repo also contains the **`espn_service`** app that fetches ESPN data, runs scheduled ingestion, and serves the HTTP ingest + cursor sync endpoints used by Betolyn. **Start with [README_ingestion.md](README_ingestion.md)** for architecture, compose layout, and how write ingest vs read sync fit together.  
+> **Below** is primarily **unofficial reference documentation** for ESPN’s public HTTP APIs (endpoints, sports, parameters)—not the ingestion service internals.
+
 # ESPN Public API Documentation
 
 **Disclaimer:** This is documentation for ESPN's undocumented public API. I am not affiliated with ESPN. Use responsibly and follow ESPN's terms of service.

@@ -1,5 +1,7 @@
 # Ingestion cadence (allowlist + Celery)
 
+**See also:** full-stack ingestion design in [`plans/ingestion-feed-architecture_63e82c3a.plan.md`](plans/ingestion-feed-architecture_63e82c3a.plan.md) and historical Celery fan-out refactor notes in [`plans/celery_allowlist_fan-out_176bfdae.plan.md`](plans/celery_allowlist_fan-out_176bfdae.plan.md).
+
 ## Overview
 
 Scheduled allowlist work is split into **orchestrator** tasks (cheap, DB-only) and **worker** tasks (ESPN HTTP). Orchestrators enqueue child work with **wall-clock `eta`** in UTC so execution is spread over time instead of one process hammering ESPN in a tight loop.
