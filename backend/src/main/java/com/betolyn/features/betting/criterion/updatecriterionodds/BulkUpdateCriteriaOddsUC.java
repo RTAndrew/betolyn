@@ -1,9 +1,10 @@
 package com.betolyn.features.betting.criterion.updatecriterionodds;
 
-import com.betolyn.config.systemEvent.DefaultSystemEventNames;
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
+import com.betolyn.features.betting.criterion.CriterionSseEvent;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
+import com.betolyn.features.betting.criterion.dto.CriterionRefreshRequiredEventDTO;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.odds.OddEntity;
@@ -22,8 +23,6 @@ public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsPar
     private final BulkUpdateOddsUC bulkUpdateOddsUC;
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final CriterionSystemEvent criterionSystemEvent;
-
-    record BulkUpdateCriteriaOddsEventDTO(String criterionId, String matchId, List<String> odds){}
 
     @Override
     @Transactional
@@ -56,12 +55,12 @@ public class BulkUpdateCriteriaOddsUC implements IUseCase<UpdateCriterionOddsPar
 
         bulkUpdateOddsUC.execute(odds);
 
-        var eventDTO = new BulkUpdateCriteriaOddsEventDTO(
+        var eventDTO = new CriterionRefreshRequiredEventDTO(
                 criterion.getId(),
                 criterion.getMatch().getId(),
                 param.requestDTO().getOdds().stream().map(odd -> odd.id()).toList()
         );
-        criterionSystemEvent.publish(this, DefaultSystemEventNames.REFRESH_REQUIRED.name(), eventDTO);
+        criterionSystemEvent.publish(this, new CriterionSseEvent.RefreshRequired(eventDTO));
 
         return findCriterionByIdUC.execute(param.criterionId());
     }

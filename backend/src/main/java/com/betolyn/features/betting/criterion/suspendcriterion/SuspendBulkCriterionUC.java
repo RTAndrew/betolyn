@@ -4,6 +4,7 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.CriterionSseEvent;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.updatecriterionstatus.CriterionStatusChangedEventDTO;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class SuspendBulkCriterionUC implements IUseCase<String, List<CriterionEn
                     List.of()
             );
 
-            criterionSystemEvent.publish(this, "criterionSuspended", eventDTO);
+            criterionSystemEvent.publish(this, new CriterionSseEvent.CriterionSuspended(eventDTO));
         }
 
         return criteria;

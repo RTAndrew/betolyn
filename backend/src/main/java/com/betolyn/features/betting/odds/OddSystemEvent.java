@@ -21,15 +21,13 @@ public final class OddSystemEvent implements ISystemEvent {
     private final ApplicationEventPublisher eventPublisher;
     private final OddMapper oddMapper;
 
-    @Override
-    public void publish(Object source, String eventName, Object data) {
-        var event = new SystemEvent(source, DOMAIN, eventName, data);
-        eventPublisher.publishEvent(event);
+    public void publish(Object source, OddSseEvent event) {
+        var systemEvent = new SystemEvent(source, DOMAIN, event.eventName(), event.payload());
+        eventPublisher.publishEvent(systemEvent);
     }
 
     public void publishOddUpdate(Object source, OddEntity odd) {
-        var channelId = "oddUpdated";
-        publish(source, channelId, oddMapper.toOddDTO(odd));
+        publish(source, new OddSseEvent.OddUpdated(oddMapper.toOddDTO(odd)));
     }
 
     public void publishOddUpdate(Object source, List<OddEntity> odds) {
@@ -39,6 +37,6 @@ public final class OddSystemEvent implements ISystemEvent {
     @Override
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('odd')")
     public void listen(SystemEvent event) {
-        sse.emitEvent(event.getEventName(), event);
+        sse.emit(event);
     }
 }

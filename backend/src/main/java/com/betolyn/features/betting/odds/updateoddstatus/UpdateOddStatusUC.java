@@ -2,7 +2,10 @@ package com.betolyn.features.betting.odds.updateoddstatus;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
-import com.betolyn.features.betting.odds.*;
+import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddSseEvent;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.betting.odds.exceptions.OddCannotBeActiveWhenCriterionNotActiveException;
 import com.betolyn.features.betting.odds.exceptions.OddStatusUpdateNotAllowedException;
@@ -45,7 +48,7 @@ public class UpdateOddStatusUC implements IUseCase<UpdateOddStatusParam, OddEnti
         }
 
         var eventDTO = new OddStatusChangedEventDTO(List.of(param.oddId()), savedOdd.get().getStatus());
-        oddSystemEvent.publish(this, "oddStatusChanged", eventDTO);
+        oddSystemEvent.publish(this, new OddSseEvent.OddStatusChanged(eventDTO));
         return savedOdd.get();
     }
 }

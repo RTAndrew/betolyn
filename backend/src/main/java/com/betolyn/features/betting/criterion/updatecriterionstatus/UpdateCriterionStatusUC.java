@@ -4,9 +4,13 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.CriterionSseEvent;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
-import com.betolyn.features.betting.odds.*;
+import com.betolyn.features.betting.odds.OddRepository;
+import com.betolyn.features.betting.odds.OddSseEvent;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
 import com.betolyn.shared.exceptions.BadRequestException;
@@ -60,9 +64,9 @@ public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusPa
                 affectedOddIds
         );
 
-        criterionSystemEvent.publish(this, "criterionStatusChanged", criterionEventDTO);
+        criterionSystemEvent.publish(this, new CriterionSseEvent.CriterionStatusChanged(criterionEventDTO));
         if (!odds.isEmpty()) {
-            oddSystemEvent.publish(this, "oddStatusChanged", new OddStatusChangedEventDTO(affectedOddIds, oddStatus));
+            oddSystemEvent.publish(this, new OddSseEvent.OddStatusChanged(new OddStatusChangedEventDTO(affectedOddIds, oddStatus)));
         }
 
         return savedCriterion;

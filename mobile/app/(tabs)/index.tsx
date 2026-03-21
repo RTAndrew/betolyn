@@ -30,9 +30,11 @@ export default function HomeScreen() {
         <ScreenHeader safeArea>
           <HomeScreenHeader />
         </ScreenHeader>
-        <Skeleton.Group count={7} gap={0}>
-          <MatchCardSkeleton />
-        </Skeleton.Group>
+        <SafeHorizontalView>
+          <Skeleton.Group count={7} gap={0}>
+            <MatchCardSkeleton />
+          </Skeleton.Group>
+        </SafeHorizontalView>
       </Wrapper>
     );
   }

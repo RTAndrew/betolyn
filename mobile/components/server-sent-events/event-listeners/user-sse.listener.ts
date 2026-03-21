@@ -1,24 +1,25 @@
-import { ISseEvent } from './sse-listener-factory';
+import type { ISseEvent } from './sse-listener-factory';
+
+import { UserSseEventName } from '../sse-events';
 import { ISseListener } from './types';
 
-type TPayload = ISseEvent<any>;
+type TEnvelope = ISseEvent<object>;
 
 class UserSseListener implements ISseListener {
-  private readonly payload: TPayload;
+  private readonly envelope: TEnvelope;
 
-  constructor(payload: TPayload) {
-    this.payload = payload;
+  constructor(envelope: TEnvelope) {
+    this.envelope = envelope;
   }
 
-  handleEvent = () => {
-    const { eventName, payload: eventPayload } = this.payload;
+  handleEvent = (): void => {
+    const { eventName, payload: eventPayload } = this.envelope;
 
     console.log('[SSE] User event received:', eventName, eventPayload);
 
-    // Handle different user event types
     switch (eventName) {
-      case 'userCreated':
-      case 'userUpdated':
+      case UserSseEventName.userCreated:
+      case UserSseEventName.userUpdated:
         // TODO: Implement user store updates when user store is created
         console.log('[SSE] User event - store update not yet implemented');
         break;

@@ -19,22 +19,6 @@ services:
     host: ${SERVICES_REDIS_HOST:localhost}
     port: ${SERVICES_REDIS_PORT:6379}
 
-betolyn:
-  feed-sync:
-    # false = scheduled sync is off; nothing runs at startup unless run-on-startup is true.
-    enabled: false
-    # One full sync when the app starts (manual / dev); does not require enabled: true
-    run-on-startup: false
-    base-url: ${ESPN_SERVICE_BASE_URL:http://localhost:8010}
-    cron: "0 */5 * * * *"
-    page-size: 100
-    trigger-ingest-for-pending-leagues: true
-    ingest-horizon-days: 7
-    max-sync-passes: 3
-  feed-shadow:
-    enabled: false
-    log-diffs: true
-
 app:
   auth:
     sessionExpirationInDays: 7
@@ -42,3 +26,24 @@ app:
     jwtSecret: "jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT"
   cors:
     allowedOrigins: "*"
+  ingestion:
+    # false = scheduled sync is off; nothing runs at startup unless run-on-startup is true.
+    enabled: false
+    # One full sync when the app starts (manual / dev); does not require enabled: true
+    run-on-startup: false
+    base-url: ${ESPN_SERVICE_BASE_URL:http://localhost:8010}
+    # Default every 5 minutes (`0 */5 * * * *`)
+    cron: "0 */5 * * * *"
+    # Number of teams to ingest per request
+    page-size: 100
+    # If an event’s home/away teams are missing in Betolyn, enqueue `(sport_slug, league_slug)` and `POST` espn_service **`/api/v1/ingest/teams/`** + **`/api/v1/ingest/scoreboard/`** (last N UTC days) before the next pass
+    trigger-ingest-for-pending-leagues: true
+    # Days of scoreboard ingest per queued league (1–30, default 7)
+    ingest-horizon-days: 7
+    # Ingest + pull teams + pull events, repeated up to this many times if the queue is still non-empty
+    max-sync-passes: 3
+    # Log-only shadow tick after sync (diff tooling placeholder)
+    shadow:
+      enabled: false
+      # Extra diff logging when shadow is enabled
+      log-diffs: true

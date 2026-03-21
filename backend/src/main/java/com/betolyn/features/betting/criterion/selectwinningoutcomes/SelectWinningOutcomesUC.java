@@ -2,7 +2,6 @@ package com.betolyn.features.betting.criterion.selectwinningoutcomes;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
-import com.betolyn.features.betting.criterion.CriterionMapper;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import com.betolyn.features.betting.odds.OddEntity;
@@ -23,7 +22,6 @@ public class SelectWinningOutcomesUC implements IUseCase<SelectWinningOutcomesPa
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final OddSystemEvent oddSystemEvent;
     private final CriterionSystemEvent criterionSystemEvent;
-    private final CriterionMapper criterionMapper;
 
     @Override
     @Transactional
@@ -59,7 +57,7 @@ public class SelectWinningOutcomesUC implements IUseCase<SelectWinningOutcomesPa
             oddSystemEvent.publishOddUpdate(this, updatedOdds);
         }
 
-        criterionSystemEvent.publish(this, "criterionUpdated", criterionMapper.toCriterionDTO(criterion));
+        criterionSystemEvent.publishCriterionUpdate(this, criterion);
 
         return criterion;
     }

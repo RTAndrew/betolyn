@@ -35,7 +35,7 @@ public class FeedSyncService {
     }
 
     /**
-     * Pull teams + events (and optional shadow tick). Ignores {@code betolyn.feed-sync.enabled} — use for
+     * Pull teams + events (and optional shadow tick). Ignores {@code app.ingestion.enabled} — use for
      * one-shot runs ({@code run-on-startup}) or future admin tooling.
      */
     public void runSyncNow() {

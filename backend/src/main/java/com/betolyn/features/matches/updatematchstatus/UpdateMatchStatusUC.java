@@ -6,6 +6,7 @@ import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.MatchStatusEnum;
 import com.betolyn.features.matches.exceptions.MatchNotFoundException;
 import com.betolyn.features.matches.matchSystemEvents.MatchProgressChangedEventDTO;
+import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchVoidedEventDTO;
 import com.betolyn.features.betting.criterion.suspendcriterion.SuspendBulkCriterionUC;
@@ -39,10 +40,10 @@ public class UpdateMatchStatusUC implements IUseCase<UpdateMatchStatusParam, Mat
         
         if (savedMatch.getStatus() == MatchStatusEnum.CANCELLED) {
             var voidedEventDTO = new MatchVoidedEventDTO(savedMatch.getId());
-            matchSystemEvent.publish(this, "matchVoided", voidedEventDTO);
+            matchSystemEvent.publish(this, new MatchSseEvent.MatchVoided(voidedEventDTO));
         } else {
             var progressEventDTO = new MatchProgressChangedEventDTO(savedMatch.getId(), previousStatus, savedMatch.getStatus());
-            matchSystemEvent.publish(this, "matchProgressChanged", progressEventDTO);
+            matchSystemEvent.publish(this, new MatchSseEvent.MatchProgressChanged(progressEventDTO));
         }
 
         return savedMatch;

@@ -3,7 +3,10 @@ package com.betolyn.features.betting.odds.updateoddvalue;
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddSseEvent;
 import com.betolyn.features.betting.odds.OddSystemEvent;
+import com.betolyn.features.betting.odds.dto.OddValueChangeDirection;
+import com.betolyn.features.betting.odds.dto.OddValueChangedEventDTO;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.shared.exceptions.BusinessRuleException;
@@ -14,12 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-enum OddValueChangeDirection {
-    UP,
-    DOWN
-}
-record UpdateOddValueEventDTO(String oddId, OddValueChangeDirection direction, BigDecimal value){}
 
 @Service
 @RequiredArgsConstructor
@@ -49,8 +46,8 @@ public class UpdateOddValueUC implements IUseCase<UpdateOddValueParam, OddEntity
             throw new InternalServerException("It was not possible to save the entity");
         }
 
-        var eventDTO = new UpdateOddValueEventDTO(savedOdd.get().getId(), oddValueChangeDirection, savedOdd.get().getValue().toBigDecimal());
-        oddSystemEvent.publish(this, "oddValueChanged",eventDTO);
+        var eventDTO = new OddValueChangedEventDTO(savedOdd.get().getId(), oddValueChangeDirection, savedOdd.get().getValue().toBigDecimal());
+        oddSystemEvent.publish(this, new OddSseEvent.OddValueChanged(eventDTO));
         return savedOdd.get();
     }
 }

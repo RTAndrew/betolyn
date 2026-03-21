@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tools.jackson.databind.ObjectMapper;
 
-import java.sql.Time;
+import com.betolyn.config.systemEvent.SystemEvent;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -43,7 +43,11 @@ public class ServerSentEventEmitter {
         emitter.onTimeout(() -> this.emitters.remove(emitter));
     }
 
-    public void emitEvent (String eventName, Object payload) {
+    public void emit(SystemEvent event) {
+        emitEvent(event.getEventName(), event);
+    }
+
+    public void emitEvent(String eventName, Object payload) {
         List<SseEmitter> deadEmitters = new ArrayList<>();
         String jsonPayload = objectMapper.writeValueAsString(payload);
 

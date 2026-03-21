@@ -4,6 +4,7 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.features.teams.TeamRepository;
 import com.betolyn.features.teams.teamSystemEvents.TeamCreatedEventDTO;
+import com.betolyn.features.teams.teamSystemEvents.TeamSseEvent;
 import com.betolyn.features.teams.teamSystemEvents.TeamSystemEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CreateTeamUC implements IUseCase<CreateTeamRequestDTO, TeamEntity> 
         var savedTeam = teamRepository.save(team);
         
         var eventDTO = new TeamCreatedEventDTO(savedTeam.getId(), savedTeam);
-        teamSystemEvent.publish(this, "teamCreated", eventDTO);
+        teamSystemEvent.publish(this, new TeamSseEvent.TeamCreated(eventDTO));
 
         return savedTeam;
     }

@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "betolyn.feed-shadow")
+@ConfigurationProperties(prefix = "app.ingestion.shadow")
 public class FeedShadowProperties {
 
     /** When true, run lightweight shadow logging after sync (no dual-write yet). */

@@ -1,24 +1,25 @@
-import { ISseEvent } from './sse-listener-factory';
+import type { ISseEvent } from './sse-listener-factory';
+
+import { TeamSseEventName } from '../sse-events';
 import { ISseListener } from './types';
 
-type TPayload = ISseEvent<any>;
+type TEnvelope = ISseEvent<object>;
 
 class TeamSseListener implements ISseListener {
-  private readonly payload: TPayload;
+  private readonly envelope: TEnvelope;
 
-  constructor(payload: TPayload) {
-    this.payload = payload;
+  constructor(envelope: TEnvelope) {
+    this.envelope = envelope;
   }
 
-  handleEvent = () => {
-    const { eventName, payload: eventPayload } = this.payload;
+  handleEvent = (): void => {
+    const { eventName, payload: eventPayload } = this.envelope;
 
     console.log('[SSE] Team event received:', eventName, eventPayload);
 
-    // Handle different team event types
     switch (eventName) {
-      case 'teamCreated':
-      case 'teamUpdated':
+      case TeamSseEventName.teamCreated:
+      case TeamSseEventName.teamUpdated:
         // TODO: Implement team store updates when team store is created
         console.log('[SSE] Team event - store update not yet implemented');
         break;

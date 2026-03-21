@@ -1,38 +1,72 @@
-import { IMatch } from '@/types';
+import type { IMatch } from '@/types';
+
+import type { ISseEvent } from './sse-listener-factory';
 
 import { DataSync } from '../data-sync';
-import { ISseEvent } from './sse-listener-factory';
+import { MatchSseEventName } from '../sse-events';
 import { ISseListener } from './types';
 
-type TPayload = ISseEvent<any>;
+type TEnvelope = ISseEvent<object>;
+
+interface IMatchEventPayload {
+  match?: IMatch;
+  matchId?: string;
+}
+
+type MatchSseMessage =
+  | { eventName: typeof MatchSseEventName.matchProgressChanged; payload: IMatchEventPayload }
+  | { eventName: typeof MatchSseEventName.matchCreated; payload: IMatchEventPayload }
+  | { eventName: typeof MatchSseEventName.matchVoided; payload: IMatchEventPayload }
+  | { eventName: typeof MatchSseEventName.scoreChanged; payload: IMatchEventPayload }
+  | { eventName: typeof MatchSseEventName.rescheduled; payload: IMatchEventPayload };
+
+function narrowMatchSseMessage(eventName: string, payload: unknown): MatchSseMessage | undefined {
+  const p = payload as IMatchEventPayload;
+  switch (eventName) {
+    case MatchSseEventName.matchProgressChanged:
+      return { eventName: MatchSseEventName.matchProgressChanged, payload: p };
+    case MatchSseEventName.matchCreated:
+      return { eventName: MatchSseEventName.matchCreated, payload: p };
+    case MatchSseEventName.matchVoided:
+      return { eventName: MatchSseEventName.matchVoided, payload: p };
+    case MatchSseEventName.scoreChanged:
+      return { eventName: MatchSseEventName.scoreChanged, payload: p };
+    case MatchSseEventName.rescheduled:
+      return { eventName: MatchSseEventName.rescheduled, payload: p };
+    default:
+      return undefined;
+  }
+}
 
 class MatchSseListener implements ISseListener {
-  private readonly payload: TPayload;
+  private readonly envelope: TEnvelope;
 
-  constructor(payload: TPayload) {
-    this.payload = payload;
+  constructor(envelope: TEnvelope) {
+    this.envelope = envelope;
   }
 
-  handleEvent = () => {
-    const { eventName, payload: eventPayload } = this.payload;
+  handleEvent = (): void => {
+    const msg = narrowMatchSseMessage(this.envelope.eventName, this.envelope.payload);
+    if (!msg) {
+      console.log('[SSE] Unhandled match event:', this.envelope.eventName);
+      return;
+    }
 
-    console.log('[SSE] Match event received:', eventName, eventPayload);
+    console.log('[SSE] Match event received:', msg.eventName, msg.payload);
 
-    // Handle different match event types
-    switch (eventName) {
-      case 'matchProgressChanged':
-      case 'matchCreated':
-      case 'matchVoided':
-        // If payload contains match data, update it
-        if (eventPayload?.match) {
-          const match = eventPayload.match as IMatch;
-          DataSync.updateMatches([match]);
+    switch (msg.eventName) {
+      case MatchSseEventName.matchProgressChanged:
+      case MatchSseEventName.matchCreated:
+      case MatchSseEventName.matchVoided:
+        if (msg.payload?.match) {
+          DataSync.updateMatches([msg.payload.match]);
         }
-
         break;
 
-      default:
-        console.log('[SSE] Unhandled match event:', eventName);
+      case MatchSseEventName.scoreChanged:
+      case MatchSseEventName.rescheduled:
+        console.log('[SSE] Match event - store update not yet implemented for', msg.eventName);
+        break;
     }
   };
 }

@@ -5,6 +5,7 @@ import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchMapper;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.matchSystemEvents.MatchCreatedEventDTO;
+import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import com.betolyn.features.teams.findteambyid.FindTeamByIdUC;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class CreateMatchUC implements IUseCase<CreateMatchRequestDTO, MatchEntit
         var savedMatch = matchRepository.save(entity);
         
         var eventDTO = new MatchCreatedEventDTO(savedMatch.getId(), matchMapper.toMatchDTO(savedMatch));
-        matchSystemEvent.publish(this, "matchCreated", eventDTO);
+        matchSystemEvent.publish(this, new MatchSseEvent.MatchCreated(eventDTO));
 
         return savedMatch;
     }

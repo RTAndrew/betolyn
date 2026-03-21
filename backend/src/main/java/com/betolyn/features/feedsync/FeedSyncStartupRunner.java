@@ -9,10 +9,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * One-shot sync after the context is up. Enable with {@code betolyn.feed-sync.run-on-startup=true}.
+ * One-shot sync after the context is up. Enable with {@code app.ingestion.run-on-startup=true}.
  */
 @Component
-@ConditionalOnProperty(prefix = "betolyn.feed-sync", name = "run-on-startup", havingValue = "true")
+@ConditionalOnProperty(prefix = "app.ingestion", name = "run-on-startup", havingValue = "true")
 @Order(1000)
 @RequiredArgsConstructor
 @Slf4j

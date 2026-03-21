@@ -16,15 +16,14 @@ public final class MatchSystemEvent implements ISystemEvent {
     private final ApplicationEventPublisher eventPublisher;
     private final ServerSentEventEmitter sse;
 
-    @Override
-    public void publish(Object source, String eventName, Object data) {
-        var event = new SystemEvent(source, DOMAIN, eventName, data);
-        eventPublisher.publishEvent(event);
+    public void publish(Object source, MatchSseEvent event) {
+        var systemEvent = new SystemEvent(source, DOMAIN, event.eventName(), event.payload());
+        eventPublisher.publishEvent(systemEvent);
     }
 
     @Override
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('match')")
     public void listen(SystemEvent event) {
-        sse.emitEvent(event.getEventName(), event);
+        sse.emit(event);
     }
 }

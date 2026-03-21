@@ -1,20 +1,23 @@
 package com.betolyn.features.betting.odds.createodd;
 
-import com.betolyn.features.IUseCase;
-import com.betolyn.features.betting.betslips.OddPrice;
-import com.betolyn.features.betting.criterion.CriterionRepository;
-import com.betolyn.features.betting.odds.*;
-import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
-import com.betolyn.shared.exceptions.BadRequestException;
-import com.betolyn.shared.exceptions.InternalServerException;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.betslips.OddPrice;
+import com.betolyn.features.betting.criterion.CriterionRepository;
+import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddSseEvent;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+import com.betolyn.features.betting.odds.OddSystemEvent;
+import com.betolyn.features.betting.odds.dto.OddCreatedEventDTO;
+import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
+import com.betolyn.shared.exceptions.BadRequestException;
+import com.betolyn.shared.exceptions.InternalServerException;
 
-record CreateOddEventDTO (String oddId, String criterionId, String matchId, OddStatusEnum status){}
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -51,13 +54,13 @@ public class CreateOddUC implements IUseCase<CreateOddRequestDTO, OddEntity> {
             throw new InternalServerException("It was not possible to save the entity");
         }
 
-        var eventDTO = new CreateOddEventDTO(
+        var eventDTO = new OddCreatedEventDTO(
                 savedOdd.get().getId(),
                 savedOdd.get().getCriterion().getId(),
                 savedOdd.get().getCriterion().getMatch().getId(),
                 savedOdd.get().getStatus()
         );
-        oddSystemEvent.publish(this, "oddCreated", eventDTO);
+        oddSystemEvent.publish(this, new OddSseEvent.OddCreated(eventDTO));
 
         return savedOdd.get();
     }

@@ -13,16 +13,17 @@ Each team row includes **`logo`** (primary URL) and often **`logos`** (ESPN arra
 
 | Property | Description |
 |----------|-------------|
-| `betolyn.feed-sync.enabled` | `true` to run `@Scheduled` sync |
-| `betolyn.feed-sync.run-on-startup` | `true` = run **one** full sync when the app finishes starting (no need to enable the scheduler) |
-| `betolyn.feed-sync.base-url` | ESPN service origin (e.g. `http://localhost:8010`) |
-| `betolyn.feed-sync.cron` | Default every 5 minutes (`0 */5 * * * *`) |
-| `betolyn.feed-sync.trigger-ingest-for-pending-leagues` | If an event’s home/away teams are missing in Betolyn, enqueue `(sport_slug, league_slug)` and `POST` espn_service **`/api/v1/ingest/teams/`** + **`/api/v1/ingest/scoreboard/`** (last N UTC days) before the next pass |
-| `betolyn.feed-sync.ingest-horizon-days` | Days of scoreboard ingest per queued league (1–30, default 7) |
-| `betolyn.feed-sync.max-sync-passes` | Ingest + pull teams + pull events, repeated up to this many times if the queue is still non-empty |
-| `betolyn.feed-shadow.enabled` | Log-only shadow tick after sync (diff tooling placeholder) |
+| `app.ingestion.enabled` | `true` to run `@Scheduled` sync |
+| `app.ingestion.run-on-startup` | `true` = run **one** full sync when the app finishes starting (no need to enable the scheduler) |
+| `app.ingestion.base-url` | ESPN service origin (e.g. `http://localhost:8010`) |
+| `app.ingestion.cron` | Default every 5 minutes (`0 */5 * * * *`) |
+| `app.ingestion.trigger-ingest-for-pending-leagues` | If an event’s home/away teams are missing in Betolyn, enqueue `(sport_slug, league_slug)` and `POST` espn_service **`/api/v1/ingest/teams/`** + **`/api/v1/ingest/scoreboard/`** (last N UTC days) before the next pass |
+| `app.ingestion.ingest-horizon-days` | Days of scoreboard ingest per queued league (1–30, default 7) |
+| `app.ingestion.max-sync-passes` | Ingest + pull teams + pull events, repeated up to this many times if the queue is still non-empty |
+| `app.ingestion.shadow.enabled` | Log-only shadow tick after sync (diff tooling placeholder) |
+| `app.ingestion.shadow.log-diffs` | Extra diff logging when shadow is enabled |
 
-Env override: `ESPN_SERVICE_BASE_URL`.
+Env overrides: `ESPN_SERVICE_BASE_URL` (via `app.ingestion.base-url` default), or Spring-style `APP_INGESTION_*` / `APP_INGESTION_SHADOW_*` (e.g. `APP_INGESTION_RUN_ON_STARTUP=true`).
 
 ### Manual sync (one-shot)
 
@@ -31,12 +32,12 @@ Env override: `ESPN_SERVICE_BASE_URL`.
 
 ```bash
 cd backend
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--betolyn.feed-sync.run-on-startup=true"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--app.ingestion.run-on-startup=true"
 ```
 
-Or env: `BETOLYN_FEED_SYNC_RUN_ON_STARTUP=true ./mvnw spring-boot:run`
+Or env: `APP_INGESTION_RUN_ON_STARTUP=true ./mvnw spring-boot:run`
 
-3. **Recurring sync**: set `betolyn.feed-sync.enabled=true` and keep the app running; the cron fires on schedule.
+3. **Recurring sync**: set `app.ingestion.enabled=true` and keep the app running; the cron fires on schedule.
 
 There is no public HTTP “sync now” endpoint yet; use `run-on-startup` or enable the scheduler.
 

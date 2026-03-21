@@ -4,6 +4,7 @@ import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.criterion.CriterionSseEvent;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class PublishCriterionUC implements IUseCase<String, CriterionEntity> {
                 savedCriterion.getMatch().getId(),
                 savedCriterion.getStatus()
         );
-        criterionSystemEvent.publish(this, "criterionPublished", eventDTO);
+        criterionSystemEvent.publish(this, new CriterionSseEvent.CriterionPublished(eventDTO));
         
         return savedCriterion;
     }

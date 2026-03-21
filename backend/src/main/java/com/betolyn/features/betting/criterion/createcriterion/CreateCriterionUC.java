@@ -64,7 +64,7 @@ public class CreateCriterionUC implements IUseCase<CreateCriterionRequestDTO, Cr
 
         bulkSaveOddsUC.execute(oddList);
         var criterionDTO = criterionMapper.toCriterionDTO(savedCriterion);
-        criterionSystemEvent.publish(this, "criterionCreated", criterionDTO);
+        criterionSystemEvent.publish(this, new CriterionSseEvent.CriterionCreated(criterionDTO));
 
         return criterionDTO;
     }

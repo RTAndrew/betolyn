@@ -2,7 +2,10 @@ package com.betolyn.features.betting.odds.publishodd;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
-import com.betolyn.features.betting.odds.*;
+import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.features.betting.odds.OddSseEvent;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.betting.odds.exceptions.OddCannotPublishException;
 import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
@@ -45,8 +48,8 @@ public class PublishOddUC implements IUseCase<String, OddEntity> {
             throw new InternalServerException("It was not possible to save the entity");
         }
 
-        oddSystemEvent.publish(this, "oddStatusChanged",
-                new OddStatusChangedEventDTO(List.of(oddId), OddStatusEnum.ACTIVE));
+        oddSystemEvent.publish(this, new OddSseEvent.OddStatusChanged(
+                new OddStatusChangedEventDTO(List.of(oddId), OddStatusEnum.ACTIVE)));
         return savedOdd.get();
     }
 }

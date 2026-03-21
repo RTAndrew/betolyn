@@ -19,20 +19,18 @@ public final class CriterionSystemEvent implements ISystemEvent {
     private final ServerSentEventEmitter sse;
     private final CriterionMapper criterionMapper;
 
-    @Override
-    public void publish(Object source, String eventName, Object data) {
-        var event = new SystemEvent(source, DOMAIN, eventName, data);
-        eventPublisher.publishEvent(event);
+    public void publish(Object source, CriterionSseEvent event) {
+        var systemEvent = new SystemEvent(source, DOMAIN, event.eventName(), event.payload());
+        eventPublisher.publishEvent(systemEvent);
     }
 
     public void publishCriterionUpdate(Object source, CriterionEntity criterion) {
-        var channelId = "criterionUpdated";
-        this.publish(source, channelId, criterionMapper.toCriterionDTO(criterion));
+        publish(source, new CriterionSseEvent.CriterionUpdated(criterionMapper.toCriterionDTO(criterion)));
     }
 
     @Override
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, condition = "#root.event.domain.equals('criterion')")
     public void listen(SystemEvent event) {
-        sse.emitEvent(event.getEventName(), event);
+        sse.emit(event);
     }
 }

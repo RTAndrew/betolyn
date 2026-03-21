@@ -8,7 +8,7 @@ import java.time.Duration;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "betolyn.feed-sync")
+@ConfigurationProperties(prefix = "app.ingestion")
 public class FeedSyncProperties {
 
     /** When false, scheduled sync is a no-op. */

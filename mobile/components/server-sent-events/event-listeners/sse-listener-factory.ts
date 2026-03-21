@@ -1,5 +1,8 @@
 import { MessageEvent } from 'react-native-sse';
 
+import type { TSseDomain } from '../sse-events';
+
+import { SseDomain } from '../sse-events';
 import CriterionSseListener from './criterion-sse.listener';
 import MatchSseListener from './match-sse.listener';
 import OddSseListener from './odd-sse.listener';
@@ -7,10 +10,10 @@ import TeamSseListener from './team-sse.listener';
 import { ISseListener } from './types';
 import UserSseListener from './user-sse.listener';
 
-export interface ISseEvent<T extends object> {
-  payload: T;
-  domain: 'odd' | 'match' | 'team' | 'user' | 'criterion';
-  eventName: 'REFRESH_REQUIRED' | string;
+export interface ISseEvent<TPayload extends object = object> {
+  payload: TPayload;
+  domain: TSseDomain;
+  eventName: string;
   timestamp: number;
 }
 
@@ -42,15 +45,15 @@ class SseListenerFactory {
     }
 
     switch (payload.domain) {
-      case 'odd':
+      case SseDomain.odd:
         return new OddSseListener(payload);
-      case 'match':
+      case SseDomain.match:
         return new MatchSseListener(payload);
-      case 'team':
+      case SseDomain.team:
         return new TeamSseListener(payload);
-      case 'user':
+      case SseDomain.user:
         return new UserSseListener(payload);
-      case 'criterion':
+      case SseDomain.criterion:
         return new CriterionSseListener(payload);
       default:
         return new DefaultSseListener(`[SSE] Invalid domain: ${payload.domain}`);
