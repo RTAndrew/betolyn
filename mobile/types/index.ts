@@ -6,10 +6,20 @@ export interface IUser {
   updatedAt: string;
 }
 
+/** User shape in nested API payloads (e.g. `createdBy`) — subset of {@link IUser}. */
+export type IUserPublic = Pick<IUser, 'id' | 'email' | 'username'>;
+
 export interface ITeam {
   id: string;
   name: string;
   badgeUrl: string;
+}
+
+export interface ISpace {
+  id: string;
+  name: string;
+  description?: string | null;
+  createdBy: IUserPublic;
 }
 
 export interface IMatch {
@@ -20,7 +30,7 @@ export interface IMatch {
   awayTeamScore: number;
   startTime: string;
   endTime: string | null;
-  createdBy: string;
+  createdBy: IUserPublic;
   status?: `${MatchStatusEnum}`;
   mainCriterion?: ICriterion & { odds: IOdd[] };
 }

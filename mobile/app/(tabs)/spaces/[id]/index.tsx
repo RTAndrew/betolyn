@@ -13,7 +13,7 @@ import { colors } from '@/constants/colors';
 import { mockAPI } from '@/mock';
 import { useGetMatches } from '@/services';
 
-const ChannelId = () => {
+const SpaceId = () => {
   const { id } = useLocalSearchParams();
 
   const insets = useSafeAreaInsets();
@@ -55,7 +55,7 @@ const ChannelId = () => {
               />
             </View>
 
-            <TouchableOpacity onPress={() => router.push(`/(tabs)/channels/${id}/info`)}>
+            <TouchableOpacity onPress={() => router.push(`/(tabs)/spaces/${id}/info`)}>
               <Text style={styles.headerTitle}>{channel.name}</Text>
             </TouchableOpacity>
           </View>
@@ -65,7 +65,7 @@ const ChannelId = () => {
               <AntDesign name="message" size={24} color="white" />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.push(`/channels/${id}/create-event`)}>
+            <TouchableOpacity onPress={() => router.push('/(modals)/spaces/create')}>
               <AntDesign name="plus" size={24} color="white" />
             </TouchableOpacity>
           </View>
@@ -77,7 +77,7 @@ const ChannelId = () => {
           <BetCard
             key={index}
             match={match}
-            onPress={(m) => router.push(`/channels/${m.id}/create-event`)}
+            onPress={(m) => router.push(`/spaces/${m.id}/create-event`)}
           />
         ))}
       </ThemedView>
@@ -117,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChannelId;
+export default SpaceId;

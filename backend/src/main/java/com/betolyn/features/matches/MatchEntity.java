@@ -1,5 +1,8 @@
 package com.betolyn.features.matches;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.shared.baseEntity.AuditableEntity;
@@ -8,13 +11,20 @@ import com.betolyn.shared.money.BetMoney;
 import com.betolyn.shared.money.BetMoneyAttributeConverter;
 import com.betolyn.shared.money.MoneyConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 @Getter
 @Setter

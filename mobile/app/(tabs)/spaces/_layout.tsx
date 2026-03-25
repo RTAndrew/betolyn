@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 
-const Layout = () => {
+const SpacesRootLayout = () => {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
@@ -9,4 +9,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default SpacesRootLayout;

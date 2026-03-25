@@ -3,18 +3,21 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { colors } from '@/constants/colors';
-import { IChannel } from '@/mock/matches';
+import { mockData } from '@/mock/matches';
+import { ISpace } from '@/types';
 
-const ChannelCard = ({ channel }: { channel: IChannel }) => {
+import SpaceCardSkeleton from './skeleton';
+
+const ChannelCard = ({ channel }: { channel: ISpace }) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => router.push(`/(tabs)/channels/${channel.id}`)}
+      onPress={() => router.push(`/(tabs)/spaces/${channel.id}`)}
     >
       <View style={styles.image}>
         <Image
           resizeMode="contain"
-          source={{ uri: channel.image_url }}
+          source={{ uri: mockData.channels[0].image_url }}
           style={{ width: '100%', height: '100%' }}
         />
       </View>
@@ -85,5 +88,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
 });
+
+ChannelCard.Skeleton = SpaceCardSkeleton;
 
 export default ChannelCard;

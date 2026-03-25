@@ -17,6 +17,7 @@ const ModalsLayout = () => {
         }}
       />
       <Stack.Screen name="me" options={{ headerShown: false }} />
+      <Stack.Screen name="spaces" options={{ headerShown: false }} />
       <Stack.Screen name="matches" options={{ headerShown: false }} />
       <Stack.Screen name="betslips" options={{ headerShown: false }} />
       <Stack.Screen name="criteria" options={{ headerShown: false }} />

@@ -1,7 +1,8 @@
 import { PropsWithChildren } from 'react';
-import { SheetDefinition, SheetRegister } from 'react-native-actions-sheet';
-import { SheetProvider } from 'react-native-actions-sheet';
+import { SheetDefinition, SheetProvider, SheetRegister } from 'react-native-actions-sheet';
 
+import AsyncProcessingBottomSheet, { AsyncProcessingBottomSheetProps } from './async-processing-gc';
+import CreateSpaceOptionGC from './create-event-option-gc';
 import UnauthenticatedGC from './unauthenticated-gc';
 
 // We extend some of the types here to give us great intellisense
@@ -9,13 +10,23 @@ import UnauthenticatedGC from './unauthenticated-gc';
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     unauthenticated: SheetDefinition;
+    createEventOptionSelection: SheetDefinition;
+    asyncProcessing: SheetDefinition<{
+      payload: AsyncProcessingBottomSheetProps;
+    }>;
   }
 }
 
 const GlobalSheetRegistry = ({ children }: PropsWithChildren) => {
   return (
     <SheetProvider>
-      <SheetRegister sheets={{ unauthenticated: UnauthenticatedGC }} />
+      <SheetRegister
+        sheets={{
+          unauthenticated: UnauthenticatedGC,
+          createEventOptionSelection: CreateSpaceOptionGC,
+          asyncProcessing: AsyncProcessingBottomSheet,
+        }}
+      />
 
       {children}
     </SheetProvider>

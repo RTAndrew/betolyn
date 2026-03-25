@@ -60,6 +60,7 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             throw new DuplicateOddsInBetSlipException(rejectedOdds);
         }
     }
+
     private static BetMoney calculateCriterionReservedLiabilityDelta(CriterionEntity criterion) {
         BetMoney maxLiability = BetMoney.zero();
         for (var criterionOdd : criterion.getOdds()) {
@@ -76,34 +77,33 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         }
         return maxLiability;
     }
+
     private static BetMoney calculateMatchReservedLiability(List<CriterionEntity> matchCriteria,
             CriterionEntity criterion, BetMoney newCriterionReservedLiability) {
         BetMoney maxLiability = BetMoney.zero();
+
         for (var matchCriterion : matchCriteria) {
             BetMoney liability = Objects.equals(matchCriterion.getId(), criterion.getId())
                     ? newCriterionReservedLiability
                     : matchCriterion.getReservedLiability();
+
             if (liability != null && liability.isGreaterThan(maxLiability)) {
                 maxLiability = liability;
             }
         }
         return maxLiability;
     }
+
     private final FindOddByIdUC findOddByIdUC;
     private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
     private final TransactionRepository transactionRepository;
-
-
     private final BetSlipRepository betSlipRepository;
-
     private final CriterionRepository criterionRepository;
-
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
-
-
     private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
     private final FindMatchCriteriaUC findMatchCriteriaUC;
     private final BetSlipMapper betSlipMapper;
+
     @SuppressWarnings("D")
     @Override
     @Transactional

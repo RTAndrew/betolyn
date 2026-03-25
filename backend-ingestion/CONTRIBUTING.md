@@ -33,8 +33,10 @@ Fix bugs or add features to the Django service. Please include tests for any cod
 git clone https://github.com/pseudo-r/Public-ESPN-API.git
 cd Public-ESPN-API
 
-# Copy env file
-cp .env.example espn_service/.env
+# Copy env template (lives under espn_service/)
+cd espn_service
+cp .env.example .env
+cd ..
 
 # Start PostgreSQL, Redis, Django + Celery
 docker compose up
@@ -54,8 +56,8 @@ python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -e ".[dev]"
 
-# Copy and edit env
-cp ../.env.example .env
+# Copy and edit env (template is in this directory)
+cp .env.example .env
 # Set DATABASE_URL and CELERY_BROKER_URL to your local values
 
 python manage.py migrate

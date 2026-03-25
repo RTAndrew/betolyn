@@ -2,10 +2,7 @@ package com.betolyn.features.user;
 
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +29,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
-
 
     public UserEntity(String password, String email, String username) {
         super();

@@ -14,7 +14,7 @@ import { colors } from '@/constants/colors';
 
 import { ThemedText } from '../ThemedText';
 
-interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
+export interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
   variant?: 'solid' | 'outline' | 'text';
   destructive?: boolean;
   disabled?: boolean;

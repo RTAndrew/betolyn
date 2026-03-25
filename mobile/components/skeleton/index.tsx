@@ -36,8 +36,8 @@ const SkeletonGroup = ({
 
 export function Skeleton({
   type = 'default',
-  borderRadius = 12,
-  size,
+  borderRadius = 4,
+  size = 16,
   color = hexToHexWithAlpha(colors.greyLighter, 0.35),
   style,
 }: SkeletonProps) {

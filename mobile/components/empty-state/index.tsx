@@ -5,7 +5,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors } from '@/constants/colors';
 
 import { Button } from '../button';
-import { NoSlipsFound } from '../illustrations';
+import { NoSearchFound as NoSearchFoundIllustration, NoSlipsFound } from '../illustrations';
 import { ThemedText } from '../ThemedText';
 
 interface EmptyStateProps extends PropsWithChildren {
@@ -54,6 +54,30 @@ const NoBetsEmptyState = ({ title, description, showButton = true }: NoBetsEmpty
   );
 };
 
+interface NoSearchResultsProps extends Omit<NoBetsEmptyStateProps, 'showButton'> {
+  onClearFilters?: () => void;
+  color?: string;
+}
+
+const NoSearchResults = ({
+  title,
+  description,
+  onClearFilters,
+  color = colors.greyMedium,
+}: NoSearchResultsProps) => {
+  return (
+    <EmptyState
+      title={title ?? 'No search results found'}
+      description={description ?? 'Try a different search or clear the filters.'}
+      icon={<NoSearchFoundIllustration width={150} height={150} color={color} />}
+    >
+      {onClearFilters && (
+        <Button.Root onPress={() => onClearFilters?.()}>Clear filters</Button.Root>
+      )}
+    </EmptyState>
+  );
+};
+
 const styles = StyleSheet.create({
   root: {
     flexDirection: 'column',
@@ -77,5 +101,6 @@ const styles = StyleSheet.create({
 });
 
 EmptyState.NoBets = NoBetsEmptyState;
+EmptyState.NoSearch = NoSearchResults;
 
 export default EmptyState;

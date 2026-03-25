@@ -1,16 +1,19 @@
 package com.betolyn.features.user.findallusers;
 
-import com.betolyn.features.user.UserApiPaths;
-import com.betolyn.features.user.UserDTO;
-import com.betolyn.features.user.UserMapper;
-import com.betolyn.utils.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.betolyn.features.user.UserApiPaths;
+import com.betolyn.features.user.UserDTO;
+import com.betolyn.features.user.UserMapper;
+import com.betolyn.utils.responses.ApiResponse;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(UserApiPaths.USERS)
@@ -21,7 +24,7 @@ public class FindAllUsers {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserDTO>>> findAll() {
-        var users = findAllUsersUC.execute()
+        var users = findAllUsersUC.execute(Optional.empty())
                 .stream()
                 .map(userMapper::toDTO)
                 .toList();

@@ -50,6 +50,7 @@ export const SegmentedProgressBar = ({
           {topLabel}
         </View>
       ) : null}
+
       <View style={[styles.barContainer, { height, borderRadius: radius }]}>
         {normalized.map((seg, i) => {
           const isFirst = i === 0;
