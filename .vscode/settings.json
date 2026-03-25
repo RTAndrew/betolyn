@@ -36,5 +36,8 @@
 		"**/**/index.ts": "${dirname} → index.ts",
 		"**/**/index.tsx": "${dirname} → index.tsx",
 		"**/**/styles.tsx": "${dirname} → styles.tsx"
+	},
+	"[xml]": {
+		"editor.defaultFormatter": "redhat.vscode-xml"
 	}
 }
