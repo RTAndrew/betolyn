@@ -2,28 +2,21 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import BetCard from '@/components/bet-card';
+import { Button } from '@/components/button';
+import EmptyState from '@/components/empty-state';
+import { Add } from '@/components/icons';
+import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Skeleton } from '@/components/skeleton';
 import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
-import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
-import { mockAPI } from '@/mock';
-import { useGetMatches } from '@/services';
+import { mockData } from '@/mock/matches';
+import { useGetSpaceById } from '@/services';
 
 const SpaceId = () => {
   const { id } = useLocalSearchParams();
-
-  const insets = useSafeAreaInsets();
-  const channel = mockAPI.getChannelById(Number(id));
-  const { data, error, isPending } = useGetMatches({});
-  const matches = data?.data;
-
-  if (!channel) {
-    return <Text>Channel not found</Text>;
-  }
+  const { data, error, isPending } = useGetSpaceById({ spaceId: id as string });
 
   if (isPending) {
     return (
@@ -35,52 +28,68 @@ const SpaceId = () => {
     );
   }
 
-  if (!matches || error) {
-    return <Text>Error loading matches</Text>;
+  if (error || !data) {
+    return (
+      <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
+        <EmptyState.NoSearch />
+      </ScreenWrapper>
+    );
   }
 
+  const space = data?.data;
+
   return (
-    <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
-      <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
-        <ThemedView style={styles.header}>
-          <View style={styles.headerLeft}>
-            <TouchableOpacity onPress={() => router.back()}>
-              <AntDesign name="arrow-left" size={24} color="white" />
-            </TouchableOpacity>
+    <ScrollView
+      stickyHeaderIndices={[0]}
+      stickyHeaderHiddenOnScroll
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <ScreenHeader
+        type="back"
+        iconContainerColor={colors.greyMedium}
+        onClose={() => {
+          router.back();
+        }}
+        style={{
+          backgroundColor: colors.greyMedium,
+        }}
+        title={
+          <TouchableOpacity
+            style={styles.headerLeft}
+            onPress={() => router.push(`/(tabs)/spaces/${id}/info`)}
+          >
             <View style={styles.imageContainer}>
               <Image
                 resizeMode="contain"
-                source={{ uri: channel.image_url }}
+                source={{ uri: mockData.channels[0].image_url }}
                 style={{ width: '100%', height: '100%' }}
               />
             </View>
 
-            <TouchableOpacity onPress={() => router.push(`/(tabs)/spaces/${id}/info`)}>
-              <Text style={styles.headerTitle}>{channel.name}</Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.headerTitle}>{space.name}</Text>
+          </TouchableOpacity>
+        }
+      >
+        <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
+          <ScreenHeader.Icon onPress={() => {}}>
+            <AntDesign name="message" size={24} color="white" />
+          </ScreenHeader.Icon>
 
-          <View style={styles.headerRight}>
-            <TouchableOpacity onPress={() => router.push(`/auth/login`)}>
-              <AntDesign name="message" size={24} color="white" />
-            </TouchableOpacity>
+          <ScreenHeader.Icon onPress={() => router.push('/(modals)/spaces/create')}>
+            <Add width={32} height={32} />
+          </ScreenHeader.Icon>
+        </ScreenHeader.QuickActions>
+      </ScreenHeader>
 
-            <TouchableOpacity onPress={() => router.push('/(modals)/spaces/create')}>
-              <AntDesign name="plus" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        </ThemedView>
+      <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
+        <EmptyState.NoSearch
+          center
+          title="No events has been created yet"
+          description="Come later to create one"
+        >
+          <Button.Root>Create event</Button.Root>
+        </EmptyState.NoSearch>
       </View>
-
-      <ThemedView style={{ flex: 1, backgroundColor: colors.greyLight }}>
-        {matches.map((match, index) => (
-          <BetCard
-            key={index}
-            match={match}
-            onPress={(m) => router.push(`/spaces/${m.id}/create-event`)}
-          />
-        ))}
-      </ThemedView>
     </ScrollView>
   );
 };

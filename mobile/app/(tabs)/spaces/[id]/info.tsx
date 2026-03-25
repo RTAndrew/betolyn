@@ -1,13 +1,23 @@
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
+import ScreenHeader from '@/components/screen-header';
+import ScreenWrapper from '@/components/screen-wrapper';
 import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
-import { mockAPI } from '@/mock';
-import { IChannelMember } from '@/mock/matches';
+import { IChannelMember, mockData } from '@/mock/matches';
+import { useGetSpaceById } from '@/services';
 
 const ParticipantCard = ({ member }: { member: IChannelMember }) => {
   const handlePress = () => {
@@ -40,11 +50,21 @@ const ParticipantCard = ({ member }: { member: IChannelMember }) => {
 
 const Info = () => {
   const { id } = useLocalSearchParams();
-  const channel = mockAPI.getChannelById(Number(id));
+  const { data, error, isPending } = useGetSpaceById({ spaceId: id as string });
 
-  if (!channel) {
-    return <Text>Channel not found</Text>;
+  if (isPending) {
+    return (
+      <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </ScreenWrapper>
+    );
   }
+
+  if (error || !data) {
+    return <Text>Error loading space</Text>;
+  }
+
+  const space = data?.data;
 
   return (
     <ParallaxScrollView
@@ -59,7 +79,7 @@ const Info = () => {
         >
           <Image
             resizeMode="cover"
-            source={{ uri: channel.image_url }}
+            source={{ uri: mockData.channels[0].image_url }}
             style={{
               flex: 1,
               width: '100%',
@@ -78,38 +98,41 @@ const Info = () => {
             }}
           />
 
-          <ThemedView style={styles.headerBodyWrapper}>
-            <TouchableOpacity style={styles.headerBodyIcon} onPress={() => router.back()}>
-              <AntDesign name="arrow-left" size={24} color="white" />
-            </TouchableOpacity>
+          <View style={styles.headerBodyWrapper}>
+            <ScreenHeader
+              iconContainerColor="transparent"
+              safeArea={true}
+              type="back"
+              onClose={() => router.back()}
+            />
 
-            <View style={styles.headerBody}>
-              <Text style={styles.headerBodyTitle}>{channel.name}</Text>
+            <SafeHorizontalView style={styles.headerBody}>
+              <Text style={styles.headerBodyTitle}>{space.name}</Text>
               <Text style={styles.headerBodyDescription}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, nulla tristique enim
                 urna, ullamcorper porta sit...
               </Text>
-            </View>
-          </ThemedView>
+            </SafeHorizontalView>
+          </View>
         </View>
       }
     >
       <ThemedView style={styles.channelInfo}>
         <Text style={styles.channelInfoText}>
-          Criado por {channel.created_by}, {new Date(channel.created_at).toLocaleDateString()}
+          Criado por {space.createdBy.username}, {new Date().toLocaleDateString()}
         </Text>
-        <Text style={styles.channelInfoText}>Chatroom ID: 7859697414785576</Text>
+        <Text style={styles.channelInfoText}>Chatroom ID: {space.id}</Text>
       </ThemedView>
 
-      <ThemedView style={styles.participants}>
-        <Text style={styles.participantsNumber}>{channel.members.length} Participantes</Text>
+      {/* <ThemedView style={styles.participants}>
+        <Text style={styles.participantsNumber}>{spac.members.length} Participantes</Text>
 
         <View style={{ flex: 1, gap: 5 }}>
           {channel.members.map((member, index) => (
             <ParticipantCard key={index} member={member} />
           ))}
         </View>
-      </ThemedView>
+      </ThemedView> */}
     </ParallaxScrollView>
   );
 };
@@ -142,12 +165,11 @@ const styles = StyleSheet.create({
 
   headerBodyWrapper: {
     backgroundColor: 'transparent',
-    padding: 16,
     position: 'absolute',
-    top: 10,
+    top: 0,
     bottom: 30,
-    left: 20,
-    right: 20,
+    left: 0,
+    right: 0,
   },
   headerBody: {
     position: 'absolute',

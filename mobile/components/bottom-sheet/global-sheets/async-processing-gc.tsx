@@ -12,19 +12,20 @@ import { ApiError } from '@/utils/http/api-error';
 
 import BottomSheet from '..';
 
-export interface AsyncProcessingBottomSheetProps {
+export interface AsyncProcessingGlobalSheetProps {
   successTitle: string;
   successMessage?: string;
   errorTitle: string;
   loadingTitle: string;
-  onSuccessClose: () => void;
+  onSuccessClose: (fnResult: unknown | null) => void;
   fnPromise: () => Promise<unknown> | void;
 }
 
-const AsyncProcessingBottomSheet = ({ payload }: SheetProps<'asyncProcessing'>) => {
+const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) => {
   const [isProcessing, setIsProcessing] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<unknown | null>(null);
+  const [fnResult, setFnResult] = useState<unknown | null>(null);
 
   const { message, isPastMaxTime } = useTimeElapsed({
     breakpoints: [3000, 7000],
@@ -34,7 +35,7 @@ const AsyncProcessingBottomSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
 
   const handleClose = () => {
     if (isSuccess) {
-      payload?.onSuccessClose?.();
+      payload?.onSuccessClose?.(fnResult);
     } else {
       SheetManager.hide('asyncProcessing');
     }
@@ -46,7 +47,7 @@ const AsyncProcessingBottomSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
       const startTime = performance.now();
       // 1. Execute the promise immediately
       const result = await payload?.fnPromise?.();
-
+      setFnResult(result);
       const endTime = performance.now();
       const duration = endTime - startTime;
 
@@ -152,4 +153,4 @@ const styles = StyleSheet.create({
     // marginTop: 30,
   },
 });
-export default AsyncProcessingBottomSheet;
+export default AsyncProcessingGlobalSheet;

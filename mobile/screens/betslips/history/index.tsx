@@ -87,8 +87,8 @@ const BetSlipHistoryScreen = () => {
           }}
         />
       ) : (
-        <SafeHorizontalView style={{ flex: 1, justifyContent: 'center' }}>
-          <EmptyState.NoBets />
+        <SafeHorizontalView>
+          <EmptyState.NoBets center />
         </SafeHorizontalView>
       )}
     </View>

@@ -12,6 +12,10 @@ export class SpaceService {
     return await getRequest<ISpace[]>('/spaces');
   }
 
+  public static async findSpaceById(spaceId: string) {
+    return await getRequest<ISpace>(`/spaces/${spaceId}`);
+  }
+
   public static async create(data: ICreateSpaceRequest) {
     return await postRequest<ISpace, ICreateSpaceRequest>('/spaces', data);
   }

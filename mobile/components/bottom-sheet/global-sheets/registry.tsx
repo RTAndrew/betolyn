@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { SheetDefinition, SheetProvider, SheetRegister } from 'react-native-actions-sheet';
 
-import AsyncProcessingBottomSheet, { AsyncProcessingBottomSheetProps } from './async-processing-gc';
+import AsyncProcessingGlobalSheet, { AsyncProcessingGlobalSheetProps } from './async-processing-gc';
 import CreateSpaceOptionGC from './create-event-option-gc';
 import UnauthenticatedGC from './unauthenticated-gc';
 
@@ -12,7 +12,7 @@ declare module 'react-native-actions-sheet' {
     unauthenticated: SheetDefinition;
     createEventOptionSelection: SheetDefinition;
     asyncProcessing: SheetDefinition<{
-      payload: AsyncProcessingBottomSheetProps;
+      payload: AsyncProcessingGlobalSheetProps;
     }>;
   }
 }
@@ -24,7 +24,7 @@ const GlobalSheetRegistry = ({ children }: PropsWithChildren) => {
         sheets={{
           unauthenticated: UnauthenticatedGC,
           createEventOptionSelection: CreateSpaceOptionGC,
-          asyncProcessing: AsyncProcessingBottomSheet,
+          asyncProcessing: AsyncProcessingGlobalSheet,
         }}
       />
 

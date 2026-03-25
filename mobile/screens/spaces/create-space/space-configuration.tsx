@@ -9,6 +9,7 @@ import { Settings } from '@/components/settings';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useCreateSpace } from '@/services';
+import { ApiFnReturnType } from '@/utils/react-query';
 
 import { CreateSpaceWizardStepProps, type SpaceConfigurationFormData } from './utils';
 
@@ -26,28 +27,25 @@ export const SpaceConfiguration = ({
   data,
   setNext,
   onChange,
-  onNext,
 }: SpaceConfigurationProps) => {
-  const [errors, setErrors] = useState<FormErrors>({});
-
-  const { mutateAsync: createSpace } = useCreateSpace();
-
-  const form: SpaceConfigurationFormData = {
+  const members = allData?.invitation ?? [];
+  const formData: SpaceConfigurationFormData = {
     name: data?.name ?? '',
     description: data?.description ?? '',
   };
 
-  const members = allData?.invitation ?? [];
+  // keep a reference to the form data to be accessed by the handleCreateSpace function
+  // fixing the stale closure when the function is passed to the setNext (useEffect)
+  const formRef = useRef(formData);
+  formRef.current = formData;
 
-  const formRef = useRef(form);
-  formRef.current = form;
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const onNextRef = useRef(onNext);
-  onNextRef.current = onNext;
+  const { mutateAsync: createSpace } = useCreateSpace();
 
   const handleFieldChange = (field: keyof SpaceConfigurationFormData, value: string) => {
     onChange({
-      ...form,
+      ...formData,
       [field]: value,
     });
 
@@ -56,44 +54,55 @@ export const SpaceConfiguration = ({
     }
   };
 
+  const handleCreateSpace = async () => {
+    const current = formRef.current;
+    const newErrors: FormErrors = {};
+    if (!current.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
+    SheetManager.show('asyncProcessing', {
+      payload: {
+        successTitle: 'Space Created',
+        loadingTitle: 'Creating Space',
+        errorTitle: 'Error Creating Space',
+        successMessage: 'You can now create events and invite more members to grow your community',
+        onSuccessClose: (fnResult) => {
+          const result = fnResult as ApiFnReturnType<typeof createSpace>;
+          if (!result || !result.data) return;
+          const { id } = result.data;
+
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            router.dismissAll();
+          }
+
+          router.push(`/spaces/${id}`);
+          SheetManager.hide('asyncProcessing');
+        },
+        fnPromise: () =>
+          createSpace({
+            variables: {
+              name: current.name,
+              description: current.description,
+              userIds: members.map((m) => m.id),
+            },
+          }),
+      },
+    });
+  };
+
   useEffect(() => {
+    console.log('rerender');
     setNext?.({
       label: 'Create Space',
       variant: 'solid',
-      onPress: () => {
-        const current = formRef.current;
-        const newErrors: FormErrors = {};
-        if (!current.name.trim()) {
-          newErrors.name = 'Name is required';
-        }
-        setErrors(newErrors);
-        if (Object.keys(newErrors).length > 0) {
-          return;
-        }
-
-        SheetManager.show('asyncProcessing', {
-          payload: {
-            successTitle: 'Space Created',
-            loadingTitle: 'Creating Space',
-            errorTitle: 'Error Creating Space',
-            successMessage:
-              'You can now create events and invite more members to grow your community',
-            onSuccessClose: () => {
-              router.dismissAll();
-              router.push('/spaces');
-              SheetManager.hide('asyncProcessing');
-            },
-            fnPromise: () =>
-              createSpace({
-                variables: {
-                  name: current.name,
-                  description: current.description,
-                  userIds: members.map((m) => m.id),
-                },
-              }),
-          },
-        });
-      },
+      onPress: handleCreateSpace,
     });
   }, [setNext]);
 
@@ -109,7 +118,7 @@ export const SpaceConfiguration = ({
           <TextInput
             label="Name"
             style={styles.input}
-            value={form.name}
+            value={formData.name}
             errorMessage={errors.name}
             placeholder="e.g. My Space"
             onChangeText={(text) => handleFieldChange('name', text)}
@@ -118,7 +127,7 @@ export const SpaceConfiguration = ({
           <TextInput
             label="Description"
             style={styles.input}
-            value={form.description}
+            value={formData.description}
             errorMessage={errors.description}
             placeholder="e.g. Weeked football"
             onChangeText={(text) => handleFieldChange('description', text)}

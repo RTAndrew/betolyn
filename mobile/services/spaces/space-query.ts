@@ -15,11 +15,28 @@ export const getAllSpacesQueryOptions = () => {
   });
 };
 
+export const getSpaceByIdQueryOptions = ({ spaceId }: { spaceId: string }) => {
+  return queryOptions<IApiResponse<ISpace>, IApiResponse>({
+    queryKey: ['space', spaceId],
+    queryFn: async () => await SpaceService.findSpaceById(spaceId),
+  });
+};
+
 // QUERIES
 
 export const useGetAllSpaces = ({
   queryOptions,
 }: IQueryOptions<typeof getAllSpacesQueryOptions>) => {
   const query = getAllSpacesQueryOptions();
+  return useQuery({ ...query, ...queryOptions });
+};
+
+export const useGetSpaceById = ({
+  spaceId,
+  queryOptions,
+}: {
+  spaceId: string;
+} & IQueryOptions<typeof getSpaceByIdQueryOptions>) => {
+  const query = getSpaceByIdQueryOptions({ spaceId });
   return useQuery({ ...query, ...queryOptions });
 };
