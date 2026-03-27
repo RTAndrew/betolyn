@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "react-native-best-practices": {
+      "source": "callstackincubator/agent-skills",
+      "sourceType": "github",
+      "computedHash": "45d6b34ee1311c1633da57ed664dd8eb5529d277c18f2e23a572d5bbf807e30c"
+    }
+  }
+}
