@@ -2,7 +2,7 @@ package com.betolyn.features.matches.findallmatches;
 
 import com.betolyn.features.matches.MatchApiPaths;
 import com.betolyn.features.matches.MatchDTO;
-import com.betolyn.features.matches.MatchMapper;
+import com.betolyn.features.matches.MatchDtoAssembler;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FindAllMatches {
     private final FindAllMatchesUC findAllMatchesUC;
-    private final MatchMapper matchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<MatchDTO>>> findAll() {
         var matches = findAllMatchesUC.execute()
                 .stream()
-                .map(matchMapper::toMatchDTO)
+                .map(matchDtoAssembler::forMatchDetail)
                 .toList();
         return ResponseEntity.ok(ApiResponse.success("Matches found", matches));
     }

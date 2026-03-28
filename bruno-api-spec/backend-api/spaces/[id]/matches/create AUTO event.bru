@@ -4,6 +4,10 @@ meta {
   seq: 1
 }
 
+docs {
+  Links a feed (official) match to the space by creating a derived row. Response data is a MatchDTO with type "DERIVED" and officialMatchId set to the feed match id (merged view).
+}
+
 post {
   url: {{baseUrl}}/spaces/{{spaceId}}/matches
   body: json

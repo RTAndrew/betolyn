@@ -24,10 +24,17 @@ export interface ISpace {
   createdBy: IUserPublic;
 }
 
+export type TMatchType = 'OFFICIAL' | 'CUSTOM' | 'DERIVED';
+
 export interface IMatch {
   id: string;
+  type?: TMatchType;
+  officialMatchId?: string | null;
+  spaceIåd?: string | null;
   homeTeam: ITeam;
   awayTeam: ITeam;
+  homeTeamName?: string;
+  awayTeamName?: string;
   homeTeamScore: number;
   awayTeamScore: number;
   startTime: string;

@@ -2,7 +2,6 @@ package com.betolyn.features.spaces.createspacematch;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.Objects;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,12 +12,11 @@ import org.springframework.util.StringUtils;
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.matches.MatchEntity;
+import com.betolyn.features.matches.MatchRepository;
+import com.betolyn.features.matches.MatchTypeEnum;
 import com.betolyn.features.matches.creatematch.CreateMatchRequestDTO;
 import com.betolyn.features.matches.creatematch.CreateMatchUC;
 import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
-import com.betolyn.features.spaces.SpaceEntity;
-import com.betolyn.features.spaces.SpaceMatchEntity;
-import com.betolyn.features.spaces.SpaceMatchRepository;
 import com.betolyn.features.spaces.SpaceUsersRepository;
 import com.betolyn.features.spaces.findspacebyid.FindSpaceByIdUC;
 import com.betolyn.features.teams.createteam.CreateTeamRequestDTO;
@@ -32,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, SpaceMatchEntity> {
+public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, MatchEntity> {
     private static void validateCustomEventFields(CreateSpaceMatchRequestDTO request) {
         if (!StringUtils.hasText(request.getHomeTeamName())
                 || !StringUtils.hasText(request.getAwayTeamName())
@@ -48,18 +46,6 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Space
         return new CreateTeamRequestDTO(name.trim());
     }
 
-    /**
-     * AUTO path: only official (platform) matches or matches already scoped to this space may be linked.
-     */
-    private static void assertMatchLinkableToSpace(MatchEntity match, String spaceId) {
-        if (match.getIsOfficial() || Objects.equals(spaceId, match.getSpaceId())) {
-            return;
-        }
-        throw new BadRequestException(
-                "MATCH_NOT_LINKABLE",
-                "This match cannot be linked to this space");
-    }
-
     private static boolean isPostgresUniqueViolation(DataIntegrityViolationException ex) {
         for (Throwable cur = ex; cur != null; cur = cur.getCause()) {
             if (cur instanceof SQLException sql && "23505".equals(sql.getSQLState())) {
@@ -68,10 +54,11 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Space
         }
         return false;
     }
+
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
     private final FindSpaceByIdUC findSpaceByIdUC;
     private final SpaceUsersRepository spaceUsersRepository;
-    private final SpaceMatchRepository spaceMatchRepository;
+    private final MatchRepository matchRepository;
     private final FindMatchByIdUC findMatchByIdUC;
 
     private final CreateTeamUC createTeamUC;
@@ -80,7 +67,7 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Space
 
     @Override
     @Transactional
-    public SpaceMatchEntity execute(CreateSpaceMatchParam input) {
+    public MatchEntity execute(CreateSpaceMatchParam input) {
         var spaceId = input.spaceId();
         var request = input.request();
 
@@ -95,52 +82,60 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Space
             throw new AccessForbiddenException();
         }
 
-        SpaceEntity space = findSpaceByIdUC.execute(spaceId);
 
-        MatchEntity match;
+        findSpaceByIdUC.execute(spaceId);
+
         if (StringUtils.hasText(request.getMatchId())) {
-            match = findMatchByIdUC.execute(request.getMatchId());
-            assertMatchLinkableToSpace(match, spaceId);
-        } else {
-            validateCustomEventFields(request);
+            MatchEntity match = findMatchByIdUC.execute(request.getMatchId());
 
-            var homeTeam = createTeamUC.execute(homeTeamRequest(request.getHomeTeamName()));
-            var awayTeam = createTeamUC.execute(homeTeamRequest(request.getAwayTeamName()));
-            var matchReq = new CreateMatchRequestDTO();
-            matchReq.setHomeTeamId(homeTeam.getId());
-            matchReq.setAwayTeamId(awayTeam.getId());
-            matchReq.setStartTime(request.getStartTime());
-            matchReq.setEndTime(request.getEndTime());
-            matchReq.setSpaceId(spaceId);
-            matchReq.setMaxReservedLiability(request.getMaxReservedLiability());
-            match = createMatchUC.execute(matchReq);
-        }
-
-        // Idempotent: only skip insert when this space is already linked to this match.
-        var existing = spaceMatchRepository.findBySpaceIdAndMatchId(spaceId, match.getId());
-        if (existing.isPresent()) {
-            return existing.get();
-        }
-
-        var spaceMatch = new SpaceMatchEntity();
-        spaceMatch.setSpace(space);
-        spaceMatch.setMatch(match);
-        spaceMatch.setReservedLiability(BetMoney.zero());
-        spaceMatch.setMaxReservedLiability(MoneyMapper.bigDecimalToBetMoney(request.getMaxReservedLiability()));
-
-        // Concurrent requests can both pass findBySpaceIdAndMatchId above; the unique (space_id, match_id)
-        // constraint ensures only one insert wins. The loser gets a duplicate-key error — not a "real"
-        // failure: the row already exists. The exception does not return that row, so we re-select it
-        // and return the same entity shape as the idempotent hit path (orElseThrow if still missing).
-        try {
-            return spaceMatchRepository.save(spaceMatch);
-        } catch (DuplicateKeyException ex) {
-            return spaceMatchRepository.findBySpaceIdAndMatchId(spaceId, match.getId()).orElseThrow(() -> ex);
-        } catch (DataIntegrityViolationException ex) {
-            if (isPostgresUniqueViolation(ex)) {
-                return spaceMatchRepository.findBySpaceIdAndMatchId(spaceId, match.getId()).orElseThrow(() -> ex);
+            // Only official feed matches can be added as a derived space event
+            if (match.getType() != MatchTypeEnum.OFFICIAL) {
+                throw new BadRequestException(
+                        "INVALID_MATCH_TYPE_FOR_LINK",
+                        "Only official feed matches can be added as a derived space event");
             }
-            throw ex;
+
+            var existing = matchRepository.findBySpaceIdAndOfficialMatchId(spaceId, match.getId());
+            if (existing.isPresent()) {
+                return existing.get();
+            }
+
+            var derivedMatch = new MatchEntity();
+            derivedMatch.setType(MatchTypeEnum.DERIVED);
+            derivedMatch.setSpaceId(spaceId);
+            derivedMatch.setOfficialMatch(match);
+            derivedMatch.setReservedLiability(BetMoney.zero());
+            derivedMatch.setMaxReservedLiability(MoneyMapper.bigDecimalToBetMoney(request.getMaxReservedLiability()));
+
+            try {
+                return matchRepository.save(derivedMatch);
+            } catch (DuplicateKeyException ex) {
+                // Idempotent: only skip insert when this space is already linked to this match.
+                return matchRepository
+                        .findBySpaceIdAndOfficialMatchId(spaceId, match.getId())
+                        .orElseThrow(() -> ex);
+            } catch (DataIntegrityViolationException ex) {
+                // Idempotent: only skip insert when this space is already linked to this match.
+                if (isPostgresUniqueViolation(ex)) {
+                    return matchRepository
+                            .findBySpaceIdAndOfficialMatchId(spaceId, match.getId())
+                            .orElseThrow(() -> ex);
+                }
+                throw ex;
+            }
         }
+
+        validateCustomEventFields(request);
+
+        var homeTeam = createTeamUC.execute(homeTeamRequest(request.getHomeTeamName()));
+        var awayTeam = createTeamUC.execute(homeTeamRequest(request.getAwayTeamName()));
+        var matchReq = new CreateMatchRequestDTO();
+        matchReq.setHomeTeamId(homeTeam.getId());
+        matchReq.setAwayTeamId(awayTeam.getId());
+        matchReq.setStartTime(request.getStartTime());
+        matchReq.setEndTime(request.getEndTime());
+        matchReq.setSpaceId(spaceId);
+        matchReq.setMaxReservedLiability(request.getMaxReservedLiability());
+        return createMatchUC.execute(matchReq);
     }
 }

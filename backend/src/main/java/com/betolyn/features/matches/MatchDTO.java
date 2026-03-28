@@ -9,6 +9,9 @@ import lombok.Data;
 @Data
 public class MatchDTO {
     private String id;
+    private MatchTypeEnum type;
+    /** Present when {@link #type} is {@link MatchTypeEnum#DERIVED}. */
+    private String officialMatchId;
     private String spaceId;
     private TeamEntity homeTeam;
     private String homeTeamName;

@@ -16,17 +16,6 @@ export interface ICreateSpaceMatchRequest {
   maxReservedLiability: number;
 }
 
-export interface ISpaceMatch {
-  id: string;
-  spaceId: string;
-  matchId: string;
-  match?: IMatch;
-  reservedLiability?: number;
-  maxReservedLiability?: number | null;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 /**
  * Minimal wizard state needed to POST /spaces/{spaceId}/matches.
  * Compatible with {@link ICreateSpaceEventState} from the create-event screen.
@@ -60,21 +49,22 @@ export class SpaceService {
       return { matchId, maxReservedLiability };
     }
 
-    const c = allData.configuration;
+    const configuration = allData.configuration;
     if (
-      !c?.homeTeam?.trim() ||
-      !c?.awayTeam?.trim() ||
-      !c?.startTime?.trim() ||
-      !c?.endTime?.trim()
+      !configuration ||
+      configuration?.homeTeam?.trim() ||
+      configuration?.awayTeam?.trim() ||
+      configuration?.startTime?.trim() ||
+      configuration?.endTime?.trim()
     ) {
       throw new Error('Complete event configuration (teams and times) before creating.');
     }
 
     return {
-      homeTeamName: c.homeTeam.trim(),
-      awayTeamName: c.awayTeam.trim(),
-      startTime: c.startTime,
-      endTime: c.endTime,
+      homeTeamName: configuration.homeTeam.trim(),
+      awayTeamName: configuration.awayTeam.trim(),
+      startTime: configuration.startTime,
+      endTime: configuration.endTime,
       maxReservedLiability,
     };
   }
@@ -87,14 +77,15 @@ export class SpaceService {
     return await getRequest<ISpace>(`/spaces/${spaceId}`);
   }
 
+  public static async findSpaceMatches(spaceId: string) {
+    return await getRequest<IMatch[]>(`/spaces/${spaceId}/matches`);
+  }
+
   public static async create(data: ICreateSpaceRequest) {
     return await postRequest<ISpace, ICreateSpaceRequest>('/spaces', data);
   }
 
   public static async createSpaceMatch(spaceId: string, data: ICreateSpaceMatchRequest) {
-    return await postRequest<ISpaceMatch, ICreateSpaceMatchRequest>(
-      `/spaces/${spaceId}/matches`,
-      data
-    );
+    return await postRequest<IMatch, ICreateSpaceMatchRequest>(`/spaces/${spaceId}/matches`, data);
   }
 }

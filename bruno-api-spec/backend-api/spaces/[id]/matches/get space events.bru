@@ -1,0 +1,29 @@
+meta {
+  name: get space events
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/spaces/{{spaceId}}/matches
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+tests {
+  test("returns 200 for existing space or 404 when spaceId is unknown", function() {
+    expect([200, 404]).to.include(res.getStatus());
+  });
+  test("200 response has data array of matches", function() {
+    if (res.getStatus() !== 200) {
+      return;
+    }
+    const body = res.getBody();
+    expect(body.data).to.be.an("array");
+  });
+}

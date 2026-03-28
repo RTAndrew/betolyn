@@ -45,8 +45,8 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   const handlePromise = async () => {
     setIsProcessing(true);
     try {
-      const workResult = await withMinimumLoadingDuration(() =>
-        Promise.resolve(payload?.fnPromise?.())
+      const workResult = await withMinimumLoadingDuration(
+        () => payload?.fnPromise?.() as Promise<unknown>
       );
 
       if (workResult.status === 'fulfilled') {

@@ -35,14 +35,14 @@ export default function TabLayout() {
         <Tabs.Screen
           name="betslips"
           options={{
-            title: 'Apostas',
+            title: 'Betslips',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="dollarsign" color={color} />,
           }}
         />
         <Tabs.Screen
           name="spaces"
           options={{
-            title: 'Espaços',
+            title: 'Spaces',
             tabBarIcon: ({ color }) => (
               <IconSymbol size={28} name="paperplane.fill" color={color} />
             ),

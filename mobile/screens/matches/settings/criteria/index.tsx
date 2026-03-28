@@ -33,9 +33,10 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
   if (error || !data) return <ThemedText>Error loading criteria</ThemedText>;
 
   const criteria = data.data;
+  if (criteria.length === 0) return <></>;
 
   return (
-    <Settings.ItemGroup>
+    <Settings.ItemGroup title="Markets">
       {criteria.map((criterion) => (
         <Settings.Item
           key={criterion.id}

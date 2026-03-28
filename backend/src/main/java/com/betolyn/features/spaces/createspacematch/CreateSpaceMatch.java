@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.betolyn.features.matches.MatchDTO;
+import com.betolyn.features.matches.MatchDtoAssembler;
+import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.spaces.SpaceApiPaths;
-import com.betolyn.features.spaces.SpaceMatchDTO;
-import com.betolyn.features.spaces.SpaceMatchEntity;
-import com.betolyn.features.spaces.SpaceMatchMapper;
 import com.betolyn.utils.responses.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateSpaceMatch {
     private final CreateSpaceMatchUC createSpaceMatchUC;
-    private final SpaceMatchMapper spaceMatchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
 
     @PostMapping("/{spaceId}/matches")
-    public ResponseEntity<ApiResponse<SpaceMatchDTO>> createSpaceMatch(
+    public ResponseEntity<ApiResponse<MatchDTO>> createSpaceMatch(
             @PathVariable String spaceId,
             @RequestBody CreateSpaceMatchRequestDTO body) {
-        SpaceMatchEntity entity =
-                createSpaceMatchUC.execute(new CreateSpaceMatchParam(spaceId, body));
-        return ResponseEntity.ok(ApiResponse.success("Space match created", spaceMatchMapper.toDTO(entity)));
+        MatchEntity entity = createSpaceMatchUC.execute(new CreateSpaceMatchParam(spaceId, body));
+        MatchDTO dto = matchDtoAssembler.forSpaceEventResponse(entity);
+        return ResponseEntity.ok(ApiResponse.success("Space match created", dto));
     }
 }

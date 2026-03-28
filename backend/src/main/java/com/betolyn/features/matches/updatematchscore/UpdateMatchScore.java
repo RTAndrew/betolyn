@@ -2,7 +2,7 @@ package com.betolyn.features.matches.updatematchscore;
 
 import com.betolyn.features.matches.MatchApiPaths;
 import com.betolyn.features.matches.MatchDTO;
-import com.betolyn.features.matches.MatchMapper;
+import com.betolyn.features.matches.MatchDtoAssembler;
 import com.betolyn.utils.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(MatchApiPaths.MATCH_SCORE)
 @RequiredArgsConstructor
 public class UpdateMatchScore {
-    private final MatchMapper matchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
     private final UpdateMatchScoreUC updateMatchScoreUC;
 
     @PostMapping
@@ -25,6 +25,6 @@ public class UpdateMatchScore {
             @RequestBody UpdateMatchScoreRequestDTO requestDTO) {
 
         var match = updateMatchScoreUC.execute(new UpdateMatchScoreParam(matchId, requestDTO));
-        return ResponseEntity.ok(ApiResponse.success("Match score updated", matchMapper.toMatchDTO(match)));
+        return ResponseEntity.ok(ApiResponse.success("Match score updated", matchDtoAssembler.forMatchDetail(match)));
     }
 }

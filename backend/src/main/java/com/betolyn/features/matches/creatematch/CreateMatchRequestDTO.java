@@ -16,7 +16,7 @@ public class CreateMatchRequestDTO {
     private String startTime;
     private String endTime;
 
-    /** When creating a match for a space (custom event); also drives {@code isOfficial}. */
+    /** When creating a match for a space (custom event); sets entity {@code type} to {@code CUSTOM}. */
     private String spaceId;
 
     /** Cap for this match when created in a space context; optional for generic {@code POST /matches}. */

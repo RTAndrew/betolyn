@@ -1,7 +1,5 @@
 package com.betolyn.features.betting.odds;
 
-import java.util.function.Supplier;
-
 /** Some states may not make sense to be available
  * in OddHistory (DRAFT). However, it must
  * because it serves to track when the values where created.

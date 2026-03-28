@@ -2,7 +2,7 @@ package com.betolyn.features.matches.updatematchstatus;
 
 import com.betolyn.features.matches.MatchApiPaths;
 import com.betolyn.features.matches.MatchDTO;
-import com.betolyn.features.matches.MatchMapper;
+import com.betolyn.features.matches.MatchDtoAssembler;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UpdateMatchStatus {
     private final UpdateMatchStatusUC updateMatchStatusUC;
-    private final MatchMapper matchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
 
     @PutMapping
     public ResponseEntity<ApiResponse<MatchDTO>> updateMatchStatus(
             @PathVariable String matchId,
             @RequestBody @Valid UpdateMatchStatusRequestDTO requestDTO) {
         var match = updateMatchStatusUC.execute(new UpdateMatchStatusParam(matchId, requestDTO));
-        return ResponseEntity.ok(ApiResponse.success("Match status updated", matchMapper.toMatchDTO(match)));
+        return ResponseEntity.ok(ApiResponse.success("Match status updated", matchDtoAssembler.forMatchDetail(match)));
     }
 }

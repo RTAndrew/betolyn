@@ -3,7 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/utils/react-query';
 
 import { getMatchQueryOptions, getMatchesQueryOptions } from '../matches/match-query';
-import { getAllSpacesQueryOptions, getSpaceByIdQueryOptions } from './space-query';
+import {
+  getAllSpacesQueryOptions,
+  getSpaceByIdQueryOptions,
+  getSpaceMatchesQueryOptions,
+} from './space-query';
 import { ICreateSpaceRequest, SpaceService } from './space-service';
 
 interface ICreateSpaceVariables {
@@ -37,17 +41,19 @@ export const useCreateSpaceMatch = () => {
       mutationFn: (data: ICreateSpaceMatchVariables) =>
         SpaceService.createSpaceMatch(data.spaceId, data.variables),
       onSuccess: (response, variables) => {
-        const spaceMatch = response.data;
+        const match = response.data;
         queryClient.invalidateQueries({
           queryKey: getSpaceByIdQueryOptions({ spaceId: variables.spaceId }).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: getSpaceMatchesQueryOptions({ spaceId: variables.spaceId }).queryKey,
         });
         queryClient.refetchQueries({
           queryKey: getAllSpacesQueryOptions().queryKey,
         });
-        const linkedMatchId = spaceMatch?.matchId ?? spaceMatch?.match?.id;
-        if (linkedMatchId) {
+        if (match?.id) {
           queryClient.invalidateQueries({
-            queryKey: getMatchQueryOptions({ matchId: linkedMatchId }).queryKey,
+            queryKey: getMatchQueryOptions({ matchId: match.id }).queryKey,
           });
         }
         queryClient.invalidateQueries({

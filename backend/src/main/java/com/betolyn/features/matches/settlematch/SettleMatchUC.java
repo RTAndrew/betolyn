@@ -61,7 +61,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
                 .user();
 
         MatchEntity match = findMatchByIdUC.execute(matchId);
-        if (match.getStatus() != MatchStatusEnum.ENDED) {
+        if (match.getEffectiveStatus() != MatchStatusEnum.ENDED) {
             throw new BadRequestException("MATCH_NOT_ENDED", "Match must be ended before settling");
         }
 

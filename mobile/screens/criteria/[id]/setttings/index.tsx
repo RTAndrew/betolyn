@@ -60,8 +60,17 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
   const criterion = data.data;
   if (!criterion) return <ThemedText>Criterion not found</ThemedText>;
 
+  // TODO: create an util to get the match title
+  const m = criterion.match;
+  const matchTitle =
+    m.homeTeam?.name && m.awayTeam?.name
+      ? `${m.homeTeam.name} vs ${m.awayTeam.name}`
+      : m.homeTeamName && m.awayTeamName
+        ? `${m.homeTeamName} vs ${m.awayTeamName}`
+        : 'Match';
+
   return (
-    <MatchBottomSheetProvider match={criterion.match}>
+    <MatchBottomSheetProvider match={m}>
       <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
         <ScreenHeader
           iconColor={colors.white}
@@ -83,10 +92,10 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
           />
 
           <Settings.Item
-            title={`${criterion.match.homeTeam.name} vs ${criterion.match.awayTeam.name}`}
+            title={matchTitle}
             subtitle="Match"
-            description={getMatchStatusTag(criterion.match.status)}
-            onPress={() => router.push(`/matches/${criterion.match.id}`)}
+            description={getMatchStatusTag(m.status)}
+            onPress={() => router.push(`/matches/${m.id}`)}
           />
 
           <Settings.ItemGroup>

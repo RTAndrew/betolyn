@@ -3,6 +3,7 @@ package com.betolyn.features.feedsync;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.MatchStatusEnum;
+import com.betolyn.features.matches.MatchTypeEnum;
 import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.features.teams.TeamRepository;
 import tools.jackson.databind.JsonNode;
@@ -115,6 +116,7 @@ public class FeedSyncBatchService {
                 m.generateId();
             }
             m.setEspnId(espnEventId);
+            m.setType(MatchTypeEnum.OFFICIAL);
             m.setHomeTeam(home);
             m.setAwayTeam(away);
             m.setHomeTeamName(text(row, "home_team_name"));

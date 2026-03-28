@@ -8,8 +8,9 @@ import org.springframework.util.StringUtils;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.matches.MatchEntity;
-import com.betolyn.features.matches.MatchMapper;
+import com.betolyn.features.matches.MatchDtoAssembler;
 import com.betolyn.features.matches.MatchRepository;
+import com.betolyn.features.matches.MatchTypeEnum;
 import com.betolyn.features.matches.matchSystemEvents.MatchCreatedEventDTO;
 import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
@@ -25,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class CreateMatchUC implements IUseCase<CreateMatchRequestDTO, MatchEntity> {
     private final FindTeamByIdUC findTeamByIdUC;
     private final MatchRepository matchRepository;
-    private final MatchMapper matchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
     private final MatchSystemEvent matchSystemEvent;
 
     @Override
@@ -39,9 +40,12 @@ public class CreateMatchUC implements IUseCase<CreateMatchRequestDTO, MatchEntit
         entity.setAwayTeam(awayTeam);
         entity.setStartTime(param.getStartTime());
         entity.setEndTime(param.getEndTime());
+        entity.setType(MatchTypeEnum.OFFICIAL);
         entity.setHomeTeamScore(param.getHomeTeamScore());
         entity.setAwayTeamScore(param.getAwayTeamScore());
-
+        entity.setReservedLiability(BetMoney.zero());
+        entity.setMaxReservedLiability(null);
+        
         // unofficial match created by space user
         if (StringUtils.hasText(param.getSpaceId())) {
             if (param.getMaxReservedLiability() == null
@@ -50,17 +54,14 @@ public class CreateMatchUC implements IUseCase<CreateMatchRequestDTO, MatchEntit
                         "INVALID_LIABILITY", "maxReservedLiability is required when spaceId is set");
             }
             entity.setSpaceId(param.getSpaceId().trim());
-            entity.setIsOfficial(false);
+            entity.setType(MatchTypeEnum.CUSTOM);
             entity.setReservedLiability(BetMoney.zero());
             entity.setMaxReservedLiability(MoneyMapper.bigDecimalToBetMoney(param.getMaxReservedLiability()));
-        } else {
-            entity.setReservedLiability(BetMoney.zero());
-            entity.setMaxReservedLiability(null);
         }
 
         var savedMatch = matchRepository.save(entity);
 
-        var eventDTO = new MatchCreatedEventDTO(savedMatch.getId(), matchMapper.toMatchDTO(savedMatch));
+        var eventDTO = new MatchCreatedEventDTO(savedMatch.getId(), matchDtoAssembler.forMatchDetail(savedMatch));
         matchSystemEvent.publish(this, new MatchSseEvent.MatchCreated(eventDTO));
 
         return savedMatch;

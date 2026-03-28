@@ -1,16 +1,18 @@
 package com.betolyn.features.matches.findmatchcriteria;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class FindMatchCriteriaUC implements IUseCase<String, List<CriterionEntit
 
     public List<CriterionEntity> execute(String matchId, Collection<CriterionStatusEnum> statuses)
             throws EntityNotfoundException {
-        matchRepository.findById(matchId).orElseThrow(EntityNotfoundException::new); // TODO: Add a custom exception for criteria not found
+        matchRepository.findById(matchId).orElseThrow(EntityNotfoundException::new);
         return criterionRepository.findAllByMatchId(matchId, statuses);
     }
 }

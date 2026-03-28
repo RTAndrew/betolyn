@@ -1,12 +1,15 @@
 package com.betolyn.features.matches.findallmatches;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.betolyn.features.IUseCaseNoParams;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.betolyn.features.matches.MatchTypeEnum;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +18,6 @@ public class FindAllMatchesUC implements IUseCaseNoParams<List<MatchEntity>> {
 
     @Override
     public List<MatchEntity> execute() {
-        return matchRepository.findAll();
+        return matchRepository.findAllByType(MatchTypeEnum.OFFICIAL);
     }
 }

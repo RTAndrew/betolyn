@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import TextInput from '@/components/forms/text-input';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { useWizardPrimaryAction } from '@/components/wizard/use-wizard';
+import { colors } from '@/constants/colors';
 
 import { CreateSpaceEventWizardStepProps, IEventConfigurationFormData } from './utils';
 
@@ -86,6 +87,7 @@ export const EventConfigurationStep = ({
         <View style={styles.formContainer}>
           <TextInput
             label="Home team"
+            style={styles.input}
             value={formData.homeTeam}
             errorMessage={errors.homeTeam}
             placeholder="e.g. Team A"
@@ -94,6 +96,7 @@ export const EventConfigurationStep = ({
 
           <TextInput
             label="Away team"
+            style={styles.input}
             value={formData.awayTeam}
             errorMessage={errors.awayTeam}
             placeholder="e.g. Team B"
@@ -102,6 +105,7 @@ export const EventConfigurationStep = ({
 
           <TextInput
             label="Start time"
+            style={styles.input}
             value={formData.startTime}
             errorMessage={errors.startTime}
             placeholder="e.g. 2025-03-28T18:00:00Z"
@@ -110,6 +114,7 @@ export const EventConfigurationStep = ({
 
           <TextInput
             label="End time"
+            style={styles.input}
             value={formData.endTime}
             errorMessage={errors.endTime}
             placeholder="e.g. 2025-03-28T20:00:00Z"
@@ -130,5 +135,8 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     gap: 16,
+  },
+  input: {
+    backgroundColor: colors.greyLight,
   },
 });

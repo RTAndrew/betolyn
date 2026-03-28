@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.odds.dto.OddDTO;
+import com.betolyn.features.user.UserMapper;
 import com.betolyn.shared.BaseMapperConfig;
 import com.betolyn.shared.MoneyMapper;
 
-@Mapper(config = BaseMapperConfig.class)
+@Mapper(config = BaseMapperConfig.class, uses = UserMapper.class)
 @Component
 public interface MatchMapper {
 
@@ -52,8 +53,21 @@ public interface MatchMapper {
         return criterionDTO;
     }
 
+    /**
+     * Straight entity → DTO for {@link MatchTypeEnum#OFFICIAL} / {@link MatchTypeEnum#CUSTOM}. For API
+     * responses, prefer {@link MatchDtoAssembler}.
+     */
+    @Mapping(source = "officialMatch.id", target = "officialMatchId")
     @Mapping(source = "mainCriterion", target = "mainCriterion", qualifiedByName = "mainCriterionEntityToMainCriterionDTO")
-    MatchDTO toMatchDTO(MatchEntity entity);
+    MatchDTO mapEntityToDto(MatchEntity entity);
+
+    /**
+     * Same as {@link #mapEntityToDto} but omits main criterion / odds. Only used from
+     * {@link MatchDtoAssembler} for non-derived rows when markets should be stripped.
+     */
+    @Mapping(source = "officialMatch.id", target = "officialMatchId")
+    @Mapping(target = "mainCriterion", ignore = true)
+    MatchDTO mapEntityOmittingMainCriterion(MatchEntity entity);
 
     @Mapping(target = "reservedLiability", ignore = true)
     @Mapping(target = "maxReservedLiability", ignore = true)

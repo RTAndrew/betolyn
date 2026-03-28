@@ -101,9 +101,7 @@ const MatchSettings = () => {
             suffixIcon={<Switch value={autoEnd} onChange={setAutoEnd} />}
           />
 
-          <Settings.ItemGroup title="Markets">
-            <MatchSettingsCriteriaList matchId={match.id} />
-          </Settings.ItemGroup>
+          <MatchSettingsCriteriaList matchId={match.id} />
         </SafeHorizontalView>
       </ScreenWrapper>
     </MatchBottomSheetProvider>

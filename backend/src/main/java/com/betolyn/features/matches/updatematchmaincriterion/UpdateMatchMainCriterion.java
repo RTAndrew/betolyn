@@ -2,7 +2,7 @@ package com.betolyn.features.matches.updatematchmaincriterion;
 
 import com.betolyn.features.matches.MatchApiPaths;
 import com.betolyn.features.matches.MatchDTO;
-import com.betolyn.features.matches.MatchMapper;
+import com.betolyn.features.matches.MatchDtoAssembler;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UpdateMatchMainCriterion {
     private final UpdateMatchMainCriterionUC updateMatchMainCriterionUC;
-    private final MatchMapper matchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
 
     @PutMapping
     public ResponseEntity<ApiResponse<MatchDTO>> updateMainCriterion(
@@ -26,6 +26,6 @@ public class UpdateMatchMainCriterion {
             @RequestBody @Valid UpdateMatchMainCriterionRequestDTO requestDTO) {
         var match = updateMatchMainCriterionUC
                 .execute(new UpdateMatchMainCriterionParam(matchId, requestDTO.criterionId()));
-        return ResponseEntity.ok(ApiResponse.success("Main criterion updated", matchMapper.toMatchDTO(match)));
+        return ResponseEntity.ok(ApiResponse.success("Main criterion updated", matchDtoAssembler.forMatchDetail(match)));
     }
 }

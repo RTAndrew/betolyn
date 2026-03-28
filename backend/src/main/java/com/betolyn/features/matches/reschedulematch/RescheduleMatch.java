@@ -2,7 +2,7 @@ package com.betolyn.features.matches.reschedulematch;
 
 import com.betolyn.features.matches.MatchApiPaths;
 import com.betolyn.features.matches.MatchDTO;
-import com.betolyn.features.matches.MatchMapper;
+import com.betolyn.features.matches.MatchDtoAssembler;
 import com.betolyn.utils.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RescheduleMatch {
     private final RescheduleMatchUC rescheduleMatchUC;
-    private final MatchMapper matchMapper;
+    private final MatchDtoAssembler matchDtoAssembler;
 
     @PatchMapping
     public ResponseEntity<ApiResponse<MatchDTO>> rescheduleMatch(
@@ -26,6 +26,6 @@ public class RescheduleMatch {
             @RequestBody @Valid RescheduleMatchRequestDTO requestDTO) {
 
         var match = rescheduleMatchUC.execute(new RescheduleMatchParam(matchId, requestDTO));
-        return ResponseEntity.ok(ApiResponse.success("Match rescheduled", matchMapper.toMatchDTO(match)));
+        return ResponseEntity.ok(ApiResponse.success("Match rescheduled", matchDtoAssembler.forMatchDetail(match)));
     }
 }

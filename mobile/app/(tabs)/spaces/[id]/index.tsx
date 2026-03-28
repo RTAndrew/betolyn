@@ -1,23 +1,32 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
+import BetCard from '@/components/bet-card';
 import { Button } from '@/components/button';
 import EmptyState from '@/components/empty-state';
 import { Add } from '@/components/icons';
+import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Skeleton } from '@/components/skeleton';
 import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
 import { colors } from '@/constants/colors';
 import { mockData } from '@/mock/matches';
-import { useGetSpaceById } from '@/services';
+import { useGetSpaceById, useGetSpaceMatches } from '@/services';
+import { IMatch } from '@/types';
 
 const SpaceId = () => {
   const { id } = useLocalSearchParams();
-  const { data, error, isPending } = useGetSpaceById({ spaceId: id as string });
+  const spaceId = id as string;
+  const { data, error, isPending } = useGetSpaceById({ spaceId });
+  const {
+    data: matchesRes,
+    error: matchesError,
+    isPending: matchesPending,
+  } = useGetSpaceMatches({ spaceId, queryOptions: { enabled: !!spaceId } });
 
   if (isPending) {
     return (
@@ -38,101 +47,119 @@ const SpaceId = () => {
   }
 
   const space = data?.data;
+  const matches = matchesRes?.data ?? [];
 
-  return (
-    <ScrollView
-      stickyHeaderIndices={[0]}
-      stickyHeaderHiddenOnScroll
-      contentContainerStyle={{ flexGrow: 1 }}
+  const renderHeader = () => (
+    <ScreenHeader
+      type="back"
+      iconContainerColor={colors.greyMedium}
+      onClose={() => {
+        router.back();
+      }}
+      style={{
+        backgroundColor: colors.greyMedium,
+      }}
+      title={
+        <TouchableOpacity
+          style={styles.headerLeft}
+          onPress={() => router.push(`/(tabs)/spaces/${id}/info`)}
+        >
+          <View style={styles.imageContainer}>
+            <Image
+              resizeMode="contain"
+              source={{ uri: mockData.channels[0].image_url }}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </View>
+
+          <Text style={styles.headerTitle}>{space.name}</Text>
+        </TouchableOpacity>
+      }
     >
-      <ScreenHeader
-        type="back"
-        iconContainerColor={colors.greyMedium}
-        onClose={() => {
-          router.back();
-        }}
-        style={{
-          backgroundColor: colors.greyMedium,
-        }}
-        title={
-          <TouchableOpacity
-            style={styles.headerLeft}
-            onPress={() => router.push(`/(tabs)/spaces/${id}/info`)}
-          >
-            <View style={styles.imageContainer}>
-              <Image
-                resizeMode="contain"
-                source={{ uri: mockData.channels[0].image_url }}
-                style={{ width: '100%', height: '100%' }}
-              />
-            </View>
+      <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
+        <ScreenHeader.Icon onPress={() => {}}>
+          <AntDesign name="message" size={24} color="white" />
+        </ScreenHeader.Icon>
 
-            <Text style={styles.headerTitle}>{space.name}</Text>
-          </TouchableOpacity>
-        }
-      >
-        <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
-          <ScreenHeader.Icon onPress={() => {}}>
-            <AntDesign name="message" size={24} color="white" />
-          </ScreenHeader.Icon>
+        <ScreenHeader.Icon
+          onPress={() =>
+            SheetManager.show('createEventOptionSelection', {
+              payload: {
+                spaceId: space.id,
+              },
+            })
+          }
+        >
+          <Add width={32} height={32} />
+        </ScreenHeader.Icon>
+      </ScreenHeader.QuickActions>
+    </ScreenHeader>
+  );
 
-          <ScreenHeader.Icon
-            onPress={() =>
-              SheetManager.show('createEventOptionSelection', {
-                payload: {
-                  spaceId: space.id,
-                },
-              })
-            }
-          >
-            <Add width={32} height={32} />
-          </ScreenHeader.Icon>
-        </ScreenHeader.QuickActions>
-      </ScreenHeader>
-
-      <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
+  const renderEmpty = () => {
+    if (matchesPending) {
+      return (
+        <Skeleton.Group count={5} gap={0}>
+          <MatchCardSkeleton />
+        </Skeleton.Group>
+      );
+    }
+    if (matchesError) {
+      return (
         <EmptyState.NoSearch
           center
-          title="No event has been created yet"
-          description="Create the first event and turn your community more engaged"
+          title="Could not load events."
+          description="Please try again later."
+        />
+      );
+    }
+    return (
+      <EmptyState.NoSearch
+        center
+        title="No event has been created yet"
+        description="Create the first event and turn your community more engaged"
+      >
+        <Button.Root
+          onPress={() =>
+            SheetManager.show('createEventOptionSelection', {
+              payload: {
+                spaceId: space.id,
+              },
+            })
+          }
         >
-          <Button.Root
-            onPress={() =>
-              SheetManager.show('createEventOptionSelection', {
-                payload: {
-                  spaceId: space.id,
-                },
-              })
-            }
-          >
-            Create event
-          </Button.Root>
-        </EmptyState.NoSearch>
-      </View>
-    </ScrollView>
+          Create event
+        </Button.Root>
+      </EmptyState.NoSearch>
+    );
+  };
+
+  const renderItem = ({ item }: { item: IMatch }) => (
+    <View style={{ marginHorizontal: 6 }}>
+      <SafeHorizontalView>
+        <BetCard match={item} showOdds={false} disableControls />
+      </SafeHorizontalView>
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={matches}
+      keyExtractor={(item) => item.id}
+      ListHeaderComponent={renderHeader}
+      ListEmptyComponent={renderEmpty}
+      renderItem={renderItem}
+      contentContainerStyle={styles.listContent}
+      style={{ backgroundColor: colors.greyLight, flex: 1 }}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    backgroundColor: colors.greyMedium,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: 'transparent',
-  },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
   },
   imageContainer: {
     width: 24,
@@ -142,6 +169,10 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: 'white',
+  },
+  listContent: {
+    flexGrow: 1,
+    paddingBottom: 120,
   },
 });
 
