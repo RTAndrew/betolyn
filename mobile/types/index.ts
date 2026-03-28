@@ -19,6 +19,8 @@ export interface ISpace {
   id: string;
   name: string;
   description?: string | null;
+  createdAt: string;
+  updatedAt: string;
   createdBy: IUserPublic;
 }
 
@@ -96,6 +98,14 @@ export enum CriterionStatusEnum {
   EXPIRED = 'EXPIRED',
   DRAFT = 'DRAFT',
 }
+
+/** Space "create event" wizard route / flow: pick existing match vs custom teams. */
+export enum ESpaceCreateEventType {
+  AUTO = 'auto',
+  MANUAL = 'manual',
+}
+
+export type TSpaceCreateEventType = `${ESpaceCreateEventType}`;
 
 export interface IOdd {
   id: string;

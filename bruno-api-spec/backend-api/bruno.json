@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "Bet Olyn",
+  "name": "Backend API (BetOlyn)",
   "type": "collection",
   "ignore": [
     "node_modules",

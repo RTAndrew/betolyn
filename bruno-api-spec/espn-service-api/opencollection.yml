@@ -1,7 +1,7 @@
 opencollection: 1.0.0
 
 info:
-  name: ESPN Service API
+  name: ESPN API (BetOlyn)
 bundled: false
 extensions:
   bruno:

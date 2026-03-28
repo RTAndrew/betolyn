@@ -2,6 +2,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 import { Button } from '@/components/button';
 import EmptyState from '@/components/empty-state';
@@ -75,7 +76,15 @@ const SpaceId = () => {
             <AntDesign name="message" size={24} color="white" />
           </ScreenHeader.Icon>
 
-          <ScreenHeader.Icon onPress={() => router.push('/(modals)/spaces/create')}>
+          <ScreenHeader.Icon
+            onPress={() =>
+              SheetManager.show('createEventOptionSelection', {
+                payload: {
+                  spaceId: space.id,
+                },
+              })
+            }
+          >
             <Add width={32} height={32} />
           </ScreenHeader.Icon>
         </ScreenHeader.QuickActions>
@@ -84,10 +93,20 @@ const SpaceId = () => {
       <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
         <EmptyState.NoSearch
           center
-          title="No events has been created yet"
-          description="Come later to create one"
+          title="No event has been created yet"
+          description="Create the first event and turn your community more engaged"
         >
-          <Button.Root>Create event</Button.Root>
+          <Button.Root
+            onPress={() =>
+              SheetManager.show('createEventOptionSelection', {
+                payload: {
+                  spaceId: space.id,
+                },
+              })
+            }
+          >
+            Create event
+          </Button.Root>
         </EmptyState.NoSearch>
       </View>
     </ScrollView>

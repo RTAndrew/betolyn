@@ -9,6 +9,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTimeElapsed } from '@/hooks/use-time-elapsed-messages';
 import { ApiError } from '@/utils/http/api-error';
+import { withMinimumLoadingDuration } from '@/utils/with-minimum-delay';
 
 import BottomSheet from '..';
 
@@ -44,24 +45,18 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   const handlePromise = async () => {
     setIsProcessing(true);
     try {
-      const startTime = performance.now();
-      // 1. Execute the promise immediately
-      const result = await payload?.fnPromise?.();
-      setFnResult(result);
-      const endTime = performance.now();
-      const duration = endTime - startTime;
+      const workResult = await withMinimumLoadingDuration(() =>
+        Promise.resolve(payload?.fnPromise?.())
+      );
 
-      // 2. fake a delay to simulate the processing
-      // to show the loading state longer (perceived security)
-      if (duration < 1500)
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(result);
-          }, 1500);
-        });
-
-      setIsSuccess(true);
+      if (workResult.status === 'fulfilled') {
+        setFnResult(workResult.value);
+        setIsSuccess(true);
+      } else {
+        setError(workResult.reason);
+      }
     } catch (err) {
+      // for errors that are not caught by the withMinimumLoadingDuration (synchronous errors)
       setError(err);
       // TODO: show API error to the user, perhaps by injecting the error
       // formmatter through the props
@@ -82,7 +77,14 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   const { loadingTitle, successTitle, successMessage, errorTitle } = payload ?? {};
 
   return (
-    <BottomSheet containerStyle={styles.container} drawUnderStatusBar={true} gestureEnabled={false}>
+    <BottomSheet
+      containerStyle={StyleSheet.flatten([
+        styles.container,
+        isSuccess && { backgroundColor: colors.greyDark },
+      ])}
+      drawUnderStatusBar={true}
+      gestureEnabled={false}
+    >
       <ScreenHeader
         type="close"
         safeArea={false}

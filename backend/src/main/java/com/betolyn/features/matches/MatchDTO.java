@@ -2,12 +2,14 @@ package com.betolyn.features.matches;
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.features.user.UserDTO;
+import com.betolyn.shared.money.BetMoney;
+
 import lombok.Data;
 
 @Data
 public class MatchDTO {
     private String id;
-
+    private String spaceId;
     private TeamEntity homeTeam;
     private String homeTeamName;
     private int homeTeamScore;
@@ -18,10 +20,14 @@ public class MatchDTO {
 
     private CriterionDTO mainCriterion;
 
+
     private String startTime;
     private String endTime;
     private UserDTO createdBy;
     private UserDTO updatedBy;
+
+    private BetMoney reservedLiability;
+    private BetMoney maxReservedLiability;
 
     private MatchStatusEnum status = MatchStatusEnum.SCHEDULED;
 }

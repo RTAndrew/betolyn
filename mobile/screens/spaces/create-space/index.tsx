@@ -3,12 +3,13 @@ import React from 'react';
 import { IWizardStep } from '@/components/wizard/use-wizard';
 import { WizardScreen } from '@/components/wizard/wizard-screen';
 
+import type { ICreateSpaceState } from './utils';
+
 import { InvitePeople } from './invite-people';
 import { SpaceConfiguration } from './space-configuration';
-import { CreateSpaceWizardStepId } from './utils';
 
 const CreateSpaceScreen = () => {
-  const steps: IWizardStep<CreateSpaceWizardStepId>[] = [
+  const steps: IWizardStep<ICreateSpaceState>[] = [
     {
       id: 'invitation',
       title: 'Invite People',
@@ -20,12 +21,12 @@ const CreateSpaceScreen = () => {
       id: 'configuration',
       title: 'Configuration',
       component: SpaceConfiguration,
-      defaultData: { name: undefined, description: undefined },
+      defaultData: { name: '', description: '' },
       defaultNextButtonProps: { label: 'Create Space' },
     },
   ];
 
-  return <WizardScreen steps={steps} activeStep={1} />;
+  return <WizardScreen steps={steps} activeStep={0} />;
 };
 
 export default CreateSpaceScreen;

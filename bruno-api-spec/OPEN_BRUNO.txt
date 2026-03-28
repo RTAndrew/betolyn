@@ -1,0 +1,20 @@
+Bruno (this repo)
+
+Why two collections: Backend API (BetOlyn) uses .bru + bruno.json; ESPN API (BetOlyn) uses OpenCollection YAML (.yml).
+Bruno does not allow mixing those formats in a single collection. Do not add bruno.json at
+bruno-api-spec/ — that breaks ESPN (folders show, YAML requests do not).
+
+What works reliably — open each collection on its own (two entries in the sidebar):
+
+  - Backend API (BetOlyn): folder bruno-api-spec/backend-api
+  - ESPN API (BetOlyn):    folder bruno-api-spec/espn-service-api
+
+Use File → Open Collection (or your Bruno version’s equivalent) for each path above.
+
+Optional: bruno-api-spec/workspace.yml lists both paths for File → Open Workspace. That
+does not always resolve both collections after import or across versions; if you only see
+one collection or empty folders, fall back to opening backend-api and espn-service-api
+separately — that is expected and fine.
+
+If you see "no .yml found", you opened a folder that had neither opencollection.yml nor
+bruno.json at that level. Open one of the two paths above, not only bruno-api-spec/ by itself.

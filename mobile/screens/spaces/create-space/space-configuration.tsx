@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
@@ -7,6 +7,7 @@ import TextInput from '@/components/forms/text-input';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Settings } from '@/components/settings';
 import { ThemedText } from '@/components/ThemedText';
+import { useWizardPrimaryAction } from '@/components/wizard/use-wizard';
 import { colors } from '@/constants/colors';
 import { useCreateSpace } from '@/services';
 import { ApiFnReturnType } from '@/utils/react-query';
@@ -34,11 +35,6 @@ export const SpaceConfiguration = ({
     description: data?.description ?? '',
   };
 
-  // keep a reference to the form data to be accessed by the handleCreateSpace function
-  // fixing the stale closure when the function is passed to the setNext (useEffect)
-  const formRef = useRef(formData);
-  formRef.current = formData;
-
   const [errors, setErrors] = useState<FormErrors>({});
 
   const { mutateAsync: createSpace } = useCreateSpace();
@@ -54,11 +50,10 @@ export const SpaceConfiguration = ({
     }
   };
 
-  const handleCreateSpace = async () => {
-    const current = formRef.current;
+  const handleCreateSpace = useCallback(async () => {
     const newErrors: FormErrors = {};
-    if (!current.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.name.trim()) {
+      newErrors.name = 'Please, enter a name for your space';
     }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -88,21 +83,23 @@ export const SpaceConfiguration = ({
         fnPromise: () =>
           createSpace({
             variables: {
-              name: current.name,
-              description: current.description,
+              name: formData.name,
+              description: formData.description,
               userIds: members.map((m) => m.id),
             },
           }),
       },
     });
-  };
+  }, [createSpace, formData.description, formData.name, members]);
+
+  useWizardPrimaryAction(() => {
+    void handleCreateSpace();
+  });
 
   useEffect(() => {
-    console.log('rerender');
     setNext?.({
       label: 'Create Space',
       variant: 'solid',
-      onPress: handleCreateSpace,
     });
   }, [setNext]);
 

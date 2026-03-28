@@ -4,18 +4,6 @@ import React from 'react';
 const ModalsLayout = () => {
   return (
     <Stack>
-      <Stack.Screen
-        name="channels/[id]/create-event/index"
-        options={{
-          headerShown: false,
-          presentation: 'containedModal',
-          animation: 'slide_from_bottom',
-          sheetElevation: 24,
-          sheetGrabberVisible: true,
-          gestureDirection: 'vertical',
-          sheetAllowedDetents: [50],
-        }}
-      />
       <Stack.Screen name="me" options={{ headerShown: false }} />
       <Stack.Screen name="spaces" options={{ headerShown: false }} />
       <Stack.Screen name="matches" options={{ headerShown: false }} />

@@ -58,6 +58,8 @@ const teamStyles = StyleSheet.create({
 
 interface BetCardProps {
   match: IMatch;
+  showOdds?: boolean;
+  disableControls?: boolean;
   onPress?: (match: IMatch) => void;
 }
 
@@ -69,7 +71,12 @@ const BetCard = (props: BetCardProps) => {
   );
 };
 
-const BetCardChild = ({ match, onPress }: BetCardProps) => {
+const BetCardChild = ({
+  match,
+  onPress,
+  disableControls = false,
+  showOdds = true,
+}: BetCardProps) => {
   const { pushSheet } = useMatchBottomSheet();
 
   const handlePress = () => {
@@ -86,7 +93,7 @@ const BetCardChild = ({ match, onPress }: BetCardProps) => {
         delayLongPress={200}
         onPress={handlePress}
         style={styles.container}
-        onLongPress={() => pushSheet({ type: 'match-action' })}
+        onLongPress={() => !disableControls && pushSheet({ type: 'match-action' })}
       >
         <View style={styles.content}>
           <View style={styles.teamBody}>
@@ -109,11 +116,18 @@ const BetCardChild = ({ match, onPress }: BetCardProps) => {
             </View>
           </View>
 
-          <View style={styles.oddsWrapper}>
-            {(match.mainCriterion?.odds ?? []).map((odd) => (
-              <OddButton showName={false} key={odd.id} odd={odd} criterion={match.mainCriterion!} />
-            ))}
-          </View>
+          {showOdds && (
+            <View style={styles.oddsWrapper}>
+              {(match.mainCriterion?.odds ?? []).map((odd) => (
+                <OddButton
+                  showName={false}
+                  key={odd.id}
+                  odd={odd}
+                  criterion={match.mainCriterion!}
+                />
+              ))}
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </>

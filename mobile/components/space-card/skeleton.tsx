@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Skeleton } from '@/components/skeleton';
+import { colors } from '@/constants/colors';
 
 export default function SpaceCardSkeleton() {
   return (
@@ -24,12 +25,14 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 10,
     height: 16,
+    borderBottomWidth: 0.25,
+    borderColor: colors.greyLighter,
   },
   title: {
     flex: 1,

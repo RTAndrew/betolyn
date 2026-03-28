@@ -65,10 +65,11 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingVertical: 8,
-    backgroundColor: colors.greyLight,
+    backgroundColor: colors.greyMedium,
   },
   indicator: {
     width: 45,
+    backgroundColor: colors.greyLight,
   },
   title: {
     fontSize: 22,

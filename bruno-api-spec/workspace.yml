@@ -1,0 +1,13 @@
+# Open Workspace may not attach both collections in every Bruno version; OPEN_BRUNO.txt describes the reliable two-folder flow.
+opencollection: 1.0.0
+info:
+  name: Betolyn API Specs
+  type: workspace
+
+collections:
+  - name: Backend API (BetOlyn)
+    path: backend-api
+  - name: ESPN API (BetOlyn)
+    path: espn-service-api
+
+specs:

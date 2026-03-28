@@ -1,38 +1,49 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 import { Checkbox, View } from 'react-native-ui-lib';
 
 import { Button } from '@/components/button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { ESpaceCreateEventType } from '@/screens/spaces/[id]/create-event/utils';
 import { hexToRgba } from '@/utils/hex-rgba';
 
 import BottomSheet from '..';
 
-const options: { type: 'auto' | 'manual'; label: string; description: string }[] = [
+const options: { type: `${ESpaceCreateEventType}`; label: string; description: string }[] = [
   {
     type: 'auto',
     label: 'Use an existing event',
     description:
-      'Pick a real event. The platform handles teams, scores, and updates automatically.',
+      'Choose a real event and set the rules on top it. The platform will handle teams, scores, and updates automatically.',
   },
   {
     type: 'manual',
     label: 'Create a custom event',
-    description: 'Set your own teams, scores, and rules. You control how it runs.',
+    description: 'Set your own teams, scores, and rules. You control when and how it runs.',
   },
 ];
 
-const CreateEventOptionGC = () => {
-  const [selectedOption, setSelectedOption] = useState<'auto' | 'manual'>('auto');
+const CreateEventOptionGS = ({ payload }: SheetProps<'createEventOptionSelection'>) => {
+  const spaceId = payload?.spaceId;
+  const [selectedOption, setSelectedOption] = useState<`${ESpaceCreateEventType}`>(
+    ESpaceCreateEventType.AUTO
+  );
 
-  const handleOptionChange = (type: 'auto' | 'manual') => {
+  const handleOptionChange = (type: `${ESpaceCreateEventType}`) => {
     setSelectedOption(type);
   };
 
+  const handleCreateEvent = async () => {
+    SheetManager.hide('createEventOptionSelection');
+    router.push(`/(modals)/spaces/${spaceId}/create-event/${selectedOption}`);
+  };
+
   return (
-    <BottomSheet containerStyle={styles.container}>
+    <BottomSheet>
       <SafeHorizontalView>
         <ThemedText type="title">How do you want to create this event?</ThemedText>
 
@@ -52,27 +63,25 @@ const CreateEventOptionGC = () => {
               </View>
 
               <Checkbox
-                borderRadius={100}
                 iconColor="white"
-                color={selectedOption === option.type ? colors.primary : '#8791A5'}
+                borderRadius={100}
                 value={selectedOption === option.type}
+                color={selectedOption === option.type ? colors.primary : '#8791A5'}
                 onValueChange={() => handleOptionChange(option.type)}
               />
             </Pressable>
           ))}
         </View>
 
-        <Button.Root style={styles.button}> Create Match </Button.Root>
+        <Button.Root onPress={() => handleCreateEvent()} style={styles.button}>
+          Create Match
+        </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.greyDark,
-    // paddingTop: 24,
-  },
   optionList: {
     gap: 16,
     flexDirection: 'column',
@@ -108,4 +117,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-export default CreateEventOptionGC;
+export default CreateEventOptionGS;

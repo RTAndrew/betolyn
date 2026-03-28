@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { ButtonProps } from '../button';
 
@@ -7,102 +7,212 @@ export interface IWizardButtonProps extends ButtonProps {
   label?: string;
 }
 
-type Keys = string;
-type TAllData<TKeys extends Keys, TData> = {
-  [key in TKeys]: TData | undefined;
-};
+/** Aggregated wizard state: optional values per key of `TState`. */
+export type WizardAllData<TState extends object> = Partial<TState>;
 
-export interface IWizardStep<TKeys = Keys, TData = unknown> {
-  id: TKeys;
+export interface IWizardStep<TState extends object = object> {
+  id: Extract<keyof TState, string>;
   title: string;
-  defaultData?: TData;
+  canSkip?: boolean;
+  defaultData?: unknown;
+  /** If omitted, the step is always shown for the current `allData`. */
+  visible?: (allData: WizardAllData<TState>) => boolean;
   defaultNextButtonProps?: IWizardButtonProps;
   defaultPreviousButtonProps?: IWizardButtonProps;
   setPrevious?: (buttonProps: IWizardButtonProps) => void;
-
-  // using unknown does not work as expected
-  // so, using any here so concrete screens can register safely
+  /** Step components narrow `data` / `allData`; keep `any` so concrete screens stay assignable. */
   component: React.ComponentType<WizardComponentProps<any, any>>;
 }
 
-type TWizardAction = { toStep?: number };
-
-export interface WizardComponentProps<TData = unknown, TAllData = unknown> {
+export interface WizardComponentProps<TData = unknown, TAll extends object = object> {
   data: TData;
-  allData: TAllData;
-  onPrevious: () => void;
+  allData: TAll;
+  goPrevious: () => void;
   onChange: (data: TData) => void;
-  onNext: (payload?: TWizardAction) => void;
+  goNext: () => void;
+  /** Zero-based index into the full `steps` array. No-op if out of range or target step is not visible. */
+  jumpTo: (stepIndex: number) => void;
   setNext?: (buttonProps: IWizardButtonProps) => void;
   setPrevious?: (buttonProps: IWizardButtonProps) => void;
 }
 
-interface IWizardProps<TKeys extends Keys, TData = unknown> {
-  steps: IWizardStep<TKeys, TData>[];
+export function isStepVisible<TState extends object>(
+  step: IWizardStep<TState>,
+  allData: WizardAllData<TState>
+): boolean {
+  if (!step.visible) return true;
+  return step.visible(allData);
+}
+
+function findFirstVisibleIndex<TState extends object>(
+  steps: IWizardStep<TState>[],
+  allData: WizardAllData<TState>
+): number {
+  for (let i = 0; i < steps.length; i++) {
+    if (isStepVisible(steps[i], allData)) return i;
+  }
+  return 0;
+}
+
+function findNextVisibleIndex<TState extends object>(
+  steps: IWizardStep<TState>[],
+  fromIndex: number,
+  allData: WizardAllData<TState>
+): number | null {
+  for (let i = fromIndex + 1; i < steps.length; i++) {
+    if (isStepVisible(steps[i], allData)) return i;
+  }
+  return null;
+}
+
+function findPrevVisibleIndex<TState extends object>(
+  steps: IWizardStep<TState>[],
+  fromIndex: number,
+  allData: WizardAllData<TState>
+): number | null {
+  for (let i = fromIndex - 1; i >= 0; i--) {
+    if (isStepVisible(steps[i], allData)) return i;
+  }
+  return null;
+}
+
+interface IWizardProps<TState extends object> {
+  steps: IWizardStep<TState>[];
+  /** Zero-based index into the full `steps` array; defaults to the first visible step. */
   activeStep?: number;
 }
 
-export const useWizard = <TKeys extends Keys, TData = unknown>({
+export const useWizard = <TState extends object = object>({
   steps,
   activeStep: activeStepProp,
-}: IWizardProps<TKeys, TData>) => {
-  const [activeStep, setActiveStep] = useState(activeStepProp ?? 1);
-  const [allData, setAllData] = useState(
-    steps.reduce(
-      (acc, step) => {
-        acc[step.id as TKeys] = step.defaultData ?? undefined;
+}: IWizardProps<TState>) => {
+  const initialAllData = useMemo(
+    () =>
+      steps.reduce((acc, step) => {
+        (acc as Record<string, unknown>)[step.id] = step.defaultData ?? undefined;
         return acc;
-      },
-      {} as TAllData<TKeys, TData>
-    )
+      }, {} as WizardAllData<TState>),
+    [steps]
   );
 
-  const handleNext = useCallback(
-    (payload?: TWizardAction) => {
-      if (activeStep === steps.length) return;
-      const nextStep = payload?.toStep ?? activeStep + 1;
-      setActiveStep(nextStep);
-      return steps[nextStep - 1];
+  const [activeStepIndex, setActiveStepIndex] = useState(() => {
+    if (activeStepProp !== undefined) {
+      const idx = Math.min(Math.max(0, activeStepProp), Math.max(0, steps.length - 1));
+      if (steps[idx] && isStepVisible(steps[idx], initialAllData)) return idx;
+      return findFirstVisibleIndex(steps, initialAllData);
+    }
+    return findFirstVisibleIndex(steps, initialAllData);
+  });
+
+  const [allData, setAllData] = useState<WizardAllData<TState>>(initialAllData);
+
+  const isDirty = useMemo(
+    () => JSON.stringify(allData) !== JSON.stringify(initialAllData),
+    [allData, initialAllData]
+  );
+
+  // If the active step becomes non-visible after `allData` changes, move to the next visible
+  // step forward, or if none, the previous visible step.
+  useEffect(() => {
+    if (steps.length === 0) return;
+    setActiveStepIndex((idx) => {
+      const i = Math.min(idx, steps.length - 1);
+      if (steps[i] && isStepVisible(steps[i], allData)) return i;
+
+      const next = findNextVisibleIndex(steps, i, allData);
+      if (next !== null) return next;
+      const prev = findPrevVisibleIndex(steps, i, allData);
+      if (prev !== null) return prev;
+      return i;
+    });
+  }, [allData, steps]);
+
+  const goNext = useCallback(() => {
+    if (steps.length === 0) return undefined;
+    const nextIdx = findNextVisibleIndex(steps, activeStepIndex, allData);
+    if (nextIdx === null) return undefined;
+    setActiveStepIndex(nextIdx);
+    return steps[nextIdx];
+  }, [activeStepIndex, allData, steps]);
+
+  const goPrevious = useCallback(() => {
+    if (steps.length === 0) return undefined;
+    const prevIdx = findPrevVisibleIndex(steps, activeStepIndex, allData);
+    if (prevIdx === null) return undefined;
+    setActiveStepIndex(prevIdx);
+    return steps[prevIdx];
+  }, [activeStepIndex, allData, steps]);
+
+  const jumpTo = useCallback(
+    (stepIndex: number) => {
+      if (steps.length === 0) return undefined;
+      if (stepIndex < 0 || stepIndex >= steps.length) return undefined;
+      if (!isStepVisible(steps[stepIndex], allData)) return undefined;
+      setActiveStepIndex(stepIndex);
+      return steps[stepIndex];
     },
-    [activeStep, steps]
+    [allData, steps]
   );
-
-  const handlePrevious = useCallback(() => {
-    if (activeStep === 1) return;
-    const previousStep = activeStep - 1;
-
-    setActiveStep(previousStep);
-    return steps[previousStep - 1];
-  }, [activeStep, steps]);
 
   const handleChange = useCallback(
-    (data: any) => {
-      const stepId = steps[activeStep - 1]?.id;
+    (data: unknown) => {
+      const stepId = steps[activeStepIndex]?.id;
       if (stepId == null) return;
-      setAllData((prev) => ({ ...prev, [stepId]: data }));
+      setAllData(
+        (prev) =>
+          ({
+            ...prev,
+            [stepId]: data,
+          }) as WizardAllData<TState>
+      );
     },
-    [activeStep, steps]
+    [activeStepIndex, steps]
   );
 
-  const activeStepComponentProps: WizardComponentProps<any, any> = {
+  const activeStepMeta = steps[activeStepIndex];
+  const activeStepComponentProps: WizardComponentProps<unknown, WizardAllData<TState>> = {
     allData,
-    onNext: handleNext,
+    goNext,
     onChange: handleChange,
-    onPrevious: handlePrevious,
-    data: allData[steps[activeStep - 1].id as TKeys],
+    goPrevious,
+    jumpTo,
+    data: activeStepMeta ? (allData[activeStepMeta.id] as unknown) : undefined,
   };
 
-  const activeStepComponent = useMemo(() => steps[activeStep - 1], [activeStep, steps]);
+  const activeStepComponent = useMemo(() => steps[activeStepIndex], [activeStepIndex, steps]);
 
   return {
     allData,
-
-    onNext: handleNext,
-    onPrevious: handlePrevious,
-
-    activeIndex: activeStep,
+    /** True when any step data differs from the initial wizard snapshot. */
+    isDirty,
+    goNext,
+    goPrevious,
+    jumpTo,
+    /** Zero-based index into the full `steps` array. */
+    activeStepIndex,
+    /** Human-facing step number (1-based) for the current slot in the full list. */
+    activeStepNumber: activeStepIndex + 1,
     stepsCount: steps.length,
     activeStep: activeStepComponent,
     activeStepProps: activeStepComponentProps,
   };
 };
+
+export const WizardPrimaryActionContext = createContext<React.MutableRefObject<
+  (() => void) | null
+> | null>(null);
+
+/**
+ * Registers the latest primary footer action for the active step (validate + advance, submit, etc.).
+ * Assigns during render so the parent footer always invokes the most recent handler without
+ * re-running `setNext` on every `data` change.
+ *
+ * `WizardScreen` reads this from `WizardPrimaryActionContext` (a ref) on the Next button:
+ * if `setNext` did not supply `onPress`, the footer calls this handler before falling back to `goNext`.
+ */
+export function useWizardPrimaryAction(handler: () => void) {
+  const ref = useContext(WizardPrimaryActionContext);
+  if (ref) {
+    ref.current = handler;
+  }
+}

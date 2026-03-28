@@ -14,6 +14,7 @@ import EmptyState from '@/components/empty-state';
 import TextInput from '@/components/forms/text-input';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
+import { useWizardPrimaryAction } from '@/components/wizard/use-wizard';
 import { colors } from '@/constants/colors';
 import { useGetAllUsers } from '@/services/users/user-query';
 import { IUser, IUserPublic } from '@/types';
@@ -31,7 +32,7 @@ function toPublicUser(user: IUser): IUserPublic {
   return { id: user.id, email: user.email, username: user.username };
 }
 
-export const InvitePeople = ({ setNext, onChange, allData }: InvitePeopleProps) => {
+export const InvitePeople = ({ setNext, onChange, allData, goNext }: InvitePeopleProps) => {
   const [search, setSearch] = useState<string | null>(null);
   const [selectedMembers, setSelectedMembers] = useState(allData?.invitation ?? []);
 
@@ -61,6 +62,8 @@ export const InvitePeople = ({ setNext, onChange, allData }: InvitePeopleProps) 
     setSelectedMembers((prev) => prev.filter((m) => m.id !== userId));
   }, []);
 
+  useWizardPrimaryAction(goNext);
+
   useEffect(() => {
     onChange(selectedMembers ?? []);
 
@@ -68,7 +71,7 @@ export const InvitePeople = ({ setNext, onChange, allData }: InvitePeopleProps) 
       label: selectedMembers.length > 0 ? 'Next' : 'Skip',
       variant: 'solid',
     });
-  }, [selectedMembers]);
+  }, [selectedMembers, onChange, setNext]);
 
   const renderRow = useCallback(
     ({ item }: { item: IUser }) => {

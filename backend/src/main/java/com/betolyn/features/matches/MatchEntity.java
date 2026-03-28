@@ -41,8 +41,13 @@ public class MatchEntity extends AuditableEntity {
     @Column(name = "venue_name", length = 300)
     private String venueName;
 
+    /** Feed-backed matches are official; space-scoped user-created matches are not. */
+    @Column(nullable = false, updatable = false)
     private boolean isOfficial = true;
-    private String channelId;
+
+    /** Set when the match is created in the context of a space (custom event flow). */
+    @Column(updatable = false)
+    private String spaceId;
 
     private String startTime;
     private String endTime;
@@ -80,4 +85,5 @@ public class MatchEntity extends AuditableEntity {
     protected EntityUUID getUUIDPrefix() {
         return new EntityUUID(12, "match");
     }
+
 }

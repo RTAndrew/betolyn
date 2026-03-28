@@ -20,7 +20,7 @@ export default function Spaces() {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <ScrollView>
-          <Skeleton.Group count={7} gap={0}>
+          <Skeleton.Group count={7} gap={12}>
             <SafeHorizontalView>
               <SpaceCard.Skeleton />
             </SafeHorizontalView>
