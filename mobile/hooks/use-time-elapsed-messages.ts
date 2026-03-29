@@ -70,6 +70,7 @@ export function useTimeElapsed({
       if (!hasPassedMaxRef.current && elapsed >= max) {
         hasPassedMaxRef.current = true;
         setTimeElapsed(elapsed);
+        clearInterval(interval);
       }
     }, 200);
 

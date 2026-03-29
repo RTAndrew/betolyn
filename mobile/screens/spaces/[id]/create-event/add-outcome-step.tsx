@@ -132,19 +132,9 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
 };
 
 export const AddOutcomeStep = ({ data, onChange, setNext, goNext }: OutcomesProps) => {
-  const [outcomes, setOutcomes] = useState<Record<string, ISpaceEventOutcome>>(data ?? {});
+  const outcomes = data ?? {};
   const [isFormVisible, setIsFormVisible] = useState<ISpaceEventOutcome | true | null>(null);
   const [listError, setListError] = useState<string | undefined>();
-
-  useEffect(() => {
-    setOutcomes(data ?? {});
-  }, [data]);
-
-  useEffect(() => {
-    if (Object.keys(outcomes).length > 0) {
-      setListError(undefined);
-    }
-  }, [outcomes]);
 
   useWizardPrimaryAction(() => {
     if (Object.keys(outcomes).length === 0) {
@@ -164,12 +154,12 @@ export const AddOutcomeStep = ({ data, onChange, setNext, goNext }: OutcomesProp
   }, [setNext]);
 
   const handleRemoveOutcome = (id: string) => {
-    setOutcomes((prev) => {
-      const next = { ...prev };
-      delete next[id];
-      onChange(next);
-      return next;
-    });
+    const next = { ...outcomes };
+    delete next[id];
+    onChange(next);
+    if (Object.keys(next).length > 0) {
+      setListError(undefined);
+    }
   };
 
   return (
@@ -219,11 +209,9 @@ export const AddOutcomeStep = ({ data, onChange, setNext, goNext }: OutcomesProp
           visible={true}
           onClose={() => setIsFormVisible(null)}
           onSubmit={(submitData) => {
-            setOutcomes((prev) => {
-              const newOutcomes = { ...prev, [submitData.id]: submitData };
-              onChange(newOutcomes);
-              return newOutcomes;
-            });
+            const newOutcomes = { ...outcomes, [submitData.id]: submitData };
+            onChange(newOutcomes);
+            setListError(undefined);
           }}
         />
       )}

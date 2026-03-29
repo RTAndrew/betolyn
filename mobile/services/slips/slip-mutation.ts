@@ -2,10 +2,10 @@ import { useMutation } from '@tanstack/react-query';
 
 import { queryClient } from '@/utils/react-query';
 
-import { IPlaceBetRequestDTO, SlipService } from './slip-service';
+import { IPlaceBetRequest, SlipService } from './slip-service';
 
 interface IPlaceBetVariables {
-  variables: IPlaceBetRequestDTO;
+  variables: IPlaceBetRequest;
 }
 
 export const usePlaceBet = () => {
