@@ -1,7 +1,7 @@
 import { useNavigation, usePreventRemove } from '@react-navigation/native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, BackHandler, StyleSheet, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import ScreenHeader from '@/components/screen-header';
@@ -65,7 +65,7 @@ export const WizardScreen = <TState extends object>({
     activeStep: activeStepProp,
   });
 
-  usePreventRemove(isDirty, ({ data }) => {
+  usePreventRemove(isDirty, function preventAccidentalLeave({ data }) {
     Alert.alert(
       'Discard changes?',
       'You have unsaved changes. If you leave now, they will be lost.',
@@ -135,6 +135,32 @@ export const WizardScreen = <TState extends object>({
       });
     },
     []
+  );
+
+  // Handle hardware back button press to go to the previous step or discard changes
+  useFocusEffect(
+    React.useCallback(
+      function registerHardwareBackHandler() {
+        function handleHardwareBackPress() {
+          if (activeStepIndex > 0) {
+            goPrevious();
+            return true;
+          }
+
+          if (!isDirty) return false;
+        }
+
+        const subscription = BackHandler.addEventListener(
+          'hardwareBackPress',
+          handleHardwareBackPress
+        );
+
+        return function removeHardwareBackHandler() {
+          subscription.remove();
+        };
+      },
+      [isDirty, activeStepIndex]
+    )
   );
 
   const ActiveStepComponent = activeStep.component;
