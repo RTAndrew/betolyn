@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { AsyncProcessingGlobalSheetProps } from '../bottom-sheet/global-sheets/async-processing-gs';
 import { ButtonProps } from '../button';
 
 export interface IWizardButtonProps extends ButtonProps {
@@ -30,6 +31,7 @@ export interface WizardComponentProps<TData = unknown, TAll extends object = obj
   goPrevious: () => void;
   onChange: (data: TData) => void;
   goNext: () => void;
+  runAsyncSubmit?: (props: AsyncProcessingGlobalSheetProps) => void;
   /** Zero-based index into the full `steps` array. No-op if out of range or target step is not visible. */
   jumpTo: (stepIndex: number) => void;
   setNext?: (buttonProps: IWizardButtonProps) => void;
@@ -82,19 +84,22 @@ interface IWizardProps<TState extends object> {
   activeStep?: number;
 }
 
+const getInitialAllData = <TState extends object>(
+  steps: IWizardStep<TState>[]
+): WizardAllData<TState> => {
+  return steps.reduce((acc, step) => {
+    (acc as Record<string, unknown>)[step.id] = step.defaultData ?? undefined;
+    return acc;
+  }, {} as WizardAllData<TState>);
+};
+
 export const useWizard = <TState extends object = object>({
   steps,
   activeStep: activeStepProp,
 }: IWizardProps<TState>) => {
-  const initialAllData = useMemo(
-    () =>
-      steps.reduce((acc, step) => {
-        (acc as Record<string, unknown>)[step.id] = step.defaultData ?? undefined;
-        return acc;
-      }, {} as WizardAllData<TState>),
-    [steps]
-  );
+  const initialAllData = useMemo(() => getInitialAllData(steps), [steps]);
 
+  const [allData, setAllData] = useState<WizardAllData<TState>>(initialAllData);
   const [activeStepIndex, setActiveStepIndex] = useState(() => {
     if (activeStepProp !== undefined) {
       const idx = Math.min(Math.max(0, activeStepProp), Math.max(0, steps.length - 1));
@@ -103,29 +108,6 @@ export const useWizard = <TState extends object = object>({
     }
     return findFirstVisibleIndex(steps, initialAllData);
   });
-
-  const [allData, setAllData] = useState<WizardAllData<TState>>(initialAllData);
-
-  const isDirty = useMemo(
-    () => JSON.stringify(allData) !== JSON.stringify(initialAllData),
-    [allData, initialAllData]
-  );
-
-  // If the active step becomes non-visible after `allData` changes, move to the next visible
-  // step forward, or if none, the previous visible step.
-  useEffect(() => {
-    if (steps.length === 0) return;
-    setActiveStepIndex((idx) => {
-      const i = Math.min(idx, steps.length - 1);
-      if (steps[i] && isStepVisible(steps[i], allData)) return i;
-
-      const next = findNextVisibleIndex(steps, i, allData);
-      if (next !== null) return next;
-      const prev = findPrevVisibleIndex(steps, i, allData);
-      if (prev !== null) return prev;
-      return i;
-    });
-  }, [allData, steps]);
 
   const goNext = useCallback(() => {
     if (steps.length === 0) return undefined;
@@ -179,17 +161,61 @@ export const useWizard = <TState extends object = object>({
     data: activeStepMeta ? (allData[activeStepMeta.id] as unknown) : undefined,
   };
 
+  const resetStepData = useCallback(
+    (stepId: string) => {
+      const step = steps.find((step) => step.id === stepId);
+      if (!step) return;
+
+      setAllData((prev) => ({
+        ...prev,
+        [stepId]: step?.defaultData ?? undefined,
+      }));
+    },
+    [steps]
+  );
+
+  const resetAllData = useCallback(() => {
+    setAllData(getInitialAllData(steps));
+  }, [initialAllData]);
+
   const activeStepComponent = useMemo(() => steps[activeStepIndex], [activeStepIndex, steps]);
+
+  const isDirty = useMemo(
+    () => JSON.stringify(allData) !== JSON.stringify(initialAllData),
+    [allData, initialAllData]
+  );
+
+  // If the active step becomes non-visible after `allData` changes, move to the next visible
+  // step forward, or if none, the previous visible step.
+  useEffect(() => {
+    if (steps.length === 0) return;
+    setActiveStepIndex((idx) => {
+      const i = Math.min(idx, steps.length - 1);
+      if (steps[i] && isStepVisible(steps[i], allData)) return i;
+
+      const next = findNextVisibleIndex(steps, i, allData);
+      if (next !== null) return next;
+      const prev = findPrevVisibleIndex(steps, i, allData);
+      if (prev !== null) return prev;
+      return i;
+    });
+  }, [allData, steps]);
 
   return {
     allData,
+
     /** True when any step data differs from the initial wizard snapshot. */
     isDirty,
     goNext,
     goPrevious,
     jumpTo,
+
+    resetStepData,
+    resetAllData,
+
     /** Zero-based index into the full `steps` array. */
     activeStepIndex,
+
     /** Human-facing step number (1-based) for the current slot in the full list. */
     activeStepNumber: activeStepIndex + 1,
     stepsCount: steps.length,

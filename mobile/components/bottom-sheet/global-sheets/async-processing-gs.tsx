@@ -18,7 +18,7 @@ export interface AsyncProcessingGlobalSheetProps {
   successMessage?: string;
   errorTitle: string;
   loadingTitle: string;
-  onSuccessClose: (fnResult: unknown | null) => void;
+  onSuccessClose: (fnResult?: unknown | null) => void;
   fnPromise: () => Promise<unknown> | void;
 }
 

@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { SheetManager } from 'react-native-actions-sheet';
 
 import type { TSpaceCreateEventType } from '@/types';
 
@@ -15,7 +14,7 @@ import { CreateSpaceEventWizardStepProps } from './utils';
 
 type ReviewProps = CreateSpaceEventWizardStepProps<'review'>;
 
-export const CreateEventReviewStep = ({ allData, setNext }: ReviewProps) => {
+export const CreateEventReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewProps) => {
   const createSpaceMatch = useCreateSpaceMatch();
   const { id: spaceId, eventType } = useLocalSearchParams<{
     id: string;
@@ -40,33 +39,24 @@ export const CreateEventReviewStep = ({ allData, setNext }: ReviewProps) => {
   }, [allData]);
 
   const handleCreate = useCallback(() => {
-    SheetManager.show('asyncProcessing', {
-      payload: {
-        successTitle: 'Event created',
-        loadingTitle: 'Creating event',
-        errorTitle: 'Error creating event',
-        successMessage: 'Your event has been created successfully.',
-        onSuccessClose: () => {
-          SheetManager.hide('asyncProcessing');
-          if (router.canGoBack()) {
-            router.back();
-          } else if (spaceId) {
-            router.replace(`/spaces/${spaceId}`);
-          } else {
-            router.dismissAll();
-          }
-        },
-        fnPromise: async () => {
-          if (!spaceId) {
-            throw new Error('Missing space id.');
-          }
-          const body = SpaceService.buildCreateSpaceMatchRequest(
-            eventType as TSpaceCreateEventType | undefined,
-            allData
-          );
-          const res = await createSpaceMatch.mutateAsync({ spaceId, variables: body });
-          return res.data;
-        },
+    runAsyncSubmit?.({
+      successTitle: 'Event created',
+      loadingTitle: 'Creating event',
+      errorTitle: 'Error creating event',
+      successMessage: 'Your event has been created successfully.',
+      onSuccessClose: () => {
+        router.push(`/spaces/${spaceId}`);
+      },
+      fnPromise: async () => {
+        if (!spaceId) {
+          throw new Error('Missing space id.');
+        }
+        const body = SpaceService.buildCreateSpaceMatchRequest(
+          eventType as TSpaceCreateEventType | undefined,
+          allData
+        );
+        const res = await createSpaceMatch.mutateAsync({ spaceId, variables: body });
+        return res.data;
       },
     });
   }, [allData, spaceId, eventType, createSpaceMatch]);

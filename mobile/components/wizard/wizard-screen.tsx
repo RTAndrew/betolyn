@@ -2,11 +2,13 @@ import { useNavigation, usePreventRemove } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 import ScreenHeader from '@/components/screen-header';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 
+import { AsyncProcessingGlobalSheetProps } from '../bottom-sheet/global-sheets/async-processing-gs';
 import { Button } from '../button';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { SegmentedProgressBar } from '../segmented-progress-bar';
@@ -51,6 +53,7 @@ export const WizardScreen = <TState extends object>({
   const {
     goNext,
     goPrevious,
+    resetAllData,
     jumpTo,
     activeStepIndex,
     activeStepNumber,
@@ -106,6 +109,34 @@ export const WizardScreen = <TState extends object>({
     [jumpTo, syncFooterToStep]
   );
 
+  const runAsyncSubmit = useCallback(
+    ({
+      errorTitle,
+      loadingTitle,
+      successTitle,
+      successMessage,
+      onSuccessClose,
+      fnPromise,
+    }: AsyncProcessingGlobalSheetProps) => {
+      SheetManager.show('asyncProcessing', {
+        payload: {
+          successTitle,
+          loadingTitle,
+          errorTitle,
+          successMessage,
+          fnPromise,
+          onSuccessClose: (fnResult) => {
+            resetAllData(); // reset all data so the the screens can be closed
+            router.dismissTo('/spaces');
+            SheetManager.hide('asyncProcessing');
+            onSuccessClose?.(fnResult);
+          },
+        },
+      });
+    },
+    []
+  );
+
   const ActiveStepComponent = activeStep.component;
 
   const { onPress: nextOnPressFromProps, ...nextButtonRest } = nextButtonProps ?? {};
@@ -147,6 +178,7 @@ export const WizardScreen = <TState extends object>({
             onChange={activeStepComponentProps.onChange}
             data={activeStepComponentProps.data}
             allData={activeStepComponentProps.allData}
+            runAsyncSubmit={runAsyncSubmit}
             setNext={setNextButtonProps}
             setPrevious={setPreviousButtonProps}
             goPrevious={handleGoPrevious}

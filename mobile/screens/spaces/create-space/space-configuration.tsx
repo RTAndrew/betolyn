@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
-import { SheetManager } from 'react-native-actions-sheet';
 
 import TextInput from '@/components/forms/text-input';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
@@ -28,6 +27,7 @@ export const SpaceConfiguration = ({
   data,
   setNext,
   onChange,
+  runAsyncSubmit,
 }: SpaceConfigurationProps) => {
   const members = allData?.invitation ?? [];
   const formData: SpaceConfigurationFormData = {
@@ -60,35 +60,25 @@ export const SpaceConfiguration = ({
       return;
     }
 
-    SheetManager.show('asyncProcessing', {
-      payload: {
-        successTitle: 'Space Created',
-        loadingTitle: 'Creating Space',
-        errorTitle: 'Error Creating Space',
-        successMessage: 'You can now create events and invite more members to grow your community',
-        onSuccessClose: (fnResult) => {
-          const result = fnResult as ApiFnReturnType<typeof createSpace>;
-          if (!result || !result.data) return;
-          const { id } = result.data;
-
-          if (router.canGoBack()) {
-            router.back();
-          } else {
-            router.dismissAll();
-          }
-
-          router.push(`/spaces/${id}`);
-          SheetManager.hide('asyncProcessing');
-        },
-        fnPromise: () =>
-          createSpace({
-            variables: {
-              name: formData.name,
-              description: formData.description,
-              userIds: members.map((m) => m.id),
-            },
-          }),
+    runAsyncSubmit?.({
+      successTitle: 'Space Created',
+      loadingTitle: 'Creating Space',
+      errorTitle: 'Error Creating Space',
+      successMessage: 'You can now create events and invite more members to grow your community',
+      onSuccessClose: (fnResult) => {
+        const result = fnResult as ApiFnReturnType<typeof createSpace>;
+        if (!result || !result.data) return;
+        const { id } = result.data;
+        router.push(`/spaces/${id}`);
       },
+      fnPromise: () =>
+        createSpace({
+          variables: {
+            name: formData.name,
+            description: formData.description,
+            userIds: members.map((m) => m.id),
+          },
+        }),
     });
   }, [createSpace, formData.description, formData.name, members]);
 
