@@ -1,11 +1,19 @@
-import { IBetSlip } from '@/types';
+import { IBetSlip, IUserPublic } from '@/types';
 import { getRequest } from '@/utils/http';
 
-import { SignInResponseDTO } from '../app/auth/signup/types';
+export interface IMe {
+  token: string;
+  user: IUserPublic;
+  sessionId: string;
+  balance?: {
+    available: number;
+    reserved: number;
+  };
+}
 
 export class MeService {
   public static async getMe() {
-    return await getRequest<SignInResponseDTO>('/me');
+    return await getRequest<IMe>('/me');
   }
 
   public static async getMyBets() {

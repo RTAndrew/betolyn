@@ -16,6 +16,11 @@ export interface ICreateSpaceMatchRequest {
   maxReservedLiability: number;
 }
 
+export interface IAllocateSpaceFundingRequest {
+  memo?: string | null;
+  amount: number;
+}
+
 /**
  * Minimal wizard state needed to POST /spaces/{spaceId}/matches.
  * Compatible with {@link ICreateSpaceEventState} from the create-event screen.
@@ -87,5 +92,9 @@ export class SpaceService {
 
   public static async createSpaceMatch(spaceId: string, data: ICreateSpaceMatchRequest) {
     return await postRequest<IMatch, ICreateSpaceMatchRequest>(`/spaces/${spaceId}/matches`, data);
+  }
+
+  public static async allocateFunding(spaceId: string, data: IAllocateSpaceFundingRequest) {
+    return await postRequest<void, IAllocateSpaceFundingRequest>(`/spaces/${spaceId}/fund`, data);
   }
 }

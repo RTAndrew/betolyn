@@ -5,8 +5,8 @@ package com.betolyn.features.bankroll.account;
  */
 public enum AccountTypeEnum {
     USER_WALLET,
-    CHANNEL_AVAILABLE,
-    CHANNEL_RESERVED,
+    SPACE_AVAILABLE,
+    SPACE_RESERVED,
     GLOBAL,
     GLOBAL_ESCROW
 }

@@ -1,15 +1,15 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { SignInResponseDTO } from '@/app/auth/signup/types';
 import { IBetSlip } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
+import { IQueryOptions } from '@/utils/react-query';
 
-import { MeService } from '../me-service';
+import { IMe, MeService } from '../me-service';
 
 // QUERIES OPTIONS
 
 export const getMeQueryOptions = () => {
-  return queryOptions<IApiResponse<SignInResponseDTO>, IApiResponse>({
+  return queryOptions<IApiResponse<IMe>, IApiResponse>({
     queryKey: ['me'],
     queryFn: () => MeService.getMe(),
   });
@@ -24,12 +24,12 @@ export const getMyBetsQueryOptions = () => {
 
 // QUERIES
 
-export const useGetMe = () => {
+export const useGetMe = ({ queryOptions }: IQueryOptions<typeof getMeQueryOptions>) => {
   const query = getMeQueryOptions();
   return useQuery({ ...query, ...queryOptions });
 };
 
-export const useGetMyBets = () => {
+export const useGetMyBets = ({ queryOptions }: IQueryOptions<typeof getMyBetsQueryOptions>) => {
   const query = getMyBetsQueryOptions();
   return useQuery({ ...query, ...queryOptions });
 };

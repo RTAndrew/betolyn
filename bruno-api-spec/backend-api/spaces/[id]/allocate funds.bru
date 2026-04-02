@@ -1,0 +1,23 @@
+meta {
+  name: allocate funds
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/spaces/{{spaceId}}/fund
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "memo": "Initial pool contribution",
+    "amount": 1000.00
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

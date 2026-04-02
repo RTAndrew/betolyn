@@ -31,7 +31,7 @@ const Header = ({ children }: PropsWithChildren) => {
 };
 
 const BetSlipHistoryScreen = () => {
-  const { data, error, isPending } = useGetMyBets();
+  const { data, error, isPending } = useGetMyBets({});
 
   if (isPending) {
     return (

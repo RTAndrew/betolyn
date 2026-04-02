@@ -14,6 +14,7 @@ import EmptyState from '@/components/empty-state';
 import TextInput from '@/components/forms/text-input';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
+import { UserCard } from '@/components/user-card';
 import { useWizardPrimaryAction } from '@/components/wizard/use-wizard';
 import { colors } from '@/constants/colors';
 import { useGetAllUsers } from '@/services/users/user-query';
@@ -25,7 +26,6 @@ type InvitePeopleProps = CreateSpaceWizardStepProps<'invitation'>;
 
 const GENERIC_AVATAR = require('@/assets/images/generic-user-profile-image.png');
 
-const LIST_AVATAR_SIZE = 44;
 const CHIP_AVATAR_SIZE = 28;
 
 function toPublicUser(user: IUser): IUserPublic {
@@ -78,33 +78,20 @@ export const InvitePeople = ({ setNext, onChange, allData, goNext }: InvitePeopl
       const checked = selectedMembers.some((m) => m.id === item.id);
       return (
         <SafeHorizontalView>
-          <Pressable
+          <UserCard
+            title={item.username}
             onPress={() => toggleUser(item)}
-            style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-          >
-            <View style={styles.rowAvatarWrap}>
-              <Image
-                source={GENERIC_AVATAR}
-                style={styles.avatarList}
-                accessibilityIgnoresInvertColors
+            avatarSource={GENERIC_AVATAR}
+            suffix={
+              <Checkbox
+                value={checked}
+                borderRadius={100}
+                iconColor={colors.white}
+                onValueChange={() => toggleUser(item)}
+                color={checked ? colors.primary : '#8791A5'}
               />
-            </View>
-            <View style={styles.rowTextColumn}>
-              <View style={styles.rowLabelRow}>
-                <ThemedText style={styles.userName} numberOfLines={1}>
-                  {item.username}
-                </ThemedText>
-
-                <Checkbox
-                  value={checked}
-                  borderRadius={100}
-                  iconColor={colors.white}
-                  onValueChange={() => toggleUser(item)}
-                  color={checked ? colors.primary : '#8791A5'}
-                />
-              </View>
-            </View>
-          </Pressable>
+            }
+          />
         </SafeHorizontalView>
       );
     },
@@ -222,43 +209,6 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-  },
-  rowPressed: {
-    opacity: 0.92,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    minHeight: 52,
-  },
-  checkboxPressable: {
-    justifyContent: 'center',
-  },
-  rowAvatarWrap: {
-    justifyContent: 'center',
-    paddingRight: 12,
-  },
-  avatarList: {
-    width: LIST_AVATAR_SIZE,
-    height: LIST_AVATAR_SIZE,
-    borderRadius: LIST_AVATAR_SIZE / 2,
-  },
-  rowTextColumn: {
-    flex: 1,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(199, 209, 231, 0.35)',
-  },
-  rowLabelRow: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingRight: 4,
-  },
-  userName: {
-    flex: 1,
-    fontSize: 16,
-    marginRight: 8,
   },
   centered: {
     flex: 1,

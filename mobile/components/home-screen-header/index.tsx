@@ -32,7 +32,7 @@ const HomeHeader = () => {
     <View style={styles.root}>
       <Pressable onPress={() => router.push('/me')} style={styles.userBadge}>
         <ThemedText style={styles.userBadgeText}>
-          {user.value?.username.slice(0, 2).toUpperCase()}
+          {user.value?.user.username.slice(0, 2).toUpperCase()}
         </ThemedText>
       </Pressable>
     </View>

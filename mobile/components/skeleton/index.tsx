@@ -46,6 +46,7 @@ export function Skeleton({
   const containerStyle: ViewStyle[] = [
     styles.base,
     {
+      width: size,
       borderRadius: isCircle && size != null ? size / 2 : isCircle ? 9999 : borderRadius,
       backgroundColor: color ?? colors.greyLight,
     },
@@ -70,8 +71,10 @@ Skeleton.Group = SkeletonGroup;
 
 const styles = StyleSheet.create({
   base: {
-    backgroundColor: colors.greyLight,
     overflow: 'hidden',
+    flexGrow: 1,
+    height: 30,
+    backgroundColor: colors.greyLight,
   },
   shimmerFill: {
     position: 'absolute',

@@ -3,16 +3,10 @@ import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 
 import { constants } from '@/constants';
-import { MeService } from '@/services';
-import { IUser } from '@/types';
+import { IMe, MeService } from '@/services';
 import { SafeStorage } from '@/utils/safe-storage';
 
-interface IAuthStore extends IUser {
-  token: string;
-  sessionId: string;
-}
-
-const user = signal<IAuthStore | null>(null);
+const user = signal<IMe | null>(null);
 const isLoggedIn = computed(() => user.value !== null);
 
 const handleLogout = async () => {
@@ -36,11 +30,7 @@ export const hydrateAuthStore = async () => {
     return;
   }
 
-  user.value = {
-    ...data.user,
-    token,
-    sessionId: data.sessionId,
-  };
+  user.value = data;
 };
 
 export const authStore = {

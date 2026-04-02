@@ -20,14 +20,28 @@ Effects are **synchronization**, not general logic. If it does not sync React st
 
 ## Rules (Apply Consistently)
 
-### 1. Name Every Effect
+### 1. Name Effects When the Name Adds Clarity
 
-Never use anonymous effect callbacks.
+Prefer a named effect callback when the name improves understanding, debugging, or reviewability.
 
-- **Do:** `useEffect(function updateDocumentTitle() { ... }, [deps]);`
-- **Don’t:** `useEffect(() => { ... }, [deps]);`
+- **Do:** `useEffect(function subscribeToKeyboard() { ... }, [deps]);`
+- **Also fine:** `useEffect(() => { setNext?.({ label: 'Next' }); }, [setNext]);`
+- **Don't:** force a name onto a tiny, obvious effect just to satisfy style.
 
-**Why:** Intent, stack traces, reviews, and debugging.
+Use a named effect when the effect:
+- synchronizes with a non-obvious external system
+- has non-trivial setup or cleanup
+- contains branching, validation, retries, subscriptions, timers, or async work
+- is likely to benefit from a clearer stack trace
+- is not immediately obvious at a glance
+
+An anonymous effect is acceptable when all of the following are true:
+- it has a single obvious responsibility
+- it is short
+- it is unlikely to throw
+- its intent is immediately clear from nearby code
+
+**Why:** naming should increase clarity, not add ceremony.
 
 ### 2. Name = Responsibility
 
@@ -55,7 +69,7 @@ If the name needs “and”, split into separate effects by concern.
 
 ### 6. One Effect, One Responsibility
 
-Multiple small named effects beat one large anonymous effect.
+Multiple small, focused effects beat one effect with mixed concerns. When naming helps, prefer small named effects over one large anonymous effect.
 
 ### 7. Symmetrical Cleanup
 
@@ -70,9 +84,13 @@ useEffect(function pollServer() {
 }, []);
 ```
 
-### 8. Prefer Inline Named Functions
+### 8. Prefer Inline Functions
 
-Keep the effect body as a **named function expression** inside `useEffect` so context stays local. Avoid passing a **distant** top-level function unless reuse is clear.
+Keep the effect body local to the `useEffect` call so context stays easy to read.
+
+- Prefer an inline **named function expression** when the effect benefits from naming.
+- Prefer an inline **anonymous function** when the effect is tiny and completely obvious.
+- Avoid passing a **distant** top-level function unless reuse is clear.
 
 ### 9. Custom Hooks
 
@@ -91,6 +109,8 @@ Keep the effect body as a **named function expression** inside `useEffect` so co
 
 ## TL;DR
 
-- Name every effect; one responsibility; no “and” in names.
+- Name effects when the name adds clarity, debugging value, or structure.
+- Tiny, obvious, single-purpose effects may stay anonymous.
+- One effect, one responsibility; no “and” in names when you do name them.
 - Prefer **derived state** and **event handlers** over effects when they fit.
-- Effects = **external sync** only; use naming to surface bad design.
+- Effects = **external sync** only; use naming to surface bad design when needed.

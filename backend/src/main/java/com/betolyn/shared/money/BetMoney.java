@@ -3,6 +3,9 @@ package com.betolyn.shared.money;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
@@ -22,6 +25,7 @@ public final class BetMoney {
         return new BetMoney(Money.of(value, CURRENCY));
     }
 
+    @JsonCreator
     public static BetMoney of(BigDecimal value) {
         if (value == null) {
             return zero();
@@ -39,6 +43,7 @@ public final class BetMoney {
         this.amount = amount.with(ROUNDING);
     }
 
+    @JsonValue
     public BigDecimal toBigDecimal() {
         return amount.getNumber().numberValueExact(BigDecimal.class);
     }

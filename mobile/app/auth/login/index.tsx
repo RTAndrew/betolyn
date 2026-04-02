@@ -87,7 +87,7 @@ const LoginPage = () => {
       await SafeStorage.saveObjectAsync(constants.session.tokenStorageKey, data.token);
       await SafeStorage.saveObjectAsync(constants.session.userStorageKey, data);
       authStore.user.value = {
-        ...data.user,
+        user: data.user,
         token: data.token,
         sessionId: data.sessionId,
       };

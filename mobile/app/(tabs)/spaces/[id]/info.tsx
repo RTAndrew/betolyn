@@ -4,22 +4,25 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 
+import { Add, DollarEuro, UserAdd } from '@/components/icons';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
+import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
 import { IChannelMember, mockData } from '@/mock/matches';
 import { useGetSpaceById } from '@/services';
 
-const ParticipantCard = ({ member }: { member: IChannelMember }) => {
+const _ParticipantCard = ({ member }: { member: IChannelMember }) => {
   const handlePress = () => {
     Alert.alert(`Remover ${member.name}`, 'Tem certeza que deseja remover este participante?', [
       {
@@ -45,6 +48,21 @@ const ParticipantCard = ({ member }: { member: IChannelMember }) => {
         </View>
       </View>
     </TouchableOpacity>
+  );
+};
+
+interface IActionsProps {
+  title: string;
+  onPress?: () => void;
+  icon: React.ReactNode;
+}
+
+const Actions = ({ title, onPress, icon }: IActionsProps) => {
+  return (
+    <Pressable onPress={onPress} style={styles.action}>
+      <View style={styles.actionIcon}>{icon}</View>
+      <ThemedText type="defaultSemiBold">{title}</ThemedText>
+    </Pressable>
   );
 };
 
@@ -117,12 +135,15 @@ const Info = () => {
         </View>
       }
     >
-      <ThemedView style={styles.channelInfo}>
-        <Text style={styles.channelInfoText}>
-          Criado por {space.createdBy.username}, {new Date().toLocaleDateString()}
-        </Text>
-        <Text style={styles.channelInfoText}>Chatroom ID: {space.id}</Text>
-      </ThemedView>
+      <SafeHorizontalView style={styles.actions}>
+        <Actions title="Withdraw" icon={<DollarEuro width={24} height={24} />} />
+        <Actions
+          onPress={() => router.push(`/(modals)/spaces/${id}/fund`)}
+          title="Allocate funds"
+          icon={<Add width={24} height={24} />}
+        />
+        <Actions title="Invite" icon={<UserAdd width={24} height={24} />} />
+      </SafeHorizontalView>
 
       {/* <ThemedView style={styles.participants}>
         <Text style={styles.participantsNumber}>{spac.members.length} Participantes</Text>
@@ -133,6 +154,12 @@ const Info = () => {
           ))}
         </View>
       </ThemedView> */}
+      <ThemedView style={styles.channelInfo}>
+        <Text style={styles.channelInfoText}>
+          Criado por {space.createdBy.username}, {new Date().toLocaleDateString()}
+        </Text>
+        <Text style={styles.channelInfoText}>Chatroom ID: {space.id}</Text>
+      </ThemedView>
     </ParallaxScrollView>
   );
 };
@@ -192,6 +219,8 @@ const styles = StyleSheet.create({
   },
   channelInfo: {
     flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 22,
     gap: 5,
   },
@@ -209,6 +238,27 @@ const styles = StyleSheet.create({
   participantsNumber: {
     fontWeight: 'bold',
     color: colors.complementary,
+  },
+  action: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 8,
+  },
+  actionIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    width: 56,
+    height: 56,
+    borderRadius: 100,
+    backgroundColor: colors.greyLight,
+  },
+  actions: {
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    gap: 16,
+
+    marginVertical: 12,
   },
 });
 

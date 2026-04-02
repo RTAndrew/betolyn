@@ -23,7 +23,7 @@ const Me = () => {
       />
 
       <SafeHorizontalView>
-        <ThemedText type="title">{user.value?.username}</ThemedText>
+        <ThemedText type="title">{user.value?.user.username}</ThemedText>
         <Button.Root onPress={() => authStore.handleLogout()} style={styles.logoutButton}>
           Logout
         </Button.Root>
