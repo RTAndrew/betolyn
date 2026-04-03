@@ -32,8 +32,8 @@ public class TransferMoneyGeneric implements IUseCase<TransferMoneyGenericParam,
         var fromAccount = findAccountByOwnerIdUC.execute(param.fromOwnerId());
         var toAccount = findAccountByOwnerIdUC.execute(param.toOwnerId());
 
-        fromAccount.debitAvailable(param.amount());
-        toAccount.creditAvailable(param.amount());
+        fromAccount.debit(param.amount());
+        toAccount.credit(param.amount());
 
         var transaction = new TransactionEntity();
         transaction.generateId();

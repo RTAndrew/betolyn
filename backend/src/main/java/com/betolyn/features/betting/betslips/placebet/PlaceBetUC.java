@@ -2,6 +2,7 @@ package com.betolyn.features.betting.betslips.placebet;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
 import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalEscrowAccountUC;
@@ -109,12 +111,13 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
     @Transactional
     public PlaceBetUCResponse execute(@Validated PlaceBetRequestDTO paramDTO) {
         throwIfExistsDuplicatedOddsInBetSlip(paramDTO);
-        if(paramDTO.getItems().isEmpty()) {
+        if (paramDTO.getItems().isEmpty()) {
             throw new BadRequestException("NO_VALID_BETS", "An unexpected error happened. No valid bets were found");
         }
 
         var loggedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var userAccount = findAccountByOwnerIdUC.execute(loggedUser.getId());
+        var globalEscrowAccount = findGlobalEscrowAccountUC.execute(null);
 
         var betSlip = new BetSlipEntity();
         betSlip.generateId();
@@ -125,6 +128,8 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         transaction.setType(TransactionTypeEnum.BET_PLACEMENT);
         transaction.setReferenceId(betSlip.getId());
         transaction.setReferenceType(TransactionReferenceTypeEnum.BET_SLIP);
+
+        var spaceAccountsBySpaceId = new HashMap<String, AccountEntity>();
 
         List<OddAccepted> oddList = new ArrayList<>();
         List<OddRejected> oddRejectedList = new ArrayList<>();
@@ -167,7 +172,8 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
 
         if (oddList.isEmpty()) {
             if (!oddRejectedList.isEmpty()) {
-                throw new RejectedBetsException("INVALID_ODDS", "Invalid odds", Collections.singletonList(oddRejectedList));
+                throw new RejectedBetsException("INVALID_ODDS", "Invalid odds",
+                        Collections.singletonList(oddRejectedList));
             }
             throw new BadRequestException("NO_VALID_BETS", "An unexpected error happened. No valid bets were found");
         }
@@ -196,10 +202,12 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             // 3.5 recalculate match projections
             // TODO: for standalone criterion, there will be no match associated with it
             var matchCriteria = findMatchCriteriaUC.execute(criterion.getMatch().getId());
+            var oldMatchReservedLiability = criterion.getMatch().getReservedLiability();
             var newMatchReservedLiability = calculateMatchReservedLiability(
                     matchCriteria,
                     criterion,
                     newCriterionReservedLiability);
+            var matchDeltaReservedLiability = newMatchReservedLiability.subtract(oldMatchReservedLiability);
 
             if (criterion.getMaxReservedLiability() != null
                     && newCriterionReservedLiability.isGreaterThan(criterion.getMaxReservedLiability())) {
@@ -213,44 +221,6 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
 
             criterion.getMatch().setReservedLiability(newMatchReservedLiability);
 
-
-            // 4. LOCK or RELEASE criterion funds
-            // var showLock = newMatchReservedLiability - criterion.getReservedLiability();
-            // lockOrReleaseMatchFunds(matchId, criterionId, liability)
-            var globalEscrowAccount = findGlobalEscrowAccountUC.execute(null);
-
-            // only for channels
-            // if (newCriterionReservedCriterion > 0) { // lock funds
-            // globalEscrowAccount.setBalanceAvailable(
-            // globalEscrowAccount.getBalanceAvailable()
-            // .add(BigDecimal.valueOf(newCriterionReservedCriterion)));
-            // transaction.setMemo("lock funds");
-            //
-            // var item = new TransactionItemEntity();
-            // item.setTransaction(transaction);
-            // item.setAmount(BigDecimal.valueOf(newCriterionReservedCriterion));
-            // item.setFromAccountType(AccountTypeEnum.GLOBAL);
-            // item.setFromAccountId(globalReserveAccount.getId());
-            // item.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-            // item.setToAccountId(globalEscrowAccount.getId());
-            // transaction.getItems().add(item);
-            //
-            // } else if (newCriterionReservedCriterion < 0) { // release funds
-            // globalEscrowAccount.setBalanceAvailable(
-            // globalEscrowAccount.getBalanceAvailable()
-            // .subtract(BigDecimal.valueOf(newCriterionReservedCriterion)));
-            // transaction.setMemo("release funds");
-            //
-            // var item = new TransactionItemEntity();
-            // item.setTransaction(transaction);
-            // item.setAmount(BigDecimal.valueOf(newCriterionReservedCriterion));
-            // item.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-            // item.setFromAccountId(globalEscrowAccount.getId());
-            // item.setToAccountType(AccountTypeEnum.GLOBAL);
-            // item.setToAccountId(globalReserveAccount.getId());
-            // transaction.getItems().add(item);
-            // }
-
             // 5. Lock user funds
             userAccount.lockFunds(stakeMoney);
             var userLockFundsTXI = new TransactionItemEntity();
@@ -258,11 +228,27 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             userLockFundsTXI.setAmount(stakeMoney);
             userLockFundsTXI.setFromAccountType(AccountTypeEnum.USER_WALLET);
             userLockFundsTXI.setFromAccountId(userAccount.getId());
-            userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-            userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
 
-            globalEscrowAccount.setBalanceAvailable(
-                    globalEscrowAccount.getBalanceAvailable().add(stakeMoney));
+            // Check if the match is space-owned (unofficial)
+            var isSpaceOwnedMatch = Objects.nonNull(criterion.getMatch().getSpaceId());
+            if (isSpaceOwnedMatch) {
+                // 5.1 Lock or ReleaseSPACE funds
+                var spaceId = criterion.getMatch().getSpaceId();
+                var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
+                userLockFundsTXI.setToAccountType(AccountTypeEnum.SPACE_RESERVED);
+                userLockFundsTXI.setToAccountId(spaceAccount.getId());
+
+                if (matchDeltaReservedLiability.isGreaterThan(BetMoney.zero())) { // lock funds
+                    spaceAccount.lockFunds(matchDeltaReservedLiability);
+                } else if (matchDeltaReservedLiability.isLessThan(BetMoney.zero())) { // release funds
+                    spaceAccount.releaseFunds(matchDeltaReservedLiability.abs());
+                }
+            } else {
+                // 5.2 Increase GLOBAL ESCROW funds (player money being held by the house)
+                globalEscrowAccount.credit(stakeMoney);
+                userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+                userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
+            }
 
             transaction.getItems().add(userLockFundsTXI);
 
@@ -287,7 +273,6 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         // 8. save
         var bet = betSlipRepository.save(betSlip);
         transactionRepository.save(transaction);
-
 
         var betDTO = betSlipMapper.toBetSlipDTO(bet);
         return new PlaceBetUCResponse(betDTO, oddRejectedList);

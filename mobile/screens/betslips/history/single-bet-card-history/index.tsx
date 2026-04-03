@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetCriterionById, useGetMatch, useGetOddById } from '@/services';
 import { IBetSlipItem, IBetSlipItemStatus } from '@/types';
-import { useMultiQueryState } from '@/utils/react-query';
+import { useMultiQueryState } from '@/utils/react-query/use-multi-query-state';
 
 import { SingleBetCardHistorySkeleton } from './skeleton';
 import { styles } from './styles';

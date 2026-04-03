@@ -3,14 +3,14 @@ package com.betolyn.shared.money;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryOperator;
 
 import org.javamoney.moneta.Money;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public final class BetMoney {
 
@@ -98,5 +98,10 @@ public final class BetMoney {
 
     public boolean isZero() {
         return this.amount.isZero();
+    }
+
+    /** Returns the absolute value of this amount. */
+    public BetMoney abs() {
+        return of(this.toBigDecimal().abs());
     }
 }

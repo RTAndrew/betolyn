@@ -1,5 +1,10 @@
 package com.betolyn.features.bankroll.account;
 
+import java.util.Objects;
+
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import com.betolyn.shared.exceptions.BusinessRuleException;
@@ -16,9 +21,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -26,6 +28,12 @@ import java.util.Objects;
 @Entity
 @Table(name = "accounts")
 public class AccountEntity extends BaseEntity {
+
+    private static void requirePositiveAmount(BetMoney amount) {
+        if (amount == null || !amount.isGreaterThan(BetMoney.zero())) {
+            throw new BusinessRuleException("INVALID_AMOUNT", "Amount must be positive");
+        }
+    }
 
     @Column(nullable = false)
     private String ownerId;
@@ -51,21 +59,8 @@ public class AccountEntity extends BaseEntity {
         this.balanceReserved = Objects.requireNonNullElse(balanceReserved, BetMoney.zero());
     }
 
-    @Override
-    protected EntityUUID getUUIDPrefix() {
-        return new EntityUUID(12, "acc");
-    }
-
-    private static void requirePositiveAmount(BetMoney amount) {
-        if (amount == null || !amount.isGreaterThan(BetMoney.zero())) {
-            throw new BusinessRuleException("INVALID_AMOUNT", "Amount must be positive");
-        }
-    }
-
-    /**
-     * Decreases {@link #balanceAvailable} after validating amount and funds.
-     */
-    public void debitAvailable(BetMoney amount) {
+    /** Decreases {@link #balanceAvailable} after validating amount and funds. */
+    public void debit(BetMoney amount) {
         requirePositiveAmount(amount);
         if (balanceAvailable.isLessThan(amount)) {
             throw new BusinessRuleException("INSUFFICIENT_AVAILABLE_BALANCE", "Insufficient available balance");
@@ -73,19 +68,15 @@ public class AccountEntity extends BaseEntity {
         this.balanceAvailable = this.balanceAvailable.subtract(amount);
     }
 
-    /**
-     * Increases {@link #balanceAvailable} after validating amount.
-     */
-    public void creditAvailable(BetMoney amount) {
+    /** Increases {@link #balanceAvailable} after validating amount. */
+    public void credit(BetMoney amount) {
         requirePositiveAmount(amount);
         this.balanceAvailable = this.balanceAvailable.add(amount);
     }
 
     /**
-     * Moves amount from available to reserved. Only USER and CHANNEL accounts may
-     * lock funds.
-     *
-     * @throws BusinessRuleException if ownerType is SYSTEM or amount is not positive or exceeds available balance
+     * Moves amount from available to reserved.
+     * Only USER and SPACE accounts may lock funds.
      */
     public void lockFunds(BetMoney amount) {
         requirePositiveAmount(amount);
@@ -96,6 +87,10 @@ public class AccountEntity extends BaseEntity {
         this.balanceReserved = this.balanceReserved.add(amount);
     }
 
+    /**
+     * Moves amount from reserved to available.
+     * * Only USER and SPACE accounts may lock funds.
+     */
     public void releaseFunds(BetMoney amount) {
         requirePositiveAmount(amount);
         if (balanceReserved.isLessThan(amount)) {
@@ -107,12 +102,9 @@ public class AccountEntity extends BaseEntity {
     }
 
     /**
-     * Consumes reserved funds permanently (e.g. losing a bet) without returning them
-     * to available balance.
-     * Currently only USER accounts are allowed to lose stake via this method.
-     *
-     * @throws BusinessRuleException if amount is invalid, exceeds reserved balance,
-     *                               or ownerType is not USER.
+     * Consumes reserved funds permanently (e.g. losing a bet) without returning
+     * them to available balance.
+     * Only USER accounts are allowed to lose stake via this method.
      */
     public void consumeReservedStake(BetMoney amount) {
         requirePositiveAmount(amount);
@@ -125,5 +117,10 @@ public class AccountEntity extends BaseEntity {
                     "Insufficient reserved balance to consume");
         }
         this.balanceReserved = this.balanceReserved.subtract(amount);
+    }
+
+    @Override
+    protected EntityUUID getUUIDPrefix() {
+        return new EntityUUID(12, "acc");
     }
 }
