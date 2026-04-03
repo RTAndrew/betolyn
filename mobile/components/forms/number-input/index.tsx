@@ -42,7 +42,7 @@ interface NumberInputProps extends Omit<BaseFieldProps, 'children'> {
 const NumberInput = ({
   containerStyle,
   errorMessage,
-  max = 10000, // I think this is a good default value for most cases
+  max = 1_000_000_000, // 1 billion
   inputStyle,
   value = 0,
   onChange,

@@ -111,6 +111,7 @@ const LoginPage = () => {
           placeholder="Email"
           keyboardType="email-address"
           value={formData.email.value}
+          errorMessage={formData.email.error}
           onChangeText={(text) => handleChange('email', text)}
         />
         <TextInput
@@ -119,6 +120,7 @@ const LoginPage = () => {
           placeholder="Senha"
           keyboardType="visible-password"
           value={formData.password.value}
+          errorMessage={formData.password.error}
           onChangeText={(text) => handleChange('password', text)}
         />
         <GradientButton loading={loading} onPress={handleSubmit}>

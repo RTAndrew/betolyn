@@ -62,7 +62,7 @@ public class AccountEntity extends BaseEntity {
     /** Decreases {@link #balanceAvailable} after validating amount and funds. */
     public void debit(BetMoney amount) {
         requirePositiveAmount(amount);
-        if (balanceAvailable.isLessThan(amount)) {
+        if (this.ownerType != AccountOwnerTypeEnum.SYSTEM && balanceAvailable.isLessThan(amount)) {
             throw new BusinessRuleException("INSUFFICIENT_AVAILABLE_BALANCE", "Insufficient available balance");
         }
         this.balanceAvailable = this.balanceAvailable.subtract(amount);
@@ -87,10 +87,7 @@ public class AccountEntity extends BaseEntity {
         this.balanceReserved = this.balanceReserved.add(amount);
     }
 
-    /**
-     * Moves amount from reserved to available.
-     * * Only USER and SPACE accounts may lock funds.
-     */
+    /** Moves amount from reserved to available. */
     public void releaseFunds(BetMoney amount) {
         requirePositiveAmount(amount);
         if (balanceReserved.isLessThan(amount)) {
@@ -104,13 +101,13 @@ public class AccountEntity extends BaseEntity {
     /**
      * Consumes reserved funds permanently (e.g. losing a bet) without returning
      * them to available balance.
-     * Only USER accounts are allowed to lose stake via this method.
+     * Only available to USER and SPACE accounts.
      */
     public void consumeReservedStake(BetMoney amount) {
         requirePositiveAmount(amount);
-        if (this.ownerType != AccountOwnerTypeEnum.USER) {
+        if (this.ownerType == AccountOwnerTypeEnum.SYSTEM) {
             throw new BusinessRuleException("INVALID_ACCOUNT_TYPE",
-                    "Only USER accounts can consume reserved stake via this operation");
+                    "System accounts cannot consume reserved stake via this operation");
         }
         if (balanceReserved.isLessThan(amount)) {
             throw new BusinessRuleException("INSUFFICIENT_RESERVED_BALANCE_TO_CONSUME",

@@ -1,5 +1,7 @@
 package com.betolyn.features.matches;
 
+import java.util.Objects;
+
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
@@ -112,6 +114,10 @@ public class MatchEntity extends AuditableEntity {
     private String awayTeamName;
     private int awayTeamScore = 0;
 
+    public boolean isSpaceOwned() {
+        return Objects.nonNull(spaceId);
+    }
+
     /**
      * Lifecycle / display status: {@link MatchTypeEnum#OFFICIAL} and {@link MatchTypeEnum#CUSTOM} use this
      * row's {@link #status}; {@link MatchTypeEnum#DERIVED} follows the linked official match when present
@@ -121,9 +127,11 @@ public class MatchEntity extends AuditableEntity {
         if (type != MatchTypeEnum.DERIVED) {
             return status;
         }
+
         if (officialMatch == null) {
             return status;
         }
+
         return officialMatch.getStatus();
     }
 

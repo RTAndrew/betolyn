@@ -57,10 +57,10 @@ export class SpaceService {
     const configuration = allData.configuration;
     if (
       !configuration ||
-      configuration?.homeTeam?.trim() ||
-      configuration?.awayTeam?.trim() ||
-      configuration?.startTime?.trim() ||
-      configuration?.endTime?.trim()
+      !configuration?.homeTeam?.trim() ||
+      !configuration?.awayTeam?.trim() ||
+      !configuration?.startTime?.trim() ||
+      !configuration?.endTime?.trim()
     ) {
       throw new Error('Complete event configuration (teams and times) before creating.');
     }

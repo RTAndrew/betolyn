@@ -1,11 +1,15 @@
 package com.betolyn.features.bankroll.transaction;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
 import com.betolyn.shared.money.BetMoney;
 import com.betolyn.shared.money.BetMoneyAttributeConverter;
 import com.betolyn.shared.money.MoneyConstants;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -17,8 +21,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 @Getter
 @Setter

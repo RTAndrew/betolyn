@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,6 +41,7 @@ import com.betolyn.features.betting.odds.findoddbyid.FindOddByIdUC;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
+import com.betolyn.shared.exceptions.BusinessRuleException;
 import com.betolyn.shared.money.BetMoney;
 
 import lombok.RequiredArgsConstructor;
@@ -129,7 +131,7 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         transaction.setReferenceId(betSlip.getId());
         transaction.setReferenceType(TransactionReferenceTypeEnum.BET_SLIP);
 
-        var spaceAccountsBySpaceId = new HashMap<String, AccountEntity>();
+        Map<String, AccountEntity> spaceAccountsBySpaceId = new HashMap<>();
 
         List<OddAccepted> oddList = new ArrayList<>();
         List<OddRejected> oddRejectedList = new ArrayList<>();
@@ -167,7 +169,7 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
                         Collections.singletonList(oddRejectedList));
             }
 
-            throw new RuntimeException("Feature not yet implemented");
+            throw new BusinessRuleException("FEAT_NOT_IMPLEMENTED", "Feature not yet implemented");
         }
 
         if (oddList.isEmpty()) {
@@ -211,13 +213,21 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
 
             if (criterion.getMaxReservedLiability() != null
                     && newCriterionReservedLiability.isGreaterThan(criterion.getMaxReservedLiability())) {
-                throw new RuntimeException("Criterion does not have sufficient liquidity");
+                throw new BusinessRuleException("CRITERION_INSUFFICIENT_LIQUIDITY",
+                        "Criterion does not have sufficient liquidity");
             }
 
+            // TODO: suspend match if it has insufficient liquidity
             if (criterion.getMatch().getMaxReservedLiability() != null
                     && newMatchReservedLiability.isGreaterThan(criterion.getMatch().getMaxReservedLiability())) {
-                throw new RuntimeException("Match does not have sufficient liquidity");
+                throw new BusinessRuleException("MATCH_INSUFFICIENT_LIQUIDITY",
+                        "Match does not have sufficient liquidity");
             }
+
+            // TODO: check if space has enough balance to cover the liability
+            // if (channel.available_balance < new_net_liability_delta) {
+            // throw new Error("CHANNEL_INSUFFICIENT_LIQUIDITY");
+            // }
 
             criterion.getMatch().setReservedLiability(newMatchReservedLiability);
 
@@ -229,26 +239,27 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             userLockFundsTXI.setFromAccountType(AccountTypeEnum.USER_WALLET);
             userLockFundsTXI.setFromAccountId(userAccount.getId());
 
+            // 5.1 Lock or Release SPACE funds
             // Check if the match is space-owned (unofficial)
-            var isSpaceOwnedMatch = Objects.nonNull(criterion.getMatch().getSpaceId());
-            if (isSpaceOwnedMatch) {
-                // 5.1 Lock or ReleaseSPACE funds
+            if (criterion.getMatch().isSpaceOwned()) {
                 var spaceId = criterion.getMatch().getSpaceId();
                 var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
                 userLockFundsTXI.setToAccountType(AccountTypeEnum.SPACE_RESERVED);
                 userLockFundsTXI.setToAccountId(spaceAccount.getId());
 
-                if (matchDeltaReservedLiability.isGreaterThan(BetMoney.zero())) { // lock funds
+                if (matchDeltaReservedLiability.isGreaterThan(BetMoney.zero())) {
+                    // lock funds
                     spaceAccount.lockFunds(matchDeltaReservedLiability);
-                } else if (matchDeltaReservedLiability.isLessThan(BetMoney.zero())) { // release funds
+                } else if (matchDeltaReservedLiability.isLessThan(BetMoney.zero())) {
+                    // release funds
                     spaceAccount.releaseFunds(matchDeltaReservedLiability.abs());
                 }
-            } else {
-                // 5.2 Increase GLOBAL ESCROW funds (player money being held by the house)
-                globalEscrowAccount.credit(stakeMoney);
-                userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-                userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
             }
+
+            // 5.2 Increase GLOBAL ESCROW funds (player money being held by the platform)
+            globalEscrowAccount.credit(stakeMoney); // we are not setting the liability aside
+            userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
 
             transaction.getItems().add(userLockFundsTXI);
 
