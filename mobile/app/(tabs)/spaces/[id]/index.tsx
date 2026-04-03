@@ -137,7 +137,7 @@ const SpaceId = () => {
   const renderItem = ({ item }: { item: IMatch }) => (
     <View style={{ marginHorizontal: 6 }}>
       <SafeHorizontalView>
-        <BetCard match={item} showOdds={false} disableControls />
+        <BetCard match={item} showOdds={false} />
       </SafeHorizontalView>
     </View>
   );

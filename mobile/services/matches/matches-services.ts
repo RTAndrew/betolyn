@@ -104,4 +104,11 @@ export class MatchesService {
   public static async settleMatch(matchId: string) {
     return await postRequest<null, Record<string, never>>(`/matches/${matchId}/settle`, {});
   }
+
+  public static async suspendAllMatchCriteria(matchId: string) {
+    return await postRequest<IMatchCriteriaResponse[], Record<string, never>>(
+      `/matches/${matchId}/criteria/suspend-all`,
+      {}
+    );
+  }
 }

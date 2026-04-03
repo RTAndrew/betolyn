@@ -13,6 +13,8 @@ import { ISheet } from '../index';
 
 const MESSAGE_NOT_ENDED =
   'Match must be ended before you can settle. End the match first, then settle.';
+const MESSAGE_NOT_ENDED_DERIVED =
+  'Match must be ended before you can settle. This event follows the official fixture; when that match ends, this event will show as ended, then you can settle.';
 const MESSAGE_CRITERIA_NOT_READY =
   'Market is stil active or has not a winner yet. Suspend the market and set a winner before settling.';
 
@@ -70,7 +72,7 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
         title="Settle match"
         visible={visible}
         onClose={closeAll}
-        description={MESSAGE_NOT_ENDED}
+        description={match.type === 'DERIVED' ? MESSAGE_NOT_ENDED_DERIVED : MESSAGE_NOT_ENDED}
         onCancelText="Close"
       />
     );

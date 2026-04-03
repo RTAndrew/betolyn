@@ -8,6 +8,7 @@ import { CriterionSelectWinningOutcomeSheet } from './criterion-sheets/select-wi
 import { EndMatchSheet } from './match-sheets/end-match-sheet';
 import { MainActionSheet } from './match-sheets/main-action-sheet';
 import { SettleMatchSheet } from './match-sheets/settle-match-sheet';
+import { SuspendAllMarketsSheet } from './match-sheets/suspend-all-markets-sheet';
 import UpdateMatchScoreSheet from './match-sheets/update-match-score';
 import { OddActionSheet } from './odd-sheets/odd-action-sheet';
 import { OddRepriceSheet } from './odd-sheets/odd-reprice-sheet';
@@ -30,6 +31,9 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'match-end-match': {
     component: EndMatchSheet,
+  },
+  'match-suspend-all-markets': {
+    component: SuspendAllMarketsSheet,
   },
   'match-settle-match': {
     component: SettleMatchSheet,

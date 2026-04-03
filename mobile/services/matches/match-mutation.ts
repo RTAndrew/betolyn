@@ -158,3 +158,22 @@ export const useSettleMatch = () => {
 
   return mutation;
 };
+
+export const useSuspendAllMatchCriteria = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (matchId: string) => MatchesService.suspendAllMatchCriteria(matchId),
+      onSuccess: (_, matchId) => {
+        queryClient.invalidateQueries({
+          queryKey: getMatchQueryOptions({ matchId }).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: getMatchCriteriaQueryOptions({ matchId }).queryKey,
+        });
+      },
+    },
+    queryClient
+  );
+
+  return mutation;
+};

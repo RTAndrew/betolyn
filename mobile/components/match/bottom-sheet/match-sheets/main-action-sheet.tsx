@@ -3,7 +3,15 @@ import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
-import { Add, MoneyHand, Settings, SoccerBall, TimeHistory, TimerOff } from '@/components/icons';
+import {
+  Add,
+  LockClosed,
+  MoneyHand,
+  Settings,
+  SoccerBall,
+  TimeHistory,
+  TimerOff,
+} from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { getMatchStatusTag } from '@/utils/get-entity-status-tag';
@@ -87,13 +95,24 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           icon={<Add color="white" />}
         />
         <BottomSheet.ActionOption
-          text="End match"
+          text="Suspend all markets"
           disabled={match.status === 'ENDED'}
-          icon={<TimerOff color="white" />}
+          icon={<LockClosed color="white" />}
           onPress={() => {
-            pushSheet({ type: 'match-end-match' });
+            pushSheet({ type: 'match-suspend-all-markets' });
           }}
         />
+
+        {match.type !== 'DERIVED' && (
+          <BottomSheet.ActionOption
+            text="End match"
+            disabled={match.status === 'ENDED'}
+            icon={<TimerOff color="white" />}
+            onPress={() => {
+              pushSheet({ type: 'match-end-match' });
+            }}
+          />
+        )}
       </View>
     </BottomSheet>
   );

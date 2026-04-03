@@ -3,6 +3,7 @@ import type { ICriterion, IMatch, IOdd } from '@/types';
 export type BottomSheetType =
   | 'match-action'
   | 'match-end-match'
+  | 'match-suspend-all-markets'
   | 'match-settle-match'
   | 'match-update-score'
   | 'criterion-action'
