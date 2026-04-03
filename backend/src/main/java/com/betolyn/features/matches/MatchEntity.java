@@ -105,13 +105,11 @@ public class MatchEntity extends AuditableEntity {
     @ManyToOne
     @JoinColumn(name = "home_team_id")
     private TeamEntity homeTeam;
-    private String homeTeamName;
     private int homeTeamScore = 0;
 
     @ManyToOne
     @JoinColumn(name = "away_team_id")
     private TeamEntity awayTeam;
-    private String awayTeamName;
     private int awayTeamScore = 0;
 
     public boolean isSpaceOwned() {

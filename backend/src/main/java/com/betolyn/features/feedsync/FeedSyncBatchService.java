@@ -58,6 +58,7 @@ public class FeedSyncBatchService {
                 badge = pickPrimaryLogoHref(row.get("logos"));
             }
             t.setBadgeUrl(badge);
+            t.setIsOfficial(true);
             teamRepository.save(t);
 
             Cursor c = parseCursor(row);
@@ -119,8 +120,6 @@ public class FeedSyncBatchService {
             m.setType(MatchTypeEnum.OFFICIAL);
             m.setHomeTeam(home);
             m.setAwayTeam(away);
-            m.setHomeTeamName(text(row, "home_team_name"));
-            m.setAwayTeamName(text(row, "away_team_name"));
             m.setVenueName(text(row, "venue_name"));
             m.setStartTime(text(row, "date"));
             m.setStatus(mapStatus(text(row, "status")));

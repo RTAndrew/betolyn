@@ -63,11 +63,7 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
   // TODO: create an util to get the match title
   const m = criterion.match;
   const matchTitle =
-    m.homeTeam?.name && m.awayTeam?.name
-      ? `${m.homeTeam.name} vs ${m.awayTeam.name}`
-      : m.homeTeamName && m.awayTeamName
-        ? `${m.homeTeamName} vs ${m.awayTeamName}`
-        : 'Match';
+    m.homeTeam?.name && m.awayTeam?.name ? `${m.homeTeam.name} vs ${m.awayTeam.name}` : 'Match';
 
   return (
     <MatchBottomSheetProvider match={m}>

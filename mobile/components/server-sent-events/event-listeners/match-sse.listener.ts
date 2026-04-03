@@ -52,8 +52,6 @@ class MatchSseListener implements ISseListener {
       return;
     }
 
-    console.log('[SSE] Match event received:', msg.eventName, msg.payload);
-
     switch (msg.eventName) {
       case MatchSseEventName.matchProgressChanged:
       case MatchSseEventName.matchCreated:

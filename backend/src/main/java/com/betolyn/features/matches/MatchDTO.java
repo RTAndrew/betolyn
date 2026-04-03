@@ -14,11 +14,9 @@ public class MatchDTO {
     private String officialMatchId;
     private String spaceId;
     private TeamEntity homeTeam;
-    private String homeTeamName;
     private int homeTeamScore;
 
     private TeamEntity awayTeam;
-    private String awayTeamName;
     private int awayTeamScore;
 
     private CriterionDTO mainCriterion;

@@ -2,6 +2,7 @@ package com.betolyn.features.teams;
 
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +32,13 @@ public class TeamEntity extends BaseEntity {
     private String shortName;
     private String alternateColor;
     private String nameAbbreviation;
+
+    /**
+     * True for teams synced from the feed; false for teams created via the API (e.g. custom space events).
+     */
+    @JsonProperty("isOfficial")
+    @Column(name = "is_official", nullable = false)
+    private boolean isOfficial = false;
 
     @Override
     protected EntityUUID getUUIDPrefix() {

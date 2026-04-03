@@ -13,6 +13,8 @@ export interface ITeam {
   id: string;
   name: string;
   badgeUrl: string;
+  /** Present when API returns it: feed-synced teams vs custom event teams. */
+  isOfficial?: boolean;
 }
 
 export interface ISpace {
@@ -30,11 +32,9 @@ export interface IMatch {
   id: string;
   type?: TMatchType;
   officialMatchId?: string | null;
-  spaceIåd?: string | null;
+  spaceId?: string | null;
   homeTeam: ITeam;
   awayTeam: ITeam;
-  homeTeamName?: string;
-  awayTeamName?: string;
   homeTeamScore: number;
   awayTeamScore: number;
   startTime: string;

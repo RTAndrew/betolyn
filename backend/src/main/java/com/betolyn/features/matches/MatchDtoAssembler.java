@@ -68,9 +68,7 @@ public class MatchDtoAssembler {
         dto.setSpaceId(match.getSpaceId());
 
         dto.setHomeTeam(official.getHomeTeam());
-        dto.setHomeTeamName(official.getHomeTeamName());
         dto.setAwayTeam(official.getAwayTeam());
-        dto.setAwayTeamName(official.getAwayTeamName());
 
         dto.setStatus(official.getStatus());
         dto.setHomeTeamScore(official.getHomeTeamScore());
