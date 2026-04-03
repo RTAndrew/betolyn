@@ -81,11 +81,11 @@ class CriterionSseListener implements ISseListener {
       }
 
       case CriterionSseEventName.criterionPublished: {
-        const criterion = msg.payload;
+        const { criterionId, status } = msg.payload;
         DataSync.updateCriteria([
           {
-            id: criterion.criterionId,
-            status: criterion.status,
+            id: criterionId,
+            status: status,
           },
         ]);
         break;
@@ -99,6 +99,7 @@ class CriterionSseListener implements ISseListener {
             status: criterion.status,
           },
         ]);
+        DataSync.refreshCriteriaData([criterion.criterionId], criterion.matchId);
         break;
       }
 

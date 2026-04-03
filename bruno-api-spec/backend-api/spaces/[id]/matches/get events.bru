@@ -1,5 +1,5 @@
 meta {
-  name: get space events
+  name: get events
   type: http
   seq: 3
 }
@@ -8,11 +8,6 @@ get {
   url: {{baseUrl}}/spaces/{{spaceId}}/matches
   body: none
   auth: inherit
-}
-
-settings {
-  encodeUrl: true
-  timeout: 0
 }
 
 tests {
@@ -26,4 +21,9 @@ tests {
     const body = res.getBody();
     expect(body.data).to.be.an("array");
   });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
 }
