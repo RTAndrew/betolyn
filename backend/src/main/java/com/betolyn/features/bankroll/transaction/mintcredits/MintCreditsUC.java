@@ -1,5 +1,8 @@
 package com.betolyn.features.bankroll.transaction.mintcredits;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.bankroll.BankrollConstants;
 import com.betolyn.features.bankroll.account.AccountEntity;
@@ -11,9 +14,8 @@ import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionRepository;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
 import com.betolyn.shared.money.BetMoney;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

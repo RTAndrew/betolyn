@@ -1,5 +1,6 @@
 package com.betolyn.features.matches.settlematch;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,30 +17,45 @@ import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalE
 import com.betolyn.features.bankroll.account.findglobalreserveaccount.FindGlobalReserveAccountUC;
 import com.betolyn.features.bankroll.transaction.TransactionEntity;
 import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
+import com.betolyn.features.bankroll.transaction.TransactionItemTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionRepository;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
-import com.betolyn.features.betting.betslips.BetSlipEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemRepository;
 import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
 import com.betolyn.features.betting.criterion.CriterionEntity;
-import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchStatusEnum;
 import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
+import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
+import com.betolyn.shared.money.BetMoney;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class SettleMatchUC implements IUseCase<String, Void> {
+
+    /**
+     * One persisted {@link TransactionEntity} per bettor
+     * ({@link UserEntity#getId()}).
+     */
+    private record SettlementTxBatchPerUser(String userId) {
+    }
+
+    /**
+     * One persisted {@link TransactionEntity} per bankroll account
+     * ({@link AccountEntity#getId()}).
+     */
+    private record SettlementTxBatchPerAccount(String accountId) {
+    }
 
     private final FindMatchByIdUC findMatchByIdUC;
     private final FindMatchCriteriaUC findMatchCriteriaUC;
@@ -48,14 +64,12 @@ public class SettleMatchUC implements IUseCase<String, Void> {
     private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
     private final FindGlobalReserveAccountUC findGlobalReserveAccountUC;
     private final TransactionRepository transactionRepository;
-    private final CriterionRepository criterionRepository;
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
 
     @Override
-    @SuppressWarnings("ALL")
     @Transactional
     public Void execute(String matchId) {
-        var loggedUser = getAuthenticatedUserUC.execute()
+        var authenticatedUser = getAuthenticatedUserUC.execute()
                 .orElseThrow(AccessForbiddenException::new)
                 .user();
 
@@ -67,16 +81,15 @@ public class SettleMatchUC implements IUseCase<String, Void> {
         List<CriterionEntity> criteria = findMatchCriteriaUC.execute(matchId);
         // criterion.status == SUSPENDED,
         // and at least one odd is suspended and winner
-        boolean readyToSettle = criteria.stream().allMatch(c -> c.getStatus() == CriterionStatusEnum.SUSPENDED &&
-                c.getOdds() != null &&
-                c.getOdds().stream().anyMatch(
-                        o -> o.getStatus() == OddStatusEnum.SUSPENDED && Boolean.TRUE.equals(o.getIsWinner())));
+        boolean readyToSettle = criteria.stream().allMatch(
+                c -> c.getStatus() == CriterionStatusEnum.SUSPENDED &&
+                        c.getOdds() != null &&
+                        c.getOdds().stream().anyMatch(
+                                o -> o.getStatus() == OddStatusEnum.SUSPENDED && Boolean.TRUE.equals(o.getIsWinner())));
         if (!readyToSettle) {
             throw new BadRequestException("CRITERIA_NOT_READY", "Suspend the market and set a winner before settling");
         }
 
-        // TODO: pass array of status (including VOIDED)
-        // otherwise the VOID check will not be reached
         List<BetSlipItemEntity> items = betSlipItemRepository.findAllByMatchIdAndBetSlipStatusAndStatus(
                 matchId, BetSlipStatusEnum.PENDING, BetSlipItemStatusEnum.PENDING);
 
@@ -84,216 +97,177 @@ public class SettleMatchUC implements IUseCase<String, Void> {
             return null; // idempotent: already settled
         }
 
-        AccountEntity globalEscrow = findGlobalEscrowAccountUC.execute(null);
-        AccountEntity globalReserve = findGlobalReserveAccountUC.execute(null);
+        var globalEscrow = findGlobalEscrowAccountUC.execute(null);
+        var globalReserve = findGlobalReserveAccountUC.execute(null);
         Map<String, AccountEntity> userAccountByOwnerId = new HashMap<>();
-
-        TransactionEntity transaction = new TransactionEntity();
-        transaction.setType(TransactionTypeEnum.MATCH_SETTLEMENT);
-        transaction.setReferenceType(TransactionReferenceTypeEnum.MATCH);
-        transaction.setReferenceId(matchId);
-        // Audit: who initiated settlement (e.g. admin who clicked "Settle match")
-        transaction.setCreatedBy(loggedUser);
-
         Map<String, AccountEntity> spaceAccountsBySpaceId = new HashMap<>();
-        List<BetSlipItemEntity> voidedItems = items.stream()
-                .filter(i -> i.getOdd().getStatus() == OddStatusEnum.VOID)
-                .toList();
-        List<BetSlipItemEntity> validItems = items.stream()
-                .filter(i -> i.getOdd().getStatus() == OddStatusEnum.SUSPENDED
-                        && i.getOdd().getCriterion().getStatus() == CriterionStatusEnum.SUSPENDED)
-                .toList();
 
-        // 1. VOID (refund)
-        for (BetSlipItemEntity item : voidedItems) {
-            var stake = item.getStake();
-            var potentialPayout = item.getPotentialPayout();
-            var liability = potentialPayout.subtract(stake);
+        Map<SettlementTxBatchPerUser, List<TransactionItemEntity>> userWinningGroupedTXItems = new HashMap<>();
+        Map<SettlementTxBatchPerAccount, List<TransactionItemEntity>> spaceLosingGroupedTXItems = new HashMap<>();
+        Map<SettlementTxBatchPerAccount, List<TransactionItemEntity>> globalLosingGroupedTXItems = new HashMap<>();
 
-            String ownerId = item.getBetSlip().getCreatedBy().getId();
-            AccountEntity userAccount = userAccountByOwnerId.computeIfAbsent(ownerId, findAccountByOwnerIdUC::execute);
+        var MATCH_TOTAL_STAKES = BetMoney.zero();
 
-            TransactionItemEntity globalEscrowToUserTX = new TransactionItemEntity();
-            globalEscrowToUserTX.setTransaction(transaction);
-            globalEscrowToUserTX.setAmount(stake);
-            globalEscrowToUserTX.setToAccountId(userAccount.getId());
-            globalEscrowToUserTX.setToAccountType(AccountTypeEnum.USER_WALLET);
-            globalEscrowToUserTX.setFromAccountId(globalEscrow.getId());
-            globalEscrowToUserTX.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+        HashMap<String, List<BetSlipItemEntity>> winnerBetsGroupedByCriterionId = new HashMap<>();
+        HashMap<String, List<BetSlipItemEntity>> lostBetsGroupedByCriterionId = new HashMap<>();
+        for (var bet : items) {
+            var oddId = bet.getOdd().getId();
 
-            if (item.getOdd().getCriterion().getMatch().isSpaceOwned()) {
-                // 1.1 Release SPACE funds
-                var spaceId = item.getOdd().getCriterion().getMatch().getSpaceId();
-                var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
-
-                // TODO: find a way to solve it
-                // because it's balacedReserved != SUM(liabilities)
-                // Without it works, but at the end the balacedReserved must be released
-//                spaceAccount.releaseFunds(liability);
-
-                var releaseSpaceFundsTXI = new TransactionItemEntity();
-                releaseSpaceFundsTXI.setTransaction(transaction);
-                releaseSpaceFundsTXI.setAmount(liability);
-                releaseSpaceFundsTXI.setFromAccountId(spaceAccount.getId());
-                releaseSpaceFundsTXI.setFromAccountType(AccountTypeEnum.SPACE_RESERVED);
-                releaseSpaceFundsTXI.setToAccountId(spaceAccount.getId());
-                releaseSpaceFundsTXI.setToAccountType(AccountTypeEnum.SPACE_AVAILABLE);
+            if (Boolean.FALSE.equals(bet.getOdd().getIsWinner())) {
+                lostBetsGroupedByCriterionId.computeIfAbsent(oddId, k -> new ArrayList<>()).add(bet);
             } else {
-                // 1.2 Release GLOBAL ESCROW funds
-                // No need to release funds from GLOBAL RESERVE here
-                // because there is no such a thing for the HOUSE
-                // The house always has enough funds to cover the liability
-
-                var releaseGlobalEscrowFundsTXI = new TransactionItemEntity();
-                releaseGlobalEscrowFundsTXI.setTransaction(transaction);
-                releaseGlobalEscrowFundsTXI.setAmount(stake);
-                releaseGlobalEscrowFundsTXI.setFromAccountId(globalEscrow.getId());
-                releaseGlobalEscrowFundsTXI.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-                releaseGlobalEscrowFundsTXI.setToAccountId(globalReserve.getId());
-                releaseGlobalEscrowFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL);
+                winnerBetsGroupedByCriterionId.computeIfAbsent(oddId, k -> new ArrayList<>()).add(bet);
             }
 
-            globalEscrow.debit(stake);
-            // 1.3 Release USER funds
-            userAccount.releaseFunds(stake);
-            transaction.getItems().add(globalEscrowToUserTX);
-            item.setStatus(BetSlipItemStatusEnum.VOIDED); // odd stays VOID (refunded)
+            MATCH_TOTAL_STAKES = bet.getStake().add(MATCH_TOTAL_STAKES);
         }
 
-        //
-        // #region 2. LOSERS
-        for (BetSlipItemEntity item : validItems) {
-            if (Boolean.TRUE.equals(item.getOdd().getIsWinner())) {
-                continue;
-            }
+        // BUCKET = ESCROW + match.getReservedLiability
+        var MATCH_BUCKET = match.getReservedLiability().add(MATCH_TOTAL_STAKES);
 
+        // WINNERS
+        var winnerItems = winnerBetsGroupedByCriterionId.values().stream()
+                .flatMap(List::stream)
+                .toList();
+        for (var item : winnerItems) {
             var stake = item.getStake();
             var potentialPayout = item.getPotentialPayout();
-            var liability = potentialPayout.subtract(stake);
+            var profitToPay = potentialPayout.subtract(stake); // same as liability
 
-            var ownerId = item.getBetSlip().getCreatedBy().getId();
-            var userAccount = userAccountByOwnerId.computeIfAbsent(ownerId, findAccountByOwnerIdUC::execute);
+            var bettorId = item.getBetSlip().getCreatedBy().getId();
+            var bettorAccount = userAccountByOwnerId.computeIfAbsent(bettorId, findAccountByOwnerIdUC::execute);
 
-            // TODO: remove and create a unified TX per user?
-//            TransactionItemEntity txi = new TransactionItemEntity();
-//            txi.setTransaction(transaction);
-//            txi.setAmount(stake);
+            // prepare transaction items
+            var txStakeReturn = new TransactionItemEntity();
+            txStakeReturn.generateId();
+            txStakeReturn.setAmount(stake);
+            txStakeReturn.setToAccountId(bettorAccount.getId());
+            txStakeReturn.setToAccountType(AccountTypeEnum.USER_WALLET);
+            txStakeReturn.setFromAccountId(globalEscrow.getId());
+            txStakeReturn.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            txStakeReturn.setType(TransactionItemTypeEnum.WIN_PAYOUT_STAKE);
+            txStakeReturn.setReferenceMatchId(matchId);
+            txStakeReturn.setReferenceBetSlipId(item.getBetSlip().getId());
+
+            var txProfitToPay = new TransactionItemEntity();
+            txProfitToPay.generateId();
+            txProfitToPay.setAmount(profitToPay);
+            txProfitToPay.setToAccountId(bettorAccount.getId());
+            txProfitToPay.setToAccountType(AccountTypeEnum.USER_WALLET);
+            txProfitToPay.setType(TransactionItemTypeEnum.WIN_PAYOUT_PROFIT);
+            txProfitToPay.setReferenceMatchId(matchId);
+            txProfitToPay.setReferenceBetSlipId(item.getBetSlip().getId());
 
             if (item.getOdd().getCriterion().getMatch().isSpaceOwned()) {
-                // 1.1 Move funds from SPACE RESERVED to SPACE AVAILABLE
+                var spaceId = item.getOdd().getCriterion().getMatch().getSpaceId();
+                var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
+                // no need to debit from space reserved. it's handled right before the end of
+                // execution
+
+                // TODO: test a scenario where bets are only in one place and the space loses
+                // money (it should come from the space reserved, since the liability will take
+                // care of it on bet placement)
+                txProfitToPay.setFromAccountId(spaceAccount.getId());
+                txProfitToPay.setFromAccountType(AccountTypeEnum.SPACE_RESERVED);
+            } else {
+                globalReserve.debit(profitToPay);
+                txProfitToPay.setFromAccountId(globalReserve.getId());
+                txProfitToPay.setFromAccountType(AccountTypeEnum.GLOBAL); // the house always has money
+            }
+
+            MATCH_BUCKET = MATCH_BUCKET.subtract(potentialPayout); // reduce the bucket
+
+            globalEscrow.debit(stake); // always debit from global escrow (money held by the platform)
+            bettorAccount.releaseFunds(stake);
+            bettorAccount.credit(profitToPay);
+
+            item.setStatus(BetSlipItemStatusEnum.WON);
+
+            var batchUser = new SettlementTxBatchPerUser(bettorId);
+            userWinningGroupedTXItems.computeIfAbsent(batchUser, k -> new ArrayList<>()).add(txStakeReturn);
+            userWinningGroupedTXItems.computeIfAbsent(batchUser, k -> new ArrayList<>()).add(txProfitToPay);
+        }
+
+        // LOST
+        var lostItems = lostBetsGroupedByCriterionId.values().stream()
+                .flatMap(List::stream)
+                .toList();
+        for (var item : lostItems) {
+            var stake = item.getStake();
+
+            var bettorId = item.getBetSlip().getCreatedBy().getId();
+            var bettorAccount = userAccountByOwnerId.computeIfAbsent(bettorId, findAccountByOwnerIdUC::execute);
+
+            var txStakeCollection = new TransactionItemEntity();
+            txStakeCollection.generateId();
+            txStakeCollection.setAmount(stake);
+            txStakeCollection.setFromAccountId(globalEscrow.getId());
+            txStakeCollection.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            txStakeCollection.setType(TransactionItemTypeEnum.LOSS_COLLECTION);
+            txStakeCollection.setReferenceMatchId(matchId);
+            txStakeCollection.setReferenceBetSlipId(item.getBetSlip().getId());
+
+            if (item.getOdd().getCriterion().getMatch().isSpaceOwned()) {
                 var spaceId = item.getOdd().getCriterion().getMatch().getSpaceId();
                 var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
 
-                // TODO: find a way to solve it
-                // because it's balacedReserved != SUM(liabilities)
-//                spaceAccount.releaseFunds(liability);
                 spaceAccount.credit(stake);
 
-                var releaseSpaceFundsTXI = new TransactionItemEntity();
-                releaseSpaceFundsTXI.setTransaction(transaction);
-                releaseSpaceFundsTXI.setAmount(liability);
-                releaseSpaceFundsTXI.setFromAccountId(globalEscrow.getId());
-                releaseSpaceFundsTXI.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-                releaseSpaceFundsTXI.setToAccountId(spaceAccount.getId());
-                releaseSpaceFundsTXI.setToAccountType(AccountTypeEnum.SPACE_AVAILABLE);
+                txStakeCollection.setToAccountId(spaceAccount.getId());
+                txStakeCollection.setToAccountType(AccountTypeEnum.SPACE_AVAILABLE);
+
+                spaceLosingGroupedTXItems
+                        .computeIfAbsent(new SettlementTxBatchPerAccount(spaceAccount.getId()), k -> new ArrayList<>())
+                        .add(txStakeCollection);
             } else {
-                // 1.2 Move funds from GLOBAL ESCROW to GLOBAL RESERVE
                 globalReserve.credit(stake);
 
-                var releaseGlobalEscrowFundsTXI = new TransactionItemEntity();
-                releaseGlobalEscrowFundsTXI.setTransaction(transaction);
-                releaseGlobalEscrowFundsTXI.setAmount(stake);
-                releaseGlobalEscrowFundsTXI.setFromAccountId(globalEscrow.getId());
-                releaseGlobalEscrowFundsTXI.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-                releaseGlobalEscrowFundsTXI.setToAccountId(globalReserve.getId());
-                releaseGlobalEscrowFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL);
+                txStakeCollection.setToAccountId(globalReserve.getId());
+                txStakeCollection.setToAccountType(AccountTypeEnum.GLOBAL);
+
+                globalLosingGroupedTXItems
+                        .computeIfAbsent(new SettlementTxBatchPerAccount(globalReserve.getId()), k -> new ArrayList<>())
+                        .add(txStakeCollection);
             }
 
             globalEscrow.debit(stake); // always debit from global escrow (money held by the platform)
-            userAccount.consumeReservedStake(stake); // user loses stake permanently
+            bettorAccount.consumeReservedStake(stake); // bettor looses the bet
 
-//            transaction.getItems().add(txi);
             item.setStatus(BetSlipItemStatusEnum.LOST);
-            item.getOdd().setStatus(OddStatusEnum.SETTLED);
         }
-        // #endregion
 
-        // 3. WINNERS
-        for (BetSlipItemEntity item : validItems) {
-            if (!Boolean.TRUE.equals(item.getOdd().getIsWinner())) {
-                continue;
+        if (match.isSpaceOwned()) {
+            var spaceId = match.getSpaceId();
+            var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
+
+            // since the money was already allocated in the MATCH_BUCKET
+            // it must be removed from the reservedBalance
+            spaceAccount.consumeReservedStake(match.getReservedLiability());
+
+            if (MATCH_BUCKET.isGreaterThan(BetMoney.zero())) {
+                spaceAccount.credit(MATCH_BUCKET);
+
+                var txReleaseReserve = new TransactionItemEntity();
+                txReleaseReserve.generateId();
+                txReleaseReserve.setAmount(MATCH_BUCKET);
+                txReleaseReserve.setToAccountId(spaceAccount.getId());
+                txReleaseReserve.setToAccountType(AccountTypeEnum.SPACE_AVAILABLE);
+                txReleaseReserve.setFromAccountId(spaceAccount.getId());
+                txReleaseReserve.setFromAccountType(AccountTypeEnum.SPACE_RESERVED);
+                txReleaseReserve.setType(TransactionItemTypeEnum.RESERVE_RELEASE);
+                txReleaseReserve.setReferenceMatchId(matchId);
+
+                spaceLosingGroupedTXItems
+                        .computeIfAbsent(new SettlementTxBatchPerAccount(spaceAccount.getId()), k -> new ArrayList<>())
+                        .add(txReleaseReserve);
             }
-
-            var stake = item.getStake();
-            var potentialPayout = item.getPotentialPayout();
-            var profit = potentialPayout.subtract(stake); // same as liability
-            var ownerId = item.getBetSlip().getCreatedBy().getId();
-            var userAccount = userAccountByOwnerId.computeIfAbsent(ownerId, findAccountByOwnerIdUC::execute);
-
-//            TransactionItemEntity txi = new TransactionItemEntity();
-//            txi.setTransaction(transaction);
-//            txi.setAmount(profit);
-//            txi.setToAccountId(userAccount.getId());
-//            txi.setToAccountType(AccountTypeEnum.USER_WALLET);
-
-            if (item.getOdd().getCriterion().getMatch().isSpaceOwned()) {
-                // 1.1 Move funds from SPACE RESERVED to SPACE AVAILABLE
-                var spaceId = item.getOdd().getCriterion().getMatch().getSpaceId();
-                var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
-
-                // channel pays the profit to the user
-                // while the stake goes from ESCROW to USER_WALLET
-                spaceAccount.consumeReservedStake(profit);
-
-                var releaseSpaceFundsTXI = new TransactionItemEntity();
-                releaseSpaceFundsTXI.setTransaction(transaction);
-                releaseSpaceFundsTXI.setAmount(profit);
-                releaseSpaceFundsTXI.setFromAccountId(spaceAccount.getId());
-                releaseSpaceFundsTXI.setFromAccountType(AccountTypeEnum.SPACE_RESERVED);
-                releaseSpaceFundsTXI.setToAccountId(spaceAccount.getId());
-                releaseSpaceFundsTXI.setToAccountType(AccountTypeEnum.SPACE_AVAILABLE);
-            } else {
-                // 1.2 Reduce GLOBAL RESERVE and GLOBAL ESCROW
-                // and move funds from GLOBAL RESERVE to USER WALLET
-
-                globalReserve.debit(profit);
-
-                var releaseGlobalReserveFundsTXI = new TransactionItemEntity();
-                releaseGlobalReserveFundsTXI.setTransaction(transaction);
-                releaseGlobalReserveFundsTXI.setAmount(profit);
-                releaseGlobalReserveFundsTXI.setFromAccountId(globalReserve.getId());
-                releaseGlobalReserveFundsTXI.setFromAccountType(AccountTypeEnum.GLOBAL);
-                releaseGlobalReserveFundsTXI.setToAccountId(userAccount.getId());
-                releaseGlobalReserveFundsTXI.setToAccountType(AccountTypeEnum.USER_WALLET);
-            }
-
-            globalEscrow.debit(stake); // always debit from global escrow (money held by the platform)
-            var releaseGlobalEscrowFundsTXI = new TransactionItemEntity();
-            releaseGlobalEscrowFundsTXI.setTransaction(transaction);
-            releaseGlobalEscrowFundsTXI.setAmount(stake);
-            releaseGlobalEscrowFundsTXI.setFromAccountId(globalEscrow.getId());
-            releaseGlobalEscrowFundsTXI.setFromAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-            releaseGlobalEscrowFundsTXI.setToAccountId(globalReserve.getId());
-            releaseGlobalEscrowFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL);
-
-            userAccount.credit(profit); // user wins profit
-            userAccount.releaseFunds(stake); // user wins stake back
-
-//            transaction.getItems().add(txi);
-            item.setStatus(BetSlipItemStatusEnum.WON);
-            item.getOdd().setStatus(OddStatusEnum.SETTLED);
+        } else if (MATCH_BUCKET.isGreaterThan(BetMoney.zero())) {
+            globalReserve.credit(MATCH_BUCKET); // the platform wins
         }
 
-        // 4. Final status updates
-        List<CriterionEntity> suspendedCriteria = criterionRepository.findAllByMatchId(matchId,
-                List.of(CriterionStatusEnum.SUSPENDED));
-        for (CriterionEntity c : suspendedCriteria) {
-            c.setStatus(CriterionStatusEnum.SETTLED);
-        }
-        criterionRepository.saveAll(suspendedCriteria);
-
-        List<BetSlipEntity> affectedSlips = items.stream().map(BetSlipItemEntity::getBetSlip).distinct().toList();
-        for (BetSlipEntity slip : affectedSlips) {
+        // update bet slip status
+        var affectedSlips = items.stream().map(BetSlipItemEntity::getBetSlip).distinct().toList();
+        for (var slip : affectedSlips) {
             List<BetSlipItemEntity> slipItems = slip.getItems();
             boolean anyLost = slipItems.stream().anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.LOST);
             boolean anyWon = slipItems.stream().anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.WON);
@@ -307,7 +281,39 @@ public class SettleMatchUC implements IUseCase<String, Void> {
             }
         }
 
-        transactionRepository.save(transaction);
+        // create TXs
+        this.createTransactionBatches(matchId, userWinningGroupedTXItems, authenticatedUser);
+        this.createTransactionBatches(matchId, spaceLosingGroupedTXItems, authenticatedUser);
+        this.createTransactionBatches(matchId, globalLosingGroupedTXItems, authenticatedUser);
+
         return Void.TYPE.cast(null);
+    }
+
+    private <K> void createTransactionBatches(
+            String matchId,
+            Map<K, List<TransactionItemEntity>> batches,
+                    UserEntity createdBy) {
+
+        for (var entry : batches.entrySet()) {
+            var txItems = entry.getValue();
+
+            if (txItems == null || txItems.isEmpty()) {
+                continue;
+            }
+
+            var tx = new TransactionEntity();
+            tx.generateId();
+            tx.setReferenceId(matchId);
+            tx.setCreatedBy(createdBy);
+            tx.setType(TransactionTypeEnum.MATCH_SETTLEMENT);
+            tx.setReferenceType(TransactionReferenceTypeEnum.MATCH);
+
+            for (var item : txItems) {
+                item.setTransaction(tx);
+                tx.getItems().add(item);
+            }
+
+            transactionRepository.save(tx);
+        }
     }
 }

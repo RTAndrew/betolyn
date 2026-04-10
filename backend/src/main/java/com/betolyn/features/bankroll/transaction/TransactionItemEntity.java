@@ -29,6 +29,13 @@ import lombok.Setter;
 @Table(name = "transaction_items")
 public class TransactionItemEntity extends BaseEntity {
 
+    private String referenceMatchId;
+    private String referenceBetSlipId;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    private TransactionItemTypeEnum type;
+
     @ManyToOne
     @JoinColumn(name = "transaction_id", nullable = false)
     private TransactionEntity transaction;

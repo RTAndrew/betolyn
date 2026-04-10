@@ -1,13 +1,14 @@
 package com.betolyn.features.betting.betslips;
 
-import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
-import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
+import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
 
 public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, String> {
 
@@ -51,6 +52,8 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             WHERE i.matchId = :matchId
             AND i.betSlip.status = :slipStatus
             AND i.status = :itemStatus
+            AND o.status = com.betolyn.features.betting.odds.OddStatusEnum.SUSPENDED
+
             """)
     List<BetSlipItemEntity> findAllByMatchIdAndBetSlipStatusAndStatus(
             @Param("matchId") String matchId,
@@ -58,9 +61,12 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             @Param("itemStatus") BetSlipItemStatusEnum itemStatus);
 
     /**
-     * Returns (sum of stake from items for match where criterion is SETTLED and item is not VOIDED, sum of potentialPayout for WON items for match).
-     * Used to compute match-level realized P/L = stakes - payouts (null when no settled criteria).
-     * EXISTS is required so we only count stakes on settled criteria; otherwise we would include stakes on PENDING criteria and distort match P/L.
+     * Returns (sum of stake from items for match where criterion is SETTLED and
+     * item is not VOIDED, sum of potentialPayout for WON items for match).
+     * Used to compute match-level realized P/L = stakes - payouts (null when no
+     * settled criteria).
+     * EXISTS is required so we only count stakes on settled criteria; otherwise we
+     * would include stakes on PENDING criteria and distort match P/L.
      */
     @Query(value = """
             SELECT (SELECT COALESCE(SUM(i.stake), 0) FROM bet_slip_items i WHERE i.match_id = :matchId AND i.status <> 'VOIDED' AND EXISTS (SELECT 1 FROM criteria c WHERE c.id = i.criterion_id AND c.match_entity_id = :matchId AND c.status = 'SETTLED')),

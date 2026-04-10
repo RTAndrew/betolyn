@@ -1,25 +1,33 @@
 package com.betolyn.features.bankroll.transaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.baseEntity.BaseEntity;
 import com.betolyn.shared.baseEntity.EntityUUID;
+import com.betolyn.shared.money.BetMoney;
+import com.betolyn.shared.money.BetMoneyAttributeConverter;
+import com.betolyn.shared.money.MoneyConstants;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -29,6 +37,10 @@ import java.util.List;
 public class TransactionEntity extends BaseEntity {
 
     private String memo;
+
+    @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
+    @Convert(converter = BetMoneyAttributeConverter.class)
+    private BetMoney totalAmount = BetMoney.zero();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -53,5 +65,20 @@ public class TransactionEntity extends BaseEntity {
     @Override
     protected EntityUUID getUUIDPrefix() {
         return new EntityUUID(12, "tx");
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void calculateTotalAmount() {
+        if (this.items == null || this.items.isEmpty()) {
+            this.totalAmount = BetMoney.zero();
+            return;
+        }
+
+        this.totalAmount = this.items
+                .stream()
+                .map(TransactionItemEntity::getAmount)
+                .reduce((a, b) -> a.add(b))
+                .orElse(BetMoney.zero());
     }
 }
