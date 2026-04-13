@@ -1,0 +1,20 @@
+meta {
+  name: findById
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/me/bets/items/slipi_6efyozpGp3dX
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  Returns a single bet slip line item for the authenticated user (`FindMyBetSlipItemByIdUC`: item must exist and belong to the current user). Success payload is `BetSlipItemDTO` (stake, potential payout, odd at placement, status, optional linked `MatchDTO`, etc.). Responds with 404 if the id is unknown or not owned by the user; 403 if unauthenticated.
+}

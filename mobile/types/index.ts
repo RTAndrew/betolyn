@@ -154,10 +154,13 @@ export type IBetSlipItemStatus = 'PENDING' | 'LOST' | 'WON' | 'VOIDED';
 
 export interface IBetSlipItem {
   id: string;
+  createdAt: string;
+  updatedAt: string;
   oddId: string;
   stake: number;
   status: `${IBetSlipItemStatus}`;
   matchId: string;
+  match?: IMatch;
   criterionId: string;
   lastOddHistoryId: string;
   potentialPayout: number;

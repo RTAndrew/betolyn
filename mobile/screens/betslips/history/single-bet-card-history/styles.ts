@@ -4,60 +4,62 @@ import { colors } from '@/constants/colors';
 
 export const styles = StyleSheet.create({
   card: {
+    backgroundColor: colors.greyMedium,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    gap: 10,
+    // borderWidth: 0.2,
+    borderColor: colors.greyLighter50,
+  },
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.greyMedium,
-    borderRadius: 8,
-    paddingVertical: 12,
-    gap: 12,
+    justifyContent: 'space-between',
   },
-  logos: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  statusBadge: {
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
-  logo: {
-    width: 28,
-    height: 28,
-    borderRadius: 15,
-    backgroundColor: colors.greyMedium,
+  statusText: {
+    color: colors.white,
+    fontSize: 13,
+    fontWeight: '700',
   },
-  logoOverlap: {
-    marginTop: 2,
-  },
-  logoPlaceholder: {
-    backgroundColor: colors.greyLight,
+  contentRow: {
+    flexDirection: 'column',
+    gap: 6,
   },
   body: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     minWidth: 0,
     gap: 4,
   },
-  oddName: {
-    fontWeight: '400',
-    color: colors.white,
-  },
   secondaryText: {
-    color: colors.greyLighter,
-    marginTop: 2,
+    color: colors.greyLighter50,
   },
   footer: {
     alignItems: 'flex-end',
     justifyContent: 'center',
-    gap: 4,
-  },
-  stake: {
-    fontSize: 16,
-    color: colors.white,
-    fontWeight: '700',
   },
   oddsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  secondaryValue: {
+    fontWeight: '600',
+    color: colors.greyLighter,
   },
   potentialPayout: {
-    color: '#E8C547',
+    fontSize: 16,
     fontWeight: '600',
+    color: colors.white,
+  },
+  dividerLine: {
+    height: 0.3,
+    backgroundColor: colors.greyLighter50,
   },
 });

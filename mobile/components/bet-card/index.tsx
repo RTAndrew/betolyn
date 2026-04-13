@@ -33,7 +33,7 @@ const Team = ({ name, imageUrl, score }: TeamProps) => {
   return (
     <View style={teamStyles.teamContent}>
       <View style={teamStyles.teamInfo}>
-        <Image source={{ uri: imageUrl }} style={{ width: 30, height: 30 }} />
+        {imageUrl && <Image source={{ uri: imageUrl }} style={{ width: 30, height: 30 }} />}
         <Text className="team-name">{name}</Text>
       </View>
 
@@ -59,6 +59,7 @@ const teamStyles = StyleSheet.create({
 interface BetCardProps {
   match: IMatch;
   showOdds?: boolean;
+  /** Do not show the bottom sheet actions */
   disableControls?: boolean;
   onPress?: (match: IMatch) => void;
 }

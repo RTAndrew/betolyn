@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { DimensionValue, StyleSheet, View, ViewStyle } from 'react-native';
 import { Shimmer } from 'react-native-fast-shimmer';
 
 import { colors } from '@/constants/colors';
@@ -8,7 +8,7 @@ import { hexToHexWithAlpha } from '@/utils/hex-rgba';
 export interface SkeletonProps {
   type?: 'circle' | 'default';
   borderRadius?: number;
-  size?: number;
+  size?: DimensionValue;
   color?: string;
   style?: ViewStyle;
 }
@@ -47,7 +47,7 @@ export function Skeleton({
     styles.base,
     {
       width: size,
-      borderRadius: isCircle && size != null ? size / 2 : isCircle ? 9999 : borderRadius,
+      borderRadius: isCircle && size != null ? Number(size) / 2 : isCircle ? 9999 : borderRadius,
       backgroundColor: color ?? colors.greyLight,
     },
   ];

@@ -89,9 +89,10 @@ export interface SettingsItemGroupProps {
   title?: ReactNode;
   children: ReactNode;
   style?: ViewStyle;
+  innerStyle?: ViewStyle;
 }
 
-const SettingsItemGroup = ({ title, children, style }: SettingsItemGroupProps) => {
+const SettingsItemGroup = ({ title, children, style, innerStyle }: SettingsItemGroupProps) => {
   const childArray = React.Children.toArray(children);
 
   return (
@@ -106,7 +107,7 @@ const SettingsItemGroup = ({ title, children, style }: SettingsItemGroupProps) =
         </View>
       )}
 
-      <View style={styles.group}>
+      <View style={[styles.group, innerStyle]}>
         {childArray.map((child, index) => {
           const isLast = index === childArray.length - 1;
           const wrapped =

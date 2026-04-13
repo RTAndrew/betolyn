@@ -57,18 +57,30 @@ const Tag = ({ title, icon, style, color, ...props }: TagProps) => {
   );
 };
 
-interface ActiveTagProps extends Pick<TagProps, 'icon'> {
+interface DerivedTagProps extends Pick<TagProps, 'icon'> {
   title?: string;
 }
 
-const ActiveTag = ({ title = 'Active', icon }: ActiveTagProps) => {
+const ActiveTag = ({ title = 'Active', icon }: DerivedTagProps) => {
   return (
     <Tag
       icon={icon}
       title={title}
       textColor="#36D399"
-      borderColor={hexToRgba('#36D399', 0.5)}
-      backgroundColor={hexToRgba('#36D399', 0.12)}
+      borderColor={'#36d39980'}
+      backgroundColor="#46616A"
+    />
+  );
+};
+
+const PendingTag = ({ title = 'Pending', icon }: DerivedTagProps) => {
+  return (
+    <Tag
+      icon={icon}
+      title={title}
+      textColor="#F3CA41"
+      borderColor={'#f3ca4180'}
+      backgroundColor="#f3ca411f"
     />
   );
 };
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 100,
-    borderWidth: 1,
+    // borderWidth: 1,
   },
   text: {
     fontSize: 12,
@@ -92,5 +104,6 @@ const styles = StyleSheet.create({
 
 Tag.Live = LiveTag;
 Tag.Active = ActiveTag;
+Tag.Pending = PendingTag;
 
 export default Tag;

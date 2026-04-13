@@ -1,6 +1,6 @@
 import Tag from '@/components/tags';
 import { colors } from '@/constants/colors';
-import { CriterionStatusEnum, EOddStatus, MatchStatusEnum } from '@/types';
+import { CriterionStatusEnum, EOddStatus, IBetSlipItemStatus, MatchStatusEnum } from '@/types';
 
 import { firstLetterUppercase } from './first-letter-uppercase';
 import { hexToRgba } from './hex-rgba';
@@ -57,5 +57,18 @@ export const getCriterionStatusTag = (status?: `${CriterionStatusEnum}`) => {
       );
     case 'DRAFT':
       return <Tag color={colors.greyLighter} title="Draft" />;
+  }
+};
+
+export const getBetSlipItemStatusTag = (status: `${IBetSlipItemStatus}`) => {
+  switch (status) {
+    case 'PENDING':
+      return <Tag.Pending />;
+    case 'WON':
+      return <Tag.Active title="Won" />;
+    case 'LOST':
+      return <Tag color={colors.secondary} title="Lost" />;
+    case 'VOIDED':
+      return <Tag color={colors.greyLighter} title="Voided" />;
   }
 };

@@ -5,6 +5,7 @@ const BetslipsLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="placebet" options={{ headerShown: false }} />
+      <Stack.Screen name="[id]" options={{ headerShown: false }} />
     </Stack>
   );
 };

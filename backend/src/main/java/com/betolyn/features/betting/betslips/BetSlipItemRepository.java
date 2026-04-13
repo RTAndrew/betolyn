@@ -9,8 +9,22 @@ import org.springframework.data.repository.query.Param;
 
 import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
+import java.util.Optional;
 
 public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, String> {
+    @Query("""
+            SELECT i FROM BetSlipItemEntity i
+            JOIN i.betSlip bs
+            JOIN FETCH i.odd o
+            JOIN FETCH o.criterion c
+            JOIN FETCH c.match
+            LEFT JOIN FETCH i.oddHistory
+            WHERE i.id = :id
+            AND bs.createdBy.id = :createdById
+            """)
+    Optional<BetSlipItemEntity> findByIdAndOwnerId(
+            @Param("id") String id,
+            @Param("createdById") String createdById);
 
     @Query("""
             SELECT COALESCE(SUM(i.potentialPayout), 0) FROM BetSlipItemEntity i

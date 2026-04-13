@@ -22,6 +22,13 @@ export const getMyBetsQueryOptions = () => {
   });
 };
 
+export const getBetSlipItemByIdQueryOptions = ({ id }: { id: string }) => {
+  return queryOptions<IApiResponse<IBetSlip['items'][number]>, IApiResponse>({
+    queryKey: ['me', 'bets', 'items', id],
+    queryFn: () => MeService.getBetSlipItemById(id),
+  });
+};
+
 // QUERIES
 
 export const useGetMe = ({ queryOptions }: IQueryOptions<typeof getMeQueryOptions>) => {
@@ -31,5 +38,13 @@ export const useGetMe = ({ queryOptions }: IQueryOptions<typeof getMeQueryOption
 
 export const useGetMyBets = ({ queryOptions }: IQueryOptions<typeof getMyBetsQueryOptions>) => {
   const query = getMyBetsQueryOptions();
+  return useQuery({ ...query, ...queryOptions });
+};
+
+export const useGetBetSlipItemById = ({
+  id,
+  queryOptions,
+}: { id: string } & IQueryOptions<typeof getBetSlipItemByIdQueryOptions>) => {
+  const query = getBetSlipItemByIdQueryOptions({ id });
   return useQuery({ ...query, ...queryOptions });
 };
