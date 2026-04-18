@@ -12,8 +12,8 @@ import { colors } from '@/constants/colors';
 import { useGetMyBets } from '@/services/me/me-query';
 import { IBetSlipItem } from '@/types';
 
-import SingleBetCardHistory from './single-bet-card-history';
-import { SingleBetCardHistorySkeleton } from './single-bet-card-history/skeleton';
+import BetSlipItemCard from './bet-slip-item-history';
+import { BetSlipItemCardSkeleton } from './bet-slip-item-history/skeleton';
 
 const Header = ({ children }: PropsWithChildren) => {
   return (
@@ -38,7 +38,7 @@ const BetSlipHistoryScreen = () => {
       <Header>
         <SafeHorizontalView style={{ marginTop: 18 }}>
           <Skeleton.Group>
-            <SingleBetCardHistorySkeleton />
+            <BetSlipItemCardSkeleton />
           </Skeleton.Group>
         </SafeHorizontalView>
       </Header>
@@ -81,7 +81,7 @@ const BetSlipHistoryScreen = () => {
           renderItem={({ item: slip }) => {
             return (
               <SafeHorizontalView>
-                <SingleBetCardHistory key={slip.id} bet={slip} />
+                <BetSlipItemCard key={slip.id} bet={slip} />
               </SafeHorizontalView>
             );
           }}

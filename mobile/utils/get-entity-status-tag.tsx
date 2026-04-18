@@ -72,3 +72,17 @@ export const getBetSlipItemStatusTag = (status: `${IBetSlipItemStatus}`) => {
       return <Tag color={colors.greyLighter} title="Voided" />;
   }
 };
+
+const getBetSlipStatusColor = (status: `${IBetSlipItemStatus}`) => {
+  if (status === 'PENDING') return colors.complementary;
+  if (status === 'WON') return '#00C853';
+  if (status === 'LOST') return '#FF0000';
+  return colors.greyLight;
+};
+
+const getBetSlipStatusLabel = (status: `${IBetSlipItemStatus}`) => {
+  if (status === 'PENDING') return 'Pending';
+  if (status === 'WON') return 'Won';
+  if (status === 'LOST') return 'Lost';
+  return status;
+};

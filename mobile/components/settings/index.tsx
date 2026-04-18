@@ -35,7 +35,7 @@ const renderNode = (node: ReactNode, style: object, wrap = false) => {
 };
 
 const SettingsItem = ({
-  suffixIcon = true,
+  suffixIcon = false,
   inGroup = false,
   description,
   subtitle,
@@ -87,22 +87,42 @@ const SettingsItem = ({
 
 export interface SettingsItemGroupProps {
   title?: ReactNode;
+  description?: {
+    title: ReactNode;
+    onPress: () => void;
+  };
   children: ReactNode;
   style?: ViewStyle;
   innerStyle?: ViewStyle;
 }
 
-const SettingsItemGroup = ({ title, children, style, innerStyle }: SettingsItemGroupProps) => {
+const SettingsItemGroup = ({
+  title,
+  children,
+  style,
+  description,
+  innerStyle,
+}: SettingsItemGroupProps) => {
   const childArray = React.Children.toArray(children);
 
   return (
     <View style={style}>
-      {title != null && (
+      {(title != null || description != null) && (
         <View style={styles.groupTitleWrap}>
           {typeof title === 'string' ? (
             <ThemedText style={styles.groupTitle}>{title}</ThemedText>
           ) : (
             title
+          )}
+
+          {typeof description?.title === 'string' ? (
+            <Pressable onPress={description?.onPress}>
+              <ThemedText style={[styles.groupTitle, styles.groupDescription]}>
+                {description?.title}
+              </ThemedText>
+            </Pressable>
+          ) : (
+            <Pressable onPress={description?.onPress}>{description?.title}</Pressable>
           )}
         </View>
       )}
@@ -115,7 +135,7 @@ const SettingsItemGroup = ({ title, children, style, innerStyle }: SettingsItemG
               ? cloneElement(child as React.ReactElement<SettingsItemProps>, { inGroup: true })
               : child;
           return (
-            <View key={index} style={[styles.groupItemWrap, !isLast && styles.groupItemBorder]}>
+            <View key={index} style={[!isLast && styles.groupItemBorder]}>
               {wrapped}
             </View>
           );
@@ -132,6 +152,9 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR,
   },
   groupTitleWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingBottom: 8,
     paddingHorizontal: ITEM_PADDING_H,
   },
@@ -139,7 +162,11 @@ const styles = StyleSheet.create({
     color: colors.greyLighter,
     fontWeight: '600',
   },
-  groupItemWrap: {},
+  groupDescription: {
+    color: colors.complementary,
+    // borderBottomWidth: 1,
+    // borderBottomColor: colors.complementary2,
+  },
   groupItemBorder: {
     borderBottomWidth: 1,
     borderBottomColor: BORDER_COLOR,

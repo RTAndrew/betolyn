@@ -167,3 +167,62 @@ export interface IBetSlipItem {
   voidReason: string | null;
   oddValueAtPlacement: number;
 }
+
+/** Ledger transaction type (bankroll). */
+export type TTransactionType =
+  | 'TRANSFER'
+  | 'CHANNEL_FUNDING'
+  | 'MINT_CREDITS'
+  | 'BET_PLACEMENT'
+  | 'MATCH_SETTLEMENT'
+  | 'MARKET_VOID'
+  | 'MATCH_VOID'
+  | 'VOID_REVERSAL'
+  | 'PLATFORM_FEE_COLLECTION'
+  | 'CHANNEL_WITHDRAW';
+
+export type TTransactionReferenceType = 'BET_SLIP' | 'MATCH' | 'MARKET' | 'CHANNEL' | 'USER';
+
+/** Account leg in a transaction line item. Mirrors backend `AccountTypeEnum`. */
+export type TAccountType =
+  | 'USER_WALLET'
+  | 'SPACE_AVAILABLE'
+  | 'SPACE_RESERVED'
+  | 'GLOBAL'
+  | 'GLOBAL_ESCROW';
+
+/** Line item kind within a transaction. Mirrors backend `TransactionItemTypeEnum`. */
+export type TTransactionItemType =
+  | 'STAKE_ESCROW'
+  | 'LIABILITY_RESERVE'
+  | 'WIN_PAYOUT_STAKE'
+  | 'WIN_PAYOUT_PROFIT'
+  | 'LOSS_COLLECTION'
+  | 'RESERVE_RELEASE';
+
+export interface ITransactionItem {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  referenceMatchId: string | null;
+  referenceBetSlipId: string | null;
+  type: `${TTransactionItemType}`;
+  fromAccountId: string;
+  fromAccountType: `${TAccountType}`;
+  toAccountId: string;
+  toAccountType: `${TAccountType}`;
+  amount: number;
+}
+
+export interface ITransaction {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  memo: string | null;
+  totalAmount: number;
+  type: `${TTransactionType}`;
+  referenceId: string;
+  referenceType: `${TTransactionReferenceType}`;
+  createdBy?: IUserPublic;
+  items: ITransactionItem[];
+}

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/constants/colors';
+import { hexToRgba } from '@/utils/hex-rgba';
 
 export const styles = StyleSheet.create({
   card: {
@@ -14,8 +15,7 @@ export const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 12,
   },
   statusBadge: {
     borderRadius: 12,
@@ -30,11 +30,12 @@ export const styles = StyleSheet.create({
   contentRow: {
     flexDirection: 'column',
     gap: 6,
+    alignSelf: 'stretch',
   },
   body: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignSelf: 'stretch',
     minWidth: 0,
     gap: 4,
   },
@@ -55,11 +56,11 @@ export const styles = StyleSheet.create({
   },
   potentialPayout: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     color: colors.white,
   },
   dividerLine: {
-    height: 0.3,
-    backgroundColor: colors.greyLighter50,
+    height: 1,
+    backgroundColor: hexToRgba(colors.greyLighter, 0.15),
   },
 });

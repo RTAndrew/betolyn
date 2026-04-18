@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   base: {
     overflow: 'hidden',
     flexGrow: 1,
-    height: 30,
+    height: 20,
     backgroundColor: colors.greyLight,
   },
   shimmerFill: {

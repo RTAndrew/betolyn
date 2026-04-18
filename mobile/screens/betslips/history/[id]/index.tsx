@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import BetCard from '@/components/bet-card';
@@ -9,9 +9,11 @@ import { MoneyHand } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import { Settings } from '@/components/settings';
-import { ThemedText } from '@/components/ThemedText';
+import Tag from '@/components/tags';
 import { colors } from '@/constants/colors';
+import TransactionScreenGeneric from '@/screens/me/transactions/transaction-screen-generic';
 import { useGetBetSlipItemById } from '@/services';
+import { IBetSlipItem } from '@/types';
 import { getBetSlipItemStatusTag } from '@/utils/get-entity-status-tag';
 import { formatKwanzaAmount, formatOddValue } from '@/utils/number-formatters';
 
@@ -41,15 +43,75 @@ const Root = (props: { children: React.ReactNode; backgroundColor?: string }) =>
   );
 };
 
+const TransactionDetailsTab = ({
+  bet,
+  type,
+}: {
+  bet: IBetSlipItem;
+  type: 'single' | 'multiple';
+}) => {
+  return (
+    <View style={styles.transactionBody}>
+      <Settings.ItemGroup>
+        <Settings.Item title="Type" suffixIcon={false} description={type.toUpperCase()} />
+        <Settings.Item title="Created At" suffixIcon={false} description={bet.createdAt} />
+      </Settings.ItemGroup>
+
+      <Settings.ItemGroup title="Bet">
+        <Settings.Item
+          title="Odd Price"
+          suffixIcon={false}
+          description={formatOddValue(bet.oddValueAtPlacement)}
+        />
+        <Settings.Item
+          title="Stake"
+          suffixIcon={false}
+          description={formatKwanzaAmount(bet.stake)}
+        />
+        <Settings.Item
+          suffixIcon={false}
+          description={
+            bet.status === 'WON'
+              ? formatKwanzaAmount(bet.potentialPayout - bet.stake)
+              : formatKwanzaAmount(bet.potentialPayout)
+          }
+          title={bet.status == 'WON' ? 'Payout' : 'Potential Payout'}
+        />
+      </Settings.ItemGroup>
+
+      <BetSlipItemOddReference oddId={bet.oddId} />
+
+      {bet.match && (
+        <Settings.ItemGroup title="Linked Reference" innerStyle={styles.linkedReference}>
+          <SafeHorizontalView>
+            <BetCard match={bet.match} disableControls />
+          </SafeHorizontalView>
+        </Settings.ItemGroup>
+      )}
+
+      <TransactionScreenGeneric.TransactionId title="Bet ID" id={bet.id} />
+    </View>
+  );
+};
+
 const BetSlipIdScreen = ({ id, type }: BetSlipIdScreenProps) => {
-  const { data, isPending } = useGetBetSlipItemById({ id });
+  const { data, isPending, error } = useGetBetSlipItemById({ id });
   const bet = data?.data;
+
+  const statusTag = useMemo(() => {
+    if (bet?.status === 'WON') {
+      const profit = (bet?.stake / bet?.potentialPayout) * 100;
+      return <Tag.Active title={`Won +${profit.toFixed(0)}%`} />;
+    }
+
+    return getBetSlipItemStatusTag(bet?.status ?? 'PENDING');
+  }, [bet]);
 
   if (isPending) {
     return <BetSlipIdScreenSkeleton />;
   }
 
-  if (!bet) {
+  if (error || !bet) {
     return (
       <Root backgroundColor={colors.greyLight}>
         <EmptyState.NoSearch center title="Bet not found" description="" />
@@ -58,54 +120,24 @@ const BetSlipIdScreen = ({ id, type }: BetSlipIdScreenProps) => {
   }
 
   return (
-    <Root>
-      <View style={{ backgroundColor: colors.greyLight }}>
-        <SafeHorizontalView style={styles.transaction}>
-          <View style={styles.iconContainer}>
-            <MoneyHand width={32} height={32} />
-          </View>
-          <ThemedText style={styles.amount}>
-            {formatKwanzaAmount(bet?.potentialPayout ?? 0)}
-          </ThemedText>
-          {getBetSlipItemStatusTag(bet?.status ?? 'PENDING')}
-        </SafeHorizontalView>
-      </View>
-
-      <SafeHorizontalView style={styles.transactionBody}>
-        <Settings.ItemGroup>
-          <Settings.Item title="Type" suffixIcon={false} description={type.toUpperCase()} />
-          <Settings.Item title="Created At" suffixIcon={false} description={bet.createdAt} />
-        </Settings.ItemGroup>
-
-        <Settings.ItemGroup title="Bet">
-          <Settings.Item
-            title="Odd Value"
-            suffixIcon={false}
-            description={formatOddValue(bet.oddValueAtPlacement)}
-          />
-          <Settings.Item
-            title="Amount"
-            suffixIcon={false}
-            description={formatKwanzaAmount(bet.stake)}
-          />
-          <Settings.Item
-            title="Payout"
-            suffixIcon={false}
-            description={formatKwanzaAmount(bet.potentialPayout)}
-          />
-        </Settings.ItemGroup>
-
-        <BetSlipItemOddReference oddId={bet.oddId} />
-
-        {bet.match && (
-          <Settings.ItemGroup title="Linked Reference" innerStyle={styles.linkedReference}>
-            <SafeHorizontalView>
-              <BetCard match={bet.match} disableControls />
-            </SafeHorizontalView>
-          </Settings.ItemGroup>
-        )}
-      </SafeHorizontalView>
-    </Root>
+    <>
+      <TransactionScreenGeneric
+        isLoading={isPending}
+        error={Boolean(error || !data)}
+        header={{
+          icon: MoneyHand,
+          amount: bet.potentialPayout,
+          tag: statusTag,
+        }}
+        tabs={[
+          {
+            id: 'details',
+            title: 'Details',
+            content: <TransactionDetailsTab bet={bet!} type={type} />,
+          },
+        ]}
+      />
+    </>
   );
 };
 
@@ -138,10 +170,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 18,
     height: '100%',
-    paddingVertical: 24,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: colors.greyMedium,
   },
   linkedReference: {
     backgroundColor: '#414A5C',

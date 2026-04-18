@@ -3,7 +3,7 @@ import type { SvgProps } from 'react-native-svg';
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const SoccerBall = ({ width = 24, height = 24, color = 'white', ...props }: SvgProps) => {
+const Down = ({ width = 24, height = 24, color = 'white', ...props }: SvgProps) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
       <Path
@@ -14,4 +14,4 @@ const SoccerBall = ({ width = 24, height = 24, color = 'white', ...props }: SvgP
   );
 };
 
-export default SoccerBall;
+export default Down;

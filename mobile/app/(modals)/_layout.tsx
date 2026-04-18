@@ -10,6 +10,7 @@ const ModalsLayout = () => {
       <Stack.Screen name="betslips" options={{ headerShown: false }} />
       <Stack.Screen name="criteria" options={{ headerShown: false }} />
       <Stack.Screen name="odds" options={{ headerShown: false }} />
+      <Stack.Screen name="transactions" options={{ headerShown: false }} />
     </Stack>
   );
 };

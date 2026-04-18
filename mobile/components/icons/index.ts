@@ -1,4 +1,6 @@
 export { default as Add } from './add';
+export { default as ArrowDown } from './arrow-down';
+export { default as ArrowUp } from './arrow-up';
 export { default as CaretDown } from './caret-down';
 export { default as CaretUp } from './caret-up';
 export { default as Close } from './close';

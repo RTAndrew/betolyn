@@ -1,14 +1,17 @@
 package com.betolyn.shared;
 
+import java.math.BigDecimal;
+
+import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
+
 import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.shared.money.BetMoney;
-import org.mapstruct.Named;
-
-import java.math.BigDecimal;
 
 /**
  * Centralized conversions between domain money types and transport types.
  */
+@Component
 public class MoneyMapper {
 
     public static BigDecimal betMoneyToBigDecimal(BetMoney money) {

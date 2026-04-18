@@ -23,4 +23,8 @@ export class MeService {
   public static async getBetSlipItemById(betSlipItemId: string) {
     return await getRequest<IBetSlip['items'][number]>(`/me/bets/items/${betSlipItemId}`);
   }
+
+  public static async getBetSlipById(betSlipId: string) {
+    return await getRequest<IBetSlip>(`/me/bets/${betSlipId}`);
+  }
 }

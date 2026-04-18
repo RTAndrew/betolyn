@@ -29,6 +29,13 @@ export const getBetSlipItemByIdQueryOptions = ({ id }: { id: string }) => {
   });
 };
 
+export const getBetSlipQueryOptions = ({ betSlipId }: { betSlipId: string }) => {
+  return queryOptions<IApiResponse<IBetSlip>, IApiResponse>({
+    queryKey: ['me', 'bets', betSlipId],
+    queryFn: () => MeService.getBetSlipById(betSlipId),
+  });
+};
+
 // QUERIES
 
 export const useGetMe = ({ queryOptions }: IQueryOptions<typeof getMeQueryOptions>) => {

@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FindMyBets {
     private final FindMyBetsUC findMyBetsUC;
+    private final FindMyBetSlipByIdUC findMyBetSlipByIdUC;
     private final FindMyBetSlipItemByIdUC findMyBetSlipItemByIdUC;
     private final BetSlipMapper betSlipMapper;
 
@@ -30,6 +31,12 @@ public class FindMyBets {
                 .map(betSlipMapper::toBetSlipDTO)
                 .toList();
         return ResponseEntity.ok(ApiResponse.success("Bet history found", response));
+    }
+
+    @GetMapping("/bets/{betSlipId}")
+    public ResponseEntity<@NotNull ApiResponse<BetSlipDTO>> findMyBetSlipById(@PathVariable String betSlipId) {
+        var betSlip = findMyBetSlipByIdUC.execute(betSlipId);
+        return ResponseEntity.ok(ApiResponse.success("Bet slip found", betSlipMapper.toBetSlipDTO(betSlip)));
     }
 
     @GetMapping("/bets/items/{betSlipItemId}")

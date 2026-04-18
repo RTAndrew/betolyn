@@ -20,3 +20,5 @@ export * from './users/user-service';
 export * from './users/user-query';
 export * from './slips/slip-service';
 export * from './slips/slip-mutation';
+export * from './transactions/transaction-service';
+export * from './transactions/transaction-query';

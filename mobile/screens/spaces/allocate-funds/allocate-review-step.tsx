@@ -10,8 +10,9 @@ import { UserCard } from '@/components/user-card';
 import { useWizardPrimaryAction } from '@/components/wizard/use-wizard';
 import { colors } from '@/constants/colors';
 import { SpaceService, useGetSpaceById } from '@/services';
+import { formatKwanzaAmount } from '@/utils/number-formatters';
 
-import { formatKwanzaAmount, SpaceAllocateWizardStepProps } from './utils';
+import { SpaceAllocateWizardStepProps } from './utils';
 
 const GENERIC_AVATAR = require('@/assets/images/generic-user-profile-image.png');
 
