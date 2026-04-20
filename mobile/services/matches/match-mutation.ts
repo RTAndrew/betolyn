@@ -1,17 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { IVoidReasonRequest } from '@/types';
 import { queryClient } from '@/utils/react-query';
 
 import {
-  getMatchQueryOptions,
   getMatchCriteriaQueryOptions,
   getMatchesQueryOptions,
+  getMatchQueryOptions,
 } from './match-query';
 import {
-  IUpdateMatchScoreRequest,
   ICreateMatchRequest,
-  IUpdateMatchMainCriterionRequest,
   IRescheduleMatchRequest,
+  IUpdateMatchMainCriterionRequest,
+  IUpdateMatchScoreRequest,
   IUpdateMatchStatusRequest,
   MatchesService,
 } from './matches-services';
@@ -38,6 +39,11 @@ interface IRescheduleMatchVariables {
 interface IUpdateMatchStatusVariables {
   matchId: string;
   variables: IUpdateMatchStatusRequest;
+}
+
+interface IVoidMatchVariables {
+  matchId: string;
+  variables: IVoidReasonRequest;
 }
 
 export const useUpdateMatchScore = () => {
@@ -169,6 +175,25 @@ export const useSuspendAllMatchCriteria = () => {
         });
         queryClient.invalidateQueries({
           queryKey: getMatchCriteriaQueryOptions({ matchId }).queryKey,
+        });
+      },
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useVoidMatch = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IVoidMatchVariables) => MatchesService.void(data.matchId, data.variables),
+      onSuccess: (_, variables) => {
+        queryClient.refetchQueries({
+          queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
+        });
+        queryClient.refetchQueries({
+          queryKey: getMatchesQueryOptions().queryKey,
         });
       },
     },

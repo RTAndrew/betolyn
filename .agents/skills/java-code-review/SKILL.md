@@ -185,6 +185,10 @@ Check for:
     - `camelCase` for methods and variables.
     - `PascalCase` for classes and interfaces.
     - `UPPER_SNAKE_CASE` for constants.
+- **SQL and JPQL (repository queries)**
+  - Applies to JPQL/HQL and native SQL in `@Query` (and similar), e.g. on Spring Data `*Repository` interfaces.
+  - **Keywords in CAPS**: Write SQL/JPQL reserved words in uppercase—`SELECT`, `FROM`, `WHERE`, `JOIN`, `LEFT JOIN`, `ON`, `AND`, `OR`, `NOT`, `IN`, `EXISTS`, `BETWEEN`, `LIKE`, `ORDER BY`, `GROUP BY`, `HAVING`, `CASE`, `WHEN`, `THEN`, `ELSE`, `END`, `AS`, `DISTINCT`, `COUNT`, etc. Entity names, aliases, column names, and enum literals follow normal Java/SQL identifier rules (do not force uppercase on those).
+  - **Named parameters**: Prefer `@Param("name")` with `:name` in the query over positional `?1`, `?2` whenever possible—clearer, safer refactors, and easier to reorder conditions. Exception: framework constraints or generated queries where positional parameters are required.
 - **Complexity**
   - Methods exceeding ~30 lines, or clearly doing too much.
   - Cyclomatic complexity > ~10 (many branches, nested conditionals).

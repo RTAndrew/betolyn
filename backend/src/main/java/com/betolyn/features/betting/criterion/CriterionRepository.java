@@ -1,15 +1,25 @@
 package com.betolyn.features.betting.criterion;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 public interface CriterionRepository extends JpaRepository<CriterionEntity, String> {
     // TODO: improve the search to allow only one query with multiple parameters
-    @Query("select c from CriterionEntity c where c.match.id = ?1 and c.status in ?2")
-    List<CriterionEntity> findAllByMatchId(String id, Collection<CriterionStatusEnum> statuses);
+    /** {@code JOIN FETCH} with a status filter limits loaded odds; {@code EXISTS} alone does not. */
+    @Query("""
+            SELECT DISTINCT c
+            FROM CriterionEntity c
+            JOIN FETCH c.odds o
+            WHERE c.match.id = :matchId
+            AND c.status IN :statuses
+            AND o.status <> com.betolyn.features.betting.odds.OddStatusEnum.VOID
+            """)
+    List<CriterionEntity> findAllByMatchId(
+            @Param("matchId") String id, @Param("statuses") Collection<CriterionStatusEnum> statuses);
 
     List<CriterionEntity> findByStatusIn(Collection<CriterionStatusEnum> statuses);
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
+import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
 import com.betolyn.shared.baseEntity.AuditableEntity;
@@ -88,6 +89,57 @@ public class BetSlipEntity extends AuditableEntity {
                 .map(BetSlipItemEntity::getPotentialPayout)
                 .reduce(BetMoney.zero(), BetMoney::add);
         setTotalPotentialPayout(totalPayoutSum);
+    }
+
+    /**
+     * WON - if at least one item is won
+     * LOST - if at least one item is lost
+     * PENDING - if at least one item is pending
+     * VOIDED - if all items are voided
+     * This logic works well for PARLAYS and SINGLE bets
+     */
+    public void syncStatusFromItems() {
+        for (var innerSlipItem : this.getItems()) {
+            var anyPending = innerSlipItem
+                    .getBetSlip()
+                    .getItems()
+                    .stream()
+                    .anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.PENDING);
+            if (anyPending) {
+                innerSlipItem.getBetSlip().setStatus(BetSlipStatusEnum.PENDING);
+                continue;
+            }
+
+            var anyLost = innerSlipItem
+                    .getBetSlip()
+                    .getItems()
+                    .stream()
+                    .anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.LOST);
+            if (anyLost) {
+                innerSlipItem.getBetSlip().setStatus(BetSlipStatusEnum.LOST);
+                continue;
+            }
+
+            var anyWon = innerSlipItem
+                    .getBetSlip()
+                    .getItems()
+                    .stream()
+                    .anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.WON);
+            if (anyWon) {
+                innerSlipItem.getBetSlip().setStatus(BetSlipStatusEnum.WON);
+                continue;
+            }
+
+            var allVoided = innerSlipItem
+                    .getBetSlip()
+                    .getItems()
+                    .stream()
+                    .allMatch(i -> i.getStatus() == BetSlipItemStatusEnum.VOIDED);
+            if (allVoided) {
+                innerSlipItem.getBetSlip().setStatus(BetSlipStatusEnum.VOIDED);
+            }
+
+        }
     }
 
     @Override

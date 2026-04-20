@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     gap: 12,
+    justifyContent: 'space-between',
   },
   statusBadge: {
     borderRadius: 12,

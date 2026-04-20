@@ -35,7 +35,13 @@ const MatchReference = ({ referenceId, onNotFound }: ReferenceProps) => {
 
   return (
     <SafeHorizontalView>
-      <BetCard disableControls match={match} />
+      <BetCard
+        disableControls
+        match={{
+          ...match,
+          mainCriterion: undefined,
+        }}
+      />
     </SafeHorizontalView>
   );
 };

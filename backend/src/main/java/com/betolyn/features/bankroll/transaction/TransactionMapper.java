@@ -46,10 +46,17 @@ public interface TransactionMapper {
         }
 
         // Filter items for the viewer
+        // and negate the amount if the item is from the viewer's account
         var items = entity.getItems().stream()
                 .filter(i -> viewerAccountId.equals(i.getFromAccountId())
                         || viewerAccountId.equals(i.getToAccountId()))
-                .map(this::toItemDTO)
+                .map(item -> {
+                    var result = toItemDTO(item);
+                    if (viewerAccountId.equals(item.getFromAccountId())) {
+                        result.setAmount(result.getAmount().negate());
+                    }
+                    return result;
+                })
                 .toList();
         dto.setItems(items);
 

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StyleSheet, TextInput as _TextInput, TextInputProps, TextStyle } from 'react-native';
+import { TextInput as _TextInput, StyleSheet, TextInputProps, TextStyle } from 'react-native';
 
 import { colors } from '@/constants/colors';
 
@@ -15,6 +15,8 @@ const TextInput = ({
   status,
   style,
   containerStyle,
+  multiline,
+  numberOfLines = 4,
   ...props
 }: InputProps) => {
   const errorColor = useMemo(() => {
@@ -34,10 +36,20 @@ const TextInput = ({
     >
       <_TextInput
         {...props}
+        multiline={multiline}
         placeholderTextColor="#BFBFBF"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={[styles.input, errorColor, isFocused && styles.focused, style]}
+        style={[
+          styles.input,
+          multiline && {
+            ...styles.multiline,
+            ...(numberOfLines && { height: numberOfLines * 20 }),
+          },
+          errorColor,
+          isFocused && styles.focused,
+          style,
+        ]}
       />
     </BaseField>
   );
@@ -51,6 +63,10 @@ const styles = StyleSheet.create({
     color: colors.white,
     borderColor: '#8791A5',
     backgroundColor: colors.greyMedium,
+  },
+  /** iOS ignores numberOfLines for height; minHeight makes multiline usable as a textarea on both platforms. */
+  multiline: {
+    textAlignVertical: 'top',
   },
   focused: {
     borderColor: colors.terciary,

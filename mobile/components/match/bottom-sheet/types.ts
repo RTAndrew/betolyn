@@ -9,14 +9,14 @@ export type BottomSheetType =
   | 'criterion-action'
   | 'criterion-reprice-update-odds'
   | 'criterion-select-winner'
-  | 'criterion-lock-and-result'
   | 'criterion-suspend'
   | 'criterion-create-odd'
   | 'criterion-publish'
   | 'odd-action'
   | 'odd-reprice'
   | 'odd-suspend'
-  | 'odd-publish';
+  | 'odd-publish'
+  | 'cancel-and-refund';
 
 export interface IOddSheetData extends IOdd {
   criterion?: Omit<ICriterion, 'match'>;

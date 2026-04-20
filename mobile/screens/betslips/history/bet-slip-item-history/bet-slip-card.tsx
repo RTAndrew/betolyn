@@ -3,6 +3,7 @@ import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { formatKwanzaAmount, formatOddValue } from '@/utils/number-formatters';
 
 import { styles } from './styles';
@@ -10,6 +11,7 @@ import { styles } from './styles';
 export interface BetSlipCardProps {
   title: string;
   stake: number;
+  isVoided?: boolean;
   onPress?: () => void;
   description: string;
   tags: React.ReactNode;
@@ -22,6 +24,7 @@ const BetSlipCard = ({
   oddValueAtPlacement,
   potentialPayout,
   description,
+  isVoided,
   onPress,
   style,
   title,
@@ -33,7 +36,7 @@ const BetSlipCard = ({
       <SafeHorizontalView style={StyleSheet.flatten([styles.card, style])}>
         <View style={styles.headerRow}>
           <View style={{ flexDirection: 'row', gap: 6 }}>{tags}</View>
-          <ThemedText style={styles.potentialPayout}>
+          <ThemedText style={[styles.potentialPayout, isVoided && { color: colors.greyLighter50 }]}>
             {formatKwanzaAmount(potentialPayout)}
           </ThemedText>
         </View>
@@ -42,7 +45,9 @@ const BetSlipCard = ({
 
         <View style={styles.contentRow}>
           <View style={styles.body}>
-            <ThemedText numberOfLines={1}>{title}</ThemedText>
+            <ThemedText numberOfLines={1} style={isVoided && { color: colors.greyLighter50 }}>
+              {title}
+            </ThemedText>
             <ThemedText style={styles.secondaryText}>{formatKwanzaAmount(stake)}</ThemedText>
           </View>
 

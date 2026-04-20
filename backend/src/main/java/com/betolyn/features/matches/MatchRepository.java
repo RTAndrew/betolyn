@@ -8,7 +8,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.betolyn.features.betting.criterion.CriterionStatusEnum;
+import com.betolyn.features.betting.odds.OddStatusEnum;
+
 public interface MatchRepository extends JpaRepository<MatchEntity, String> {
+        /** Use {@code JOIN FETCH} so {@code mc.odds} only contains rows matching {@code oddStatuses}. */
+        @Query("""
+                        SELECT DISTINCT m
+                        FROM MatchEntity m
+                        JOIN FETCH m.mainCriterion mc
+                        JOIN FETCH mc.odds o
+                        WHERE m.type = :matchType
+                        AND mc.status IN :criteriaStatuses
+                        AND o.status IN :oddStatuses
+                        """)
+        List<MatchEntity> findAllByMatchType(@Param("matchType") MatchTypeEnum matchType,
+                        @Param("criteriaStatuses") Collection<CriterionStatusEnum> criteriaStatuses,
+                        @Param("oddStatuses") Collection<OddStatusEnum> oddStatuses);
 
     Optional<MatchEntity> findByEspnId(String espnId);
 

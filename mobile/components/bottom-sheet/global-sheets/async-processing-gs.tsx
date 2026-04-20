@@ -75,6 +75,7 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   }, []);
 
   const { loadingTitle, successTitle, successMessage, errorTitle } = payload ?? {};
+  console.log('AsyncProcessingGlobalSheet');
 
   return (
     <BottomSheet

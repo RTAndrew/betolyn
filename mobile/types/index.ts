@@ -175,6 +175,7 @@ export type TTransactionType =
   | 'MINT_CREDITS'
   | 'BET_PLACEMENT'
   | 'MATCH_SETTLEMENT'
+  | 'OUTCOME_VOID'
   | 'MARKET_VOID'
   | 'MATCH_VOID'
   | 'VOID_REVERSAL'
@@ -193,7 +194,8 @@ export type TAccountType =
 
 /** Line item kind within a transaction. Mirrors backend `TransactionItemTypeEnum`. */
 export type TTransactionItemType =
-  | 'STAKE_ESCROW'
+  | 'STAKE_ESCROW_LOCK'
+  | 'STAKE_ESCROW_REFUND'
   | 'LIABILITY_RESERVE'
   | 'WIN_PAYOUT_STAKE'
   | 'WIN_PAYOUT_PROFIT'
@@ -225,4 +227,9 @@ export interface ITransaction {
   referenceType: `${TTransactionReferenceType}`;
   createdBy?: IUserPublic;
   items: ITransactionItem[];
+}
+
+/** Request body for voiding a criterion, odd, or match. */
+export interface IVoidReasonRequest {
+  reason: string;
 }

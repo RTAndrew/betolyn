@@ -27,3 +27,4 @@ export { default as Trash } from './trash';
 export { default as TrendingLines } from './trending-lines';
 export { default as Trophy } from './trophy';
 export { default as UserAdd } from './user-add';
+export { default as Warning } from './warning';

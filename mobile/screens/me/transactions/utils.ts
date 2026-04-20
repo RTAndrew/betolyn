@@ -16,7 +16,12 @@ export function getTransactionIcon(
     return ArrowUp;
   }
 
-  if (type === 'MINT_CREDITS') {
+  if (
+    type === 'MINT_CREDITS' ||
+    type === 'OUTCOME_VOID' ||
+    type === 'MARKET_VOID' ||
+    type === 'MATCH_VOID'
+  ) {
     return ArrowDown;
   }
 
@@ -30,16 +35,16 @@ interface ITransactionDetail {
   icon: React.ComponentType<SvgProps>;
 }
 
-const negateAmount = (amount: string) => `-${amount}`;
-
 const TRANSACTION_TYPE_TITLES: Partial<Record<TTransactionType, string>> = {
   BET_PLACEMENT: 'Bet Placed',
   MATCH_SETTLEMENT: 'Settlement',
-  MATCH_VOID: 'Cashback',
   PLATFORM_FEE_COLLECTION: 'Platform Fee',
   CHANNEL_WITHDRAW: 'Withdraw',
   CHANNEL_FUNDING: 'Space Funding',
   MINT_CREDITS: 'Mint Credits',
+  OUTCOME_VOID: 'Outcome Refund',
+  MARKET_VOID: 'Market Refund',
+  MATCH_VOID: 'Match Refund',
 };
 
 export const formatTransactionDetail = (
@@ -56,7 +61,8 @@ export const formatTransactionDetail = (
 };
 
 const TRANSACTION_ITEM_TYPE_TITLES: Partial<Record<TTransactionItemType, string>> = {
-  STAKE_ESCROW: 'Stake Escrow',
+  STAKE_ESCROW_LOCK: 'Stake on hold',
+  STAKE_ESCROW_REFUND: 'Stake Refunded',
   LIABILITY_RESERVE: 'Liability Reserve',
   WIN_PAYOUT_STAKE: 'Stake Return',
   WIN_PAYOUT_PROFIT: 'Profit Payout',
@@ -71,19 +77,20 @@ export const formatTransactionItemDetail = (
   const formattedAmount = formatKwanzaAmount(transaction.amount);
 
   let title = TRANSACTION_ITEM_TYPE_TITLES[transaction.type] ?? null;
-  let shouldNegateAmount = false;
+  let isFromViewerAccount = false;
 
   const SPACE_FROM_ACCOUNT_TYPE_NEGATE = ['SPACE_AVAILABLE', 'SPACE_RESERVED'] as TAccountType[];
   if (context === 'space' && SPACE_FROM_ACCOUNT_TYPE_NEGATE.includes(transaction.fromAccountType)) {
-    shouldNegateAmount = true;
+    isFromViewerAccount = true;
   } else if (context === 'user' && transaction.fromAccountType === 'USER_WALLET') {
+    isFromViewerAccount = true;
+  } else if (!title) {
     title = 'From balance';
-    shouldNegateAmount = true;
   }
 
   return {
     title: title ?? '',
-    icon: shouldNegateAmount ? ArrowUp : ArrowDown,
-    amount: shouldNegateAmount ? negateAmount(formattedAmount) : formattedAmount,
+    icon: isFromViewerAccount ? ArrowUp : ArrowDown,
+    amount: formattedAmount,
   };
 };

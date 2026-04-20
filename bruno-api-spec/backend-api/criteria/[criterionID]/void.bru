@@ -1,0 +1,26 @@
+meta {
+  name: void
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/criteria/{{criterionId}}/void
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "reason": "Void reason"
+  }
+}
+
+vars:pre-request {
+  criterionId: crit_URSZgvz8MjFS
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

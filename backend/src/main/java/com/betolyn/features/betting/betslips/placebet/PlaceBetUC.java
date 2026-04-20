@@ -1,39 +1,17 @@
 package com.betolyn.features.betting.betslips.placebet;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
 import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalEscrowAccountUC;
-import com.betolyn.features.bankroll.transaction.TransactionEntity;
-import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
-import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
-import com.betolyn.features.bankroll.transaction.TransactionRepository;
-import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
-import com.betolyn.features.betting.betslips.BetSlipEntity;
-import com.betolyn.features.betting.betslips.BetSlipItemEntity;
-import com.betolyn.features.betting.betslips.BetSlipMapper;
-import com.betolyn.features.betting.betslips.BetSlipRepository;
-import com.betolyn.features.betting.betslips.DuplicateOddsInBetSlipException;
-import com.betolyn.features.betting.betslips.OddPrice;
+import com.betolyn.features.bankroll.transaction.*;
+import com.betolyn.features.betting.betslips.*;
 import com.betolyn.features.betting.betslips.dto.BetSlipDTO;
 import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
-import com.betolyn.features.betting.criterion.CriterionEntity;
-import com.betolyn.features.betting.criterion.CriterionRepository;
+import com.betolyn.features.betting.BettingUtils;
+import com.betolyn.features.betting.betslips.enums.CreateSpaceTXIEnum;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddStatusEnum;
@@ -43,12 +21,26 @@ import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import com.betolyn.shared.money.BetMoney;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCResponse> {
+
+    private final FindOddByIdUC findOddByIdUC;
+    private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
+    private final TransactionRepository transactionRepository;
+    private final BetSlipRepository betSlipRepository;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
+    private final FindMatchCriteriaUC findMatchCriteriaUC;
+    private final BetSlipMapper betSlipMapper;
+
     public static void throwIfExistsDuplicatedOddsInBetSlip(PlaceBetRequestDTO paramDTO) {
         Set<String> acceptedOddIds = new HashSet<>();
         List<Object> rejectedOdds = new ArrayList<>();
@@ -65,50 +57,7 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         }
     }
 
-    private static BetMoney calculateCriterionReservedLiabilityDelta(CriterionEntity criterion) {
-        BetMoney maxLiability = BetMoney.zero();
-        for (var criterionOdd : criterion.getOdds()) {
-            // marketLiability = odd.potentialPayoutVolume - criterion.totalStakesVolume
-            // if marketLiability < 0, then liability = 0 (profit for the house)
 
-            BetMoney liability = criterionOdd.getPotentialPayoutVolume().subtract(criterion.getTotalStakesVolume());
-            if (liability.isLessThan(BetMoney.zero())) {
-                liability = BetMoney.zero();
-            }
-            if (liability.isGreaterThan(maxLiability)) {
-                maxLiability = liability;
-            }
-        }
-        return maxLiability;
-    }
-
-    private static BetMoney calculateMatchReservedLiability(List<CriterionEntity> matchCriteria,
-            CriterionEntity criterion, BetMoney newCriterionReservedLiability) {
-        BetMoney maxLiability = BetMoney.zero();
-
-        for (var matchCriterion : matchCriteria) {
-            BetMoney liability = Objects.equals(matchCriterion.getId(), criterion.getId())
-                    ? newCriterionReservedLiability
-                    : matchCriterion.getReservedLiability();
-
-            if (liability != null && liability.isGreaterThan(maxLiability)) {
-                maxLiability = liability;
-            }
-        }
-        return maxLiability;
-    }
-
-    private final FindOddByIdUC findOddByIdUC;
-    private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
-    private final TransactionRepository transactionRepository;
-    private final BetSlipRepository betSlipRepository;
-    private final CriterionRepository criterionRepository;
-    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
-    private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
-    private final FindMatchCriteriaUC findMatchCriteriaUC;
-    private final BetSlipMapper betSlipMapper;
-
-    @SuppressWarnings("D")
     @Override
     @Transactional
     public PlaceBetUCResponse execute(@Validated PlaceBetRequestDTO paramDTO) {
@@ -127,8 +76,8 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         // prepare TX
         var transaction = new TransactionEntity();
         transaction.setCreatedBy(loggedUser);
-        transaction.setType(TransactionTypeEnum.BET_PLACEMENT);
         transaction.setReferenceId(betSlip.getId());
+        transaction.setType(TransactionTypeEnum.BET_PLACEMENT);
         transaction.setReferenceType(TransactionReferenceTypeEnum.BET_SLIP);
 
         Map<String, AccountEntity> spaceAccountsBySpaceId = new HashMap<>();
@@ -165,7 +114,9 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
         // 2. All odds in PARLAY must be valid
         if (paramDTO.getType() == BetSlipTypeEnum.PARLAY) {
             if (!oddRejectedList.isEmpty()) {
-                throw new RejectedBetsException("INVALID_ODDS", "Invalid odds",
+                throw new RejectedBetsException(
+                        "INVALID_ODDS",
+                        "Invalid odds",
                         Collections.singletonList(oddRejectedList));
             }
 
@@ -174,7 +125,9 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
 
         if (oddList.isEmpty()) {
             if (!oddRejectedList.isEmpty()) {
-                throw new RejectedBetsException("INVALID_ODDS", "Invalid odds",
+                throw new RejectedBetsException(
+                        "INVALID_ODDS",
+                        "Invalid odds",
                         Collections.singletonList(oddRejectedList));
             }
             throw new BadRequestException("NO_VALID_BETS", "An unexpected error happened. No valid bets were found");
@@ -198,17 +151,18 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             criterion.setTotalStakesVolume(criterion.getTotalStakesVolume().add(stakeMoney));
 
             // 3.4 recalculate market liability for each criterion.odds
-            var newCriterionReservedLiability = calculateCriterionReservedLiabilityDelta(criterion);
+            var newCriterionReservedLiability = BettingUtils.calculateCriterionReservedLiability(criterion);
             criterion.setReservedLiability(newCriterionReservedLiability);
 
             // 3.5 recalculate match projections
             // TODO: for standalone criterion, there will be no match associated with it
             var matchCriteria = findMatchCriteriaUC.execute(criterion.getMatch().getId());
             var oldMatchReservedLiability = criterion.getMatch().getReservedLiability();
-            var newMatchReservedLiability = calculateMatchReservedLiability(
+            var newMatchReservedLiability = BettingUtils.calculateMatchReservedLiability(
                     matchCriteria,
                     criterion,
                     newCriterionReservedLiability);
+            criterion.getMatch().setReservedLiability(newMatchReservedLiability);
             var matchDeltaReservedLiability = newMatchReservedLiability.subtract(oldMatchReservedLiability);
 
             if (criterion.getMaxReservedLiability() != null
@@ -229,39 +183,47 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             // throw new Error("CHANNEL_INSUFFICIENT_LIQUIDITY");
             // }
 
-            criterion.getMatch().setReservedLiability(newMatchReservedLiability);
-
             // 5. Lock user funds
             userAccount.lockFunds(stakeMoney);
             var userLockFundsTXI = new TransactionItemEntity();
             userLockFundsTXI.setTransaction(transaction);
             userLockFundsTXI.setAmount(stakeMoney);
+            userLockFundsTXI.setType(TransactionItemTypeEnum.STAKE_ESCROW_LOCK);
             userLockFundsTXI.setFromAccountType(AccountTypeEnum.USER_WALLET);
             userLockFundsTXI.setFromAccountId(userAccount.getId());
+            userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
+            userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
+            transaction.getItems().add(userLockFundsTXI);
 
             // 5.1 Lock or Release SPACE funds
             // Check if the match is space-owned (unofficial)
             if (criterion.getMatch().isSpaceOwned()) {
                 var spaceId = criterion.getMatch().getSpaceId();
                 var spaceAccount = spaceAccountsBySpaceId.computeIfAbsent(spaceId, findAccountByOwnerIdUC::execute);
-                userLockFundsTXI.setToAccountType(AccountTypeEnum.SPACE_RESERVED);
-                userLockFundsTXI.setToAccountId(spaceAccount.getId());
 
                 if (matchDeltaReservedLiability.isGreaterThan(BetMoney.zero())) {
                     // lock funds
                     spaceAccount.lockFunds(matchDeltaReservedLiability);
+
+                    BettingUtils.createSpaceTXIForLockOrRelease(
+                            CreateSpaceTXIEnum.LOCK,
+                            transaction,
+                            matchDeltaReservedLiability,
+                            spaceAccount);
                 } else if (matchDeltaReservedLiability.isLessThan(BetMoney.zero())) {
                     // release funds
                     spaceAccount.releaseFunds(matchDeltaReservedLiability.abs());
+
+                    BettingUtils.createSpaceTXIForLockOrRelease(
+                            CreateSpaceTXIEnum.RELEASE,
+                            transaction,
+                            matchDeltaReservedLiability,
+                            spaceAccount);
                 }
             }
 
             // 5.2 Increase GLOBAL ESCROW funds (player money being held by the platform)
             globalEscrowAccount.credit(stakeMoney); // we are not setting the liability aside
-            userLockFundsTXI.setToAccountType(AccountTypeEnum.GLOBAL_ESCROW);
-            userLockFundsTXI.setToAccountId(globalEscrowAccount.getId());
-
-            transaction.getItems().add(userLockFundsTXI);
 
             // 6. create betSlipItem
             var betSlipItem = new BetSlipItemEntity();
@@ -274,8 +236,6 @@ public class PlaceBetUC implements IUseCase<PlaceBetRequestDTO, PlaceBetUCRespon
             betSlipItem.setOddHistory(realOdd.getLastOddHistory());
             betSlipItem.setOddValueAtPlacement(new OddPrice(betOdd.getOddValueAtPlacement()));
             betSlip.getItems().add(betSlipItem);
-
-            criterionRepository.save(criterion);
         }
 
         // 7. Update betSlip projections

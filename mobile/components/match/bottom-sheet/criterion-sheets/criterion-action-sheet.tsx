@@ -3,16 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
-import {
-  Add,
-  DollarEuro,
-  Eye,
-  LockClosed,
-  MoneyHand,
-  Settings,
-  Trash,
-  Trophy,
-} from '@/components/icons';
+import { Add, DollarEuro, Eye, LockClosed, Settings, Trash, Trophy } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionById } from '@/services/criteria/criterion-query';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
@@ -68,15 +59,14 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
           text="Cancel & Refund"
           icon={<Trash color="white" />}
           onPress={() => {
-            pushSheet({ type: 'match-update-score' });
-          }}
-        />
-
-        <BottomSheet.ActionOption
-          text="Lock & Result"
-          icon={<MoneyHand color="white" />}
-          onPress={() => {
-            pushSheet({ type: 'criterion-lock-and-result', data: criterion });
+            pushSheet({
+              type: 'cancel-and-refund',
+              data: {
+                id: criterion.id,
+                name: criterion.name,
+                type: 'criterion',
+              },
+            });
           }}
         />
 

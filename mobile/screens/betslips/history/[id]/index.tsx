@@ -59,7 +59,7 @@ const TransactionDetailsTab = ({
 
       <Settings.ItemGroup title="Bet">
         <Settings.Item
-          title="Odd Price"
+          title="Outcome Price"
           suffixIcon={false}
           description={formatOddValue(bet.oddValueAtPlacement)}
         />

@@ -22,7 +22,7 @@ public class FindMatchCriteriaUC implements IUseCase<String, List<CriterionEntit
 
     @Override
     public List<CriterionEntity> execute(String matchId) throws EntityNotfoundException {
-        return execute(matchId, List.of(CriterionStatusEnum.ACTIVE, CriterionStatusEnum.SUSPENDED));
+        return this.execute(matchId, List.of(CriterionStatusEnum.ACTIVE, CriterionStatusEnum.SUSPENDED));
     }
 
     public List<CriterionEntity> execute(String matchId, Collection<CriterionStatusEnum> statuses)

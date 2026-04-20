@@ -11,6 +11,7 @@ import {
   SoccerBall,
   TimeHistory,
   TimerOff,
+  Trash,
 } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
@@ -60,14 +61,29 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
+          text="Cancel & Refund"
+          icon={<Trash color="white" />}
+          onPress={() => {
+            pushSheet({
+              type: 'cancel-and-refund',
+              data: {
+                id: match.id,
+                type: 'match',
+                name: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
+              },
+            });
+          }}
+        />
+
+        <BottomSheet.ActionOption
           text="Update score"
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}
           icon={<SoccerBall color="white" />}
         />
+
         <BottomSheet.ActionOption text="Reschedule" icon={<TimeHistory color="white" />} />
-        {/* <BottomSheet.ActionOption text="View all markets" icon={<TrendingLines color="white" />} /> */}
 
         <BottomSheet.ActionOption
           text="Settle match"

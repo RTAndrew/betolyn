@@ -1,13 +1,5 @@
 package com.betolyn.features.matches.settlematch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.bankroll.account.AccountEntity;
@@ -15,16 +7,13 @@ import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
 import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalEscrowAccountUC;
 import com.betolyn.features.bankroll.account.findglobalreserveaccount.FindGlobalReserveAccountUC;
-import com.betolyn.features.bankroll.transaction.TransactionEntity;
-import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
-import com.betolyn.features.bankroll.transaction.TransactionItemTypeEnum;
-import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
-import com.betolyn.features.bankroll.transaction.TransactionRepository;
-import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
+import com.betolyn.features.bankroll.transaction.*;
+import com.betolyn.features.betting.betslips.BetSlipEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemRepository;
 import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
+import com.betolyn.features.betting.betslips.enums.CreateSpaceTXIEnum;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.OddStatusEnum;
@@ -36,26 +25,20 @@ import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
 import com.betolyn.shared.money.BetMoney;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.betolyn.features.betting.BettingUtils.createSpaceTXIForLockOrRelease;
 
 @Service
 @RequiredArgsConstructor
 public class SettleMatchUC implements IUseCase<String, Void> {
-
-    /**
-     * One persisted {@link TransactionEntity} per bettor
-     * ({@link UserEntity#getId()}).
-     */
-    private record SettlementTxBatchPerUser(String userId) {
-    }
-
-    /**
-     * One persisted {@link TransactionEntity} per bankroll account
-     * ({@link AccountEntity#getId()}).
-     */
-    private record SettlementTxBatchPerAccount(String accountId) {
-    }
 
     private final FindMatchByIdUC findMatchByIdUC;
     private final FindMatchCriteriaUC findMatchCriteriaUC;
@@ -108,25 +91,31 @@ public class SettleMatchUC implements IUseCase<String, Void> {
 
         var MATCH_TOTAL_STAKES = BetMoney.zero();
 
-        HashMap<String, List<BetSlipItemEntity>> winnerBetsGroupedByCriterionId = new HashMap<>();
-        HashMap<String, List<BetSlipItemEntity>> lostBetsGroupedByCriterionId = new HashMap<>();
+        HashMap<String, List<BetSlipItemEntity>> winnerBetsGroupedByOddId = new HashMap<>();
+        HashMap<String, List<BetSlipItemEntity>> lostBetsGroupedByOddId = new HashMap<>();
         for (var bet : items) {
             var oddId = bet.getOdd().getId();
 
-            if (Boolean.FALSE.equals(bet.getOdd().getIsWinner())) {
-                lostBetsGroupedByCriterionId.computeIfAbsent(oddId, k -> new ArrayList<>()).add(bet);
-            } else {
-                winnerBetsGroupedByCriterionId.computeIfAbsent(oddId, k -> new ArrayList<>()).add(bet);
-            }
-
             MATCH_TOTAL_STAKES = bet.getStake().add(MATCH_TOTAL_STAKES);
+
+            if (Boolean.FALSE.equals(bet.getOdd().getIsWinner())) {
+                lostBetsGroupedByOddId.computeIfAbsent(oddId, k -> new ArrayList<>()).add(bet);
+            } else {
+                winnerBetsGroupedByOddId.computeIfAbsent(oddId, k -> new ArrayList<>()).add(bet);
+            }
         }
 
+        // There is no SPACE_BET_POOL where all the user bets gets saved/secured by the
+        // space,
+        // instead it is saved in the GLOBAL ESCROW.
+        // So, we account match.reservedLiability (which is the same as the
+        // spaceAccount.balanceReserved)
+        // to increase our buffer and be able to process the settlement
         // BUCKET = ESCROW + match.getReservedLiability
         var MATCH_BUCKET = match.getReservedLiability().add(MATCH_TOTAL_STAKES);
 
         // WINNERS
-        var winnerItems = winnerBetsGroupedByCriterionId.values().stream()
+        var winnerItems = winnerBetsGroupedByOddId.values().stream()
                 .flatMap(List::stream)
                 .toList();
         for (var item : winnerItems) {
@@ -189,7 +178,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
         }
 
         // LOST
-        var lostItems = lostBetsGroupedByCriterionId.values().stream()
+        var lostItems = lostBetsGroupedByOddId.values().stream()
                 .flatMap(List::stream)
                 .toList();
         for (var item : lostItems) {
@@ -247,16 +236,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
             if (MATCH_BUCKET.isGreaterThan(BetMoney.zero())) {
                 spaceAccount.credit(MATCH_BUCKET);
 
-                var txReleaseReserve = new TransactionItemEntity();
-                txReleaseReserve.generateId();
-                txReleaseReserve.setAmount(MATCH_BUCKET);
-                txReleaseReserve.setToAccountId(spaceAccount.getId());
-                txReleaseReserve.setToAccountType(AccountTypeEnum.SPACE_AVAILABLE);
-                txReleaseReserve.setFromAccountId(spaceAccount.getId());
-                txReleaseReserve.setFromAccountType(AccountTypeEnum.SPACE_RESERVED);
-                txReleaseReserve.setType(TransactionItemTypeEnum.RESERVE_RELEASE);
-                txReleaseReserve.setReferenceMatchId(matchId);
-
+                var txReleaseReserve = createSpaceTXIForLockOrRelease(CreateSpaceTXIEnum.RELEASE, null, MATCH_BUCKET, spaceAccount);
                 spaceLosingGroupedTXItems
                         .computeIfAbsent(new SettlementTxBatchPerAccount(spaceAccount.getId()), k -> new ArrayList<>())
                         .add(txReleaseReserve);
@@ -267,19 +247,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
 
         // update bet slip status
         var affectedSlips = items.stream().map(BetSlipItemEntity::getBetSlip).distinct().toList();
-        for (var slip : affectedSlips) {
-            List<BetSlipItemEntity> slipItems = slip.getItems();
-            boolean anyLost = slipItems.stream().anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.LOST);
-            boolean anyWon = slipItems.stream().anyMatch(i -> i.getStatus() == BetSlipItemStatusEnum.WON);
-            boolean allVoided = slipItems.stream().allMatch(i -> i.getStatus() == BetSlipItemStatusEnum.VOIDED);
-            if (anyLost) {
-                slip.setStatus(BetSlipStatusEnum.LOST);
-            } else if (anyWon) {
-                slip.setStatus(BetSlipStatusEnum.WON);
-            } else if (allVoided) {
-                slip.setStatus(BetSlipStatusEnum.VOIDED);
-            }
-        }
+        affectedSlips.forEach(BetSlipEntity::syncStatusFromItems);
 
         // create TXs
         this.createTransactionBatches(matchId, userWinningGroupedTXItems, authenticatedUser);
@@ -292,7 +260,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
     private <K> void createTransactionBatches(
             String matchId,
             Map<K, List<TransactionItemEntity>> batches,
-                    UserEntity createdBy) {
+            UserEntity createdBy) {
 
         for (var entry : batches.entrySet()) {
             var txItems = entry.getValue();
@@ -315,5 +283,19 @@ public class SettleMatchUC implements IUseCase<String, Void> {
 
             transactionRepository.save(tx);
         }
+    }
+
+    /**
+     * One persisted {@link TransactionEntity} per bettor
+     * ({@link UserEntity#getId()}).
+     */
+    private record SettlementTxBatchPerUser(String userId) {
+    }
+
+    /**
+     * One persisted {@link TransactionEntity} per bankroll account
+     * ({@link AccountEntity#getId()}).
+     */
+    private record SettlementTxBatchPerAccount(String accountId) {
     }
 }

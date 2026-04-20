@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { IVoidReasonRequest } from '@/types';
 import { queryClient } from '@/utils/react-query';
 
 import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from '../matches/match-query';
@@ -35,6 +36,12 @@ interface ISelectWinningOutcomesVariables {
 interface ISetAllowMultipleWinnersVariables {
   criterionId: string;
   allowMultipleWinners: boolean;
+}
+
+interface IVoidCriterionVariables {
+  criterionId: string;
+  matchId: string;
+  variables: IVoidReasonRequest;
 }
 
 export const useRepriceCriterionOdds = () => {
@@ -110,6 +117,26 @@ export const useSetAllowMultipleWinners = () => {
     {
       mutationFn: (data: ISetAllowMultipleWinnersVariables) =>
         CriterionService.setAllowMultipleWinners(data.criterionId, data.allowMultipleWinners),
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useVoidCriterion = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IVoidCriterionVariables) =>
+        CriterionService.void(data.criterionId, data.variables),
+      onSuccess: (_, variables) => {
+        queryClient.refetchQueries({
+          queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
+        });
+        queryClient.refetchQueries({
+          queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
+        });
+      },
     },
     queryClient
   );

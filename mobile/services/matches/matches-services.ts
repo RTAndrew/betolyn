@@ -5,6 +5,7 @@ import {
   IMatch,
   IMatchMetrics,
   IOdd,
+  IVoidReasonRequest,
   MatchStatusEnum,
 } from '@/types';
 import { getRequest, postRequest, putRequest, patchRequest } from '@/utils/http';
@@ -110,5 +111,9 @@ export class MatchesService {
       `/matches/${matchId}/criteria/suspend-all`,
       {}
     );
+  }
+
+  public static async void(matchId: string, data: IVoidReasonRequest) {
+    return await postRequest<null, IVoidReasonRequest>(`/matches/${matchId}/void`, data);
   }
 }

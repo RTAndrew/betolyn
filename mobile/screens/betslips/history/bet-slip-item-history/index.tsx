@@ -12,17 +12,20 @@ import { BetSlipItemCardSkeleton } from './skeleton';
 
 const getStatusColor = (status: `${IBetSlipItemStatus}`) => {
   if (status === 'PENDING') return colors.complementary;
-  if (status === 'WON') return '#00C853';
-  if (status === 'LOST') return '#FF0000';
-  return colors.greyLight;
+  if (status === 'WON') return colors.primary;
+  if (status === 'LOST') return colors.secondary;
+  return colors.greyLighter;
 };
 
-const getStatusLabel = (status: `${IBetSlipItemStatus}`) => {
-  if (status === 'PENDING') return 'Pending';
-  if (status === 'WON') return 'Won';
-  if (status === 'LOST') return 'Lost';
-  return status;
+const BET_SLIP_ITEM_STATUS_LABELS: Partial<Record<IBetSlipItemStatus, string>> = {
+  PENDING: 'Pending',
+  WON: 'Won',
+  LOST: 'Lost',
+  VOIDED: 'Voided',
 };
+
+const getStatusLabel = (status: `${IBetSlipItemStatus}`) =>
+  BET_SLIP_ITEM_STATUS_LABELS[status] ?? status;
 
 export interface BetSlipItemCardProps {
   bet: IBetSlipItem;
@@ -62,10 +65,11 @@ const BetSlipItemCard = ({ bet }: BetSlipItemCardProps) => {
 
   return (
     <BetSlipCard
-      style={{ backgroundColor: '#414A5C' }}
       title={matchName}
       stake={bet.stake}
       description={marketDescription}
+      isVoided={bet.status === 'VOIDED'}
+      style={{ backgroundColor: '#414A5C' }}
       potentialPayout={bet.potentialPayout}
       oddValueAtPlacement={bet.oddValueAtPlacement}
       tags={<Tag title={getStatusLabel(bet.status)} color={getStatusColor(bet.status)} />}

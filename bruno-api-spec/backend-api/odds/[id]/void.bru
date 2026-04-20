@@ -1,0 +1,26 @@
+meta {
+  name: void
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/odds/{{oddId}}/void
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "reason": "Void reason"
+  }
+}
+
+vars:pre-request {
+  oddId: match_vKmwZG9v8oSO
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

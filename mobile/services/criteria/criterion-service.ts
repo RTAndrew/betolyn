@@ -1,5 +1,12 @@
 import { DataSync } from '@/components/server-sent-events/data-sync';
-import { CriterionStatusEnum, EOddStatus, ICriterion, ICriterionMetrics, IOdd } from '@/types';
+import {
+  CriterionStatusEnum,
+  EOddStatus,
+  ICriterion,
+  ICriterionMetrics,
+  IOdd,
+  IVoidReasonRequest,
+} from '@/types';
 import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
 
 import { IMatchCriteriaResponse } from '../matches/matches-services';
@@ -92,5 +99,9 @@ export class CriterionService {
       `/criteria/${criterionId}/allow-multiple-winners`,
       { allowMultipleWinners }
     );
+  }
+
+  public static async void(criterionId: string, data: IVoidReasonRequest) {
+    return await postRequest<null, IVoidReasonRequest>(`/criteria/${criterionId}/void`, data);
   }
 }

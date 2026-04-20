@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, TextStyle, View } from 'react-native';
 import { NumberInput } from 'react-native-ui-lib';
 
+import AlertMessage from '@/components/alert-message';
 import TextInput from '@/components/forms/text-input';
-import { ErrorFilled } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import { Skeleton } from '@/components/skeleton';
 import { ThemedText } from '@/components/ThemedText';
@@ -12,8 +12,9 @@ import { UserCard } from '@/components/user-card';
 import { useWizardPrimaryAction } from '@/components/wizard/use-wizard';
 import { colors } from '@/constants/colors';
 import { useGetMe, useGetSpaceById } from '@/services';
+import { formatKwanzaAmount } from '@/utils/number-formatters';
 
-import { formatKwanzaAmount, SpaceAllocateWizardStepProps } from './utils';
+import { SpaceAllocateWizardStepProps } from './utils';
 
 const GENERIC_AVATAR = require('@/assets/images/generic-user-profile-image.png');
 
@@ -157,17 +158,12 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
             <ThemedText style={styles.balanceLine} type="default">
               Balance available:{' '}
               <ThemedText type="defaultSemiBold">
-                {formatKwanzaAmount(userBalanceAvailable)} kz
+                {formatKwanzaAmount(userBalanceAvailable)}
               </ThemedText>
             </ThemedText>
           )}
 
-          {amountError && (
-            <View style={styles.errorContainer}>
-              <ErrorFilled width={18} height={18} color={'#A8200D'} />
-              <ThemedText style={styles.error}>{amountError}</ThemedText>
-            </View>
-          )}
+          {amountError && <AlertMessage.Error title={amountError} style={styles.amountError} />}
         </View>
       </SafeHorizontalView>
 
@@ -229,18 +225,9 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
-  errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
+  amountError: {
     marginTop: 8,
-    borderRadius: 8,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    backgroundColor: '#FFD7EF',
-  },
-  error: {
-    color: '#A8200D',
+    alignSelf: 'flex-end',
   },
   amountInput: {
     textAlign: 'right',

@@ -1,11 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { IVoidReasonRequest } from '@/types';
 import { queryClient } from '@/utils/react-query';
 
+import { getMatchCriteriaQueryOptions, getMatchQueryOptions } from '../matches/match-query';
 import {
+  ICreateOddRequest,
   IUpdateOddStatusRequest,
   IUpdateOddValueRequest,
-  ICreateOddRequest,
   OddService,
 } from '../odds/odd-service';
 
@@ -23,6 +25,12 @@ interface IUpdateOddValueVariables {
 
 interface ICreateOddVariables {
   variables: ICreateOddRequest;
+}
+
+interface IVoidOddVariables {
+  oddId: string;
+  matchId: string;
+  variables: IVoidReasonRequest;
 }
 
 export const useUpdateOddStatus = () => {
@@ -73,6 +81,25 @@ export const useCreateOdd = () => {
   const mutation = useMutation(
     {
       mutationFn: (data: ICreateOddVariables) => OddService.createOdd(data.variables),
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useVoidOdd = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IVoidOddVariables) => OddService.void(data.oddId, data.variables),
+      onSuccess: (_, variables) => {
+        queryClient.refetchQueries({
+          queryKey: getMatchQueryOptions({ matchId: variables.matchId }).queryKey,
+        });
+        queryClient.refetchQueries({
+          queryKey: getMatchCriteriaQueryOptions({ matchId: variables.matchId }).queryKey,
+        });
+      },
     },
     queryClient
   );

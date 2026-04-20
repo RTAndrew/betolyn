@@ -8,4 +8,7 @@ import java.util.List;
 public interface OddRepository extends JpaRepository<OddEntity, String> {
     @Query("select o from OddEntity o where o.criterion.id = ?1 order by o.updatedAt DESC")
     List<OddEntity> findAllByCriterionId(String id);
+
+    @Query("select o from OddEntity o where o.criterion.match.id = ?1")
+    List<OddEntity> findAllByMatchId(String matchId);
 }

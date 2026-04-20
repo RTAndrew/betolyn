@@ -2,7 +2,6 @@ import { CriterionBulkRepriceOddsSheet } from './criterion-sheets/bulk-reprice-o
 import { CreateOddSheet } from './criterion-sheets/create-odd-sheet';
 import { CriterionActionSheet } from './criterion-sheets/criterion-action-sheet';
 import { CriterionSuspendSheet } from './criterion-sheets/criterion-suspend-sheet';
-import { CriterionLockAndResultSheet } from './criterion-sheets/lock-and-result-sheet';
 import { PublishCriterionSheet } from './criterion-sheets/publish';
 import { CriterionSelectWinningOutcomeSheet } from './criterion-sheets/select-winning-odds-sheet';
 import { EndMatchSheet } from './match-sheets/end-match-sheet';
@@ -14,6 +13,7 @@ import { OddActionSheet } from './odd-sheets/odd-action-sheet';
 import { OddRepriceSheet } from './odd-sheets/odd-reprice-sheet';
 import { PublishOddSheet } from './odd-sheets/publish';
 import { SuspendOddSheet } from './odd-sheets/suspend-odd-sheet';
+import CancelAndRefundSheet from './shared-sheets/cancel-and-refund';
 import { BottomSheetType } from './types';
 
 export interface ISheet {
@@ -26,6 +26,9 @@ export interface SheetComponent {
 }
 
 export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
+  'cancel-and-refund': {
+    component: CancelAndRefundSheet,
+  },
   'match-action': {
     component: MainActionSheet,
   },
@@ -49,9 +52,6 @@ export const SHEET_REGISTRY: Record<BottomSheetType, SheetComponent> = {
   },
   'criterion-select-winner': {
     component: CriterionSelectWinningOutcomeSheet,
-  },
-  'criterion-lock-and-result': {
-    component: CriterionLockAndResultSheet,
   },
   'criterion-suspend': {
     component: CriterionSuspendSheet,

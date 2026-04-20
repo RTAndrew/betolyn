@@ -34,15 +34,15 @@ public enum TransactionTypeEnum {
 
     /** Triggers stake lock + reserve lock. */
     BET_PLACEMENT,
-
-    /** Settlement for one market/criterion. */
-    // MARKET_SETTLEMENT, // TODO: when settling criterion immediately instead of
-    // waiting for match settlement
         
     /** Settlement for one match. */
     MATCH_SETTLEMENT,
 
-    /** Cancel one market/criterion. */
+
+    /** Void one odd/outcome. */
+    OUTCOME_VOID,
+
+    /** Bulk void for all outcomes in one market. */
     MARKET_VOID,
 
     /** Bulk void for all markets in a match. */

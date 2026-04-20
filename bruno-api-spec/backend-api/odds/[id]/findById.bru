@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/odds/od_DDSmMjxEWLs8
+  url: {{baseUrl}}/odds/{{oddId}}
   body: none
   auth: inherit
+}
+
+vars:pre-request {
+  oddId: 
 }
 
 settings {

@@ -59,9 +59,9 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <GlobalSheetRegistry />
-      <ShimmerProvider duration={1500}>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <GlobalSheetRegistry />
+        <ShimmerProvider duration={1500}>
           <StreamEventSource />
           <SafeAreaProvider>
             <KeyboardProvider>
@@ -100,8 +100,8 @@ export default function RootLayout() {
               <StatusBar style={'light'} backgroundColor={colors.greyDark} />
             </KeyboardProvider>
           </SafeAreaProvider>
-        </QueryClientProvider>
-      </ShimmerProvider>
+        </ShimmerProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }

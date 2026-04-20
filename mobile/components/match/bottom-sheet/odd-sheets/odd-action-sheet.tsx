@@ -78,7 +78,14 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
           text="Cancel & Refund"
           icon={<Trash color="white" />}
           onPress={() => {
-            pushSheet({ type: 'match-update-score' });
+            pushSheet({
+              type: 'cancel-and-refund',
+              data: {
+                id: odd.id,
+                name: odd.name,
+                type: 'odd',
+              },
+            });
           }}
         />
 

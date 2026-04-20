@@ -6,10 +6,15 @@ package com.betolyn.features.bankroll.transaction;
 public enum TransactionItemTypeEnum {
 
   /** User → Escrow. */
-  STAKE_ESCROW,
+  STAKE_ESCROW_LOCK,
+
+  /** Escrow → User (VOID). */
+  STAKE_ESCROW_REFUND,
 
   /** Space available → Space reserved (liability lock). */
   LIABILITY_RESERVE,
+  /** Space reserved → Space available. Unused risk released after settlement. */
+  LIABILITY_RELEASE,
 
   // --- Settlement (MATCH_SETTLEMENT) ---
 
@@ -25,6 +30,4 @@ public enum TransactionItemTypeEnum {
   /** Escrow → Space available. Losing stake retained by the space. */
   LOSS_COLLECTION,
 
-  /** Space reserved → Space available. Unused risk released after settlement. */
-  RESERVE_RELEASE
 }

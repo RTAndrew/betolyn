@@ -1,14 +1,14 @@
 package com.betolyn.features.betting.betslips;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
+import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
-import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, String> {
@@ -67,12 +67,12 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
             AND i.betSlip.status = :slipStatus
             AND i.status = :itemStatus
             AND o.status = com.betolyn.features.betting.odds.OddStatusEnum.SUSPENDED
-
             """)
     List<BetSlipItemEntity> findAllByMatchIdAndBetSlipStatusAndStatus(
             @Param("matchId") String matchId,
             @Param("slipStatus") BetSlipStatusEnum slipStatus,
-            @Param("itemStatus") BetSlipItemStatusEnum itemStatus);
+            @Param("itemStatus") BetSlipItemStatusEnum itemStatus
+    );
 
     /**
      * Returns (sum of stake from items for match where criterion is SETTLED and
@@ -87,4 +87,11 @@ public interface BetSlipItemRepository extends JpaRepository<BetSlipItemEntity, 
                    (SELECT COALESCE(SUM(i.potential_payout), 0) FROM bet_slip_items i WHERE i.match_id = :matchId AND i.status = 'WON')
             """, nativeQuery = true)
     List<Object[]> getSettledMatchStakesAndPayouts(@Param("matchId") String matchId);
+
+    @Query("""
+        SELECT DISTINCT i FROM BetSlipItemEntity i
+        WHERE i.odd.id IN :oddIds
+        AND i.status = com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum.PENDING
+        """)
+    List<BetSlipItemEntity> findAllByOddIds(@Param("oddIds") Collection<String> oddIds);
 }

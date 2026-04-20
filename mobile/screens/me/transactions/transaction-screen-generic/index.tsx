@@ -164,6 +164,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 24,
     backgroundColor: colors.greyMedium,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   linkedReference: {
     backgroundColor: '#414A5C',

@@ -1,5 +1,5 @@
 import { DataSync } from '@/components/server-sent-events/data-sync';
-import { IOdd, IOddMetrics, EOddStatus, ICriterion } from '@/types';
+import { IOdd, IOddMetrics, EOddStatus, ICriterion, IVoidReasonRequest } from '@/types';
 import { getRequest, patchRequest, postRequest, putRequest } from '@/utils/http';
 
 export interface IUpdateOddStatusRequest {
@@ -62,5 +62,9 @@ export class OddService {
     return await putRequest<IOdd, unknown>(`/odds/${oddId}/status`, {
       status: EOddStatus.SUSPENDED as EOddStatus,
     });
+  }
+
+  public static async void(oddId: string, data: IVoidReasonRequest) {
+    return await postRequest<null, IVoidReasonRequest>(`/odds/${oddId}/void`, data);
   }
 }

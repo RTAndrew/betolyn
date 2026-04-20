@@ -81,9 +81,12 @@ public class MatchEntity extends AuditableEntity {
     private String startTime;
     private String endTime;
 
+    /** The worst-scenario (risk) among all criteria */
     @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
     @Convert(converter = BetMoneyAttributeConverter.class)
     private BetMoney reservedLiability = BetMoney.zero();
+
+    /** The maximum worst-scenario (risk) ceiling acceptable */
     @Column(precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
     @Convert(converter = BetMoneyAttributeConverter.class)
     private BetMoney maxReservedLiability = null;
