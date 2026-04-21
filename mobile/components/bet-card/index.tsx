@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import React from 'react';
 import {
   Image,
@@ -8,6 +7,7 @@ import {
   Text as _Text,
   TextProps as _TextProps,
 } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 import { colors } from '@/constants/colors';
@@ -84,7 +84,13 @@ const BetCardChild = ({
     if (onPress) {
       onPress(match);
     } else {
-      router.push(`/matches/${match.id}`);
+      console.log('match id', match.id);
+      SheetManager.show('match', {
+        payload: {
+          matchId: match.id,
+        },
+      });
+      // router.push(`/matches/${match.id}`);
     }
   };
 

@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image, Text, View, ViewProps } from 'react-native';
+import { ScrollView, SheetManager } from 'react-native-actions-sheet';
 
+import BottomSheet from '@/components/bottom-sheet';
 import { MoreVertical, Settings, Sync } from '@/components/icons';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 import { OddButton } from '@/components/odd-button';
@@ -15,7 +16,7 @@ import { useGetMatch } from '@/services/matches/match-query';
 import { MatchStatusEnum } from '@/types';
 import { getMatchStatusTag } from '@/utils/get-entity-status-tag';
 
-import MatchCriteria from './match-criteria-list';
+import MatchCriteriaList from './match-criteria-list';
 
 interface MatchTeamProps {
   name: string;
@@ -72,8 +73,29 @@ const OpenMatchBottomSheet = () => {
   );
 };
 
+const BottomSheetWrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <BottomSheet
+      CustomHeaderComponent={<></>}
+      drawUnderStatusBar
+      useBottomSafeAreaPadding={false}
+      containerStyle={{ flex: 1, padding: 0, margin: 0, backgroundColor: colors.greyMedium }}
+    >
+      <ScrollView
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={true}
+        keyboardShouldPersistTaps="handled"
+        style={{ height: '100%', backgroundColor: colors.greyMedium }}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        {children}
+      </ScrollView>
+    </BottomSheet>
+  );
+};
+
 const MatchScreen = ({ matchId }: { matchId: string }) => {
-  const { data: result, refetch, isLoading, isError } = useGetMatch({ matchId: matchId });
+  const { data: result, refetch, isPending, isError } = useGetMatch({ matchId: matchId });
 
   const shouldShowMainCriterion = useMemo(() => {
     const match = result?.data;
@@ -92,30 +114,20 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
     return shouldShowMainCriterion && isMainCriterionActive;
   }, [result?.data]);
 
-  // Ensure there's always enough padding so ScrollView can scroll to top,
-  // which enables the formSheet dismiss gesture even when content is short
-  // Problem: scrolling to top is not working in Android after reaching the bottom of the screen.
-  // The bug is present in Android.
-  // https://github.com/software-mansion/react-native-screens/issues/2424
-  const screenHeight = Platform.OS === 'android' ? Dimensions.get('window').height * 0.3 : 50;
-
-  if (isLoading) {
+  if (isPending) {
     return (
-      <SafeAreaView style={{ backgroundColor: colors.greyLight, flex: 1 }}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}>
-          <ScreenHeader
-            type="down"
-            safeArea={false}
-            iconContainerColor={colors.greyMedium}
-            onClose={() => router.back()}
-            style={{
-              backgroundColor: colors.greyMedium,
-              ...(Platform.OS === 'ios' && { paddingTop: 16 }),
-            }}
-          />
-          <MatchDetailSkeleton />
-        </ScrollView>
-      </SafeAreaView>
+      <BottomSheetWrapper>
+        <ScreenHeader
+          type="down"
+          safeArea={false}
+          iconContainerColor={colors.greyMedium}
+          onClose={() => SheetManager.hide('match')}
+          style={{
+            backgroundColor: colors.greyMedium,
+          }}
+        />
+        <MatchDetailSkeleton />
+      </BottomSheetWrapper>
     );
   }
 
@@ -125,26 +137,14 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
   const match = result.data;
 
   return (
-    <MatchBottomSheetProvider match={match}>
-      <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
-        {/* Weird bug on iOS where the screencontent is not shown without this node*/}
-        {Platform.OS === 'ios' && (
-          <ThemedText style={{ color: colors.white }}> MatchScreen </ThemedText>
-        )}
-
-        <ScrollView
-          scrollEventThrottle={16}
-          stickyHeaderIndices={[0]}
-          showsVerticalScrollIndicator={true}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled={Platform.OS === 'android'}
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: screenHeight }}
-        >
+    <BottomSheetWrapper>
+      <MatchBottomSheetProvider match={match}>
+        <View style={{ backgroundColor: colors.greyLight, flex: 1, paddingBottom: 100 }}>
           <ScreenHeader
             type="down"
-            safeArea={Platform.OS === 'ios' ? false : true}
+            safeArea={false}
             iconContainerColor={colors.greyMedium}
-            onClose={() => router.back()}
+            onClose={() => SheetManager.hide('match')}
             style={{
               backgroundColor: colors.greyMedium,
             }}
@@ -154,7 +154,7 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
                 <Sync />
               </ScreenHeader.Icon>
 
-              <ScreenHeader.Icon onPress={() => router.replace(`/matches/${matchId}/settings`)}>
+              <ScreenHeader.Icon onPress={() => router.push(`/matches/${matchId}/settings`)}>
                 <Settings />
               </ScreenHeader.Icon>
 
@@ -236,11 +236,11 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
               Match ended
             </ThemedText>
           ) : (
-            <MatchCriteria matchId={match.id} />
+            <MatchCriteriaList matchId={match.id} />
           )}
-        </ScrollView>
-      </View>
-    </MatchBottomSheetProvider>
+        </View>
+      </MatchBottomSheetProvider>
+    </BottomSheetWrapper>
   );
 };
 

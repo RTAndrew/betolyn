@@ -58,7 +58,7 @@ const BottomSheet = ({
 
 const styles = StyleSheet.create({
   root: {
-    paddingTop: 10,
+    paddingTop: 0,
     paddingBottom: 0,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

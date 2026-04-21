@@ -3,6 +3,7 @@ import { SheetDefinition, SheetProvider, SheetRegister } from 'react-native-acti
 
 import AsyncProcessingGlobalSheet, { AsyncProcessingGlobalSheetProps } from './async-processing-gs';
 import CreateSpaceOptionGC from './create-event-option-gs';
+import MatchGlobalSheet from './match-gs';
 import UnauthenticatedGC from './unauthenticated-gc';
 
 // We extend some of the types here to give us great intellisense
@@ -18,6 +19,11 @@ declare module 'react-native-actions-sheet' {
     asyncProcessing: SheetDefinition<{
       payload: AsyncProcessingGlobalSheetProps;
     }>;
+    match: SheetDefinition<{
+      payload: {
+        matchId: string;
+      };
+    }>;
   }
 }
 
@@ -29,6 +35,7 @@ const GlobalSheetRegistry = ({ children }: PropsWithChildren) => {
           unauthenticated: UnauthenticatedGC,
           createEventOptionSelection: CreateSpaceOptionGC,
           asyncProcessing: AsyncProcessingGlobalSheet,
+          match: MatchGlobalSheet,
         }}
       />
 
