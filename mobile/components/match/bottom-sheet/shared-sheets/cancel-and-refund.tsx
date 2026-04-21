@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
@@ -8,9 +8,7 @@ import { Button } from '@/components/button';
 import TextInput from '@/components/forms/text-input';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
-import { useVoidCriterion } from '@/services/criteria/criterion-mutation';
-import { useVoidMatch } from '@/services/matches/match-mutation';
-import { useVoidOdd } from '@/services/odds/odd-mutation';
+import { CriterionService, MatchesService, OddService } from '@/services';
 
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
@@ -65,41 +63,21 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
   const trimmedReason = reason.trim();
   const canSubmit = Boolean(sheetData?.id && trimmedReason);
 
-  const mutations = useMemo(
-    () => ({
-      criterion: useVoidCriterion(),
-      odd: useVoidOdd(),
-      match: useVoidMatch(),
-    }),
-    []
-  );
-
   const handleVoid = async () => {
     if (!sheetData?.id || !trimmedReason) return;
     const variables = { reason: trimmedReason };
 
     if (entityType === 'criterion') {
-      await mutations.criterion.mutateAsync({
-        criterionId: sheetData?.id,
-        matchId: match.id,
-        variables,
-      });
+      await CriterionService.void(sheetData?.id, variables);
       return;
     }
 
     if (entityType === 'odd') {
-      await mutations.odd.mutateAsync({
-        oddId: sheetData.id,
-        matchId: match.id,
-        variables,
-      });
+      await OddService.void(sheetData.id, variables);
       return;
     }
 
-    await mutations.match.mutateAsync({
-      matchId: match.id,
-      variables,
-    });
+    await MatchesService.void(match.id, variables);
   };
 
   const onSubmit = () => {
@@ -113,6 +91,7 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
           fnPromise: async () => handleVoid(),
           onSuccessClose: () => {
             SheetManager.hide('asyncProcessing');
+            closeAll();
           },
         },
       });

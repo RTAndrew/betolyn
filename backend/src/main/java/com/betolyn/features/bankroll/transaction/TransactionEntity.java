@@ -36,7 +36,28 @@ import lombok.Setter;
 @Table(name = "transactions")
 public class TransactionEntity extends BaseEntity {
 
+    /**
+     * A snapshot of the reference entity name
+     * (e.g. criterion name, odd name, matchtitle).
+     *
+     * NOTE: The reference name is not bidirectional. It is only used to display
+     * the reference name of referenced entity (referencedType or type).
+     * Because the money may touch multiple entities, the reference name states the
+     * final money destination,
+     * optimizing querying.
+     *
+     * Not populated for {@link TransactionReferenceTypeEnum#BET_SLIP}.
+     */
+    @Column(name = "reference_name")
+    private String referenceName;
+
     private String memo;
+
+    /**
+     * Reference ID of the entity of the type {@link TransactionReferenceTypeEnum}.
+     */
+    @Column(nullable = false)
+    private String referenceId;
 
     @Column(nullable = false, precision = MoneyConstants.PRECISION, scale = MoneyConstants.SCALE)
     @Convert(converter = BetMoneyAttributeConverter.class)
@@ -46,9 +67,6 @@ public class TransactionEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private TransactionTypeEnum type;
-
-    @Column(nullable = false)
-    private String referenceId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

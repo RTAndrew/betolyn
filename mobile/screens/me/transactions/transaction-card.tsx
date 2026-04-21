@@ -27,7 +27,7 @@ const TransactionCard = ({
       </View>
 
       <View style={styles.body}>
-        <View>
+        <View style={styles.textColumn}>
           <ThemedText style={styles.title}>{title}</ThemedText>
           {description && <ThemedText style={styles.description}>{description}</ThemedText>}
         </View>
@@ -60,26 +60,29 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  textColumn: {
+    flex: 1,
+    flexShrink: 1,
+    minWidth: 0,
   },
   title: {
     fontWeight: '500',
     fontSize: 16,
+    marginBottom: 2,
   },
   description: {
-    fontSize: 16,
     color: colors.greyLighter,
   },
   amount: {
-    fontSize: 16,
-
+    flexShrink: 0,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    fontWeight: '700',
-    // backgroundColor: colors.complementary2,
-    // color: colors.greyLight,
-    // borderRadius: 100,
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
 

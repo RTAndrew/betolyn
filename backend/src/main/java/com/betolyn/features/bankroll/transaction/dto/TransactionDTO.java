@@ -26,6 +26,9 @@ public class TransactionDTO {
 
     private TransactionReferenceTypeEnum referenceType;
 
+    /** Snapshot label for the reference (omitted for bet slip placements). */
+    private String referenceName;
+
     private UserDTO createdBy;
 
     // It's okay to return the items since they are not 

@@ -1,18 +1,20 @@
 package com.betolyn.features.spaces.allocatespacefund;
 
+import org.springframework.stereotype.Service;
+
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionEntity;
+import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
-import com.betolyn.features.bankroll.transaction.transfermoney.TransferMoneyGenericParam;
 import com.betolyn.features.bankroll.transaction.transfermoney.TransferMoneyGeneric;
+import com.betolyn.features.bankroll.transaction.transfermoney.TransferMoneyGenericParam;
 import com.betolyn.features.spaces.findspacebyid.FindSpaceByIdUC;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
-import com.betolyn.shared.money.BetMoney;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 
 @Service
@@ -40,6 +42,9 @@ public class AllocateSpaceFundUC implements IUseCase<AllocateSpaceFundParam, Tra
                 .toAccountType(AccountTypeEnum.SPACE_AVAILABLE)
                 .fromOwnerId(authenticatedUser.user().getId())
                 .fromAccountType(AccountTypeEnum.USER_WALLET)
+                .transactionReferenceName(space.getName())
+                .transactionReferenceType(TransactionReferenceTypeEnum.SPACE)
+                .transactionReferenceId(space.getId())
                 .build();
         return transferMoneyGeneric.execute(dto);
     }

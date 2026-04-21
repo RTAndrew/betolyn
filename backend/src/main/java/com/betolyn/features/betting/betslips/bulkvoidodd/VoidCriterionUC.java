@@ -25,7 +25,7 @@ public class VoidCriterionUC implements IUseCase<VoidCriterionParam, Void> {
 
     @Override
     public Void execute(VoidCriterionParam param) {
-        criterionRepository.findById(param.criterionId())
+        var criterion = criterionRepository.findById(param.criterionId())
                 .orElseThrow(EntityNotfoundException::new);
 
         List<String> voidableOddIds = oddRepository.findAllByCriterionId(param.criterionId()).stream()
@@ -42,6 +42,7 @@ public class VoidCriterionUC implements IUseCase<VoidCriterionParam, Void> {
                 TransactionReferenceTypeEnum.MARKET,
                 TransactionTypeEnum.MARKET_VOID,
                 param.reason(),
+                criterion.getName(),
                 voidableOddIds));
 
         return null;

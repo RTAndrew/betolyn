@@ -30,6 +30,7 @@ public class VoidOddUC implements IUseCase<VoidOddParam, Void> {
                 TransactionReferenceTypeEnum.OUTCOME,
                 TransactionTypeEnum.OUTCOME_VOID,
                 param.reason(),
+                odd.getName(),
                 List.of(odd.getId())));
 
         return null;

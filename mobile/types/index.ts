@@ -200,7 +200,7 @@ export type TTransactionItemType =
   | 'WIN_PAYOUT_STAKE'
   | 'WIN_PAYOUT_PROFIT'
   | 'LOSS_COLLECTION'
-  | 'RESERVE_RELEASE';
+  | 'LIABILITY_RELEASE';
 
 export interface ITransactionItem {
   id: string;
@@ -225,6 +225,7 @@ export interface ITransaction {
   type: `${TTransactionType}`;
   referenceId: string;
   referenceType: `${TTransactionReferenceType}`;
+  referenceName: string | null;
   createdBy?: IUserPublic;
   items: ITransactionItem[];
 }

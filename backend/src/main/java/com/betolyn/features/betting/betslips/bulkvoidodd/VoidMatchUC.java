@@ -24,7 +24,7 @@ public class VoidMatchUC implements IUseCase<VoidMatchParam, Void> {
 
     @Override
     public Void execute(VoidMatchParam param) {
-        findMatchByIdUC.execute(param.matchId());
+        var match = findMatchByIdUC.execute(param.matchId());
 
         List<String> voidableOddIds = oddRepository.findAllByMatchId(param.matchId()).stream()
                 .filter(BettingUtils::isOddVoidable)
@@ -40,6 +40,7 @@ public class VoidMatchUC implements IUseCase<VoidMatchParam, Void> {
                 TransactionReferenceTypeEnum.MATCH,
                 TransactionTypeEnum.MATCH_VOID,
                 param.reason(),
+                match.getDisplayName(),
                 voidableOddIds));
 
         return null;

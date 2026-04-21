@@ -74,6 +74,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
         spaceTX.setType(paramDTO.voidType());
         spaceTX.setReferenceId(paramDTO.referenceId());
         spaceTX.setReferenceType(paramDTO.referenceType());
+        spaceTX.setReferenceName(paramDTO.referenceName());
         spaceTX.setMemo(paramDTO.reason());
 
         // 3. Criterion and Odd projection recalculation
@@ -169,6 +170,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
                 paramDTO.referenceType(),
                 paramDTO.voidType(),
                 paramDTO.reason(),
+                paramDTO.referenceName(),
                 userGroupedTXItems,
                 loggedUser.user());
 
@@ -216,6 +218,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             TransactionReferenceTypeEnum referenceType,
             TransactionTypeEnum voidType, // only allow VOID
             String reason,
+            String referenceName,
             Map<K, List<TransactionItemEntity>> batches,
             UserEntity createdBy) {
 
@@ -232,6 +235,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             tx.setCreatedBy(createdBy);
             tx.setReferenceId(referenceId);
             tx.setReferenceType(referenceType);
+            tx.setReferenceName(referenceName);
             tx.setMemo(reason);
 
             for (var item : txItems) {

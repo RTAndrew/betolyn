@@ -250,15 +250,17 @@ public class SettleMatchUC implements IUseCase<String, Void> {
         affectedSlips.forEach(BetSlipEntity::syncStatusFromItems);
 
         // create TXs
-        this.createTransactionBatches(matchId, userWinningGroupedTXItems, authenticatedUser);
-        this.createTransactionBatches(matchId, spaceLosingGroupedTXItems, authenticatedUser);
-        this.createTransactionBatches(matchId, globalLosingGroupedTXItems, authenticatedUser);
+        var matchReferenceName = match.getDisplayName();
+        this.createTransactionBatches(matchId, matchReferenceName, userWinningGroupedTXItems, authenticatedUser);
+        this.createTransactionBatches(matchId, matchReferenceName, spaceLosingGroupedTXItems, authenticatedUser);
+        this.createTransactionBatches(matchId, matchReferenceName, globalLosingGroupedTXItems, authenticatedUser);
 
         return Void.TYPE.cast(null);
     }
 
     private <K> void createTransactionBatches(
             String matchId,
+            String referenceName,
             Map<K, List<TransactionItemEntity>> batches,
             UserEntity createdBy) {
 
@@ -275,6 +277,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
             tx.setCreatedBy(createdBy);
             tx.setType(TransactionTypeEnum.MATCH_SETTLEMENT);
             tx.setReferenceType(TransactionReferenceTypeEnum.MATCH);
+            tx.setReferenceName(referenceName);
 
             for (var item : txItems) {
                 item.setTransaction(tx);

@@ -90,11 +90,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     alignSelf: 'flex-start',
-    gap: 12,
+    gap: 6,
     marginTop: 8,
     borderRadius: 8,
     paddingVertical: 4,
-    paddingHorizontal: 12,
+    paddingHorizontal: 6,
   },
   content: {
     flexShrink: 1,

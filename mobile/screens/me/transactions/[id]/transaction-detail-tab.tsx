@@ -21,6 +21,9 @@ const TransactionDetailsTab = ({ transaction }: TransactionDetailsTabProps) => {
     <View style={styles.root}>
       <Settings.ItemGroup title="Details">
         <Settings.Item title="Type" description={transactionDetail.title} />
+        {transaction.referenceName && (
+          <Settings.Item title="Reference" description={transaction.referenceName} />
+        )}
         <Settings.Item title="Date" description={transaction.createdAt} />
 
         {transaction.type === 'TRANSFER' && (

@@ -5,9 +5,9 @@ package com.betolyn.features.bankroll.transaction;
  */
 public enum TransactionReferenceTypeEnum {
     OUTCOME,
-            BET_SLIP,
-    MATCH,
+    BET_SLIP,
+            MATCH,
     MARKET,
-    CHANNEL,
+    SPACE,
     USER
 }

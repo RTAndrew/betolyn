@@ -24,15 +24,12 @@ const TransactionsScreen = () => {
       <FlatList
         data={data?.data ?? []}
         renderItem={({ item }) => {
-          const { title, description, amount, icon } = formatTransactionDetail(
-            item.type,
-            item.totalAmount
-          );
+          const { title, amount, icon } = formatTransactionDetail(item.type, item.totalAmount);
           return (
             <SafeHorizontalView>
               <TransactionCard
                 title={title}
-                description={description}
+                description={item.referenceName ?? undefined}
                 icon={icon}
                 amount={amount}
                 onPress={() => router.push(`/(modals)/transactions/${item.id}`)}
@@ -52,7 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.greyLight,
   },
   contentContainer: {
-    gap: 12,
+    gap: 18,
     paddingTop: 16,
     paddingBottom: 100,
   },

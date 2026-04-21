@@ -45,6 +45,7 @@ public class MintCreditsUC implements IUseCase<MintCreditsParam, TransactionEnti
         transaction.setType(TransactionTypeEnum.MINT_CREDITS);
         transaction.setReferenceId(param.getUser().getId());
         transaction.setReferenceType(TransactionReferenceTypeEnum.USER);
+        transaction.setReferenceName(param.getReferenceName());
         param.getCreatedBy().ifPresent(transaction::setCreatedBy);
 
         var item = new TransactionItemEntity();

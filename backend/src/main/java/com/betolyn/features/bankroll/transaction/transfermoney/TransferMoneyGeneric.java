@@ -1,16 +1,20 @@
 package com.betolyn.features.bankroll.transaction.transfermoney;
 
+import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
-import com.betolyn.features.bankroll.transaction.*;
+import com.betolyn.features.bankroll.transaction.TransactionEntity;
+import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
+import com.betolyn.features.bankroll.transaction.TransactionRepository;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 
 @Service
@@ -40,8 +44,9 @@ public class TransferMoneyGeneric implements IUseCase<TransferMoneyGenericParam,
         transaction.setMemo(param.memo());
         transaction.setCreatedBy(authenticatedUser.user());
         transaction.setType(param.transactionType());
-        transaction.setReferenceId(authenticatedUser.user().getId());
-        transaction.setReferenceType(TransactionReferenceTypeEnum.USER);
+        transaction.setReferenceId(param.transactionReferenceId());
+        transaction.setReferenceType(param.transactionReferenceType());
+        transaction.setReferenceName(param.transactionReferenceName());
 
         var transactionItem = new TransactionItemEntity();
         transactionItem.setAmount(param.amount());

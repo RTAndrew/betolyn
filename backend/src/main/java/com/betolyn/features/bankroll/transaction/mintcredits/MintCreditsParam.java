@@ -24,6 +24,8 @@ public class MintCreditsParam {
     private final BigDecimal amount;
     /** Memo for the transaction (e.g. "Initial credits", "Credit purchase"). */
     private final String memo;
+    /** Snapshot for {@code TransactionEntity.referenceName} (e.g. username). */
+    private final String referenceName;
     /** Optional user to set as createdBy on the transaction; empty when caller is logged in. */
     private final Optional<UserEntity> createdBy;
 }
