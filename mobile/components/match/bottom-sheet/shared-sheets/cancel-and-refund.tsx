@@ -24,6 +24,10 @@ interface IEntityType {
 interface ICancelRefundSheetData {
   id: string;
   name?: string;
+  note?: {
+    title: string;
+    description?: string;
+  };
   type: TEntityType;
 }
 
@@ -57,6 +61,7 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
 
   const sheetData = currentSheet?.data as ICancelRefundSheetData | undefined;
   const entityType = sheetData?.type ?? 'criterion';
+  const note = sheetData?.note;
   const data = MAPPED_ENTITY_TYPE[entityType];
   const showNote = entityType !== 'match';
 
@@ -109,8 +114,17 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
       <BottomSheet.SafeHorizontalView style={styles.content}>
         <ThemedText> {data.description}</ThemedText>
 
+        {note && (
+          <AlertMessage.Warning
+            title={note.title}
+            description={note.description}
+            style={{ alignSelf: 'stretch', flexGrow: 1 }}
+          />
+        )}
+
         {showNote && (
           <AlertMessage.Warning
+            style={{ alignSelf: 'stretch', flexGrow: 1 }}
             title="Risk will be recalculated!"
             description="You may need to add funds or adjust risk exposure limits."
           />

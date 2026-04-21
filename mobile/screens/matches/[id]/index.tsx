@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Dimensions, Image, Platform, ScrollView, Text, View, ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -12,6 +12,7 @@ import { MatchDetailSkeleton } from '@/components/skeleton/match-detail-skeleton
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetMatch } from '@/services/matches/match-query';
+import { MatchStatusEnum } from '@/types';
 import { getMatchStatusTag } from '@/utils/get-entity-status-tag';
 
 import MatchCriteria from './match-criteria-list';
@@ -73,6 +74,23 @@ const OpenMatchBottomSheet = () => {
 
 const MatchScreen = ({ matchId }: { matchId: string }) => {
   const { data: result, refetch, isLoading, isError } = useGetMatch({ matchId: matchId });
+
+  const shouldShowMainCriterion = useMemo(() => {
+    const match = result?.data;
+    if (!match) return false;
+
+    const shouldShowMainCriterion = ![MatchStatusEnum.CANCELLED, MatchStatusEnum.ENDED].includes(
+      match?.status as MatchStatusEnum
+    );
+
+    const isMainCriterionActive =
+      match.mainCriterion &&
+      match.mainCriterion.status === 'ACTIVE' &&
+      match.mainCriterion.odds.length &&
+      match.mainCriterion.odds.length > 0;
+
+    return shouldShowMainCriterion && isMainCriterionActive;
+  }, [result?.data]);
 
   // Ensure there's always enough padding so ScrollView can scroll to top,
   // which enables the formSheet dismiss gesture even when content is short
@@ -180,28 +198,25 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
             </View>
 
             {/* Main Bet */}
-            {match.mainCriterion &&
-              match.mainCriterion.status === 'ACTIVE' &&
-              match.mainCriterion.odds.length &&
-              match.mainCriterion.odds.length > 0 && (
-                <Section
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 10,
-                  }}
-                >
-                  {match.mainCriterion.odds.map((odd) => (
-                    <OddButton
-                      key={odd.id}
-                      odd={odd}
-                      style={{ flex: 1 }}
-                      criterion={match.mainCriterion!}
-                    />
-                  ))}
-                </Section>
-              )}
+            {shouldShowMainCriterion && (
+              <Section
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                }}
+              >
+                {match?.mainCriterion?.odds.map((odd) => (
+                  <OddButton
+                    key={odd.id}
+                    odd={odd}
+                    style={{ flex: 1 }}
+                    criterion={match.mainCriterion!}
+                  />
+                ))}
+              </Section>
+            )}
 
             {/* RealTime Bet Odds */}
             <Section>

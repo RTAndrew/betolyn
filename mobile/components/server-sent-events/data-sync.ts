@@ -24,11 +24,15 @@ class _DataSync {
     let odds: IOddWithCriterion[] = [];
 
     for (const match of matches) {
-      if (!match.mainCriterion) continue;
-
-      criteria.push(match.mainCriterion);
+      // 1. Update the match data
+      const matchKey = getMatchQueryOptions({ matchId: match.id });
+      queryClient.setQueryData(matchKey.queryKey, (value) => {
+        const patchedMatch = patch(value?.data, match);
+        return { ...value, data: patchedMatch } as IApiResponse<IMatch>;
+      });
 
       if (match.mainCriterion) {
+        criteria.push(match.mainCriterion);
         const criterion = match.mainCriterion;
 
         criterion.odds.forEach((odd) =>
@@ -38,12 +42,6 @@ class _DataSync {
           })
         );
       }
-
-      // 1. Update the match data
-      const matchKey = getMatchQueryOptions({ matchId: match.id });
-      queryClient.setQueryData(matchKey.queryKey, (value) => {
-        return { ...value, data: patch(value?.data, match) } as IApiResponse<IMatch>;
-      });
     }
 
     // 2. Update criteria data

@@ -121,8 +121,9 @@ public class MatchEntity extends AuditableEntity {
 
     /**
      * Lifecycle / display status: {@link MatchTypeEnum#OFFICIAL} and {@link MatchTypeEnum#CUSTOM} use this
-     * row's {@link #status}; {@link MatchTypeEnum#DERIVED} follows the linked official match when present
-     * (feed-backed truth), since derived rows are not updated for lifecycle.
+     * row's {@link #status}. {@link MatchTypeEnum#DERIVED} follows the linked official match when present
+     * (feed-backed truth), except when this row is {@link MatchStatusEnum#CANCELLED} (e.g. match void in a
+     * space), which takes precedence over the official fixture.
      */
     public MatchStatusEnum getEffectiveStatus() {
         if (type != MatchTypeEnum.DERIVED) {
@@ -131,6 +132,10 @@ public class MatchEntity extends AuditableEntity {
 
         if (officialMatch == null) {
             return status;
+        }
+
+        if (status == MatchStatusEnum.CANCELLED) {
+            return MatchStatusEnum.CANCELLED;
         }
 
         return officialMatch.getStatus();

@@ -1,4 +1,4 @@
-import type { IMatch } from '@/types';
+import { MatchStatusEnum, type IMatch } from '@/types';
 
 import type { ISseEvent } from './sse-listener-factory';
 
@@ -53,9 +53,13 @@ class MatchSseListener implements ISseListener {
     }
 
     switch (msg.eventName) {
+      case MatchSseEventName.matchVoided:
+        if (msg.payload?.matchId) {
+          DataSync.updateMatches([{ id: msg.payload.matchId, status: MatchStatusEnum.CANCELLED }]);
+        }
+        break;
       case MatchSseEventName.matchProgressChanged:
       case MatchSseEventName.matchCreated:
-      case MatchSseEventName.matchVoided:
         if (msg.payload?.match) {
           DataSync.updateMatches([msg.payload.match]);
         }

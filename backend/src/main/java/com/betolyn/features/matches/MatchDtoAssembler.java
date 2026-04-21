@@ -70,7 +70,7 @@ public class MatchDtoAssembler {
         dto.setHomeTeam(official.getHomeTeam());
         dto.setAwayTeam(official.getAwayTeam());
 
-        dto.setStatus(official.getStatus());
+        dto.setStatus(match.getEffectiveStatus());
         dto.setHomeTeamScore(official.getHomeTeamScore());
         dto.setAwayTeamScore(official.getAwayTeamScore());
 

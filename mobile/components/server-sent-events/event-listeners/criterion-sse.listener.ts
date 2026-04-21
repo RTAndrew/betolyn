@@ -1,4 +1,4 @@
-import type { ICriterion } from '@/types';
+import { CriterionStatusEnum, type ICriterion } from '@/types';
 
 import type { ISseEvent } from './sse-listener-factory';
 
@@ -12,6 +12,13 @@ interface ICriterionChangeEvent {
   criterionId: string;
   matchId?: string;
   status?: ICriterion['status'];
+}
+
+interface ICriterionVoidedEventPayload {
+  criterionId: string;
+  matchId: string;
+  reason: string;
+  odds: string[];
 }
 
 interface ICriterionRefreshRequiredPayload {
@@ -29,7 +36,11 @@ type CriterionSseMessage =
   | { eventName: typeof CriterionSseEventName.criterionCreated; payload: ICriterion }
   | { eventName: typeof CriterionSseEventName.criterionPublished; payload: ICriterionChangeEvent }
   | { eventName: typeof CriterionSseEventName.criterionSuspended; payload: ICriterionChangeEvent }
-  | { eventName: typeof CriterionSseEventName.criterionUpdated; payload: ICriterion };
+  | { eventName: typeof CriterionSseEventName.criterionUpdated; payload: ICriterion }
+  | {
+      eventName: typeof CriterionSseEventName.criterionVoided;
+      payload: ICriterionVoidedEventPayload;
+    };
 
 function narrowCriterionSseMessage(
   eventName: string,
@@ -40,6 +51,8 @@ function narrowCriterionSseMessage(
       return { eventName, payload: payload as ICriterionRefreshRequiredPayload };
     case CriterionSseEventName.criterionStatusChanged:
       return { eventName, payload: payload as ICriterion };
+    case CriterionSseEventName.criterionVoided:
+      return { eventName, payload: payload as ICriterionVoidedEventPayload };
     case CriterionSseEventName.criterionCreated:
       return { eventName, payload: payload as ICriterion };
     case CriterionSseEventName.criterionPublished:
@@ -70,6 +83,13 @@ class CriterionSseListener implements ISseListener {
     switch (msg.eventName) {
       case CriterionSseEventName.refreshRequired: {
         DataSync.refreshCriteriaData([msg.payload.criterionId]);
+        break;
+      }
+
+      case CriterionSseEventName.criterionVoided: {
+        DataSync.updateCriteria([
+          { id: msg.payload.criterionId, status: CriterionStatusEnum.VOID },
+        ]);
         break;
       }
 

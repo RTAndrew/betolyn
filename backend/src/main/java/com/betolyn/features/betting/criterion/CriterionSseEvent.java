@@ -2,6 +2,7 @@ package com.betolyn.features.betting.criterion;
 
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.betting.criterion.dto.CriterionRefreshRequiredEventDTO;
+import com.betolyn.features.betting.criterion.dto.CriterionVoidedEventDTO;
 import com.betolyn.features.betting.criterion.publishcriterion.PublishCriterionEventDTO;
 import com.betolyn.features.betting.criterion.updatecriterionstatus.CriterionStatusChangedEventDTO;
 
@@ -9,12 +10,9 @@ public sealed interface CriterionSseEvent permits CriterionSseEvent.CriterionCre
         CriterionSseEvent.RefreshRequired,
         CriterionSseEvent.CriterionStatusChanged,
         CriterionSseEvent.CriterionSuspended,
-        CriterionSseEvent.CriterionUpdated,
+        CriterionSseEvent.CriterionVoided,
+                CriterionSseEvent.CriterionUpdated,
         CriterionSseEvent.CriterionPublished {
-
-    String eventName();
-
-    Object payload();
 
     record CriterionCreated(CriterionDTO data) implements CriterionSseEvent {
         @Override
@@ -44,6 +42,18 @@ public sealed interface CriterionSseEvent permits CriterionSseEvent.CriterionCre
         @Override
         public String eventName() {
             return "criterionStatusChanged";
+        }
+
+        @Override
+        public Object payload() {
+            return data;
+        }
+    }
+
+    record CriterionVoided(CriterionVoidedEventDTO data) implements CriterionSseEvent {
+        @Override
+        public String eventName() {
+            return "criterionVoided";
         }
 
         @Override
@@ -87,4 +97,8 @@ public sealed interface CriterionSseEvent permits CriterionSseEvent.CriterionCre
             return data;
         }
     }
+
+    String eventName();
+
+    Object payload();
 }

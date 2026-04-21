@@ -26,7 +26,13 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
     return <> Error: No criterion data found </>;
   }
 
+  const canView = () => {
+    if (criterion.status === 'VOID') return false;
+    return true;
+  };
+
   const canSuspend = () => {
+    if (!canView()) return false;
     if (criterion.status === 'SUSPENDED') return false;
     if (criterion.status === 'VOID') return false;
     if (criterion.status === 'EXPIRED') return false;
@@ -36,6 +42,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
   };
 
   const canPublish = () => {
+    if (!canView()) return false;
     if (criterion.status === 'SUSPENDED') return true;
     if (criterion.status === 'DRAFT') return true;
 
@@ -56,6 +63,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
+          disabled={!canView()}
           text="Cancel & Refund"
           icon={<Trash color="white" />}
           onPress={() => {
@@ -89,6 +97,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
+          disabled={!canView()}
           text="Create outcome"
           icon={<Add color="white" />}
           onPress={() => {
@@ -105,6 +114,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
+          disabled={!canView()}
           text="Select winning outcomes"
           icon={<Trophy color="white" />}
           onPress={() => {
@@ -113,6 +123,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
+          disabled={!canView()}
           text="Reprice all outcomes"
           icon={<DollarEuro color="white" />}
           onPress={() => {

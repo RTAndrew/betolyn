@@ -70,6 +70,13 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
                 id: match.id,
                 type: 'match',
                 name: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
+                ...(match.type === 'OFFICIAL' && {
+                  note: {
+                    title: 'This will also affect linked matches.',
+                    description:
+                      'The markets and bets of the matches derived (usually from spaces) from this one will be canceled as well.',
+                  },
+                }),
               },
             });
           }}

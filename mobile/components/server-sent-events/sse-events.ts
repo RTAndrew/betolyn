@@ -20,6 +20,7 @@ export const OddSseEventName = {
 export type TOddSseEventName = (typeof OddSseEventName)[keyof typeof OddSseEventName];
 
 export const CriterionSseEventName = {
+  criterionVoided: 'criterionVoided',
   criterionCreated: 'criterionCreated',
   refreshRequired: 'REFRESH_REQUIRED',
   criterionStatusChanged: 'criterionStatusChanged',

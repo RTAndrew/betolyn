@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.betolyn.features.bankroll.transaction.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +20,26 @@ import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
 import com.betolyn.features.bankroll.account.findglobalescrowaccount.FindGlobalEscrowAccountUC;
+import com.betolyn.features.bankroll.transaction.TransactionEntity;
+import com.betolyn.features.bankroll.transaction.TransactionItemEntity;
+import com.betolyn.features.bankroll.transaction.TransactionItemTypeEnum;
+import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
+import com.betolyn.features.bankroll.transaction.TransactionRepository;
+import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
+import com.betolyn.features.betting.BettingUtils;
 import com.betolyn.features.betting.betslips.BetSlipEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemEntity;
 import com.betolyn.features.betting.betslips.BetSlipItemRepository;
-import com.betolyn.features.betting.BettingUtils;
 import com.betolyn.features.betting.betslips.enums.BetSlipItemStatusEnum;
 import com.betolyn.features.betting.betslips.enums.CreateSpaceTXIEnum;
 import com.betolyn.features.betting.odds.OddEntity;
 import com.betolyn.features.betting.odds.OddRepository;
+import com.betolyn.features.betting.odds.OddSseEvent;
 import com.betolyn.features.betting.odds.OddStatusEnum;
+import com.betolyn.features.betting.odds.OddSystemEvent;
+import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.matches.MatchEntity;
+import com.betolyn.features.matches.MatchStatusEnum;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
@@ -41,7 +50,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
+public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, MatchEntity> {
     private final OddRepository oddRepository;
     private final FindMatchCriteriaUC findMatchCriteriaUC;
     private final TransactionRepository transactionRepository;
@@ -50,13 +59,14 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
     private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
 
     private final BetSlipItemRepository betSlipItemRepository;
+    private final OddSystemEvent oddSystemEvent;
 
     private final List<OddStatusEnum> INVALID_ODD_STATUSES = List
             .of(new OddStatusEnum[] { OddStatusEnum.SETTLED, OddStatusEnum.VOID });
 
     @Override
     @Transactional
-    public Void execute(BulkVoidOddParam paramDTO) {
+    public MatchEntity execute(BulkVoidOddParam paramDTO) {
         var loggedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new);
 
         var odds = oddRepository.findAllById(paramDTO.oddsIds());
@@ -68,7 +78,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             spaceAccount = Optional.of(findAccountByOwnerIdUC.execute(match.getSpaceId()));
         }
 
-        // prepare space TX
+        // 1. Prepare space TX
         var spaceTX = new TransactionEntity();
         spaceTX.generateId();
         spaceTX.setType(paramDTO.voidType());
@@ -77,7 +87,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
         spaceTX.setReferenceName(paramDTO.referenceName());
         spaceTX.setMemo(paramDTO.reason());
 
-        // 3. Criterion and Odd projection recalculation
+        // 2. Criterion and Odd projection recalculation
         // TODO: this can be simplified by summing all the
         for (var odd : odds) {
             odd.setStatus(OddStatusEnum.VOID);
@@ -91,11 +101,11 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             criterion.setTotalBetsCount(
                     criterion.getTotalBetsCount() - oddTotalBetsCount);
 
-            // 3.4 recalculate market liability
+            // 2.1 recalculate market liability
             var newCriterionReservedLiability = BettingUtils.calculateCriterionReservedLiability(criterion);
             criterion.setReservedLiability(newCriterionReservedLiability);
 
-            // 3.4 recalculate market liability
+            // 2.2 recalculate market liability
             var oldMatchReservedLiability = criterion.getMatch().getReservedLiability();
             var newMatchReservedLiability = calculateMatchReservedLiability(
                     matchCriteria,
@@ -104,7 +114,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             criterion.getMatch().setReservedLiability(newMatchReservedLiability);
             var matchDeltaReservedLiability = newMatchReservedLiability.subtract(oldMatchReservedLiability);
 
-            // 3.5 Reduce reserved liabilities
+            // 2.3 Reduce reserved liabilities
             if (match.isSpaceOwned()) {
                 if (matchDeltaReservedLiability.isGreaterThan(BetMoney.zero())) {
                     // lock funds
@@ -128,16 +138,22 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             }
         }
 
+        if (paramDTO.voidType() == TransactionTypeEnum.MATCH_VOID) {
+            match.setStatus(MatchStatusEnum.CANCELLED);
+        }
+        // 3. publish odd status changed event
+        oddSystemEvent.publish(this, new OddSseEvent.OddStatusChanged(
+                new OddStatusChangedEventDTO(paramDTO.oddsIds(), OddStatusEnum.VOID)));
+
+
         // 4. Reverse TXs (cashback)
         var betSlipItems = betSlipItemRepository.findAllByOddIds(paramDTO.oddsIds());
-        if (betSlipItems.isEmpty()) {
-            return null;
-        }
 
         var globalEscrowAccount = findGlobalEscrowAccountUC.execute(null);
         Map<String, AccountEntity> userAccountGroupedByUserId = new HashMap<>();
         Map<String, List<TransactionItemEntity>> userGroupedTXItems = new HashMap<>();
 
+        // 4.1 Emitting a new TX to return the stake to the user
         for (var slip : betSlipItems) {
             var slipUser = slip.getCreatedBy();
             var stake = slip.getStake();
@@ -161,10 +177,12 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
             userGroupedTXItems.computeIfAbsent(slipUser.getId(), k -> new ArrayList<>()).add(userTXI);
         }
 
-        // update bet slip status
+        // 4.2 Update bet slip status based on its items
+        // (all voided, all lost, all won, etc.)
         var affectedSlips = betSlipItems.stream().map(BetSlipItemEntity::getBetSlip).distinct().toList();
         affectedSlips.forEach(BetSlipEntity::syncStatusFromItems);
 
+        // 5. Create TXs
         this.createTransactionBatches(
                 paramDTO.referenceId(),
                 paramDTO.referenceType(),
@@ -174,11 +192,12 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, Void> {
                 userGroupedTXItems,
                 loggedUser.user());
 
+        // 6. Save space TX
         if (!spaceAccount.isEmpty()) {
             transactionRepository.save(spaceTX);
         }
 
-        return null;
+        return match;
     }
 
     private MatchEntity validateOdds(List<String> oddIdsToVoid, List<OddEntity> odds) {

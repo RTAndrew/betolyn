@@ -9,6 +9,9 @@ export interface AlertMessageProps {
   title: string;
   description?: string;
   icon?: React.ReactNode;
+  /** To make it fill the width of the container,
+   * use ```{ alignSelf: 'stretch', flexGrow: 1 }```
+   */
   style?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   textColor?: string;

@@ -25,12 +25,14 @@ export const getOddStatusTag = (status?: `${EOddStatus}`) => {
     case 'ACTIVE':
       return <Tag.Active />;
     case 'SUSPENDED':
+      return <Tag.Pending title="Suspended" />;
+    case 'VOID':
       return (
         <Tag
           textColor={colors.secondary}
           backgroundColor={hexToRgba(colors.secondary, 0.12)}
           borderColor={hexToRgba(colors.secondary, 0.3)}
-          title="Suspended"
+          title="Cancelled"
         />
       );
     case 'DRAFT':
@@ -47,12 +49,14 @@ export const getCriterionStatusTag = (status?: `${CriterionStatusEnum}`) => {
     case 'ACTIVE':
       return <Tag.Active />;
     case 'SUSPENDED':
+      return <Tag.Pending title="Suspended" />;
+    case 'VOID':
       return (
         <Tag
           textColor={colors.secondary}
           backgroundColor={hexToRgba(colors.secondary, 0.12)}
           borderColor={hexToRgba(colors.secondary, 0.3)}
-          title="Suspended"
+          title="Cancelled"
         />
       );
     case 'DRAFT':
@@ -71,18 +75,4 @@ export const getBetSlipItemStatusTag = (status: `${IBetSlipItemStatus}`) => {
     case 'VOIDED':
       return <Tag color={colors.greyLighter} title="Voided" />;
   }
-};
-
-const getBetSlipStatusColor = (status: `${IBetSlipItemStatus}`) => {
-  if (status === 'PENDING') return colors.complementary;
-  if (status === 'WON') return '#00C853';
-  if (status === 'LOST') return '#FF0000';
-  return colors.greyLight;
-};
-
-const getBetSlipStatusLabel = (status: `${IBetSlipItemStatus}`) => {
-  if (status === 'PENDING') return 'Pending';
-  if (status === 'WON') return 'Won';
-  if (status === 'LOST') return 'Lost';
-  return status;
 };

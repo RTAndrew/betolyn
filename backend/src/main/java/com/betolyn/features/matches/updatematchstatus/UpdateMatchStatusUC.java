@@ -13,7 +13,6 @@ import com.betolyn.features.matches.exceptions.MatchNotFoundException;
 import com.betolyn.features.matches.matchSystemEvents.MatchProgressChangedEventDTO;
 import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
-import com.betolyn.features.matches.matchSystemEvents.MatchVoidedEventDTO;
 import com.betolyn.shared.exceptions.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +28,12 @@ public class UpdateMatchStatusUC implements IUseCase<UpdateMatchStatusParam, Mat
     @Transactional
     public MatchEntity execute(UpdateMatchStatusParam param) throws MatchNotFoundException {
         var match = matchRepository.findById(param.matchId()).orElseThrow(MatchNotFoundException::new);
+
+        if (match.getStatus() == MatchStatusEnum.CANCELLED) {
+            throw new BadRequestException(
+                    "CANCELLATION_NOT_ALLOWED",
+                    "Cancellation is not allowed. Use void instead.");
+        }
 
         if (match.getType() == MatchTypeEnum.DERIVED) {
             throw new BadRequestException(
@@ -48,14 +53,9 @@ public class UpdateMatchStatusUC implements IUseCase<UpdateMatchStatusParam, Mat
 
         var savedMatch = matchRepository.save(match);
 
-        if (savedMatch.getStatus() == MatchStatusEnum.CANCELLED) {
-            var voidedEventDTO = new MatchVoidedEventDTO(savedMatch.getId());
-            matchSystemEvent.publish(this, new MatchSseEvent.MatchVoided(voidedEventDTO));
-        } else {
-            var progressEventDTO = new MatchProgressChangedEventDTO(
-                    savedMatch.getId(), previousStatus, savedMatch.getStatus());
-            matchSystemEvent.publish(this, new MatchSseEvent.MatchProgressChanged(progressEventDTO));
-        }
+        var progressEventDTO = new MatchProgressChangedEventDTO(
+                savedMatch.getId(), previousStatus, savedMatch.getStatus());
+        matchSystemEvent.publish(this, new MatchSseEvent.MatchProgressChanged(progressEventDTO));
 
         return savedMatch;
     }
