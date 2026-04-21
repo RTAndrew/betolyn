@@ -41,6 +41,8 @@ export interface IMatch {
   endTime: string | null;
   createdBy: IUserPublic;
   status?: `${MatchStatusEnum}`;
+  /** ISO timestamp from API when match-level settlement has completed. */
+  settledAt?: string | null;
   mainCriterion?: ICriterion & { odds: IOdd[] };
 }
 

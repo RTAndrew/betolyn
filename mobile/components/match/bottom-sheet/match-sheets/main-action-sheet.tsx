@@ -95,6 +95,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Settle match"
           icon={<MoneyHand color="white" />}
+          disabled={Boolean(match.settledAt)}
           onPress={() => {
             pushSheet({ type: 'match-settle-match' });
           }}

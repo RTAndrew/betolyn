@@ -38,6 +38,7 @@ export const MatchSseEventName = {
   matchCreated: 'matchCreated',
   scoreChanged: 'scoreChanged',
   rescheduled: 'rescheduled',
+  matchSettled: 'matchSettled',
 } as const;
 
 export type TMatchSseEventName = (typeof MatchSseEventName)[keyof typeof MatchSseEventName];

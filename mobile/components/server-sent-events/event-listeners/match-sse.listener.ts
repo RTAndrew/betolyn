@@ -11,6 +11,7 @@ type TEnvelope = ISseEvent<object>;
 interface IMatchEventPayload {
   match?: IMatch;
   matchId?: string;
+  settledAt?: string;
 }
 
 type MatchSseMessage =
@@ -18,7 +19,8 @@ type MatchSseMessage =
   | { eventName: typeof MatchSseEventName.matchCreated; payload: IMatchEventPayload }
   | { eventName: typeof MatchSseEventName.matchVoided; payload: IMatchEventPayload }
   | { eventName: typeof MatchSseEventName.scoreChanged; payload: IMatchEventPayload }
-  | { eventName: typeof MatchSseEventName.rescheduled; payload: IMatchEventPayload };
+  | { eventName: typeof MatchSseEventName.rescheduled; payload: IMatchEventPayload }
+  | { eventName: typeof MatchSseEventName.matchSettled; payload: IMatchEventPayload };
 
 function narrowMatchSseMessage(eventName: string, payload: unknown): MatchSseMessage | undefined {
   const p = payload as IMatchEventPayload;
@@ -33,6 +35,8 @@ function narrowMatchSseMessage(eventName: string, payload: unknown): MatchSseMes
       return { eventName: MatchSseEventName.scoreChanged, payload: p };
     case MatchSseEventName.rescheduled:
       return { eventName: MatchSseEventName.rescheduled, payload: p };
+    case MatchSseEventName.matchSettled:
+      return { eventName: MatchSseEventName.matchSettled, payload: p };
     default:
       return undefined;
   }
@@ -64,6 +68,14 @@ class MatchSseListener implements ISseListener {
           DataSync.updateMatches([msg.payload.match]);
         }
         break;
+
+      case MatchSseEventName.matchSettled: {
+        const { matchId, settledAt } = msg.payload;
+        if (matchId && settledAt) {
+          DataSync.updateMatches([{ id: matchId, settledAt }]);
+        }
+        break;
+      }
 
       case MatchSseEventName.scoreChanged:
       case MatchSseEventName.rescheduled:

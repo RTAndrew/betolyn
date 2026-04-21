@@ -4,7 +4,8 @@ public sealed interface MatchSseEvent permits MatchSseEvent.MatchVoided,
         MatchSseEvent.MatchProgressChanged,
         MatchSseEvent.ScoreChanged,
         MatchSseEvent.Rescheduled,
-        MatchSseEvent.MatchCreated {
+        MatchSseEvent.MatchCreated,
+        MatchSseEvent.MatchSettled {
 
     String eventName();
 
@@ -62,6 +63,18 @@ public sealed interface MatchSseEvent permits MatchSseEvent.MatchVoided,
         @Override
         public String eventName() {
             return "matchCreated";
+        }
+
+        @Override
+        public Object payload() {
+            return data;
+        }
+    }
+
+    record MatchSettled(MatchSettledEventDTO data) implements MatchSseEvent {
+        @Override
+        public String eventName() {
+            return "matchSettled";
         }
 
         @Override

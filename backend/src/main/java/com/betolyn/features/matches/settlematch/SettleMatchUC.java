@@ -18,9 +18,13 @@ import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.matches.MatchEntity;
+import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.MatchStatusEnum;
 import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import com.betolyn.features.matches.findmatchcriteria.FindMatchCriteriaUC;
+import com.betolyn.features.matches.matchSystemEvents.MatchSettledEventDTO;
+import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
+import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import com.betolyn.features.user.UserEntity;
 import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
@@ -29,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +53,8 @@ public class SettleMatchUC implements IUseCase<String, Void> {
     private final FindGlobalReserveAccountUC findGlobalReserveAccountUC;
     private final TransactionRepository transactionRepository;
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final MatchRepository matchRepository;
+    private final MatchSystemEvent matchSystemEvent;
 
     @Override
     @Transactional
@@ -57,6 +64,9 @@ public class SettleMatchUC implements IUseCase<String, Void> {
                 .user();
 
         MatchEntity match = findMatchByIdUC.execute(matchId);
+        if (match.getSettledAt() != null) {
+            return null;
+        }
         if (match.getEffectiveStatus() != MatchStatusEnum.ENDED) {
             throw new BadRequestException("MATCH_NOT_ENDED", "Match must be ended before settling");
         }
@@ -77,7 +87,11 @@ public class SettleMatchUC implements IUseCase<String, Void> {
                 matchId, BetSlipStatusEnum.PENDING, BetSlipItemStatusEnum.PENDING);
 
         if (items.isEmpty()) {
-            return null; // idempotent: already settled
+            var settledAt = LocalDateTime.now();
+            match.setSettledAt(settledAt);
+            matchRepository.save(match);
+            matchSystemEvent.publish(this, new MatchSseEvent.MatchSettled(new MatchSettledEventDTO(matchId, settledAt)));
+            return null;
         }
 
         var globalEscrow = findGlobalEscrowAccountUC.execute(null);
@@ -254,6 +268,11 @@ public class SettleMatchUC implements IUseCase<String, Void> {
         this.createTransactionBatches(matchId, matchReferenceName, userWinningGroupedTXItems, authenticatedUser);
         this.createTransactionBatches(matchId, matchReferenceName, spaceLosingGroupedTXItems, authenticatedUser);
         this.createTransactionBatches(matchId, matchReferenceName, globalLosingGroupedTXItems, authenticatedUser);
+
+        var settledAt = LocalDateTime.now();
+        match.setSettledAt(settledAt);
+        matchRepository.save(match);
+        matchSystemEvent.publish(this, new MatchSseEvent.MatchSettled(new MatchSettledEventDTO(matchId, settledAt)));
 
         return Void.TYPE.cast(null);
     }
