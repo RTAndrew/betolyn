@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import { SheetProvider } from 'react-native-actions-sheet';
 
 import { IMatch } from '@/types';
 
@@ -76,8 +77,10 @@ export const MatchBottomSheetProvider = ({
 
   return (
     <MatchBottomSheetContext.Provider value={contextValue}>
-      <MatchSheets />
-      {children}
+      <SheetProvider context="match-screen">
+        <MatchSheets />
+        {children}
+      </SheetProvider>
     </MatchBottomSheetContext.Provider>
   );
 };
