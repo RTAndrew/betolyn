@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.betslips.bulkvoidodd;
+package com.betolyn.features.betting.betslips.voiding;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

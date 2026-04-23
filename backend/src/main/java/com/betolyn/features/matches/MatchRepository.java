@@ -39,6 +39,10 @@ public interface MatchRepository extends JpaRepository<MatchEntity, String> {
 
     Optional<MatchEntity> findBySpaceIdAndOfficialMatchId(String spaceId, String officialMatchId);
 
+    /** Space {@link MatchTypeEnum#DERIVED} rows linked to a feed-backed official match. */
+    List<MatchEntity> findByOfficialMatch_IdAndType(String officialMatchId, MatchTypeEnum type);
+
+
     List<MatchEntity> findAllByType(MatchTypeEnum type);
 
     @Query("""

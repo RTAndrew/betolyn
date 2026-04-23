@@ -84,13 +84,11 @@ const BetCardChild = ({
     if (onPress) {
       onPress(match);
     } else {
-      console.log('match id', match.id);
       SheetManager.show('match', {
         payload: {
           matchId: match.id,
         },
       });
-      // router.push(`/matches/${match.id}`);
     }
   };
 

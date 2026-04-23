@@ -8,6 +8,7 @@ import UnauthenticatedGC from './unauthenticated-gc';
 
 // We extend some of the types here to give us great intellisense
 // across the app for all registered sheets.
+// ATT: for each sheet, ALWAYS give it a unique ID using.
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     unauthenticated: SheetDefinition;

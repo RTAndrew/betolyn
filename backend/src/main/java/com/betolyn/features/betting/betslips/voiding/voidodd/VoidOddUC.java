@@ -1,13 +1,15 @@
-package com.betolyn.features.betting.betslips.bulkvoidodd;
+package com.betolyn.features.betting.betslips.voiding.voidodd;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.betolyn.features.IUseCase;
 import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
-import com.betolyn.features.IUseCase;
+import com.betolyn.features.betting.betslips.voiding.bulkvoidodd.BulkVoidOddParam;
+import com.betolyn.features.betting.betslips.voiding.bulkvoidodd.BulkVoidOddUC;
 import com.betolyn.features.betting.odds.OddRepository;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 
@@ -31,7 +33,7 @@ public class VoidOddUC implements IUseCase<VoidOddParam, Void> {
                 TransactionTypeEnum.OUTCOME_VOID,
                 param.reason(),
                 odd.getName(),
-                List.of(odd.getId())));
+                List.of(odd.getId()), List.of(odd)));
 
         return null;
     }
