@@ -40,6 +40,19 @@ import lombok.Setter;
 })
 public class MatchEntity extends AuditableEntity {
 
+    private static String titleFromTeams(TeamEntity home, TeamEntity away) {
+        if (home != null && away != null) {
+            return home.getName() + " vs " + away.getName();
+        }
+        if (home != null) {
+            return home.getName();
+        }
+        if (away != null) {
+            return away.getName();
+        }
+        return null;
+    }
+
     /** ESPN event id for feed sync / dedupe (nullable for legacy rows). */
     @Column(name = "espn_id", unique = true, length = 64)
     private String espnId;
@@ -77,8 +90,8 @@ public class MatchEntity extends AuditableEntity {
             "handler"
     })
     private MatchEntity officialMatch;
-
     private String startTime;
+
     private String endTime;
 
     /** The worst-scenario (risk) among all criteria */
@@ -104,15 +117,15 @@ public class MatchEntity extends AuditableEntity {
     @JoinColumn(name = "criteria_highlight_id")
     @JsonIgnoreProperties({ "odds", "match" })
     private CriterionEntity mainCriterion;
-
     @ManyToOne
     @JoinColumn(name = "home_team_id")
     private TeamEntity homeTeam;
-    private int homeTeamScore = 0;
 
+    private int homeTeamScore = 0;
     @ManyToOne
     @JoinColumn(name = "away_team_id")
     private TeamEntity awayTeam;
+
     private int awayTeamScore = 0;
 
     public boolean isSpaceOwned() {
@@ -142,28 +155,16 @@ public class MatchEntity extends AuditableEntity {
     }
 
     /**
-     * Human-readable fixture title for UI and transaction snapshots (not persisted).
-     * For {@link MatchTypeEnum#DERIVED}, uses the linked official match's teams, consistent with
-     * {@link com.betolyn.features.matches.MatchDtoAssembler}.
+     * Human-readable fixture title for UI and transaction snapshots (not
+     * persisted).
+     * For {@link MatchTypeEnum#DERIVED}, uses the linked official match's teams,
+     * consistent with {@link MatchDtoAssembler}.
      */
     public String getDisplayName() {
         if (type == MatchTypeEnum.DERIVED && officialMatch != null) {
             return titleFromTeams(officialMatch.getHomeTeam(), officialMatch.getAwayTeam());
         }
         return titleFromTeams(homeTeam, awayTeam);
-    }
-
-    private static String titleFromTeams(TeamEntity home, TeamEntity away) {
-        if (home != null && away != null) {
-            return home.getName() + " vs " + away.getName();
-        }
-        if (home != null) {
-            return home.getName();
-        }
-        if (away != null) {
-            return away.getName();
-        }
-        return null;
     }
 
     @Override

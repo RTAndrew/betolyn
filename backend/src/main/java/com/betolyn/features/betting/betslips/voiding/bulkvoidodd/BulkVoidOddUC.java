@@ -1,4 +1,4 @@
-package com.betolyn.features.betting.betslips.bulkvoidodd;
+package com.betolyn.features.betting.betslips.voiding.bulkvoidodd;
 
 import static com.betolyn.features.betting.BettingUtils.calculateMatchReservedLiability;
 import static com.betolyn.features.betting.BettingUtils.createSpaceTXIForLockOrRelease;
@@ -69,7 +69,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, MatchEntity> {
     public MatchEntity execute(BulkVoidOddParam paramDTO) {
         var loggedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new);
 
-        var odds = oddRepository.findAllById(paramDTO.oddsIds());
+        var odds = Objects.requireNonNullElseGet(paramDTO.odds(), () -> oddRepository.findAllById(paramDTO.oddsIds()));
         var match = validateOdds(paramDTO.oddsIds(), odds);
 
         var matchCriteria = findMatchCriteriaUC.execute(match.getId());
