@@ -128,7 +128,7 @@ public class FeedSyncService {
             b.queryParam("after_updated_at", state.getWatermarkUpdatedAt().toString());
             b.queryParam("after_id", state.getWatermarkRowId());
         }
-        return b.build(true).toUri();
+        return b.build().encode().toUri();
     }
 
     private static String truncate(String s, int max) {
