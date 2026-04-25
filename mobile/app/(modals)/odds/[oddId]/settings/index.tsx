@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 import { MoreVertical, Trophy } from '@/components/icons';
 import { useMatchBottomSheet } from '@/components/match/bottom-sheet/context';
@@ -152,8 +153,8 @@ const OddSettings = () => {
             <Settings.Item
               title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
               subtitle="Event"
-              description={getMatchStatusTag(match.status)}
-              onPress={() => router.push(`/matches/${match.id}`)}
+              description={getMatchStatusTag(match.status, Boolean(match.settledAt))}
+              onPress={() => SheetManager.show('match', { payload: { matchId: match.id } })}
             />
 
             <Settings.Item

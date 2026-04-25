@@ -80,6 +80,7 @@ public class MatchDtoAssembler {
         dto.setUpdatedBy(userMapper.toDTO(match.getUpdatedBy()));
         dto.setReservedLiability(match.getReservedLiability());
         dto.setMaxReservedLiability(match.getMaxReservedLiability());
+        dto.setSettledAt(match.getSettledAt());
 
         if (stripMarkets) {
             dto.setMainCriterion(null);

@@ -45,6 +45,9 @@ public interface MatchRepository extends JpaRepository<MatchEntity, String> {
 
     List<MatchEntity> findAllByType(MatchTypeEnum type);
 
+    /** Space-linked events that follow the given official match (feed-backed). */
+    List<MatchEntity> findAllByOfficialMatch_IdAndType(String officialMatchId, MatchTypeEnum type);
+
     @Query("""
             SELECT DISTINCT m
             FROM MatchEntity m
@@ -61,6 +64,9 @@ public interface MatchRepository extends JpaRepository<MatchEntity, String> {
             FROM MatchEntity m
             LEFT JOIN FETCH m.homeTeam
             LEFT JOIN FETCH m.awayTeam
+            LEFT JOIN FETCH m.officialMatch om
+            LEFT JOIN FETCH om.homeTeam
+            LEFT JOIN FETCH om.awayTeam
             WHERE m.id = :id
             """)
     Optional<MatchEntity> findByIdWithTeams(@Param("id") String id);

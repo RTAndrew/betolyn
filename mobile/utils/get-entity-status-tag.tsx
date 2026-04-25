@@ -1,3 +1,4 @@
+import { TrophyLocked } from '@/components/icons';
 import Tag from '@/components/tags';
 import { colors } from '@/constants/colors';
 import { CriterionStatusEnum, EOddStatus, IBetSlipItemStatus, MatchStatusEnum } from '@/types';
@@ -5,7 +6,16 @@ import { CriterionStatusEnum, EOddStatus, IBetSlipItemStatus, MatchStatusEnum } 
 import { firstLetterUppercase } from './first-letter-uppercase';
 import { hexToRgba } from './hex-rgba';
 
-export const getMatchStatusTag = (status?: `${MatchStatusEnum}`) => {
+export const getMatchStatusTag = (status?: `${MatchStatusEnum}`, settled = false) => {
+  if (settled)
+    return (
+      <Tag
+        icon={<TrophyLocked width={18} height={18} />}
+        color={colors.greyLighter}
+        title="Settled"
+      />
+    );
+
   if (!status) return <></>;
 
   switch (status) {

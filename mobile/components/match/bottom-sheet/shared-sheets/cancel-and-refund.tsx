@@ -104,7 +104,7 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
   };
 
   return (
-    <BottomSheet onClose={closeAll} visible={visible}>
+    <BottomSheet id={`cancelAndRefund-${sheetData?.id}`} onClose={closeAll} visible={visible}>
       <BottomSheet.Header
         title={`Cancel & Refund - ${data.name}`}
         description={sheetData?.name}

@@ -84,7 +84,7 @@ const MatchSettings = () => {
             <Settings.Item
               title="24 October - 19:45"
               subtitle="Kick off"
-              suffixIcon={getMatchStatusTag(match.status)}
+              suffixIcon={getMatchStatusTag(match.status, Boolean(match.settledAt))}
             />
             <Settings.Item
               title="Cartões Amarelos"

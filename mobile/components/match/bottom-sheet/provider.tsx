@@ -77,7 +77,7 @@ export const MatchBottomSheetProvider = ({
 
   return (
     <MatchBottomSheetContext.Provider value={contextValue}>
-      <SheetProvider context={`match-action-sheets-for-match-${match.id}`}>
+      <SheetProvider context={`match-action-sheets-for-${match.id}`}>
         <MatchSheets />
         {children}
       </SheetProvider>

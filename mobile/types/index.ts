@@ -41,6 +41,7 @@ export interface IMatch {
   endTime: string | null;
   createdBy: IUserPublic;
   status?: `${MatchStatusEnum}`;
+  settledAt?: string | null;
   mainCriterion?: ICriterion & { odds: IOdd[] };
 }
 

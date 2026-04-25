@@ -72,5 +72,6 @@ public interface MatchMapper {
     @Mapping(target = "reservedLiability", ignore = true)
     @Mapping(target = "maxReservedLiability", ignore = true)
     @Mapping(target = "mainCriterion", ignore = true)
+    @Mapping(target = "settledAt", ignore = true)
     MatchEntity toEntity(MatchDTO entity);
 }

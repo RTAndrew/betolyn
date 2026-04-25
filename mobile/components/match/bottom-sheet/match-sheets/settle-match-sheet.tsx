@@ -66,6 +66,18 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
 
   if (!visible) return null;
 
+  if (match.settledAt) {
+    return (
+      <BottomSheet.ModalConfirmation
+        title="Settle match"
+        visible={visible}
+        onClose={closeAll}
+        description="This match is already settled."
+        onCancelText="Close"
+      />
+    );
+  }
+
   if (match.status !== MatchStatusEnum.ENDED) {
     return (
       <BottomSheet.ModalConfirmation
