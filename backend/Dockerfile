@@ -10,7 +10,7 @@ RUN mvn dependency:go-offline -B -DskipTests || true
 
 # Copy source and build the application
 COPY src ./src
-RUN mvn package -B -DskipTests -Dspring-boot.repackage.skip=false
+RUN mvn -X package -B -DskipTests -Dspring-boot.repackage.skip=false
 
 # Runtime stage
 FROM eclipse-temurin:17-jre
