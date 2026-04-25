@@ -1,5 +1,6 @@
 package com.betolyn.features.matches;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.annotations.JdbcType;
@@ -127,6 +128,10 @@ public class MatchEntity extends AuditableEntity {
     private TeamEntity awayTeam;
 
     private int awayTeamScore = 0;
+
+    /** Set when match-level settlement has completed (including no pending bets). */
+    @Column(name = "settled_at")
+    private LocalDateTime settledAt;
 
     public boolean isSpaceOwned() {
         return Objects.nonNull(spaceId);

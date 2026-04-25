@@ -26,7 +26,7 @@ export function MatchCardSkeleton() {
         <View style={styles.teamBody}>
           <View style={styles.teamWrapper}>
             <View style={styles.teamRow}>
-              <Skeleton color={BACKGROUND_COLOR} type="circle" size={35} />
+              <Skeleton color={BACKGROUND_COLOR} type="circle" size={50} />
               <Skeleton
                 color={BACKGROUND_COLOR}
                 type="default"
@@ -35,7 +35,7 @@ export function MatchCardSkeleton() {
               />
             </View>
             <View style={styles.teamRow}>
-              <Skeleton color={BACKGROUND_COLOR} type="circle" size={35} />
+              <Skeleton color={BACKGROUND_COLOR} type="circle" size={50} />
               <Skeleton
                 color={BACKGROUND_COLOR}
                 type="default"
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   teamNameLine: {
-    height: 14,
     backgroundColor: BACKGROUND_COLOR,
+    flexGrow: 0,
   },
   scoreLine: {
     width: 24,

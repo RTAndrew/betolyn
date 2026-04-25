@@ -1,4 +1,7 @@
 package com.betolyn.features.matches;
+
+import java.time.LocalDateTime;
+
 import com.betolyn.features.betting.criterion.dto.CriterionDTO;
 import com.betolyn.features.teams.TeamEntity;
 import com.betolyn.features.user.UserDTO;
@@ -31,4 +34,6 @@ public class MatchDTO {
     private BetMoney maxReservedLiability;
 
     private MatchStatusEnum status = MatchStatusEnum.SCHEDULED;
+
+    private LocalDateTime settledAt;
 }

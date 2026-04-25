@@ -5,6 +5,7 @@ import com.betolyn.features.betting.betslips.dto.BetSlipDTO;
 import com.betolyn.features.betting.betslips.dto.BetSlipItemDTO;
 import com.betolyn.features.matches.MatchDTO;
 import com.betolyn.features.matches.MatchEntity;
+import com.betolyn.features.matches.MatchTypeEnum;
 import com.betolyn.shared.BaseMapperConfig;
 import com.betolyn.shared.MoneyMapper;
 import org.mapstruct.Mapper;
@@ -52,6 +53,10 @@ public interface BetSlipMapper {
     }
 
     static MatchDTO toMatchDTO(MatchEntity match) {
+        var fixture = match.getType() == MatchTypeEnum.DERIVED && match.getOfficialMatch() != null
+                ? match.getOfficialMatch()
+                : match;
+
         var dto = new MatchDTO();
         dto.setId(match.getId());
         dto.setType(match.getType());
@@ -59,12 +64,12 @@ public interface BetSlipMapper {
             dto.setOfficialMatchId(match.getOfficialMatch().getId());
         }
         dto.setSpaceId(match.getSpaceId());
-        dto.setHomeTeam(match.getHomeTeam());
-        dto.setHomeTeamScore(match.getHomeTeamScore());
-        dto.setAwayTeam(match.getAwayTeam());
-        dto.setAwayTeamScore(match.getAwayTeamScore());
-        dto.setStartTime(match.getStartTime());
-        dto.setEndTime(match.getEndTime());
+        dto.setHomeTeam(fixture.getHomeTeam());
+        dto.setHomeTeamScore(fixture.getHomeTeamScore());
+        dto.setAwayTeam(fixture.getAwayTeam());
+        dto.setAwayTeamScore(fixture.getAwayTeamScore());
+        dto.setStartTime(fixture.getStartTime());
+        dto.setEndTime(fixture.getEndTime());
         dto.setStatus(match.getEffectiveStatus());
         return dto;
     }

@@ -76,6 +76,7 @@ const OpenMatchBottomSheet = () => {
 const BottomSheetWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <BottomSheet
+      onClose={() => SheetManager.hide('match')}
       CustomHeaderComponent={<></>}
       drawUnderStatusBar
       useBottomSafeAreaPadding={false}
@@ -171,7 +172,9 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
                 paddingVertical: 30,
               }}
             >
-              <View style={{ marginBottom: 10 }}>{getMatchStatusTag(match.status)}</View>
+              <View style={{ marginBottom: 10 }}>
+                {getMatchStatusTag(match.status, Boolean(match.settledAt))}
+              </View>
 
               <View
                 style={{

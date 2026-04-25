@@ -26,5 +26,6 @@ export { default as TimerOff } from './timer-off';
 export { default as Trash } from './trash';
 export { default as TrendingLines } from './trending-lines';
 export { default as Trophy } from './trophy';
+export { default as TrophyLocked } from './trophy-locked';
 export { default as UserAdd } from './user-add';
 export { default as Warning } from './warning';

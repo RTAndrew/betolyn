@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
@@ -23,6 +23,9 @@ export interface AsyncProcessingGlobalSheetProps {
 }
 
 const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) => {
+  const _id = useId();
+  const id = useRef(_id).current;
+
   const [isProcessing, setIsProcessing] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<unknown | null>(null);
@@ -37,9 +40,15 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   const handleClose = () => {
     if (isSuccess) {
       payload?.onSuccessClose?.(fnResult);
+      SheetManager.hide('asyncProcessing', {
+        context: `asyncProcessing-${id}`,
+      });
     } else {
-      SheetManager.hide('asyncProcessing');
+      SheetManager.hide('asyncProcessing', {
+        context: `asyncProcessing-${id}`,
+      });
     }
+    console.log('asyncProcessing-gs closed', `asyncProcessing-${id}`);
   };
 
   const handlePromise = async () => {
@@ -78,6 +87,7 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
 
   return (
     <BottomSheet
+      id={`asyncProcessing-${id}`}
       containerStyle={StyleSheet.flatten([
         styles.container,
         isSuccess && { backgroundColor: colors.greyDark },

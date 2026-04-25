@@ -35,25 +35,26 @@ const SkeletonGroup = ({
 };
 
 export function Skeleton({
+  color = hexToHexWithAlpha(colors.greyLighter, 0.35),
   type = 'default',
   borderRadius = 4,
   size = 16,
-  color = hexToHexWithAlpha(colors.greyLighter, 0.35),
   style,
 }: SkeletonProps) {
   const isCircle = type === 'circle';
+  const circleRadius = typeof size === 'number' ? size / 2 : 9999;
 
   const containerStyle: ViewStyle[] = [
     styles.base,
     {
       width: size,
-      borderRadius: isCircle && size != null ? Number(size) / 2 : isCircle ? 9999 : borderRadius,
+      borderRadius: isCircle ? circleRadius : borderRadius,
       backgroundColor: color ?? colors.greyLight,
     },
   ];
 
   if (isCircle && size != null) {
-    containerStyle.push({ width: size, height: size });
+    containerStyle.push({ height: size, flexGrow: 0 });
   }
 
   if (style) {
@@ -77,10 +78,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.greyLight,
   },
   shimmerFill: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });

@@ -15,6 +15,7 @@ import {
 } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { MatchStatusEnum } from '@/types';
 import { getMatchStatusTag } from '@/utils/get-entity-status-tag';
 
 import { useMatchBottomSheet } from '../context';
@@ -42,12 +43,44 @@ const Team = ({
 export const MainActionSheet = ({ visible = false }: ISheet) => {
   const { match, pushSheet, closeAll, goBack } = useMatchBottomSheet();
 
+  const isDerivedMatch = match.type === 'DERIVED';
+  const hasEnded =
+    match.status === MatchStatusEnum.CANCELLED ||
+    match.status === MatchStatusEnum.ENDED ||
+    Boolean(match.settledAt);
+
+  const canSettle = () => {
+    if (match.settledAt) return false;
+
+    if (![MatchStatusEnum.ENDED].includes(match.status as MatchStatusEnum)) return false;
+
+    return true;
+  };
+
+  const canUpdateScore = () => {
+    if (isDerivedMatch) return false;
+    if (hasEnded) return false;
+    return true;
+  };
+
+  const canEndMatch = () => {
+    if (isDerivedMatch) return false;
+    if (hasEnded) return false;
+    return true;
+  };
+
+  const canSuspendAllMarkets = () => {
+    if (isDerivedMatch) return false;
+    if (hasEnded) return false;
+    return true;
+  };
+
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
       <BottomSheet.Header>
         <BottomSheet.SafeHorizontalView style={{ width: '100%' }}>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
-            {getMatchStatusTag(match.status)}
+            {getMatchStatusTag(match.status, Boolean(match.settledAt))}
           </View>
           <View style={styles.teamWrapper}>
             <Team name={'Home'} imageUrl={match.homeTeam.badgeUrl} direction="row-reverse" />
@@ -61,6 +94,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
+          disabled={isDerivedMatch || Boolean(match.settledAt)}
           text="Cancel & Refund"
           icon={<Trash color="white" />}
           onPress={() => {
@@ -74,7 +108,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
                   note: {
                     title: 'This will also affect linked matches.',
                     description:
-                      'The markets and bets of the matches derived (usually from spaces) from this one will be canceled as well.',
+                      'Space-linked events derived from this will be voided and canceled the as well (markets and outcomes).',
                   },
                 }),
               },
@@ -84,17 +118,19 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           text="Update score"
+          disabled={!canUpdateScore()}
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
           }}
           icon={<SoccerBall color="white" />}
         />
 
-        <BottomSheet.ActionOption text="Reschedule" icon={<TimeHistory color="white" />} />
+        <BottomSheet.ActionOption disabled text="Reschedule" icon={<TimeHistory color="white" />} />
 
         <BottomSheet.ActionOption
           text="Settle match"
           icon={<MoneyHand color="white" />}
+          disabled={!canSettle()}
           onPress={() => {
             pushSheet({ type: 'match-settle-match' });
           }}
@@ -109,7 +145,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           icon={<Settings color="white" />}
         />
         <BottomSheet.ActionOption
-          disabled={match.status === 'ENDED'}
+          disabled={hasEnded}
           text="Add market"
           onPress={() => {
             goBack();
@@ -117,19 +153,19 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           }}
           icon={<Add color="white" />}
         />
+
         <BottomSheet.ActionOption
+          disabled={!canSuspendAllMarkets()}
           text="Suspend all markets"
-          disabled={match.status === 'ENDED'}
           icon={<LockClosed color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-suspend-all-markets' });
           }}
         />
 
-        {match.type !== 'DERIVED' && (
+        {canEndMatch() && (
           <BottomSheet.ActionOption
             text="End match"
-            disabled={match.status === 'ENDED'}
             icon={<TimerOff color="white" />}
             onPress={() => {
               pushSheet({ type: 'match-end-match' });

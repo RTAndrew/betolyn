@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 import Switch from '@/components/forms/switch';
 import { MoreVertical, Trophy } from '@/components/icons';
@@ -89,9 +90,9 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
 
           <Settings.Item
             title={matchTitle}
-            subtitle="Match"
-            description={getMatchStatusTag(m.status)}
-            onPress={() => router.push(`/matches/${m.id}`)}
+            subtitle="Matchs"
+            description={getMatchStatusTag(m.status, Boolean(m.settledAt))}
+            onPress={() => SheetManager.show('match', { payload: { matchId: m.id } })}
           />
 
           <Settings.ItemGroup>
