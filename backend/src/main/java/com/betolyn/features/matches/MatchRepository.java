@@ -12,15 +12,20 @@ import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.odds.OddStatusEnum;
 
 public interface MatchRepository extends JpaRepository<MatchEntity, String> {
-        /** Use {@code JOIN FETCH} so {@code mc.odds} only contains rows matching {@code oddStatuses}. */
+        /**
+         * Use left joins so official feed matches without betting markets are still
+         * returned by the public match list.
+         */
         @Query("""
                         SELECT DISTINCT m
                         FROM MatchEntity m
-                        JOIN FETCH m.mainCriterion mc
-                        JOIN FETCH mc.odds o
+                        LEFT JOIN FETCH m.homeTeam
+                        LEFT JOIN FETCH m.awayTeam
+                        LEFT JOIN FETCH m.mainCriterion mc
+                        LEFT JOIN FETCH mc.odds o
                         WHERE m.type = :matchType
-                        AND mc.status IN :criteriaStatuses
-                        AND o.status IN :oddStatuses
+                        AND (mc IS NULL OR mc.status IN :criteriaStatuses)
+                        AND (o IS NULL OR o.status IN :oddStatuses)
                         """)
         List<MatchEntity> findAllByMatchType(@Param("matchType") MatchTypeEnum matchType,
                         @Param("criteriaStatuses") Collection<CriterionStatusEnum> criteriaStatuses,
