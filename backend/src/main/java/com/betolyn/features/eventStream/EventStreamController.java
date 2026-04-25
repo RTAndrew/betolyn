@@ -18,7 +18,7 @@ public class EventStreamController {
     private final ServerSentEventEmitter sse;
 
     @CrossOrigin(allowedHeaders = "*")
-    @GetMapping( produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream() {
         SseEmitter emitter = sse.newEmitter();
 
