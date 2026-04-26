@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 public class RenderEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private static final String PROPERTY_SOURCE_NAME = "renderEnv";
-    // postgresql://USER:PASSWORD@HOST:PORT/DATABASE (password may contain : and @)
-    private static final Pattern PG_URL = Pattern.compile("postgres(?:ql)?://([^:]+):([^@]+)@([^:]+):(\\d+)/(.+)");
+    // postgresql://USER:PASSWORD@HOST[:PORT]/DATABASE
+    private static final Pattern PG_URL = Pattern.compile("postgres(?:ql)?://([^:]+):([^@]+)@([^/:]+)(?::(\\d+))?/([^?]+)(?:\\?.*)?");
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -29,6 +29,11 @@ public class RenderEnvironmentPostProcessor implements EnvironmentPostProcessor 
         String databaseUrl = environment.getProperty("DATABASE_URL");
         if (databaseUrl != null && !databaseUrl.isBlank()) {
             parseDatabaseUrl(databaseUrl, props);
+        }
+
+        String springDatasourceUrl = environment.getProperty("SPRING_DATASOURCE_URL");
+        if (springDatasourceUrl != null && !springDatasourceUrl.isBlank()) {
+            parseDatabaseUrl(springDatasourceUrl, props);
         }
 
         String redisUrl = environment.getProperty("REDIS_URL");
@@ -49,8 +54,8 @@ public class RenderEnvironmentPostProcessor implements EnvironmentPostProcessor 
                 String username = m.group(1);
                 String password = m.group(2);
                 String host = m.group(3);
-                String port = m.group(4);
-                String database = m.group(5).split("\\?")[0];
+                String port = m.group(4) == null ? "5432" : m.group(4);
+                String database = m.group(5);
                 props.put("spring.datasource.url", "jdbc:postgresql://" + host + ":" + port + "/" + database);
                 props.put("spring.datasource.username", username);
                 props.put("spring.datasource.password", password);
