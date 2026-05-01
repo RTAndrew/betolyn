@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useCallback, useMemo, useState } from 'react';
-import { SheetProvider } from 'react-native-actions-sheet';
+import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 
 import { IMatch } from '@/types';
 
@@ -58,6 +58,11 @@ export const MatchBottomSheetProvider = ({
     setStack([]);
   }, []);
 
+  const closeMatchScreen = useCallback(() => {
+    setStack([]);
+    SheetManager.hide('match');
+  }, []);
+
   const currentSheet = useMemo(() => {
     return stack.length > 0 ? stack[stack.length - 1] : null;
   }, [stack]);
@@ -69,10 +74,11 @@ export const MatchBottomSheetProvider = ({
       pushSheet,
       goBack,
       closeAll,
+      closeMatchScreen,
       currentSheet,
     }),
 
-    [match, stack, pushSheet, goBack, closeAll, currentSheet]
+    [match, stack, pushSheet, goBack, closeAll, closeMatchScreen, currentSheet]
   );
 
   return (

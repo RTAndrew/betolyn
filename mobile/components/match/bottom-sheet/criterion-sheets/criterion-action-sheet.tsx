@@ -13,7 +13,7 @@ import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 
 export const CriterionActionSheet = ({ visible = false }: ISheet) => {
-  const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();
+  const { pushSheet, closeAll, closeMatchScreen, currentSheet } = useMatchBottomSheet();
   const sheetCriterion = currentSheet?.data as IMatchCriteriaResponse | undefined;
   const criterionId = sheetCriterion?.id;
   const { data: criterionRes } = useGetCriterionById({
@@ -109,6 +109,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
           text="Settings"
           icon={<Settings color="white" />}
           onPress={() => {
+            closeMatchScreen();
             router.push(`/criteria/${criterion.id}/settings`);
           }}
         />

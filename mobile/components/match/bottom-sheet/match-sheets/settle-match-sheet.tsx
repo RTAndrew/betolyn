@@ -37,7 +37,7 @@ const formatSettleSummary = (
 };
 
 export const SettleMatchSheet = ({ visible = false }: ISheet) => {
-  const { closeAll, match } = useMatchBottomSheet();
+  const { closeAll, closeMatchScreen, match } = useMatchBottomSheet();
   const { data: criteriaResult, isPending: criteriaLoading } = useGetMatchCriteria({
     matchId: match.id,
     queryOptions: {
@@ -55,7 +55,7 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
   const isReadyToSettle = allSuspended || allHaveWinner;
 
   const handleSeeCriteria = () => {
-    closeAll();
+    closeMatchScreen();
     router.push(`/matches/${match.id}/settings`);
   };
 

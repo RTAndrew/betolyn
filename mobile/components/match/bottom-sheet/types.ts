@@ -33,5 +33,6 @@ export interface MatchBottomSheetContextType {
   pushSheet: (item: BottomSheetStackItem) => void;
   goBack: () => void;
   closeAll: () => void;
+  closeMatchScreen: () => void;
   currentSheet: BottomSheetStackItem | null;
 }

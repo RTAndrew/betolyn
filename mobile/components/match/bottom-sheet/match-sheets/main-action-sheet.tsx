@@ -41,7 +41,7 @@ const Team = ({
 };
 
 export const MainActionSheet = ({ visible = false }: ISheet) => {
-  const { match, pushSheet, closeAll, goBack } = useMatchBottomSheet();
+  const { match, pushSheet, closeAll, closeMatchScreen } = useMatchBottomSheet();
 
   const isDerivedMatch = match.type === 'DERIVED';
   const hasEnded =
@@ -139,7 +139,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Settings"
           onPress={() => {
-            goBack();
+            closeMatchScreen();
             router.push(`/matches/${match.id}/settings`);
           }}
           icon={<Settings color="white" />}
@@ -148,7 +148,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           disabled={hasEnded}
           text="Add market"
           onPress={() => {
-            goBack();
+            closeMatchScreen();
             router.push(`/matches/${match.id}/create-criterion`);
           }}
           icon={<Add color="white" />}

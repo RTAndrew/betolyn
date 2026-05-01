@@ -155,7 +155,12 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
                 <Sync />
               </ScreenHeader.Icon>
 
-              <ScreenHeader.Icon onPress={() => router.push(`/matches/${matchId}/settings`)}>
+              <ScreenHeader.Icon
+                onPress={() => {
+                  SheetManager.hide('match');
+                  router.push(`/matches/${matchId}/settings`);
+                }}
+              >
                 <Settings />
               </ScreenHeader.Icon>
 

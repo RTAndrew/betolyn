@@ -34,7 +34,7 @@ const canSuspendOdd = (oddStatus: `${EOddStatus}`, criterionStatus: `${Criterion
 };
 
 export const OddActionSheet = ({ visible = false }: ISheet) => {
-  const { pushSheet, closeAll, currentSheet } = useMatchBottomSheet();
+  const { pushSheet, closeAll, closeMatchScreen, currentSheet } = useMatchBottomSheet();
   const sheetOdd = currentSheet?.data as IOddSheetData | undefined;
 
   const { data: oddRes, isPending } = useGetOddById({
@@ -111,7 +111,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
           text="Settings"
           icon={<Settings color="white" />}
           onPress={() => {
-            closeAll();
+            closeMatchScreen();
             router.push(`/odds/${odd.id}/settings`);
           }}
         />
