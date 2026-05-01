@@ -1,6 +1,6 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { SheetManager, SheetProps } from 'react-native-actions-sheet';
+import { SheetManager, SheetProps, useProviderContext } from 'react-native-actions-sheet';
 
 import { Button } from '@/components/button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
@@ -18,13 +18,12 @@ export interface AsyncProcessingGlobalSheetProps {
   successMessage?: string;
   errorTitle: string;
   loadingTitle: string;
-  onSuccessClose: (fnResult?: unknown | null) => void;
+  onSuccessClose?: (fnResult?: unknown | null) => void;
   fnPromise: () => Promise<unknown> | void;
 }
 
 const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) => {
-  const _id = useId();
-  const id = useRef(_id).current;
+  const context = useProviderContext();
 
   const [isProcessing, setIsProcessing] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -40,15 +39,11 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   const handleClose = () => {
     if (isSuccess) {
       payload?.onSuccessClose?.(fnResult);
-      SheetManager.hide('asyncProcessing', {
-        context: `asyncProcessing-${id}`,
-      });
-    } else {
-      SheetManager.hide('asyncProcessing', {
-        context: `asyncProcessing-${id}`,
-      });
     }
-    console.log('asyncProcessing-gs closed', `asyncProcessing-${id}`);
+    SheetManager.hide('asyncProcessing', {
+      context,
+    });
+    console.log('asyncProcessing-gs closed');
   };
 
   const handlePromise = async () => {
@@ -87,7 +82,6 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
 
   return (
     <BottomSheet
-      id={`asyncProcessing-${id}`}
       containerStyle={StyleSheet.flatten([
         styles.container,
         isSuccess && { backgroundColor: colors.greyDark },

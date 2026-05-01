@@ -43,7 +43,7 @@ export const EndMatchSheet = ({ visible = false }: ISheet) => {
       <View style={styles.container}>
         <Switch
           label="Suspend all criteria for this match"
-          description="When enabled, all markets for this match will be suspended immediately, preventing any
+          description="All markets for this match will be suspended immediately, preventing any
       new bets."
           value={suspendAllCriteria}
           onChange={(value) => setSuspendAllCriteria(value)}

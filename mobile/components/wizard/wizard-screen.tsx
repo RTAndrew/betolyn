@@ -128,7 +128,6 @@ export const WizardScreen = <TState extends object>({
           onSuccessClose: (fnResult) => {
             resetAllData(); // reset all data so the the screens can be closed
             router.dismissTo('/spaces');
-            SheetManager.hide('asyncProcessing');
             onSuccessClose?.(fnResult);
           },
         },

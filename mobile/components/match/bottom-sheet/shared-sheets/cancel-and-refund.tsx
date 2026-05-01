@@ -95,7 +95,6 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
           successMessage: '',
           fnPromise: async () => handleVoid(),
           onSuccessClose: () => {
-            SheetManager.hide('asyncProcessing');
             closeAll();
           },
         },

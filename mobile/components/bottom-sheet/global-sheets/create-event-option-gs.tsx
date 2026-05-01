@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { SheetManager, SheetProps } from 'react-native-actions-sheet';
+import { SheetManager, SheetProps, useProviderContext } from 'react-native-actions-sheet';
 import { Checkbox, View } from 'react-native-ui-lib';
 
 import { Button } from '@/components/button';
@@ -28,6 +28,8 @@ const options: { type: `${ESpaceCreateEventType}`; label: string; description: s
 ];
 
 const CreateEventOptionGS = ({ payload }: SheetProps<'createEventOptionSelection'>) => {
+  const context = useProviderContext();
+
   const spaceId = payload?.spaceId;
   const [selectedOption, setSelectedOption] = useState<`${ESpaceCreateEventType}`>(
     ESpaceCreateEventType.AUTO
@@ -38,7 +40,9 @@ const CreateEventOptionGS = ({ payload }: SheetProps<'createEventOptionSelection
   };
 
   const handleCreateEvent = async () => {
-    SheetManager.hide('createEventOptionSelection');
+    SheetManager.hide('createEventOptionSelection', {
+      context,
+    });
     router.push(`/(modals)/spaces/${spaceId}/create-event/${selectedOption}`);
   };
 

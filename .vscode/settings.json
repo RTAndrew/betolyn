@@ -8,8 +8,13 @@
 	"[java]": {
 		"editor.defaultFormatter": "redhat.java"
 	},
-
+	"[xml]": {
+		"editor.defaultFormatter": "redhat.vscode-xml"
+	},
 	// JavaScript/TypeScript
+	"[jsonc]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
 	"editor.defaultFormatter": "oxc.oxc-vscode",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit",
@@ -37,7 +42,4 @@
 		"**/**/index.tsx": "${dirname} → index.tsx",
 		"**/**/styles.tsx": "${dirname} → styles.tsx"
 	},
-	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml"
-	}
 }

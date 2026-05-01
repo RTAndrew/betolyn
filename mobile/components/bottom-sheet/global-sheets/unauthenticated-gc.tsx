@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { SheetManager } from 'react-native-actions-sheet';
+import { SheetManager, useProviderContext } from 'react-native-actions-sheet';
 
 import { Button } from '@/components/button';
 import EmptyState from '@/components/empty-state';
@@ -12,6 +12,8 @@ import { colors } from '@/constants/colors';
 import BottomSheet from '..';
 
 const UnauthenticatedGC = () => {
+  const context = useProviderContext();
+
   return (
     <BottomSheet>
       <SafeHorizontalView>
@@ -31,7 +33,9 @@ const UnauthenticatedGC = () => {
             style={styles.button}
             onPress={() => {
               router.push('/auth/login');
-              SheetManager.hide('unauthenticated');
+              SheetManager.hide('unauthenticated', {
+                context,
+              });
             }}
           >
             Sign in
