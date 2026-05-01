@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
@@ -57,6 +58,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, MatchEntity> {
     private final FindAccountByOwnerIdUC findAccountByOwnerIdUC;
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
     private final FindGlobalEscrowAccountUC findGlobalEscrowAccountUC;
+    private final DomainPermissionService domainPermissionService;
 
     private final BetSlipItemRepository betSlipItemRepository;
     private final OddSystemEvent oddSystemEvent;
@@ -71,6 +73,7 @@ public class BulkVoidOddUC implements IUseCase<BulkVoidOddParam, MatchEntity> {
 
         var odds = Objects.requireNonNullElseGet(paramDTO.odds(), () -> oddRepository.findAllById(paramDTO.oddsIds()));
         var match = validateOdds(paramDTO.oddsIds(), odds);
+        domainPermissionService.assertCanMutateMatch(loggedUser.user(), match);
 
         var matchCriteria = findMatchCriteriaUC.execute(match.getId());
         Optional<AccountEntity> spaceAccount = Optional.empty();

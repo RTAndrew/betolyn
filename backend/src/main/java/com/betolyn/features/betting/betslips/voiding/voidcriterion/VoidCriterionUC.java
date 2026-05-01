@@ -7,6 +7,8 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
 import com.betolyn.features.betting.BettingUtils;
@@ -19,6 +21,7 @@ import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.dto.CriterionVoidedEventDTO;
 import com.betolyn.features.betting.odds.OddEntity;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 
@@ -31,6 +34,8 @@ public class VoidCriterionUC implements IUseCase<VoidCriterionParam, Void> {
     private final CriterionRepository criterionRepository;
     private final BulkVoidOddUC bulkVoidOddUC;
     private final CriterionSystemEvent criterionSystemEvent;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     /**
      * Voids a criterion and all its voidable odds.
@@ -45,9 +50,11 @@ public class VoidCriterionUC implements IUseCase<VoidCriterionParam, Void> {
     @Override
     @Transactional
     public Void execute(VoidCriterionParam param) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         CriterionEntity criterion = Objects.requireNonNullElseGet(param.criterion(),
                 () -> criterionRepository.findById(param.criterionId())
                         .orElseThrow(EntityNotfoundException::new));
+        domainPermissionService.assertCanMutateCriterion(authenticatedUser, criterion);
 
         List<String> voidableOddsIds = new ArrayList<>();
         List<OddEntity> voidableOdds = new ArrayList<>();

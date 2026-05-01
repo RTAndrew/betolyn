@@ -6,11 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.bankroll.transaction.TransactionReferenceTypeEnum;
 import com.betolyn.features.bankroll.transaction.TransactionTypeEnum;
 import com.betolyn.features.betting.betslips.voiding.bulkvoidodd.BulkVoidOddParam;
 import com.betolyn.features.betting.betslips.voiding.bulkvoidodd.BulkVoidOddUC;
 import com.betolyn.features.betting.odds.OddRepository;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.EntityNotfoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -20,12 +23,16 @@ import lombok.RequiredArgsConstructor;
 public class VoidOddUC implements IUseCase<VoidOddParam, Void> {
     private final OddRepository oddRepository;
     private final BulkVoidOddUC bulkVoidOddUC;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     @Override
     @Transactional
     public Void execute(VoidOddParam param) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var odd = oddRepository.findById(param.oddId())
                 .orElseThrow(EntityNotfoundException::new);
+        domainPermissionService.assertCanMutateOdd(authenticatedUser, odd);
 
         bulkVoidOddUC.execute(new BulkVoidOddParam(
                 odd.getId(),

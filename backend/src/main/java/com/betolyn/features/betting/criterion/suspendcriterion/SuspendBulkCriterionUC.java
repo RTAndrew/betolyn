@@ -1,6 +1,8 @@
 package com.betolyn.features.betting.criterion.suspendcriterion;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
@@ -12,6 +14,8 @@ import com.betolyn.features.betting.odds.OddSseEvent;
 import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
+import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +29,17 @@ public class SuspendBulkCriterionUC implements IUseCase<String, List<CriterionEn
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final CriterionSystemEvent criterionSystemEvent;
     private final OddSystemEvent oddSystemEvent;
+    private final FindMatchByIdUC findMatchByIdUC;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     @Override
     @Transactional
     public List<CriterionEntity> execute(String matchId) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
+        var match = findMatchByIdUC.execute(matchId);
+        domainPermissionService.assertCanMutateMatch(authenticatedUser, match);
+
         var criteria = criterionRepository.findAllByMatchId(
                 matchId,
                 List.of(CriterionStatusEnum.ACTIVE, CriterionStatusEnum.DRAFT)

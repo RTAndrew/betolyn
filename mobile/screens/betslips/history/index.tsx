@@ -61,7 +61,7 @@ const BetSlipHistoryScreen = () => {
   }, [] as IBetSlipItem[]);
 
   return (
-    <View style={{ backgroundColor: colors.greyLight, flex: 1 }}>
+    <View style={{ backgroundColor: colors.greyLight, flex: 1, flexGrow: 1 }}>
       <ScreenHeader
         safeArea
         type="back"
@@ -87,7 +87,7 @@ const BetSlipHistoryScreen = () => {
           }}
         />
       ) : (
-        <SafeHorizontalView>
+        <SafeHorizontalView style={{ flexGrow: 1 }}>
           <EmptyState.NoBets center />
         </SafeHorizontalView>
       )}

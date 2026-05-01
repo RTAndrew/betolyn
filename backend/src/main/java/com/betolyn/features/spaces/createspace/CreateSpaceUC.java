@@ -53,6 +53,7 @@ public class CreateSpaceUC implements IUseCase<CreateSpaceRequestDTO, SpaceEntit
                 var membership = new SpaceUsersEntity();
                 membership.setUser(user);
                 membership.setSpace(space);
+                membership.setIsAdmin(user.getId().equals(authenticatedUser.user().getId()));
                 spaceMembers.add(membership);
             }
         }

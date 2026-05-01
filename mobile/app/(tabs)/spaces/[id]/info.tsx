@@ -16,6 +16,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
+import SpaceGuard from '@/components/space-guard';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { colors } from '@/constants/colors';
@@ -135,15 +136,17 @@ const Info = () => {
         </View>
       }
     >
-      <SafeHorizontalView style={styles.actions}>
-        <Actions title="Withdraw" icon={<DollarEuro width={24} height={24} />} />
-        <Actions
-          onPress={() => router.push(`/(modals)/spaces/${id}/fund`)}
-          title="Allocate funds"
-          icon={<Add width={24} height={24} />}
-        />
-        <Actions title="Invite" icon={<UserAdd width={24} height={24} />} />
-      </SafeHorizontalView>
+      <SpaceGuard spaceId={id as string}>
+        <SafeHorizontalView style={styles.actions}>
+          <Actions title="Withdraw" icon={<DollarEuro width={24} height={24} />} />
+          <Actions
+            onPress={() => router.push(`/(modals)/spaces/${id}/fund`)}
+            title="Allocate funds"
+            icon={<Add width={24} height={24} />}
+          />
+          <Actions title="Invite" icon={<UserAdd width={24} height={24} />} />
+        </SafeHorizontalView>
+      </SpaceGuard>
 
       {/* <ThemedView style={styles.participants}>
         <Text style={styles.participantsNumber}>{spac.members.length} Participantes</Text>

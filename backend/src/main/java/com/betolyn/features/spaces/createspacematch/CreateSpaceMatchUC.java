@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
 import com.betolyn.features.matches.MatchTypeEnum;
@@ -60,7 +61,7 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Match
     private final SpaceUsersRepository spaceUsersRepository;
     private final MatchRepository matchRepository;
     private final FindMatchByIdUC findMatchByIdUC;
-
+    private final DomainPermissionService domainPermissionService;
     private final CreateTeamUC createTeamUC;
 
     private final CreateMatchUC createMatchUC;
@@ -77,11 +78,7 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Match
         }
 
         var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new);
-        var userId = authenticatedUser.user().getId();
-        if (!spaceUsersRepository.existsBySpaceIdAndUserId(spaceId, userId)) {
-            throw new AccessForbiddenException();
-        }
-
+        domainPermissionService.assertIsSpaceAdmin(authenticatedUser.user(), spaceId);
 
         findSpaceByIdUC.execute(spaceId);
 
@@ -97,7 +94,9 @@ public class CreateSpaceMatchUC implements IUseCase<CreateSpaceMatchParam, Match
 
             var existing = matchRepository.findBySpaceIdAndOfficialMatchId(spaceId, match.getId());
             if (existing.isPresent()) {
-                return existing.get();
+                throw new BadRequestException(
+                        "MATCH_ALREADY_LINKED",
+                        "This match is already linked to this space");
             }
 
             var derivedMatch = new MatchEntity();

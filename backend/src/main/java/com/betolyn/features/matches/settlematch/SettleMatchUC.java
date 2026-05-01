@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.bankroll.account.AccountEntity;
 import com.betolyn.features.bankroll.account.AccountTypeEnum;
 import com.betolyn.features.bankroll.account.findaccountbyownerid.FindAccountByOwnerIdUC;
@@ -74,6 +75,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
     private final FindGlobalReserveAccountUC findGlobalReserveAccountUC;
     private final TransactionRepository transactionRepository;
     private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
     private final MatchSystemEvent matchSystemEvent;
     private final Supplier<LocalDateTime> settledAtNow = LocalDateTime::now;
 
@@ -85,6 +87,7 @@ public class SettleMatchUC implements IUseCase<String, Void> {
                 .user();
 
         MatchEntity match = findMatchByIdUC.execute(matchId);
+        domainPermissionService.assertCanMutateMatch(authenticatedUser, match);
         if (match.getSettledAt() != null) {
             throw new BadRequestException("MATCH_ALREADY_SETTLED", "Match has already been settled");
         }

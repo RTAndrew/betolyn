@@ -7,6 +7,7 @@ import com.betolyn.shared.baseEntity.EntityUUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -25,10 +26,12 @@ public class SpaceUsersEntity extends AuditableEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-
     @ManyToOne
     @JoinColumn(name = "space_id", nullable = false)
     private SpaceEntity space;
+
+    @Column(name = "is_admin", nullable = false)
+    private Boolean isAdmin = false;
 
     @Override
     protected EntityUUID getUUIDPrefix() {

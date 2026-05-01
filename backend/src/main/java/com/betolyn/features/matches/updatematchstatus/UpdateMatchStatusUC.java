@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.criterion.suspendcriterion.SuspendBulkCriterionUC;
 import com.betolyn.features.matches.MatchEntity;
 import com.betolyn.features.matches.MatchRepository;
@@ -13,6 +15,7 @@ import com.betolyn.features.matches.exceptions.MatchNotFoundException;
 import com.betolyn.features.matches.matchSystemEvents.MatchProgressChangedEventDTO;
 import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
@@ -23,11 +26,15 @@ public class UpdateMatchStatusUC implements IUseCase<UpdateMatchStatusParam, Mat
     private final MatchRepository matchRepository;
     private final MatchSystemEvent matchSystemEvent;
     private final SuspendBulkCriterionUC suspendBulkCriterionUC;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     @Override
     @Transactional
     public MatchEntity execute(UpdateMatchStatusParam param) throws MatchNotFoundException {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var match = matchRepository.findById(param.matchId()).orElseThrow(MatchNotFoundException::new);
+        domainPermissionService.assertCanMutateMatch(authenticatedUser, match);
 
         if (match.getStatus() == MatchStatusEnum.CANCELLED) {
             throw new BadRequestException(

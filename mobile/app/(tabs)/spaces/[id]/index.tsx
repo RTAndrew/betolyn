@@ -13,6 +13,7 @@ import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
 import { Skeleton } from '@/components/skeleton';
 import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
+import { useIsSpaceAdmin } from '@/components/space-guard';
 import { colors } from '@/constants/colors';
 import { mockData } from '@/mock/matches';
 import { useGetSpaceById, useGetSpaceMatches } from '@/services';
@@ -22,6 +23,7 @@ const SpaceId = () => {
   const { id } = useLocalSearchParams();
   const spaceId = id as string;
   const { data, error, isPending } = useGetSpaceById({ spaceId });
+  const { isAdmin: canCreateEvents } = useIsSpaceAdmin(spaceId);
   const {
     data: matchesRes,
     error: matchesError,
@@ -81,17 +83,19 @@ const SpaceId = () => {
           <AntDesign name="message" size={24} color="white" />
         </ScreenHeader.Icon>
 
-        <ScreenHeader.Icon
-          onPress={() =>
-            SheetManager.show('createEventOptionSelection', {
-              payload: {
-                spaceId: space.id,
-              },
-            })
-          }
-        >
-          <Add width={32} height={32} />
-        </ScreenHeader.Icon>
+        {canCreateEvents && (
+          <ScreenHeader.Icon
+            onPress={() =>
+              SheetManager.show('createEventOptionSelection', {
+                payload: {
+                  spaceId: space.id,
+                },
+              })
+            }
+          >
+            <Add width={32} height={32} />
+          </ScreenHeader.Icon>
+        )}
       </ScreenHeader.QuickActions>
     </ScreenHeader>
   );
@@ -100,7 +104,9 @@ const SpaceId = () => {
     if (matchesPending) {
       return (
         <Skeleton.Group count={5} gap={0}>
-          <MatchCardSkeleton />
+          <SafeHorizontalView>
+            <MatchCardSkeleton />
+          </SafeHorizontalView>
         </Skeleton.Group>
       );
     }
@@ -116,20 +122,26 @@ const SpaceId = () => {
     return (
       <EmptyState.NoSearch
         center
-        title="No event has been created yet"
-        description="Create the first event and turn your community more engaged"
+        title="No event was found"
+        description={
+          canCreateEvents
+            ? 'Create the first event and turn your community more engaged'
+            : 'The events will appear here once the admin creates them'
+        }
       >
-        <Button.Root
-          onPress={() =>
-            SheetManager.show('createEventOptionSelection', {
-              payload: {
-                spaceId: space.id,
-              },
-            })
-          }
-        >
-          Create event
-        </Button.Root>
+        {canCreateEvents && (
+          <Button.Root
+            onPress={() =>
+              SheetManager.show('createEventOptionSelection', {
+                payload: {
+                  spaceId: space.id,
+                },
+              })
+            }
+          >
+            Create event
+          </Button.Root>
+        )}
       </EmptyState.NoSearch>
     );
   };

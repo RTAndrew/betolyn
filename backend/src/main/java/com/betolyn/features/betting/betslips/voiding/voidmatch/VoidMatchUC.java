@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.BettingUtils;
 import com.betolyn.features.betting.betslips.voiding.voidcriterion.VoidCriterionParam;
 import com.betolyn.features.betting.betslips.voiding.voidcriterion.VoidCriterionUC;
@@ -23,6 +25,7 @@ import com.betolyn.features.matches.findmatchbyid.FindMatchByIdUC;
 import com.betolyn.features.matches.matchSystemEvents.MatchSseEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchSystemEvent;
 import com.betolyn.features.matches.matchSystemEvents.MatchVoidedEventDTO;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 
 import lombok.RequiredArgsConstructor;
@@ -40,13 +43,17 @@ public class VoidMatchUC implements IUseCase<VoidMatchParam, Void> {
     private final VoidCriterionUC voidCriterionUC;
     private final CriterionRepository criterionRepository;
     private final MatchRepository matchRepository;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     private final MatchSystemEvent matchSystemEvent;
 
     @Override
     @Transactional
     public Void execute(VoidMatchParam param) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var match = findMatchByIdUC.execute(param.matchId());
+        domainPermissionService.assertCanMutateMatch(authenticatedUser, match);
 
         List<MatchEntity> matchTargets = new ArrayList<>();
         matchTargets.add(match);

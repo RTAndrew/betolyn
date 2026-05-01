@@ -1,6 +1,8 @@
 package com.betolyn.features.betting.criterion.suspendcriterion;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.criterion.CriterionSseEvent;
@@ -13,6 +15,7 @@ import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.betting.odds.OddSseEvent;
 import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +29,15 @@ public class SuspendCriterionUC implements IUseCase<String, CriterionEntity> {
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final CriterionSystemEvent criterionSystemEvent;
     private final OddSystemEvent oddSystemEvent;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     @Override
     @Transactional
     public CriterionEntity execute(String criterionId) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var foundCriterion = findCriterionByIdUC.execute(criterionId);
+        domainPermissionService.assertCanMutateCriterion(authenticatedUser, foundCriterion);
         if (foundCriterion.getStatus() == CriterionStatusEnum.SUSPENDED) {
             throw new BusinessRuleException("ALREADY_SUSPENDED", "Criterion is already suspended");
         }

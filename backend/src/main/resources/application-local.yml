@@ -1,0 +1,5 @@
+# Activate with: SPRING_PROFILES_ACTIVE=local (or spring.profiles.active=local)
+# Usernames align with ../../seed/user-seed.json at repo root.
+app:
+  auth:
+    seed-platform-usernames: "anderson,bruno,joao,maria"

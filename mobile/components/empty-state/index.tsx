@@ -5,6 +5,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors } from '@/constants/colors';
 
 import { Button } from '../button';
+import FullScreenCentered from '../full-screen-centered';
 import { NoSearchFound as NoSearchFoundIllustration, NoSlipsFound } from '../illustrations';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { ThemedText } from '../ThemedText';
@@ -27,19 +28,31 @@ const EmptyState = ({
   children,
   center = false,
 }: EmptyStateProps) => {
-  return (
-    <SafeHorizontalView style={[styles.root, style, center && { marginTop: 150 }]}>
-      {icon}
+  const Component = () => {
+    return (
+      <SafeHorizontalView style={[styles.root, style]}>
+        {icon}
 
-      <ThemedText type="subtitle" style={styles.title}>
-        {title}
-      </ThemedText>
+        <ThemedText type="subtitle" style={styles.title}>
+          {title}
+        </ThemedText>
 
-      <ThemedText style={styles.description}>{description}</ThemedText>
+        <ThemedText style={styles.description}>{description}</ThemedText>
 
-      <View style={styles.footer}>{children}</View>
-    </SafeHorizontalView>
-  );
+        <View style={styles.footer}>{children}</View>
+      </SafeHorizontalView>
+    );
+  };
+
+  if (center) {
+    return (
+      <FullScreenCentered>
+        <Component />
+      </FullScreenCentered>
+    );
+  }
+
+  return <Component />;
 };
 
 interface NoBetsEmptyStateProps extends Partial<ExtendableEmptyStateProps> {

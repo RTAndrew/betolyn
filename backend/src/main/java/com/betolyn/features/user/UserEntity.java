@@ -10,6 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -29,12 +32,17 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(nullable = false)
+    private UserRoleEnum role = UserRoleEnum.USER;
 
     public UserEntity(String password, String email, String username) {
         super();
         this.email = email;
         this.username = username;
         this.password = password;
+        this.role = UserRoleEnum.USER;
     }
 
     public UserEntity(String id, String password, String email, String username) {
@@ -43,12 +51,14 @@ public class UserEntity extends BaseEntity implements UserDetails {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.role = UserRoleEnum.USER;
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ADMIN"));
+        var effectiveRole = role == null ? UserRoleEnum.USER : role;
+        return List.of(new SimpleGrantedAuthority("ROLE_" + effectiveRole.name()));
     }
 
     @Override

@@ -14,7 +14,7 @@ dev-backend: ## Start the Spring Boot development server (ESPN ingestion API def
 		echo "Error: backend/pom.xml not found. Please ensure the Spring Boot project is properly set up."; \
 		exit 1; \
 	fi
-	cd backend && ./mvnw spring-boot:run
+	cd backend && SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
 
 
 install-mobile: ## Install mobile app dependencies

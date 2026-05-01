@@ -1,6 +1,8 @@
 package com.betolyn.features.betting.criterion.updatecriterionstatus;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
@@ -13,6 +15,7 @@ import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.dto.OddStatusChangedEventDTO;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,11 +36,15 @@ public class UpdateCriterionStatusUC implements IUseCase<UpdateCriterionStatusPa
     private final OddRepository oddRepository;
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final OddSystemEvent oddSystemEvent;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     @Override
     @Transactional
     public CriterionEntity execute(UpdateCriterionStatusParam param) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var foundCriterion = findCriterionByIdUC.execute(param.criterionId());
+        domainPermissionService.assertCanMutateCriterion(authenticatedUser, foundCriterion);
 
         var newStatus = param.requestDTO().getStatus();
         var oddStatus = OddStatusEnum.valueOf(newStatus.name());

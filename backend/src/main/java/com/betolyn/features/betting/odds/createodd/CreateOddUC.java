@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.betslips.OddPrice;
 import com.betolyn.features.betting.criterion.CriterionRepository;
 import com.betolyn.features.betting.odds.OddEntity;
@@ -14,6 +16,7 @@ import com.betolyn.features.betting.odds.OddStatusEnum;
 import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.betting.odds.dto.OddCreatedEventDTO;
 import com.betolyn.features.betting.odds.saveandsyncodd.SaveAndSyncOddUseCase;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BadRequestException;
 import com.betolyn.shared.exceptions.InternalServerException;
 
@@ -26,10 +29,13 @@ public class CreateOddUC implements IUseCase<CreateOddRequestDTO, OddEntity> {
     private final CriterionRepository criterionRepository;
     private final SaveAndSyncOddUseCase saveAndSyncOddUseCase;
     private final OddSystemEvent oddSystemEvent;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
 
     @Override
     @Transactional
     public OddEntity execute(CreateOddRequestDTO data) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         if(data.getStatus() == null) {
             data.setStatus(OddStatusEnum.DRAFT);
         }
@@ -46,7 +52,10 @@ public class CreateOddUC implements IUseCase<CreateOddRequestDTO, OddEntity> {
 
         if (data.getCriterionId() != null) {
             var criterion = criterionRepository.findById(data.getCriterionId()).orElseThrow();
+            domainPermissionService.assertCanMutateCriterion(authenticatedUser, criterion);
             odd.setCriterion(criterion);
+        } else {
+            domainPermissionService.assertIsPlatformUser(authenticatedUser);
         }
 
         var savedOdd = saveAndSyncOddUseCase.execute(List.of(odd)).stream().findFirst();

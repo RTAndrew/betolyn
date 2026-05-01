@@ -6,12 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.betolyn.features.IUseCase;
+import com.betolyn.features.auth.getauthenticateduser.GetAuthenticatedUserUC;
+import com.betolyn.features.auth.permissions.DomainPermissionService;
 import com.betolyn.features.betting.criterion.CriterionEntity;
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
 import com.betolyn.features.betting.criterion.CriterionSystemEvent;
 import com.betolyn.features.betting.criterion.findcriterionbyid.FindCriterionByIdUC;
 import com.betolyn.features.betting.odds.OddSystemEvent;
 import com.betolyn.features.matches.MatchStatusEnum;
+import com.betolyn.shared.exceptions.AccessForbiddenException;
 import com.betolyn.shared.exceptions.BusinessRuleException;
 
 import lombok.RequiredArgsConstructor;
@@ -23,13 +26,17 @@ public class SetCriterionAllowMultipleWinnersUC implements IUseCase<SetAllowMult
     private final FindCriterionByIdUC findCriterionByIdUC;
     private final CriterionSystemEvent criterionSystemEvent;
     private final OddSystemEvent oddSystemEvent;
+    private final GetAuthenticatedUserUC getAuthenticatedUserUC;
+    private final DomainPermissionService domainPermissionService;
     private final Set<CriterionStatusEnum> NOT_ALLOWED_CRITERION_STATUSES = Set.of(CriterionStatusEnum.SETTLED,
             CriterionStatusEnum.VOID);
 
     @Override
     @Transactional
     public CriterionEntity execute(SetAllowMultipleWinnersParam param) {
+        var authenticatedUser = getAuthenticatedUserUC.execute().orElseThrow(AccessForbiddenException::new).user();
         var criterion = findCriterionByIdUC.execute(param.criterionId());
+        domainPermissionService.assertCanMutateCriterion(authenticatedUser, criterion);
 
         if (criterion.getAllowMultipleWinners() == param.allowMultipleWinners()) {
             throw new BusinessRuleException("ALLOW_MULTIPLE_WINNERS_ALREADY_SET",
