@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { colors } from '@/constants/colors';
 import { hexToHexWithAlpha } from '@/utils/hex-rgba';
 
+import { Spinner } from '../spinner';
 import { Skeleton } from './index';
 
 export function MatchDetailSkeleton() {
@@ -15,7 +16,7 @@ export function MatchDetailSkeleton() {
             <Skeleton type="circle" size={80} />
           </View>
 
-          <Skeleton type="default" borderRadius={4} style={styles.scoreLine} />
+          <Skeleton type="default" borderRadius={4} size={48} style={{ flexGrow: 0 }} />
 
           <View style={styles.teamBlock}>
             <Skeleton type="circle" size={80} />
@@ -143,38 +144,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const BACKGROUND_COLOR = hexToHexWithAlpha(colors.greyLighter, 0.2);
-
 export function MatchCriteriaSectionSkeleton() {
   return (
     <View style={[styles.section, styles.sectionBorder]}>
-      <Skeleton.Group count={3} gap={16}>
-        <View style={styles.collapsibleRow}>
-          <Skeleton
-            type="default"
-            borderRadius={4}
-            style={{ ...styles.collapsibleTitle, backgroundColor: BACKGROUND_COLOR }}
-          />
-
-          <View style={styles.oddsRow}>
-            <Skeleton
-              type="default"
-              borderRadius={8}
-              style={{ ...styles.smallOddButtonEqual, backgroundColor: BACKGROUND_COLOR }}
-            />
-            <Skeleton
-              type="default"
-              borderRadius={8}
-              style={{ ...styles.smallOddButtonEqual, backgroundColor: BACKGROUND_COLOR }}
-            />
-            <Skeleton
-              type="default"
-              borderRadius={8}
-              style={{ ...styles.smallOddButtonEqual, backgroundColor: BACKGROUND_COLOR }}
-            />
-          </View>
-        </View>
-      </Skeleton.Group>
+      <Spinner style={{ marginTop: 60 }} size="large" color={colors.white} />
     </View>
   );
 }

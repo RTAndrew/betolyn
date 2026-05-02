@@ -4,7 +4,6 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollView, SheetManager } from 'react-native-actions-sheet';
 
-import { ButtonTab } from '@/components/button-tab';
 import { NumberInput } from '@/components/forms';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
@@ -17,7 +16,7 @@ import SafeHorizontalView from '../safe-horizontal-view';
 const BetSlipFooter = () => {
   useSignals();
   const { totalPotentialPayout, totalBets, totalStake, parlayStake, setParlayStake } = betSlipStore;
-  const { betType, updateBetType } = betSlipStore;
+  const { betType } = betSlipStore;
 
   const handlePlaceBet = () => {
     if (!authStore.isLoggedIn.peek()) {
@@ -53,13 +52,17 @@ const BetSlipFooter = () => {
           )}
         </View>
 
-        <ButtonTab
+        {/* <ButtonTab
           style={styles.buttonTab}
           activeIndex={betType.value === 'single' ? 0 : 1}
           options={['Single', 'Parlay']}
           onIndexChange={(index) => updateBetType(index === 0 ? 'single' : 'parlay')}
-        />
-        <Button.Root onPress={handlePlaceBet} disabled={totalPotentialPayout.value === 0}>
+        /> */}
+        <Button.Root
+          style={styles.button}
+          onPress={handlePlaceBet}
+          disabled={totalPotentialPayout.value === 0}
+        >
           Place Bet
         </Button.Root>
       </SafeHorizontalView>
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.complementary,
   },
-  buttonTab: {
+  button: {
     marginVertical: 8,
   },
 });

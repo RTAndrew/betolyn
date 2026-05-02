@@ -80,7 +80,7 @@ const BetSlips = () => {
           backgroundInteractionEnabled
           indicatorStyle={styles.indicator}
           containerStyle={styles.sheetContainer}
-          snapPoints={[Platform.OS === 'ios' ? 45 : 16, 100]}
+          snapPoints={[Platform.OS === 'ios' ? 50 : 16, 100]}
         >
           <BetSlipFooter />
         </BottomSheet>

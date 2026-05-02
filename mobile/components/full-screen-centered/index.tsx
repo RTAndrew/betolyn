@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useMemo } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
-interface FullScreenCenteredProps extends PropsWithChildren {
+export interface FullScreenCenteredProps extends PropsWithChildren {
   /** Whether to include the tab bar height in the padding bottom */
   includeTabBar?: boolean;
 }

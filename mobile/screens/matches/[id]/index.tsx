@@ -9,6 +9,7 @@ import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/matc
 import { OddButton } from '@/components/odd-button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
+import { Spinner } from '@/components/spinner';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { useGetMatch } from '@/services/matches/match-query';
@@ -145,8 +146,7 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
             backgroundColor: colors.greyMedium,
           }}
         />
-        {/* <MatchDetailSkeleton /> */}
-        <Text>Loading...</Text>
+        <Spinner style={{ marginTop: -100 }} fullScreen size="large" color={colors.white} />
       </BottomSheetWrapper>
     );
   }
