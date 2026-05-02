@@ -2,3 +2,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+# Same usernames as seed/user-seed.json and application-local.yml (used by POST /dev/seed-platform-user-roles).
+app:
+  auth:
+    seed-platform-usernames: "anderson,bruno,joao,maria"

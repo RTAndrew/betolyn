@@ -1,6 +1,9 @@
 package com.betolyn.config.filters;
 
 import lombok.RequiredArgsConstructor;
+
+import com.betolyn.bootstrap.dev.DevBootstrapSecurity;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +46,7 @@ public class SecurityFilterConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/signup").not().authenticated()
                         .requestMatchers(HttpMethod.POST, "/auth/signin").not().authenticated()
                         .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/accounts/seed").permitAll()
+                        .requestMatchers(DevBootstrapSecurity.postPermitAllSeedMatchers()).permitAll()
                         .requestMatchers(HttpMethod.POST).authenticated()
                         .requestMatchers(HttpMethod.PUT).authenticated()
                         .requestMatchers(HttpMethod.PATCH).authenticated()

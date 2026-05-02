@@ -148,6 +148,18 @@ async function seedUsers() {
 	return createdUsers;
 }
 
+/** Promotes seed usernames to PLATFORM_USER (matches application-local / reset config). Call after signup, before sign-in. */
+async function seedPlatformUserRoles() {
+	console.log("\n=== 1.5. Assigning PLATFORM_USER to seed usernames ===");
+	try {
+		await apiRequest("POST", "/dev/seed-platform-user-roles");
+		console.log("✓ Platform roles assigned for configured seed users");
+	} catch (error) {
+		console.error("✗ Failed to assign platform user roles:", error.message);
+		throw error;
+	}
+}
+
 // Sign in with first user to get auth token
 async function signIn(email, password) {
 	console.log("\n=== Signing in ===");
@@ -383,51 +395,31 @@ async function seed() {
 		await seedBankrollSystemAccounts();
 
 		// 1. Seed users
-		const users = await seedUsers();
+		await seedUsers();
 
-		if (users.length === 0) {
-			// If no users were created, try to sign in with first user from seed file
-			const usersData = JSON.parse(
-				fs.readFileSync(path.join(SEED_DIR, "user-seed.json"), "utf8")
-			);
-			if (usersData.length > 0) {
-				const firstUser = usersData[0];
-				const token = await signIn(firstUser.email, firstUser.password);
+		// So criteria on OFFICIAL matches succeed (requires PLATFORM_USER), promote seed accounts after signup.
+		await seedPlatformUserRoles();
 
-				// 2. Seed Matches
-				const matches = await seedMatches(token);
-
-				// 2.1 Seed criteria and odds
-				const criteria = await seedCriteriaAndOdds(matches, token);
-
-				// 2.2 Update match with highlightCriteria
-				await updateMatchHighlightCriteria(matches, criteria, token);
-
-				console.log("\n✓ Database seed completed successfully!");
-			}
-		} else {
-			// Sign in with first created user
-			// Get password from seed file
-			const usersData = JSON.parse(
-				fs.readFileSync(path.join(SEED_DIR, "user-seed.json"), "utf8")
-			);
-			const firstUser = users[0];
-			const firstUserData = usersData.find((u) => u.email === firstUser.email);
-			const password = firstUserData ? firstUserData.password : "123456";
-
-			const token = await signIn(firstUser.email, password);
-
-			// 2. Seed Matches
-			const matches = await seedMatches(token);
-
-			// 2.1 Seed criteria and odds
-			const criteria = await seedCriteriaAndOdds(matches, token);
-
-			// 2.2 Update match with highlightCriteria
-			await updateMatchHighlightCriteria(matches, criteria, token);
-
-			console.log("\n✓ Database seed completed successfully!");
+		const usersData = JSON.parse(
+			fs.readFileSync(path.join(SEED_DIR, "user-seed.json"), "utf8")
+		);
+		if (usersData.length === 0) {
+			throw new Error("user-seed.json has no users");
 		}
+
+		const firstUser = usersData[0];
+		const token = await signIn(firstUser.email, firstUser.password);
+
+		// 2. Seed Matches
+		const matches = await seedMatches(token);
+
+		// 2.1 Seed criteria and odds
+		const criteria = await seedCriteriaAndOdds(matches, token);
+
+		// 2.2 Update match with highlightCriteria
+		await updateMatchHighlightCriteria(matches, criteria, token);
+
+		console.log("\n✓ Database seed completed successfully!");
 	} catch (error) {
 		console.error("\n✗ Seed failed:", error);
 		process.exit(1);
