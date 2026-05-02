@@ -76,14 +76,15 @@ const MoreIcon = () => {
 };
 
 const SettingsIcon = () => {
-  const { canMutateMatchActions, isMatchActionPermissionPending, match } = useMatchBottomSheet();
+  const { canMutateMatchActions, isMatchActionPermissionPending, match, closeMatchScreen } =
+    useMatchBottomSheet();
 
   if (!canMutateMatchActions || isMatchActionPermissionPending) return <></>;
 
   return (
     <ScreenHeader.Icon
-      onPress={() => {
-        SheetManager.hide('match');
+      onPress={async () => {
+        await closeMatchScreen();
         router.push(`/matches/${match.id}/settings`);
       }}
     >

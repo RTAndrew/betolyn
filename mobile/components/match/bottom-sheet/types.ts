@@ -33,7 +33,7 @@ export interface MatchBottomSheetContextType {
   pushSheet: (item: BottomSheetStackItem) => void;
   goBack: () => void;
   closeAll: () => void;
-  closeMatchScreen: () => void;
+  closeMatchScreen: () => Promise<void> | void;
   currentSheet: BottomSheetStackItem | null;
   /** Whether the current user may open admin match/criterion/odd action sheets */
   canMutateMatchActions: boolean;

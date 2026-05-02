@@ -110,8 +110,8 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           text="Settings"
           icon={<Settings color="white" />}
-          onPress={() => {
-            closeMatchScreen();
+          onPress={async () => {
+            await closeMatchScreen();
             router.push(`/odds/${odd.id}/settings`);
           }}
         />

@@ -1,7 +1,9 @@
 import React, { PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { SheetManager, SheetProvider } from 'react-native-actions-sheet';
 
+import { BOTTOM_SHEET_ANIMATION_DURATION } from '@/components/bottom-sheet';
 import { IMatch } from '@/types';
+import { fakePromise } from '@/utils/with-minimum-delay';
 
 import { MatchBottomSheetContext, useMatchBottomSheet } from './context';
 import { SHEET_REGISTRY } from './registry';
@@ -69,9 +71,13 @@ export const MatchBottomSheetProvider = ({
     setStack([]);
   }, []);
 
-  const closeMatchScreen = useCallback(() => {
+  const closeMatchScreen = useCallback(async () => {
     setStack([]);
+    // No every place has the matchGlobalSheet open. So, using
+    // await SheetManager.hide would block the app for not finding the sheet.
     SheetManager.hide('match');
+    // Wait for the animation to complete
+    await fakePromise(Number(BOTTOM_SHEET_ANIMATION_DURATION - 100));
   }, []);
 
   const currentSheet = useMemo(() => {

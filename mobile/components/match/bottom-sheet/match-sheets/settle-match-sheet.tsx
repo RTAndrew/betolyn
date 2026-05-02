@@ -1,11 +1,11 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import BottomSheet from '@/components/bottom-sheet';
 import { useSettleMatch } from '@/services/matches/match-mutation';
 import { useGetMatchCriteria } from '@/services/matches/match-query';
-import { MatchStatusEnum, CriterionStatusEnum } from '@/types';
+import { CriterionStatusEnum, MatchStatusEnum } from '@/types';
 import { ApiError } from '@/utils/http/api-error';
 
 import { useMatchBottomSheet } from '../context';
@@ -54,8 +54,8 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
     criteria.length > 0 && criteria.every((c) => c.odds?.some((o) => o.isWinner) ?? false);
   const isReadyToSettle = allSuspended || allHaveWinner;
 
-  const handleSeeCriteria = () => {
-    closeMatchScreen();
+  const handleSeeCriteria = async () => {
+    await closeMatchScreen();
     router.push(`/matches/${match.id}/settings`);
   };
 

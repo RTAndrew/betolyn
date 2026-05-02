@@ -138,8 +138,8 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           text="Settings"
-          onPress={() => {
-            closeMatchScreen();
+          onPress={async () => {
+            await closeMatchScreen();
             router.push(`/matches/${match.id}/settings`);
           }}
           icon={<Settings color="white" />}
@@ -147,8 +147,8 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         <BottomSheet.ActionOption
           disabled={hasEnded}
           text="Add market"
-          onPress={() => {
-            closeMatchScreen();
+          onPress={async () => {
+            await closeMatchScreen();
             router.push(`/matches/${match.id}/create-criterion`);
           }}
           icon={<Add color="white" />}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import SafeHorizontalView from '../safe-horizontal-view';
 import { Settings } from '../settings';
@@ -10,14 +10,8 @@ const ITEM_PADDING_V = 12;
 function CriteriaListSkeletonRow() {
   return (
     <SafeHorizontalView style={styles.item}>
-      <View style={styles.body}>
-        <Skeleton type="default" borderRadius={4} style={styles.titleLine} />
-        <Skeleton type="default" borderRadius={4} style={styles.subtitleLine} />
-      </View>
-
-      <View style={styles.footer}>
-        <Skeleton type="default" borderRadius={4} style={styles.descriptionLine} />
-      </View>
+      <Skeleton type="default" borderRadius={4} style={styles.titleLine} />
+      <Skeleton type="default" borderRadius={4} style={styles.subtitleLine} />
     </SafeHorizontalView>
   );
 }
@@ -37,25 +31,21 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   item: {
+    gap: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: 44,
     paddingVertical: ITEM_PADDING_V,
   },
-  body: {
-    flex: 1,
-    gap: 2,
-    minWidth: 0,
-  },
   titleLine: {
-    width: '70%',
-    height: 16,
+    width: 170,
+    flexGrow: 0,
   },
   subtitleLine: {
     width: 100,
-    height: 12,
     marginTop: 4,
+    flexGrow: 0,
   },
   footer: {
     flexDirection: 'row',

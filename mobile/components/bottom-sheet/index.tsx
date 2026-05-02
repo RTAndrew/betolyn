@@ -17,6 +17,8 @@ export interface BottomSheetProps extends ActionSheetProps {
   onClose?: () => void;
 }
 
+export const BOTTOM_SHEET_ANIMATION_DURATION = 250;
+
 const BottomSheet = ({
   containerStyle,
   indicatorStyle,
@@ -43,7 +45,7 @@ const BottomSheet = ({
       gestureEnabled
       onClose={onClose}
       ref={actionSheetRef}
-      openAnimationConfig={{ duration: 250 }}
+      openAnimationConfig={{ duration: BOTTOM_SHEET_ANIMATION_DURATION }}
       indicatorStyle={[styles.indicator, indicatorStyle]}
       containerStyle={{ ...styles.container, ...(containerStyle as object) }}
       {...props}
