@@ -69,7 +69,7 @@ export const SpaceConfiguration = ({
         const result = fnResult as ApiFnReturnType<typeof createSpace>;
         if (!result || !result.data) return;
         const { id } = result.data;
-        router.push(`/spaces/${id}`);
+        router.dismissTo(`/spaces/${id}`);
       },
       fnPromise: () =>
         createSpace({

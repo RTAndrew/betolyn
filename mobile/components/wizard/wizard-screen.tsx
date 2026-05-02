@@ -127,7 +127,6 @@ export const WizardScreen = <TState extends object>({
           fnPromise,
           onSuccessClose: (fnResult) => {
             resetAllData(); // reset all data so the the screens can be closed
-            router.dismissTo('/spaces');
             onSuccessClose?.(fnResult);
           },
         },

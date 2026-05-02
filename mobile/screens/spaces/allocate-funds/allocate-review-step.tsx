@@ -46,7 +46,7 @@ export const AllocateReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewP
       successMessage: 'Your allocation to the space was submitted successfully.',
       onSuccessClose: () => {
         if (spaceId) {
-          router.push(`/spaces/${spaceId}`);
+          router.dismissTo(`/(tabs)/spaces/${spaceId}/info`);
         }
       },
       fnPromise: async () => {

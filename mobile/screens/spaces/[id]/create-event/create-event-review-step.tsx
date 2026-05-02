@@ -45,7 +45,7 @@ export const CreateEventReviewStep = ({ allData, setNext, runAsyncSubmit }: Revi
       errorTitle: 'Error creating event',
       successMessage: 'Your event has been created successfully.',
       onSuccessClose: () => {
-        router.push(`/spaces/${spaceId}`);
+        router.dismissTo(`/spaces/${spaceId}`);
       },
       fnPromise: async () => {
         if (!spaceId) {
