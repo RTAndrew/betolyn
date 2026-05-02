@@ -8,7 +8,7 @@ import { ISpace } from '@/types';
 
 import SpaceCardSkeleton from './skeleton';
 
-const ChannelCard = ({ channel }: { channel: ISpace }) => {
+const SpaceCard = ({ channel }: { channel: ISpace }) => {
   return (
     <TouchableOpacity
       style={styles.container}
@@ -25,13 +25,13 @@ const ChannelCard = ({ channel }: { channel: ISpace }) => {
       <View style={styles.body}>
         <View style={styles.descriptionAndTime}>
           <Text style={styles.name}>{channel.name}</Text>
-          <Text style={styles.description}>Conor McGregor vs Khabib Nurmagomedov</Text>
+          {channel.description && <Text style={styles.description}>{channel.description}</Text>}
         </View>
 
-        <View style={[styles.descriptionAndTime, { alignItems: 'flex-end' }]}>
+        {/* <View style={[styles.descriptionAndTime, { alignItems: 'flex-end' }]}>
           <Text style={styles.time}>21:47</Text>
           <Text style={styles.remainingUsers}>100</Text>
-        </View>
+        </View> */}
       </View>
     </TouchableOpacity>
   );
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    paddingVertical: 20,
+    paddingVertical: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     height: 'auto',
 
     borderBottomWidth: 0.25,
-    borderBottomColor: colors.greyLighter,
+    borderBottomColor: colors.greyLighter50,
   },
   image: {
     width: 45,
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     // transform: [{ scale: 0.8 }],
   },
   name: {
+    fontWeight: '500',
     color: colors.white,
   },
   description: {
@@ -89,6 +90,6 @@ const styles = StyleSheet.create({
   },
 });
 
-ChannelCard.Skeleton = SpaceCardSkeleton;
+SpaceCard.Skeleton = SpaceCardSkeleton;
 
-export default ChannelCard;
+export default SpaceCard;

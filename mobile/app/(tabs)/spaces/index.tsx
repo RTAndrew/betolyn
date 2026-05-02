@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { FlatList, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthenticationGuard from '@/components/auth-guard';
@@ -19,13 +19,11 @@ export default function Spaces() {
   if (isPending) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        <ScrollView>
+        <SafeHorizontalView>
           <Skeleton.Group count={7} gap={12}>
-            <SafeHorizontalView>
-              <SpaceCard.Skeleton />
-            </SafeHorizontalView>
+            <SpaceCard.Skeleton />
           </Skeleton.Group>
-        </ScrollView>
+        </SafeHorizontalView>
       </View>
     );
   }
@@ -41,6 +39,7 @@ export default function Spaces() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <FlatList
+        keyExtractor={(item) => item.id}
         data={data?.data}
         renderItem={({ item: space }) => (
           <SafeHorizontalView key={space.id}>
@@ -74,10 +73,15 @@ const styles = StyleSheet.create({
   container: { backgroundColor: colors.greyLight, flex: 1 },
   floatingButton: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 150 : 100,
+    bottom: Platform.OS === 'ios' ? 120 : 80,
     right: 0,
   },
   createSpaceButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 56,
+    height: 56,
     backgroundColor: colors.terciary,
     padding: 10,
     borderRadius: 100,

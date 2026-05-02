@@ -49,8 +49,8 @@ public class SignUpUC implements IUseCase<SignUpRequestDTO, UserEntity> {
         mintCreditsUC.execute(new MintCreditsParam(
                 savedUser,
                 BankrollConstants.INITIAL_MINT_AMOUNT,
-                "Welcome to Bet Olyn! Happy betting 🎉🚀",
-                savedUser.getUsername(),
+                "Welcome to Bet Olyn! Happy betting 🎉🚀🇦🇴",
+                        savedUser.getUsername(),
                 Optional.of(savedUser)
         ));
         return savedUser;

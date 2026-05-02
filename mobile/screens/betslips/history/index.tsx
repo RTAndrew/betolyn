@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import React, { PropsWithChildren } from 'react';
-import { FlatList, Platform, View } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 
 import EmptyState from '@/components/empty-state';
+import FullScreenCentered from '@/components/full-screen-centered';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
@@ -61,7 +62,7 @@ const BetSlipHistoryScreen = () => {
   }, [] as IBetSlipItem[]);
 
   return (
-    <View style={{ backgroundColor: colors.greyLight, flex: 1, flexGrow: 1 }}>
+    <ScreenWrapper safeArea={false} backgroundColor={colors.greyLight}>
       <ScreenHeader
         safeArea
         type="back"
@@ -87,11 +88,13 @@ const BetSlipHistoryScreen = () => {
           }}
         />
       ) : (
-        <SafeHorizontalView style={{ flexGrow: 1 }}>
-          <EmptyState.NoBets center />
-        </SafeHorizontalView>
+        <FullScreenCentered includeTabBar>
+          <SafeHorizontalView>
+            <EmptyState.NoBets />
+          </SafeHorizontalView>
+        </FullScreenCentered>
       )}
-    </View>
+    </ScreenWrapper>
   );
 };
 

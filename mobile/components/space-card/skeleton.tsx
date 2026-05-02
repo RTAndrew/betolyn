@@ -3,15 +3,22 @@ import { StyleSheet, View } from 'react-native';
 
 import { Skeleton } from '@/components/skeleton';
 import { colors } from '@/constants/colors';
+import { pickRandom } from '@/utils/pick-random';
+
+const SIZES = [90, 110, 130, 150, 170, 190, 200];
+
+const titleSize = () => {
+  return pickRandom(SIZES);
+};
 
 export default function SpaceCardSkeleton() {
   return (
     <View style={styles.container}>
-      <Skeleton type="circle" size={45} />
+      <Skeleton type="circle" size={40} />
 
       <View style={styles.body}>
-        <Skeleton type="default" style={styles.title} />
-        <Skeleton type="default" style={styles.description} />
+        <Skeleton type="default" size={titleSize()} style={styles.title} />
+        <Skeleton type="default" size={50} style={styles.description} />
       </View>
     </View>
   );
@@ -35,14 +42,11 @@ const styles = StyleSheet.create({
     borderColor: colors.greyLighter,
   },
   title: {
-    flex: 1,
-    minWidth: 0,
-    maxWidth: '70%',
+    flexGrow: 0,
     height: 16,
   },
   description: {
-    // flex: 1,
-    width: 40,
+    flexGrow: 0,
     height: 16,
   },
 });

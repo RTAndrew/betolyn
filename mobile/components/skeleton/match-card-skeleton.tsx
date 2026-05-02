@@ -3,20 +3,17 @@ import { StyleSheet, View } from 'react-native';
 
 import { colors } from '@/constants/colors';
 import { hexToHexWithAlpha } from '@/utils/hex-rgba';
+import { pickRandom } from '@/utils/pick-random';
 
 import { Skeleton } from './index';
 
 const TEAM_NAME_WIDTHS = [70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
 
-function randomFrom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)]!;
-}
-
 const BACKGROUND_COLOR = hexToHexWithAlpha(colors.greyLighter, 0.2);
 
 export function MatchCardSkeleton() {
   const [teamOneNameWidth, teamTwoNameWidth] = useMemo(
-    () => [randomFrom(TEAM_NAME_WIDTHS), randomFrom(TEAM_NAME_WIDTHS)],
+    () => [pickRandom(TEAM_NAME_WIDTHS), pickRandom(TEAM_NAME_WIDTHS)],
     []
   );
 
@@ -26,7 +23,7 @@ export function MatchCardSkeleton() {
         <View style={styles.teamBody}>
           <View style={styles.teamWrapper}>
             <View style={styles.teamRow}>
-              <Skeleton color={BACKGROUND_COLOR} type="circle" size={50} />
+              <Skeleton color={BACKGROUND_COLOR} type="circle" size={40} />
               <Skeleton
                 color={BACKGROUND_COLOR}
                 type="default"
@@ -35,7 +32,7 @@ export function MatchCardSkeleton() {
               />
             </View>
             <View style={styles.teamRow}>
-              <Skeleton color={BACKGROUND_COLOR} type="circle" size={50} />
+              <Skeleton color={BACKGROUND_COLOR} type="circle" size={40} />
               <Skeleton
                 color={BACKGROUND_COLOR}
                 type="default"
@@ -48,27 +45,6 @@ export function MatchCardSkeleton() {
           <View style={styles.betInfo}>
             <View style={styles.divider} />
           </View>
-        </View>
-
-        <View style={styles.oddsWrapper}>
-          <Skeleton
-            color={BACKGROUND_COLOR}
-            type="default"
-            borderRadius={8}
-            style={styles.oddButton}
-          />
-          <Skeleton
-            color={BACKGROUND_COLOR}
-            type="default"
-            borderRadius={8}
-            style={styles.oddButton}
-          />
-          <Skeleton
-            color={BACKGROUND_COLOR}
-            type="default"
-            borderRadius={8}
-            style={styles.oddButton}
-          />
         </View>
       </View>
     </View>

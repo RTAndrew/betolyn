@@ -11,9 +11,8 @@ import { Add } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import ScreenWrapper from '@/components/screen-wrapper';
-import { Skeleton } from '@/components/skeleton';
-import { MatchCardSkeleton } from '@/components/skeleton/match-card-skeleton';
 import { useIsSpaceAdmin } from '@/components/space-guard';
+import { Spinner } from '@/components/spinner';
 import { colors } from '@/constants/colors';
 import { mockData } from '@/mock/matches';
 import { useGetSpaceById, useGetSpaceMatches } from '@/services';
@@ -32,17 +31,15 @@ const SpaceId = () => {
 
   if (isPending) {
     return (
-      <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
-        <Skeleton.Group count={5} gap={0}>
-          <MatchCardSkeleton />
-        </Skeleton.Group>
+      <ScreenWrapper backgroundColor={colors.greyLight} safeArea>
+        <Spinner fullScreen size="large" color={colors.white} />
       </ScreenWrapper>
     );
   }
 
   if (error || !data) {
     return (
-      <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
+      <ScreenWrapper backgroundColor={colors.greyLight} safeArea>
         <EmptyState.NoSearch />
       </ScreenWrapper>
     );
@@ -103,11 +100,9 @@ const SpaceId = () => {
   const renderEmpty = () => {
     if (matchesPending) {
       return (
-        <Skeleton.Group count={5} gap={0}>
-          <SafeHorizontalView>
-            <MatchCardSkeleton />
-          </SafeHorizontalView>
-        </Skeleton.Group>
+        <View style={styles.matchesLoading}>
+          <Spinner size="large" color={colors.white} />
+        </View>
       );
     }
     if (matchesError) {
@@ -185,6 +180,11 @@ const styles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
     paddingBottom: 120,
+  },
+  matchesLoading: {
+    paddingVertical: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

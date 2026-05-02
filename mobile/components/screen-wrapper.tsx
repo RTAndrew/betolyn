@@ -35,7 +35,7 @@ const WithSafeArea = ({
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   children,
   scrollable = true,
-  statusBarStyle = 'dark-content',
+  statusBarStyle = 'light-content',
   backgroundColor = '#fff',
   safeArea = true,
 }) => {

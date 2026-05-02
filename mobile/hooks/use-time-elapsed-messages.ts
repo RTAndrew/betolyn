@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { pickRandom } from '@/utils/pick-random';
+
 const DEFAULT_MESSAGES: Record<number, string[]> = {
   0: ['Hang tight...we are doing some magics.'],
   1: ['The hamsters are getting a workout.'],
   2: ['Okay. One last shot.'],
 };
-
-function pickRandom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
 
 interface UseTimeElapsedProps {
   breakpoints: number[];
