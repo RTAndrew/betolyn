@@ -31,6 +31,7 @@ public class AuditorAwareImpl implements AuditorAware<UserEntity> {
             user.setId(jwtUser.getUserId());
             user.setUsername(jwtUser.getUsername());
             user.setEmail(jwtUser.getEmail());
+            user.setRole(jwtUser.getRole());
 
             return Optional.of(user);
         }

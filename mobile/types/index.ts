@@ -1,13 +1,16 @@
+export type TUserRole = 'USER' | 'PLATFORM_USER';
+
 export interface IUser {
   id: string;
   email: string;
   username: string;
   createdAt: string;
   updatedAt: string;
+  role?: TUserRole;
 }
 
 /** User shape in nested API payloads (e.g. `createdBy`) — subset of {@link IUser}. */
-export type IUserPublic = Pick<IUser, 'id' | 'email' | 'username'>;
+export type IUserPublic = Pick<IUser, 'id' | 'email' | 'username' | 'role'>;
 
 export interface ITeam {
   id: string;

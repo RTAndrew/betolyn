@@ -1,5 +1,6 @@
 package com.betolyn.features.auth;
 
+import com.betolyn.features.user.UserRoleEnum;
 import lombok.Data;
 
 import java.time.Instant;
@@ -12,6 +13,7 @@ public class JwtSessionDTO {
     private String email;
     private String sessionId;
     private String token;
+    private UserRoleEnum role;
 
     private String iss;
     private String sub;

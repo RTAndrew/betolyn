@@ -14,7 +14,9 @@ import { Section } from '.';
 
 const MatchCriteriaList = ({ matchId }: { matchId: string }) => {
   const { data, isLoading, isError } = useGetMatchCriteria({ matchId });
-  const { pushSheet } = useMatchBottomSheet();
+  const { pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
+    useMatchBottomSheet();
+  const allowMutations = canMutateMatchActions && !isMatchActionPermissionPending;
   const criteria = data?.data;
 
   if (isLoading)
@@ -33,6 +35,7 @@ const MatchCriteriaList = ({ matchId }: { matchId: string }) => {
           <Collapsible
             delayLongPress={200}
             onLongPress={() => {
+              if (!allowMutations) return;
               pushSheet({ type: 'criterion-action', data: criteria });
             }}
             open={index === 0}

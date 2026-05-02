@@ -29,7 +29,7 @@ public class SignUpUC implements IUseCase<SignUpRequestDTO, UserEntity> {
     @Override
     @Transactional
     public UserEntity execute(SignUpRequestDTO requestDTO) {
-        String email = requestDTO.getEmail();
+        String email = requestDTO.getEmail().toLowerCase().trim();
         Optional<UserEntity> existsEmail = Optional.ofNullable(userRepository.findByEmail(email));
         Optional<UserEntity> existsUsername = Optional
                 .ofNullable(userRepository.findByUsername(requestDTO.getUsername()));

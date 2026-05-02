@@ -22,7 +22,9 @@ import { getMatchStatusTag, getOddStatusTag } from '@/utils/get-entity-status-ta
 import { useMultiQueryState } from '@/utils/react-query/use-multi-query-state';
 
 const OpenMatchBottomSheetIcon = ({ odd }: { odd: IOdd }) => {
-  const { pushSheet } = useMatchBottomSheet();
+  const { pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
+    useMatchBottomSheet();
+  if (!canMutateMatchActions || isMatchActionPermissionPending) return null;
   return (
     <ScreenHeader.QuickActions>
       <ScreenHeader.Icon

@@ -78,7 +78,9 @@ const BetCardChild = ({
   disableControls = false,
   showOdds = true,
 }: BetCardProps) => {
-  const { pushSheet } = useMatchBottomSheet();
+  const { pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
+    useMatchBottomSheet();
+  const allowMutations = canMutateMatchActions && !isMatchActionPermissionPending;
 
   const handlePress = () => {
     if (onPress) {
@@ -98,7 +100,9 @@ const BetCardChild = ({
         delayLongPress={200}
         onPress={handlePress}
         style={styles.container}
-        onLongPress={() => !disableControls && pushSheet({ type: 'match-action' })}
+        onLongPress={() =>
+          !disableControls && allowMutations && pushSheet({ type: 'match-action' })
+        }
       >
         <View style={styles.content}>
           <View style={styles.teamBody}>

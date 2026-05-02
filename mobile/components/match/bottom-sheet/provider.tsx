@@ -6,6 +6,7 @@ import { IMatch } from '@/types';
 import { MatchBottomSheetContext, useMatchBottomSheet } from './context';
 import { SHEET_REGISTRY } from './registry';
 import { BottomSheetStackItem, MatchBottomSheetContextType } from './types';
+import { useCanMutateSpace } from './use-can-mutate-match';
 
 interface MatchBottomSheetProviderProps {
   match: Omit<IMatch, 'mainCriterion'>;
@@ -43,9 +44,19 @@ export const MatchBottomSheetProvider = ({
   /**A LIFO stack of bottom sheets */
   const [stack, setStack] = useState<BottomSheetStackItem[]>([]);
 
-  const pushSheet = useCallback((item: BottomSheetStackItem) => {
-    setStack((prev) => [...prev, item]);
-  }, []);
+  const { canMutateMatchActions, isMatchActionPermissionPending } = useCanMutateSpace(
+    match.spaceId
+  );
+
+  const pushSheet = useCallback(
+    (item: BottomSheetStackItem) => {
+      if (isMatchActionPermissionPending || !canMutateMatchActions) {
+        return;
+      }
+      setStack((prev) => [...prev, item]);
+    },
+    [canMutateMatchActions, isMatchActionPermissionPending]
+  );
 
   const goBack = useCallback(() => {
     setStack((prev) => {
@@ -76,9 +87,21 @@ export const MatchBottomSheetProvider = ({
       closeAll,
       closeMatchScreen,
       currentSheet,
+      canMutateMatchActions,
+      isMatchActionPermissionPending,
     }),
 
-    [match, stack, pushSheet, goBack, closeAll, closeMatchScreen, currentSheet]
+    [
+      match,
+      stack,
+      pushSheet,
+      goBack,
+      closeAll,
+      closeMatchScreen,
+      currentSheet,
+      canMutateMatchActions,
+      isMatchActionPermissionPending,
+    ]
   );
 
   return (

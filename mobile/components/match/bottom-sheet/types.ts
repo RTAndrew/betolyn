@@ -35,4 +35,8 @@ export interface MatchBottomSheetContextType {
   closeAll: () => void;
   closeMatchScreen: () => void;
   currentSheet: BottomSheetStackItem | null;
+  /** Whether the current user may open admin match/criterion/odd action sheets */
+  canMutateMatchActions: boolean;
+  /** True while `/me` or space membership is still loading. */
+  isMatchActionPermissionPending: boolean;
 }

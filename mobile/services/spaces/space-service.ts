@@ -21,6 +21,10 @@ export interface IAllocateSpaceFundingRequest {
   amount: number;
 }
 
+export interface ISpaceMembership {
+  isSpaceAdmin: boolean;
+}
+
 /**
  * Minimal wizard state needed to POST /spaces/{spaceId}/matches.
  * Compatible with {@link ICreateSpaceEventState} from the create-event screen.
@@ -80,6 +84,11 @@ export class SpaceService {
 
   public static async findSpaceById(spaceId: string) {
     return await getRequest<ISpace>(`/spaces/${spaceId}`);
+  }
+
+  /** Current user's membership in the space (`space_users.is_admin`). Requires auth. */
+  public static async getMySpaceMembership(spaceId: string) {
+    return await getRequest<ISpaceMembership>(`/spaces/${spaceId}/membership`);
   }
 
   public static async findSpaceMatches(spaceId: string) {

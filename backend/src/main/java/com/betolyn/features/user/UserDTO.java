@@ -7,4 +7,5 @@ public class UserDTO {
     private String id;
     private String email;
     private String username;
+    private UserRoleEnum role;
 }

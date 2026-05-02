@@ -37,13 +37,11 @@ const AsyncProcessingGlobalSheet = ({ payload }: SheetProps<'asyncProcessing'>) 
   });
 
   const handleClose = () => {
-    if (isSuccess) {
-      payload?.onSuccessClose?.(fnResult);
-    }
+    if (isSuccess) payload?.onSuccessClose?.(fnResult);
+
     SheetManager.hide('asyncProcessing', {
       context,
     });
-    console.log('asyncProcessing-gs closed');
   };
 
   const handlePromise = async () => {

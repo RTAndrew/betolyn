@@ -4,7 +4,10 @@ import { IMatch, ISpace } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
 
-import { SpaceService } from './space-service';
+import { ISpaceMembership, SpaceService } from './space-service';
+
+/** `staleTime` for space membership: data is fresh for 20 minutes, then may refetch on the next trigger. */
+const SPACE_MEMBERSHIP_STALE_MS = 20 * 60 * 1000;
 
 // QUERIES OPTIONS
 
@@ -26,6 +29,14 @@ export const getSpaceMatchesQueryOptions = ({ spaceId }: { spaceId: string }) =>
   return queryOptions<IApiResponse<IMatch[]>, IApiResponse>({
     queryKey: ['space', spaceId, 'matches'],
     queryFn: async () => await SpaceService.findSpaceMatches(spaceId),
+  });
+};
+
+export const getMySpaceMembershipQueryOptions = ({ spaceId }: { spaceId: string }) => {
+  return queryOptions<IApiResponse<ISpaceMembership>, IApiResponse>({
+    queryKey: ['space', spaceId, 'membership'],
+    queryFn: async () => await SpaceService.getMySpaceMembership(spaceId),
+    staleTime: SPACE_MEMBERSHIP_STALE_MS,
   });
 };
 
@@ -55,5 +66,15 @@ export const useGetSpaceMatches = ({
   spaceId: string;
 } & IQueryOptions<typeof getSpaceMatchesQueryOptions>) => {
   const query = getSpaceMatchesQueryOptions({ spaceId });
+  return useQuery({ ...query, ...queryOptions });
+};
+
+export const useGetMySpaceMembership = ({
+  spaceId,
+  queryOptions,
+}: {
+  spaceId: string;
+} & IQueryOptions<typeof getMySpaceMembershipQueryOptions>) => {
+  const query = getMySpaceMembershipQueryOptions({ spaceId });
   return useQuery({ ...query, ...queryOptions });
 };

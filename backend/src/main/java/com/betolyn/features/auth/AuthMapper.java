@@ -17,5 +17,7 @@ public interface AuthMapper {
     @Mapping(source = "userId", target = "user.id")
     @Mapping(source = "username", target = "user.username")
     @Mapping(source = "email", target = "user.email")
+    @Mapping(source = "role", target = "user.role")
+    @Mapping(source = "token", target = "token")
     SignInResponseDTO toSignInResponse(JwtSessionDTO session);
 }

@@ -64,11 +64,30 @@ export const Section = ({ children, style }: ViewProps) => {
   );
 };
 
-const OpenMatchBottomSheet = () => {
-  const { pushSheet } = useMatchBottomSheet();
+const MoreIcon = () => {
+  const { pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
+    useMatchBottomSheet();
+  if (!canMutateMatchActions || isMatchActionPermissionPending) return <></>;
   return (
     <ScreenHeader.Icon onPress={() => pushSheet({ type: 'match-action' })}>
       <MoreVertical />
+    </ScreenHeader.Icon>
+  );
+};
+
+const SettingsIcon = () => {
+  const { canMutateMatchActions, isMatchActionPermissionPending, match } = useMatchBottomSheet();
+
+  if (!canMutateMatchActions || isMatchActionPermissionPending) return <></>;
+
+  return (
+    <ScreenHeader.Icon
+      onPress={() => {
+        SheetManager.hide('match');
+        router.push(`/matches/${match.id}/settings`);
+      }}
+    >
+      <Settings />
     </ScreenHeader.Icon>
   );
 };
@@ -155,16 +174,8 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
                 <Sync />
               </ScreenHeader.Icon>
 
-              <ScreenHeader.Icon
-                onPress={() => {
-                  SheetManager.hide('match');
-                  router.push(`/matches/${matchId}/settings`);
-                }}
-              >
-                <Settings />
-              </ScreenHeader.Icon>
-
-              <OpenMatchBottomSheet />
+              <SettingsIcon />
+              <MoreIcon />
             </ScreenHeader.QuickActions>
           </ScreenHeader>
 

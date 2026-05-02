@@ -193,7 +193,8 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
   const oddId = props.odd.id ?? '';
   const subscribeOdd = useSubscribeSlipOdd(oddId);
   const { addBetToSlip } = betSlipStore;
-  const { match, pushSheet } = useMatchBottomSheet();
+  const { match, pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
+    useMatchBottomSheet();
 
   const { data, isPending, error } = useGetOddById({ oddId: props.odd.id });
   const odd = data?.data;
@@ -208,10 +209,6 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
       criterionId: criterion.id,
       oddAtPlacement: odd?.value,
     });
-  };
-
-  const handleOnLongPress = () => {
-    pushSheet({ type: 'odd-action', data: oddSheetData });
   };
 
   const buttonVariant = useMemo(() => {
@@ -230,6 +227,11 @@ export const OddButton = ({ style, criterion, variant, ...props }: OddButtonProp
   const oddSheetData: IOddSheetData = {
     ...odd,
     criterion,
+  };
+
+  const handleOnLongPress = () => {
+    if (!canMutateMatchActions || isMatchActionPermissionPending) return;
+    pushSheet({ type: 'odd-action', data: oddSheetData });
   };
 
   return (

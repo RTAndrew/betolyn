@@ -3,6 +3,7 @@ package com.betolyn.features.auth;
 import com.betolyn.features.IUseCase;
 import com.betolyn.features.auth.config.AuthConstants;
 
+import com.betolyn.features.user.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
@@ -20,7 +21,7 @@ public class JwtTokenService {
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
 
-    public JwtSessionDTO generateToken(String email, String sessionId, String username, String userId) {
+    public JwtSessionDTO generateToken(String email, String sessionId, String username, String userId, UserRoleEnum role) {
         Instant now = Instant.now();
         var expiresAt = now.plus(authConstants.sessionExpirationInDays(), ChronoUnit.DAYS);
         var issuer = "betolyn";
@@ -30,6 +31,7 @@ public class JwtTokenService {
                 .issuedAt(now)
                 .expiresAt(expiresAt)
                 .subject("user")
+                .claim("role", role)
                 .claim("email", email)
                 .claim("user_id", userId)
                 .claim("username", username)
@@ -41,6 +43,7 @@ public class JwtTokenService {
         JwtSessionDTO session = new JwtSessionDTO();
         session.setIss(issuer);
         session.setSessionId(sessionId);
+        session.setRole(role);
         session.setEmail(email);
         session.setUsername(username);
         session.setUserId(userId);
@@ -67,10 +70,31 @@ public class JwtTokenService {
         jwtDTO.setUsername(decodedToken.getClaim("username"));
         jwtDTO.setSessionId(decodedToken.getClaim("session_id"));
         jwtDTO.setEmail(decodedToken.getClaim("email"));
+        jwtDTO.setRole(getRoleFromJWT(decodedToken.getClaim("role")));
         jwtDTO.setIss(decodedToken.getClaim("iss"));
         jwtDTO.setIat(decodedToken.getClaim("iat"));
 
         return jwtDTO;
+    }
+
+    /**
+     * JWT payloads deserialize claims as JSON primitives; {@code role} is a string (e.g. {@code USER}), not a Java enum instance.
+     */
+    static UserRoleEnum getRoleFromJWT(Object claim) {
+        if (claim == null) {
+            return UserRoleEnum.USER;
+        }
+        if (claim instanceof UserRoleEnum role) {
+            return role;
+        }
+        try {
+            if (claim instanceof String s) {
+                return UserRoleEnum.valueOf(s);
+            }
+            return UserRoleEnum.valueOf(claim.toString());
+        } catch (IllegalArgumentException ignored) {
+            return UserRoleEnum.USER;
+        }
     }
 
     @Service

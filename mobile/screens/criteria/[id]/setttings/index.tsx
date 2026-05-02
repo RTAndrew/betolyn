@@ -23,7 +23,9 @@ import CriteriaMetrics from './criteria-metrics';
 import CriterionToggleMultipleWinners from './criterion-toggle-multiple-winners';
 
 const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
-  const { pushSheet } = useMatchBottomSheet();
+  const { pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
+    useMatchBottomSheet();
+  if (!canMutateMatchActions || isMatchActionPermissionPending) return <></>;
 
   return (
     <ScreenHeader.QuickActions>

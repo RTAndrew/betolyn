@@ -21,7 +21,7 @@ public class SignInUC implements IUseCase<SignInRequestDTO, JwtSessionDTO> {
 
     @Override
     public JwtSessionDTO execute(SignInRequestDTO requestDTO) {
-        var foundUser = userRepository.findByEmail(requestDTO.getEmail().toLowerCase());
+        var foundUser = userRepository.findByEmail(requestDTO.getEmail().toLowerCase().trim());
         if (foundUser == null) {
             throw new InvalidCredentialsException();
         }
@@ -36,7 +36,8 @@ public class SignInUC implements IUseCase<SignInRequestDTO, JwtSessionDTO> {
                 requestDTO.getEmail(),
                 sessionId,
                 foundUser.getUsername(),
-                foundUser.getId()
+                foundUser.getId(),
+                foundUser.getRole()
         );
 
         authSessionRepository.saveSession(session);
