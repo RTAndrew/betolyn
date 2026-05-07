@@ -61,6 +61,7 @@ async function apiRequest(method, endpoint, body = null, token = null) {
 	}
 
 	if (token) {
+		options.headers["Authorization"] = `Bearer ${token}`;
 		options.headers["Cookie"] = `token=${token}`;
 	}
 
@@ -93,18 +94,6 @@ async function apiRequest(method, endpoint, body = null, token = null) {
 		}
 		throw error;
 	}
-}
-
-// Helper to extract token from Set-Cookie header
-function extractTokenFromResponse(response) {
-	const setCookieHeader = response.headers.get("set-cookie");
-	if (setCookieHeader) {
-		const match = setCookieHeader.match(/token=([^;]+)/);
-		if (match) {
-			return match[1];
-		}
-	}
-	return null;
 }
 
 // 0. Ensure bankroll system accounts exist
@@ -160,6 +149,33 @@ async function seedPlatformUserRoles() {
 	}
 }
 
+function extractTokenFromSignInResponse(response) {
+	const rawCookies =
+		typeof response.headers.getSetCookie === "function"
+			? response.headers.getSetCookie()
+			: null;
+	if (rawCookies && rawCookies.length > 0) {
+		for (const part of rawCookies) {
+			const m = part.match(/token=([^;,\s]+)/);
+			if (m) {
+				return m[1];
+			}
+		}
+	}
+	const setCookieHeader =
+		response.headers.get("set-cookie") || response.headers.get("Set-Cookie");
+	if (setCookieHeader) {
+		const cookieString = Array.isArray(setCookieHeader)
+			? setCookieHeader.join(", ")
+			: setCookieHeader;
+		const m = cookieString.match(/token=([^;,\s]+)/);
+		if (m) {
+			return m[1];
+		}
+	}
+	return null;
+}
+
 // Sign in with first user to get auth token
 async function signIn(email, password) {
 	console.log("\n=== Signing in ===");
@@ -180,29 +196,12 @@ async function signIn(email, password) {
 			);
 		}
 
-		// Extract token from Set-Cookie header
-		// The Set-Cookie header can be an array or a single string
-		const setCookieHeader =
-			response.headers.get("set-cookie") || response.headers.get("Set-Cookie");
-		let token = null;
+		let token = extractTokenFromSignInResponse(response);
 
-		if (setCookieHeader) {
-			// Handle both string and array formats
-			const cookieString = Array.isArray(setCookieHeader)
-				? setCookieHeader[0]
-				: setCookieHeader;
-			const match = cookieString.match(/token=([^;,\s]+)/);
-			if (match) {
-				token = match[1];
-			}
-		}
-
-		// If token not found in headers, try to get all headers for debugging
 		if (!token) {
 			console.warn(
-				"⚠ Token not found in Set-Cookie header. Trying alternative methods..."
+				"⚠ Token not found in Set-Cookie; dumping headers for debugging"
 			);
-			// Sometimes the cookie might be in a different format
 			const allHeaders = {};
 			response.headers.forEach((value, key) => {
 				allHeaders[key] = value;
@@ -219,6 +218,17 @@ async function signIn(email, password) {
 	} catch (error) {
 		console.error("Sign in error:", error.message);
 		throw error;
+	}
+}
+
+async function assertAuthenticated(token, email) {
+	try {
+		await apiRequest("GET", "/me", null, token);
+		console.log(`✓ Authenticated session verified for ${email}`);
+	} catch (error) {
+		throw new Error(
+			`Authenticated session check failed for ${email}: ${error.message}`
+		);
 	}
 }
 
@@ -409,6 +419,7 @@ async function seed() {
 
 		const firstUser = usersData[0];
 		const token = await signIn(firstUser.email, firstUser.password);
+		await assertAuthenticated(token, firstUser.email);
 
 		// 2. Seed Matches
 		const matches = await seedMatches(token);

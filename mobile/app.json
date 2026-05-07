@@ -11,7 +11,7 @@
 		"newArchEnabled": true,
 		"ios": {
 			"supportsTablet": true,
-			"bundleIdentifier": "com.anonymous.betolyn",
+			"bundleIdentifier": "com.betolyn.betolyn",
 			"config": {
 				"usesNonExemptEncryption": false
 			}
@@ -22,7 +22,7 @@
 				"backgroundColor": "#ffffff"
 			},
 			"edgeToEdgeEnabled": true,
-			"package": "com.anonymous.betolyn"
+			"package": "com.betolyn.betolyn"
 		},
 		"web": {
 			"bundler": "metro",

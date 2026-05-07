@@ -31,6 +31,8 @@ app:
     sessionExpirationInDays: 7
     cookiesTokenNameKey: "token"
     jwtSecret: "jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT"
+    # Used by POST /dev/seed-platform-user-roles and local startup runner; aligns with seed/user-seed.json
+    seed-platform-usernames: "anderson,bruno,joao,maria"
   cors:
     allowedOrigins: "*"
   ingestion:
@@ -54,3 +56,7 @@ app:
       enabled: false
       # Extra diff logging when shadow is enabled
       log-diffs: true
+  observability:
+    sql-count:
+      # Logs SQL count per HTTP request for selected public endpoints.
+      enabled: false

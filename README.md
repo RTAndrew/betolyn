@@ -61,6 +61,16 @@ make dev-mobile
 cd mobile && npm start
 ```
 
+#### Mobile Environment Profiles
+Expo/EAS-native setup:
+- Local development uses Expo automatic env loading from `.env.local` (copy from `.env.local.example`)
+- Debug builds use EAS `preview` profile env values from `mobile/eas.json`
+- Release builds use EAS `production` profile env values from `mobile/eas.json`
+
+Build commands:
+- `npm run build:android:debug` (cloud) / `npm run build:android:debug:local` (local)
+- `npm run build:android:release` (cloud) / `npm run build:android:release:local` (local)
+
 #### Backend
 ```bash
 make dev-backend

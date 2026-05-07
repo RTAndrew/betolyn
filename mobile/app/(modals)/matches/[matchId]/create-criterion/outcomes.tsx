@@ -43,7 +43,7 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
     }
 
     if (!value || value <= 0) {
-      newErrors.value = 'Outcome value must be greater than 0';
+      newErrors.value = 'O valor da odd deve ser maior que 0';
     }
 
     setErrors(newErrors);

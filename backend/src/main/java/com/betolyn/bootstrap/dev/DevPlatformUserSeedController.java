@@ -12,11 +12,12 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Dev-only: promotes configured seed usernames to PLATFORM_USER after signup (see {@code seed/seed.js}).
- * Enabled for {@code local} (normal dev) and {@code reset} ({@code make db-reset}).
+ * Enabled for {@code local} (normal dev), {@code reset} ({@code make db-reset}), and Spring's
+ * {@code default} profile (common IntelliJ run config without explicit profile).
  */
 @RestController
 @RequestMapping("/dev")
-@Profile({ "local", "reset" })
+@Profile({ "local", "reset", "default" })
 @RequiredArgsConstructor
 public class DevPlatformUserSeedController {
 
