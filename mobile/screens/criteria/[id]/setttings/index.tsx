@@ -58,15 +58,15 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
     );
   }
 
-  if (error || !data) return <ThemedText>Error loading criterion</ThemedText>;
+  if (error || !data) return <ThemedText>Erro ao carregar mercado</ThemedText>;
 
   const criterion = data.data;
-  if (!criterion) return <ThemedText>Criterion not found</ThemedText>;
+  if (!criterion) return <ThemedText>Mercado não encontrado</ThemedText>;
 
   // TODO: create an util to get the match title
   const m = criterion.match;
   const matchTitle =
-    m.homeTeam?.name && m.awayTeam?.name ? `${m.homeTeam.name} vs ${m.awayTeam.name}` : 'Match';
+    m.homeTeam?.name && m.awayTeam?.name ? `${m.homeTeam.name} vs ${m.awayTeam.name}` : 'Evento';
 
   return (
     <MatchBottomSheetProvider match={m}>
@@ -85,35 +85,35 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
 
           <Settings.Item
             title={criterion.name}
-            subtitle="Criterion"
+            subtitle="Mercado"
             description={getCriterionStatusTag(criterion.status)}
             suffixIcon={null}
           />
 
           <Settings.Item
             title={matchTitle}
-            subtitle="Matchs"
+            subtitle="Eventos"
             description={getMatchStatusTag(m.status, Boolean(m.settledAt))}
             onPress={() => SheetManager.show('match', { payload: { matchId: m.id } })}
           />
 
           <Settings.ItemGroup>
             <Settings.Item
-              title="Allow multiple outcomes"
-              subtitle="Multiple bets on the same outcome are allowed."
+              title="Permitir múltiplas odds"
+              subtitle="Múltiplas apostas na mesma odd são permitidas."
               suffixIcon={<Switch value={criterion.allowMultipleOdds} onChange={() => {}} />}
             />
 
             <CriterionToggleMultipleWinners criterion={criterion} />
 
             <Settings.Item
-              title="Publish on kickoff"
-              subtitle="When the match starts, the criterion will be published automatically."
+              title="Publicar no início"
+              subtitle="Quando o evento iniciar, o mercado será publicado automaticamente."
               suffixIcon={<Switch value={false} onChange={() => {}} />}
             />
           </Settings.ItemGroup>
 
-          <Settings.ItemGroup title="Outcomes">
+          <Settings.ItemGroup title="Odds">
             {criterion.odds.map((odd) => (
               <Settings.Item
                 key={odd.id}

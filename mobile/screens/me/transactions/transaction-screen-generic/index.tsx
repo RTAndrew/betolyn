@@ -42,7 +42,7 @@ interface TransactionScreenGenericProps {
   isLoading: boolean;
   error: boolean;
   header: {
-    icon: React.ComponentType<SvgProps>;
+    icon?: React.ComponentType<SvgProps>;
     amount: number;
     tag: React.ReactNode;
   };
@@ -51,13 +51,13 @@ interface TransactionScreenGenericProps {
 
 const LinkedReference = ({ children }: PropsWithChildren) => {
   return (
-    <Settings.ItemGroup title="Linked Reference" innerStyle={styles.linkedReference}>
+    <Settings.ItemGroup title="Referência" innerStyle={styles.linkedReference}>
       {children}
     </Settings.ItemGroup>
   );
 };
 
-const TransactionId = ({ id, title = 'Transaction ID' }: { id: string; title?: string }) => {
+const TransactionId = ({ id, title = 'ID da transação' }: { id: string; title?: string }) => {
   // TODO: add copy to clipboard functionality
   return (
     <ThemedText style={styles.transactionId}>
@@ -79,7 +79,7 @@ const TransactionScreenGeneric = ({
   if (error) {
     return (
       <Root backgroundColor={colors.greyLight}>
-        <EmptyState.NoSearch center title="Bet not found" description="" />
+        <EmptyState.NoSearch center title="Aposta não encontrada" description="" />
       </Root>
     );
   }
@@ -89,7 +89,7 @@ const TransactionScreenGeneric = ({
       <View style={{ backgroundColor: colors.greyLight }}>
         <SafeHorizontalView style={styles.transaction}>
           <View style={styles.iconContainer}>
-            <header.icon width={32} height={32} />
+            {header.icon && <header.icon width={32} height={32} />}
           </View>
 
           <ThemedText style={styles.amount}>{formatKwanzaAmount(header.amount)}</ThemedText>

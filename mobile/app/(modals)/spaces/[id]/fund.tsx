@@ -12,8 +12,8 @@ const AllocateFunds = () => {
     <SpaceGuard
       fullScreen
       spaceId={spaceId}
-      title="Only admins can allocate funds"
-      description="You do not have permission to allocate funds in this space."
+      title="Apenas administradores podem alocar fundos"
+      description="Não tem permissão para alocar fundos neste espaço."
     >
       <AllocateFundsScreen />
     </SpaceGuard>

@@ -63,11 +63,11 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
 
   const handleNext = useCallback(() => {
     if (amount <= 0) {
-      setAmountError('Enter an amount greater than zero');
+      setAmountError('Introduza um montante superior a zero');
       return;
     }
     if (amount > userBalanceAvailable) {
-      setAmountError('Amount exceeds your available balance');
+      setAmountError('O montante excede o saldo disponível');
       return;
     }
     setAmountError(null);
@@ -79,12 +79,12 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
 
   useEffect(() => {
     setNext?.({
-      label: 'Next',
+      label: 'Próximo',
       variant: 'solid',
     });
   }, [setNext]);
 
-  const spaceTitle = useMemo(() => space?.name + ' will receive', [space?.name]);
+  const spaceTitle = useMemo(() => space?.name + ' vai receber', [space?.name]);
 
   /** Large headline: muted when zero; scales down from 1M so long values stay on screen. */
   const amountTextStyle = useMemo((): TextStyle => {
@@ -105,7 +105,7 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
   if (!spaceId) {
     return (
       <SafeHorizontalView style={styles.centered}>
-        <ThemedText style={styles.muted}>Missing space.</ThemedText>
+        <ThemedText style={styles.muted}>Espaço em falta.</ThemedText>
       </SafeHorizontalView>
     );
   }
@@ -121,7 +121,7 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
   if (isError || !space) {
     return (
       <SafeHorizontalView style={styles.centered}>
-        <ThemedText style={styles.muted}>Could not load space.</ThemedText>
+        <ThemedText style={styles.muted}>Não foi possível carregar o espaço.</ThemedText>
       </SafeHorizontalView>
     );
   }
@@ -156,7 +156,7 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
             <Skeleton size={100} />
           ) : (
             <ThemedText style={styles.balanceLine} type="default">
-              Balance available:{' '}
+              Saldo disponível:{' '}
               <ThemedText type="defaultSemiBold">
                 {formatKwanzaAmount(userBalanceAvailable)}
               </ThemedText>
@@ -170,9 +170,9 @@ export const AllocateAmountStep = ({ data, onChange, setNext, goNext }: AmountPr
       <SafeHorizontalView>
         <TextInput
           value={memo}
-          label="Memo (optional)"
+          label="Nota (opcional)"
           style={styles.memoInput}
-          placeholder="Add a note"
+          placeholder="Adicione uma nota"
           onChangeText={handleMemoChange}
           containerStyle={{ marginTop: 40 }}
         />

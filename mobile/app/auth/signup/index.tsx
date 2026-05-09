@@ -75,19 +75,19 @@ const SignupPage = () => {
 
     // Validate password
     if (!formData.password.value) {
-      errors.password.error = 'A senha é obrigatória';
+      errors.password.error = 'A palavra-passe é obrigatória';
       hasErrors = true;
     } else if (formData.password.value.length < 6) {
-      errors.password.error = 'A senha deve ter pelo menos 6 caracteres';
+      errors.password.error = 'A palavra-passe deve ter pelo menos 6 caracteres';
       hasErrors = true;
     }
 
     // Validate confirm password
     if (!formData.confirmPassword.value) {
-      errors.confirmPassword.error = 'Por favor, confirme a senha';
+      errors.confirmPassword.error = 'Por favor, confirme a palavra-passe';
       hasErrors = true;
     } else if (formData.password.value !== formData.confirmPassword.value) {
-      errors.confirmPassword.error = 'As senhas não coincidem';
+      errors.confirmPassword.error = 'As palavras-passe não coincidem';
       hasErrors = true;
     }
 
@@ -133,7 +133,7 @@ const SignupPage = () => {
 
       <AuthForm>
         <TextInput
-          label="Username"
+          label="Nome de utilizador"
           placeholder="hojiyahenda.@gmail.com"
           value={formData.username.value}
           errorMessage={formData.username.error}
@@ -148,7 +148,7 @@ const SignupPage = () => {
           onChangeText={(text) => handleChange('email', text)}
         />
         <TextInput
-          label="Senha"
+          label="Palavra-passe"
           secureTextEntry
           placeholder="********"
           keyboardType="visible-password"
@@ -158,7 +158,7 @@ const SignupPage = () => {
         />
         <TextInput
           secureTextEntry
-          label="Confirmar senha"
+          label="Confirmar palavra-passe"
           placeholder="********"
           keyboardType="visible-password"
           value={formData.confirmPassword.value}

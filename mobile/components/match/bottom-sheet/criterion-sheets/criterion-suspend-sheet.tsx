@@ -1,6 +1,7 @@
 import React from 'react';
 
 import BottomSheet from '@/components/bottom-sheet';
+import { ThemedText } from '@/components/ThemedText';
 import { useSuspendCriterion } from '@/services';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
 import { CriterionStatusEnum } from '@/types';
@@ -13,7 +14,7 @@ export const CriterionSuspendSheet = ({ visible = false }: ISheet) => {
   const { mutateAsync: suspendCriterion, isPending } = useSuspendCriterion();
 
   if (!currentSheet?.data) {
-    return <> Error: No criterion data found </>;
+    return <ThemedText>Nenhum mercado encontrado </ThemedText>;
   }
 
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
@@ -37,13 +38,13 @@ export const CriterionSuspendSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet.ModalConfirmation
-      title="Are you sure you want to suspend all odds?"
+      title="Tem a certeza de que pretende suspender todas as odds?"
       visible={visible}
       onClose={closeAll}
       onConfirm={handleConfirm}
-      description="If you suspend this criterion, users will no longer be able to bet on it."
-      onConfirmText={isPending ? 'Suspending...' : 'Suspend'}
-      onCancelText="Cancel"
+      description="Se suspender este mercado, os utilizadores deixarão de poder apostar nele."
+      onConfirmText={isPending ? 'A suspender...' : 'Suspender'}
+      onCancelText="Cancelar"
     />
   );
 };

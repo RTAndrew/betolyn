@@ -40,10 +40,10 @@ export const AllocateReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewP
 
   const handleFinish = useCallback(() => {
     runAsyncSubmit?.({
-      successTitle: 'Funds allocated',
-      loadingTitle: 'Allocating funds',
-      errorTitle: 'Could not allocate funds',
-      successMessage: 'Your allocation to the space was submitted successfully.',
+      successTitle: 'Fundos alocados',
+      loadingTitle: 'A alocar fundos',
+      errorTitle: 'Não foi possível alocar fundos',
+      successMessage: 'A alocação para o espaço foi enviada com sucesso.',
       onSuccessClose: () => {
         if (spaceId) {
           router.dismissTo(`/(tabs)/spaces/${spaceId}/info`);
@@ -51,7 +51,7 @@ export const AllocateReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewP
       },
       fnPromise: async () => {
         if (!spaceId) {
-          throw new Error('Missing space id.');
+          throw new Error('ID do espaço em falta.');
         }
 
         await SpaceService.allocateFunding(spaceId, {
@@ -67,7 +67,7 @@ export const AllocateReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewP
 
   useEffect(() => {
     setNext?.({
-      label: 'Finish',
+      label: 'Concluir',
       variant: 'solid',
     });
   }, [setNext]);
@@ -81,7 +81,7 @@ export const AllocateReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewP
             direction="column"
             showBottomBorder={false}
             avatarSource={GENERIC_AVATAR}
-            title={`${spaceName} will receive`}
+            title={`${spaceName} vai receber`}
             style={{
               alignContent: 'center',
               alignItems: 'center',
@@ -95,17 +95,17 @@ export const AllocateReviewStep = ({ allData, setNext, runAsyncSubmit }: ReviewP
 
         <View style={{ gap: 16 }}>
           <Settings.ItemGroup>
-            <Settings.Item title="From" description="Personal balance" suffixIcon={false} />
-            <Settings.Item title="To" description={spaceName} suffixIcon={false} />
+            <Settings.Item title="De" description="Saldo pessoal" suffixIcon={false} />
+            <Settings.Item title="Para" description={spaceName} suffixIcon={false} />
             <Settings.Item
-              title="Transaction"
-              description={<Tag color={colors.greyLighter} title="Funding" />}
+              title="Transação"
+              description={<Tag color={colors.greyLighter} title="Financiamento" />}
               suffixIcon={false}
             />
           </Settings.ItemGroup>
 
           {memo && (
-            <Settings.ItemGroup title="Memo">
+            <Settings.ItemGroup title="Observação">
               <Settings.Item title={summary.memo} suffixIcon={false} />
             </Settings.ItemGroup>
           )}

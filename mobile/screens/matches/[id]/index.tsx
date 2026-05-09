@@ -152,8 +152,8 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
     );
   }
 
-  if (isError) return <Text>Error loading match</Text>;
-  if (!result?.data) return <Text>Match not found</Text>;
+  if (isError) return <Text>Erro ao carregar evento</Text>;
+  if (!result?.data) return <Text>Evento não encontrado</Text>;
 
   const match = result.data;
 
@@ -190,7 +190,7 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
               }}
             >
               <View style={{ marginBottom: 10 }}>
-                {getMatchStatusTag(match.status, Boolean(match.settledAt))}
+                {getMatchStatusTag(match.status, Boolean(match?.settledAt))}
               </View>
 
               <View

@@ -6,6 +6,7 @@ import { NumberInput } from '@/components/forms';
 import Switch from '@/components/forms/switch';
 import TextInput from '@/components/forms/text-input';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
+import { ThemedText } from '@/components/ThemedText';
 import { useCreateOdd } from '@/services';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
 
@@ -23,19 +24,19 @@ function validateCreateOddForm(name: string | null, value: string | null): Valid
   // Name: required, non-empty after trim (covers null, '', whitespace-only)
   const trimmedName = (name ?? '').trim();
   if (trimmedName.length === 0) {
-    nameError = 'Name is required';
+    nameError = 'Nome obrigatório';
   }
 
   // Value: required, must be a finite number > 0
   const trimmedValue = (value ?? '').trim();
   if (trimmedValue.length === 0) {
-    valueError = 'Odds value is required';
+    valueError = 'Preço da odd obrigatório';
   } else {
     const parsed = parseFloat(trimmedValue);
     if (!Number.isFinite(parsed)) {
-      valueError = 'Odds value must be a valid number';
+      valueError = 'O preço da odd deve ser um número válido';
     } else if (parsed <= 0) {
-      valueError = 'Odds value must be greater than 0';
+      valueError = 'O preço da odd deve ser maior que 0';
     }
   }
 
@@ -62,7 +63,7 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
   const { mutateAsync: createOdd, isPending } = useCreateOdd();
 
   if (!currentSheet?.data) {
-    return <>Error: No criterion data found</>;
+    return <ThemedText>Nenhum mercado encontrado</ThemedText>;
   }
 
   const criterion = currentSheet.data as IMatchCriteriaResponse;
@@ -95,30 +96,30 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
     <BottomSheet onClose={closeAll} visible={visible} closeOnTouchBackdrop={false}>
       <BottomSheet.Header
         onPrevious={goBack}
-        title="New Outcome"
+        title="Nova odd"
         description={criterion.name}
         onClose={closeAll}
       />
 
       <SafeHorizontalView style={{ flexDirection: 'column', gap: 24 }}>
         <TextInput
-          label="Name"
-          placeholder="e.g. Real Madrid"
+          label="Nome"
+          placeholder="ex.: Real Madrid"
           value={name ?? ''}
           onChangeText={setName}
           errorMessage={nameError}
         />
 
         <NumberInput
-          label="Outcome value"
+          label="Preço da odd"
           value={Number(value ?? 0)}
           onChange={(value) => setValue(value.toString())}
           errorMessage={valueError}
         />
 
         <Switch
-          label="Create as a draft?"
-          description="Draft outcomes are not visible to users until they are published."
+          label="Criar como rascunho?"
+          description="Odds em rascunho não ficam visíveis até serem publicadas."
           value={isDraft}
           onChange={setIsDraft}
         />
@@ -126,7 +127,7 @@ export const CreateOddSheet = ({ visible = false }: ISheet) => {
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
         <Button.Root loading={isPending} onPress={handleSave}>
-          Save
+          Salvar
         </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>

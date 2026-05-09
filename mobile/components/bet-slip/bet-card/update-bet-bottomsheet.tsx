@@ -150,10 +150,10 @@ export const UpdateBetBottomsheet = ({
 
       <SafeHorizontalView style={styles.actions}>
         <Button.Root disabled={stake === _stake} onPress={handleSave}>
-          Save
+          Salvar
         </Button.Root>
         <Button.Root destructive variant="text" onPress={handleRemove}>
-          Remove
+          Remover
         </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>

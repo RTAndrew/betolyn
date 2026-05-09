@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import BetCard from '@/components/bet-card';
 import ScreenWrapper from '@/components/screen-wrapper';
@@ -21,7 +21,7 @@ const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
     return (
       <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
         <View style={{ marginBottom: 16 }}>
-          <TextInput placeholder="Search" style={styles.input} placeholderTextColor="#BFBFBF" />
+          <TextInput placeholder="Pesquisar" style={styles.input} placeholderTextColor="#BFBFBF" />
         </View>
         <View style={{ flex: 1 }}>
           <Skeleton.Group count={5} gap={0}>
@@ -33,12 +33,12 @@ const ChannelSearchMatches = ({ onMatchPress }: ChannelSearchMatchesProps) => {
   }
 
   if (!matches || error) {
-    return <Text>Error loading matches</Text>;
+    return <Text>Erro ao carregar eventos</Text>;
   }
   return (
     <ScreenWrapper backgroundColor={colors.greyLight} scrollable={true} safeArea={false}>
       <View style={{ marginBottom: 16 }}>
-        <TextInput placeholder="Search" style={styles.input} placeholderTextColor="#BFBFBF" />
+        <TextInput placeholder="Pesquisar" style={styles.input} placeholderTextColor="#BFBFBF" />
       </View>
       <View style={{ flex: 1 }}>
         {matches.map((match, index) => (

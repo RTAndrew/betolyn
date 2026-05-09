@@ -3,9 +3,21 @@ import { useEffect, useRef, useState } from 'react';
 import { pickRandom } from '@/utils/pick-random';
 
 const DEFAULT_MESSAGES: Record<number, string[]> = {
-  0: ['Hang tight...we are doing some magics.'],
-  1: ['The hamsters are getting a workout.'],
-  2: ['Okay. One last shot.'],
+  0: [
+    'Que recua é carro. Segure firme!',
+    'A luta continua... e nós também para que isto funcione',
+    'A demorar mais do que o esperado, mas não somos o PIIM. Prometemos!',
+  ],
+  1: [
+    'Tá quase, tá quase, tá quase... 😗🎵',
+    'Nosso tempo de resposta é mais rápido do que o Maria Pia',
+    'Sem stress, estamos a processar isso com estilo.',
+  ],
+  2: [
+    'Últimos ajustes e já sai no ponto',
+    'Se piscaste, quase perdeste: estamos a finalizar',
+    'Quase lá, família. Só a fechar a cena',
+  ],
 };
 
 interface UseTimeElapsedProps {
@@ -17,7 +29,7 @@ interface UseTimeElapsedProps {
 }
 
 export function useTimeElapsed({
-  defaultMessage = DEFAULT_MESSAGES[0][0],
+  defaultMessage = pickRandom(DEFAULT_MESSAGES[0]),
   messages = DEFAULT_MESSAGES,
   enabled = true,
   breakpoints,

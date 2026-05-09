@@ -22,7 +22,7 @@ const CreateSpaceScreen = () => {
       title: 'Configuration',
       component: SpaceConfiguration,
       defaultData: { name: '', description: '' },
-      defaultNextButtonProps: { label: 'Create Space' },
+      defaultNextButtonProps: { label: 'Criar espaço' },
     },
   ];
 

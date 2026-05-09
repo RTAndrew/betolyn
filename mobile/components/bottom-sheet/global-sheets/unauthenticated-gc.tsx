@@ -18,8 +18,8 @@ const UnauthenticatedGC = () => {
     <BottomSheet>
       <SafeHorizontalView>
         <EmptyState
-          title="Create an account"
-          description="BET ALL IN... Death markets, gossip, sports, custom betting channels and everything in between."
+          title="Crie uma conta"
+          description="Participe em mercados, desporto e canais personalizados de apostas."
           icon={
             <NoUsersFound
               width={150}
@@ -38,7 +38,7 @@ const UnauthenticatedGC = () => {
               });
             }}
           >
-            Sign in
+            Iniciar sessao
           </Button.Root>
         </EmptyState>
       </SafeHorizontalView>

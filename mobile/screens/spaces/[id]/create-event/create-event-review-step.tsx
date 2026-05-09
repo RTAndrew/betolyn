@@ -40,16 +40,16 @@ export const CreateEventReviewStep = ({ allData, setNext, runAsyncSubmit }: Revi
 
   const handleCreate = useCallback(() => {
     runAsyncSubmit?.({
-      successTitle: 'Event created',
-      loadingTitle: 'Creating event',
-      errorTitle: 'Error creating event',
-      successMessage: 'Your event has been created successfully.',
+      successTitle: 'Evento criado',
+      loadingTitle: 'A criar evento',
+      errorTitle: 'Erro ao criar evento',
+      successMessage: 'O evento foi criado com sucesso.',
       onSuccessClose: () => {
         router.dismissTo(`/spaces/${spaceId}`);
       },
       fnPromise: async () => {
         if (!spaceId) {
-          throw new Error('Missing space id.');
+          throw new Error('ID do espaço em falta.');
         }
         const body = SpaceService.buildCreateSpaceMatchRequest(
           eventType as TSpaceCreateEventType | undefined,
@@ -65,7 +65,7 @@ export const CreateEventReviewStep = ({ allData, setNext, runAsyncSubmit }: Revi
 
   useEffect(() => {
     setNext?.({
-      label: 'Create event',
+      label: 'Criar evento',
       variant: 'solid',
     });
   }, [setNext]);
@@ -78,47 +78,47 @@ export const CreateEventReviewStep = ({ allData, setNext, runAsyncSubmit }: Revi
     >
       <SafeHorizontalView>
         <ThemedText style={styles.lead} type="default">
-          Review your event details before creating it.
+          Reveja os detalhes do evento antes de o criar.
         </ThemedText>
 
         <View style={styles.block}>
           <ThemedText style={styles.label} type="defaultSemiBold">
-            Match
+            Evento
           </ThemedText>
           <ThemedText type="default">{summary.matchLabel ?? '—'}</ThemedText>
         </View>
 
         <View style={styles.block}>
           <ThemedText style={styles.label} type="defaultSemiBold">
-            Home team
+            Equipa da casa
           </ThemedText>
           <ThemedText type="default">{summary.homeTeam ?? '—'}</ThemedText>
         </View>
 
         <View style={styles.block}>
           <ThemedText style={styles.label} type="defaultSemiBold">
-            Away team
+            Equipa visitante
           </ThemedText>
           <ThemedText type="default">{summary.awayTeam ?? '—'}</ThemedText>
         </View>
 
         <View style={styles.block}>
           <ThemedText style={styles.label} type="defaultSemiBold">
-            Start time
+            Hora de início
           </ThemedText>
           <ThemedText type="default">{summary.startTime ?? '—'}</ThemedText>
         </View>
 
         <View style={styles.block}>
           <ThemedText style={styles.label} type="defaultSemiBold">
-            End time
+            Hora de fim
           </ThemedText>
           <ThemedText type="default">{summary.endTime ?? '—'}</ThemedText>
         </View>
 
         <View style={styles.block}>
           <ThemedText style={styles.label} type="defaultSemiBold">
-            Max reserved liability
+            Limite de risco
           </ThemedText>
           <ThemedText type="default">{summary.risk ?? '—'}</ThemedText>
         </View>

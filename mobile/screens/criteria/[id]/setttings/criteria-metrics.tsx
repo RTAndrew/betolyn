@@ -7,12 +7,10 @@ import { Stats } from '@/components/stats';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetCriterionMetrics } from '@/services';
 import { CriterionStatusEnum } from '@/types';
+import { formatKNumber } from '@/utils/format-k-number';
 import { hexToRgba } from '@/utils/hex-rgba';
+import { formatKwanzaAmount } from '@/utils/number-formatters';
 import { getRiskLevelColor } from '@/utils/risk-level-color';
-
-function formatCurrency(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
 
 export interface CriteriaMetricsProps {
   criterionId: string;
@@ -47,19 +45,20 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
       <SegmentedProgressBar
         segments={[
           { value: riskSegmentValue, color: getRiskLevelColor(riskLevel) },
+          // @ts-ignore
           { value: availableSegmentValue, color: hexToRgba(getRiskLevelColor(riskLevel), 0.5) },
         ]}
         topLabel={
           <ThemedText type="default" style={{ color: '#A8A8A8' }}>
-            {formatCurrency(reservedLiability)} exp. {' / '} {formatCurrency(maxReservedLiability)}{' '}
-            max. exp.
+            {formatKwanzaAmount(reservedLiability)} risco. {' / '}{' '}
+            {formatKwanzaAmount(maxReservedLiability)} lim. risco.
           </ThemedText>
         }
         bottomLabel={
           <ThemedText
             style={StyleSheet.flatten([styles.riskLevel, { color: getRiskLevelColor(riskLevel) }])}
           >
-            {riskLevel.toFixed(0)}% Risk Level
+            {riskLevel.toFixed(0)}% Nível de Risco
           </ThemedText>
         }
       />
@@ -73,23 +72,23 @@ const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps)
                   title: 'P/L',
                   description:
                     metrics?.profitAndLosses != null
-                      ? formatCurrency(metrics.profitAndLosses)
+                      ? formatKwanzaAmount(metrics.profitAndLosses)
                       : 'N/A',
                 },
               ]
             : [
                 {
-                  title: 'Exposure',
-                  description: formatCurrency(reservedLiability),
+                  title: 'Risco',
+                  description: formatKNumber(reservedLiability, true),
                 },
               ]),
           {
-            title: 'Bets',
+            title: 'Apostas',
             description: String(metrics?.totalBetsCount ?? 0),
           },
           {
-            title: 'Vol.',
-            description: formatCurrency(metrics?.totalStakesVolume ?? 0),
+            title: 'Volume',
+            description: formatKNumber(metrics?.totalStakesVolume ?? 0, true),
           },
         ]}
       />

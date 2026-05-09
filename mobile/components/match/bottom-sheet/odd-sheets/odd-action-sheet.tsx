@@ -56,10 +56,10 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
     );
   }
   if (!odd) {
-    return <> Error: No odd data found </>;
+    return <ThemedText>Nenhuma odd encontrada</ThemedText>;
   }
 
-  const description = odd.criterion?.name ?? 'Odd';
+  const description = odd.criterion?.name ?? 'odd';
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
@@ -75,7 +75,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
-          text="Cancel & Refund"
+          text="Cancelar e reembolsar"
           icon={<Trash color="white" />}
           onPress={() => {
             pushSheet({
@@ -90,7 +90,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
-          text="Publish"
+          text="Publicar"
           disabled={!canPublishOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
           icon={<Eye color="white" />}
           onPress={() => {
@@ -100,7 +100,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canSuspendOdd(odd.status, odd.criterion?.status ?? 'ACTIVE')}
-          text="Suspend"
+          text="Suspender"
           icon={<LockClosed color="white" />}
           onPress={() => {
             pushSheet({ type: 'odd-suspend', data: odd });
@@ -108,7 +108,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
-          text="Settings"
+          text="Definições"
           icon={<Settings color="white" />}
           onPress={async () => {
             await closeMatchScreen();
@@ -118,7 +118,7 @@ export const OddActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={odd.status === 'SETTLED' || odd.criterion?.status === 'SETTLED'}
-          text="Reprice"
+          text="Reprecificar"
           icon={<DollarEuro color="white" />}
           onPress={() => {
             pushSheet({ type: 'odd-reprice', data: odd });

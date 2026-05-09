@@ -24,7 +24,7 @@ const Header = ({ children }: PropsWithChildren) => {
         type="back"
         onClose={() => router.back()}
         safeArea
-        title="History"
+        title="Histórico"
       />
       {children}
     </ScreenWrapper>
@@ -49,7 +49,7 @@ const BetSlipHistoryScreen = () => {
   if (error || !data) {
     return (
       <Header>
-        <ThemedText>Error loading bets</ThemedText>
+        <ThemedText>Erro ao carregar apostas</ThemedText>
       </Header>
     );
   }
@@ -62,38 +62,37 @@ const BetSlipHistoryScreen = () => {
   }, [] as IBetSlipItem[]);
 
   return (
-    <ScreenWrapper safeArea={false} backgroundColor={colors.greyLight}>
+    <ScreenWrapper scrollable={false} safeArea={false} backgroundColor={colors.greyLight}>
       <ScreenHeader
         safeArea
         type="back"
-        title="History"
+        title="Histórico"
         onClose={() => router.back()}
         iconContainerColor={colors.greyMedium}
       />
 
-      {betSlips.length > 0 ? (
-        <FlatList
-          contentContainerStyle={{
-            gap: 8,
-            marginTop: 18,
-            paddingBottom: Platform.OS === 'ios' ? 200 : 130,
-          }}
-          data={betSlips}
-          renderItem={({ item: slip }) => {
-            return (
-              <SafeHorizontalView>
-                <BetSlipItemCard key={slip.id} bet={slip} />
-              </SafeHorizontalView>
-            );
-          }}
-        />
-      ) : (
-        <FullScreenCentered includeTabBar>
-          <SafeHorizontalView>
-            <EmptyState.NoBets />
-          </SafeHorizontalView>
-        </FullScreenCentered>
-      )}
+      <FlatList
+        data={betSlips}
+        contentContainerStyle={{
+          gap: 8,
+          marginTop: 18,
+          paddingBottom: Platform.OS === 'ios' ? 200 : 130,
+        }}
+        renderItem={({ item: slip }) => {
+          return (
+            <SafeHorizontalView>
+              <BetSlipItemCard key={slip.id} bet={slip} />
+            </SafeHorizontalView>
+          );
+        }}
+        ListEmptyComponent={
+          <FullScreenCentered includeTabBar>
+            <SafeHorizontalView>
+              <EmptyState.NoBets />
+            </SafeHorizontalView>
+          </FullScreenCentered>
+        }
+      />
     </ScreenWrapper>
   );
 };

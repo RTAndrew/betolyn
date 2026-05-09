@@ -23,7 +23,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
   const criterion = (criterionId && criterionRes?.data) ?? sheetCriterion;
 
   if (!criterion) {
-    return <> Error: No criterion data found </>;
+    return <ThemedText> Nenhum mercado encontrado </ThemedText>;
   }
 
   const canView = () => {
@@ -58,13 +58,13 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
             {getCriterionStatusTag(criterion.status)}
           </View>
         }
-        description={'Criterion'}
+        description={'Mercado'}
       />
 
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
           disabled={!canView()}
-          text="Cancel & Refund"
+          text="Cancelar e reembolsar"
           icon={<Trash color="white" />}
           onPress={() => {
             pushSheet({
@@ -80,7 +80,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canPublish()}
-          text="Publish"
+          text="Publicar"
           icon={<Eye color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-publish', data: criterion });
@@ -89,7 +89,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canSuspend()}
-          text="Suspend all outcomes"
+          text="Suspender todas as odds"
           icon={<LockClosed color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-suspend', data: criterion });
@@ -98,7 +98,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canView()}
-          text="Create outcome"
+          text="Criar odd"
           icon={<Add color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-create-odd', data: criterion });
@@ -106,7 +106,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
-          text="Settings"
+          text="Definições"
           icon={<Settings color="white" />}
           onPress={async () => {
             await closeMatchScreen();
@@ -116,7 +116,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canView()}
-          text="Select winning outcomes"
+          text="Selecionar odds vencedoras"
           icon={<Trophy color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-select-winner', data: criterion });
@@ -125,7 +125,7 @@ export const CriterionActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canView()}
-          text="Reprice all outcomes"
+          text="Reprecificar todas as odds"
           icon={<DollarEuro color="white" />}
           onPress={() => {
             pushSheet({ type: 'criterion-reprice-update-odds', data: criterion });

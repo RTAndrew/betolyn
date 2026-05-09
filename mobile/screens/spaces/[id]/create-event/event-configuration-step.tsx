@@ -15,10 +15,10 @@ type FieldKey = keyof IEventConfigurationFormData;
 type FormErrors = Partial<Record<FieldKey, string>>;
 
 const FIELD_LABELS: Record<FieldKey, string> = {
-  homeTeam: 'Home team',
-  awayTeam: 'Away team',
-  startTime: 'Start time',
-  endTime: 'End time',
+  homeTeam: 'equipa da casa',
+  awayTeam: 'equipa visitante',
+  startTime: 'hora de início',
+  endTime: 'hora de fim',
 };
 
 const REQUIRED_FIELDS: FieldKey[] = ['homeTeam', 'awayTeam', 'startTime', 'endTime'];
@@ -43,7 +43,7 @@ export const EventConfigurationStep = ({
 
     for (const key of REQUIRED_FIELDS) {
       if (!formData[key].trim()) {
-        newErrors[key] = `Please, enter a value for ${FIELD_LABELS[key]}`;
+        newErrors[key] = `Introduza um valor para ${FIELD_LABELS[key]}`;
       }
     }
 
@@ -71,7 +71,7 @@ export const EventConfigurationStep = ({
 
   useEffect(() => {
     setNext?.({
-      label: 'Next',
+      label: 'Próximo',
       variant: 'solid',
     });
   }, [setNext]);
@@ -86,38 +86,38 @@ export const EventConfigurationStep = ({
       <SafeHorizontalView>
         <View style={styles.formContainer}>
           <TextInput
-            label="Home team"
+            label="Equipa da casa"
             style={styles.input}
             value={formData.homeTeam}
             errorMessage={errors.homeTeam}
-            placeholder="e.g. Team A"
+            placeholder="ex.: Equipa A"
             onChangeText={(text) => updateField('homeTeam', text)}
           />
 
           <TextInput
-            label="Away team"
+            label="Equipa visitante"
             style={styles.input}
             value={formData.awayTeam}
             errorMessage={errors.awayTeam}
-            placeholder="e.g. Team B"
+            placeholder="ex.: Equipa B"
             onChangeText={(text) => updateField('awayTeam', text)}
           />
 
           <TextInput
-            label="Start time"
+            label="Hora de início"
             style={styles.input}
             value={formData.startTime}
             errorMessage={errors.startTime}
-            placeholder="e.g. 2025-03-28T18:00:00Z"
+            placeholder="ex.: 2025-03-28T18:00:00Z"
             onChangeText={(text) => updateField('startTime', text)}
           />
 
           <TextInput
-            label="End time"
+            label="Hora de fim"
             style={styles.input}
             value={formData.endTime}
             errorMessage={errors.endTime}
-            placeholder="e.g. 2025-03-28T20:00:00Z"
+            placeholder="ex.: 2025-03-28T20:00:00Z"
             onChangeText={(text) => updateField('endTime', text)}
           />
         </View>

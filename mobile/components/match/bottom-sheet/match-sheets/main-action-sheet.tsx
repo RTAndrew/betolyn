@@ -83,11 +83,11 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
             {getMatchStatusTag(match.status, Boolean(match.settledAt))}
           </View>
           <View style={styles.teamWrapper}>
-            <Team name={'Home'} imageUrl={match.homeTeam.badgeUrl} direction="row-reverse" />
+            <Team name={'Casa'} imageUrl={match.homeTeam.badgeUrl} direction="row-reverse" />
             <ThemedText style={{ color: colors.greyLighter, fontWeight: '900' }}>
               {match.homeTeamScore} : {match.awayTeamScore}
             </ThemedText>
-            <Team name={'Away'} imageUrl={match.awayTeam.badgeUrl} direction="row" />
+            <Team name={'Fora'} imageUrl={match.awayTeam.badgeUrl} direction="row" />
           </View>
         </BottomSheet.SafeHorizontalView>
       </BottomSheet.Header>
@@ -95,7 +95,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
       <View style={{ flexDirection: 'column', gap: 24 }}>
         <BottomSheet.ActionOption
           disabled={isDerivedMatch || Boolean(match.settledAt)}
-          text="Cancel & Refund"
+          text="Cancelar e reembolsar"
           icon={<Trash color="white" />}
           onPress={() => {
             pushSheet({
@@ -106,9 +106,9 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
                 name: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
                 ...(match.type === 'OFFICIAL' && {
                   note: {
-                    title: 'This will also affect linked matches.',
+                    title: 'Isto também afeta eventos vinculados.',
                     description:
-                      'Space-linked events derived from this will be voided and canceled the as well (markets and outcomes).',
+                      'Eventos de espacos derivados deste serão anulados e cancelados (mercados e odds).',
                   },
                 }),
               },
@@ -117,7 +117,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
-          text="Update score"
+          text="Atualizar resultado"
           disabled={!canUpdateScore()}
           onPress={() => {
             pushSheet({ type: 'match-update-score' });
@@ -125,10 +125,10 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
           icon={<SoccerBall color="white" />}
         />
 
-        <BottomSheet.ActionOption disabled text="Reschedule" icon={<TimeHistory color="white" />} />
+        <BottomSheet.ActionOption disabled text="Reagendar" icon={<TimeHistory color="white" />} />
 
         <BottomSheet.ActionOption
-          text="Settle match"
+          text="Anunciar vencedores"
           icon={<MoneyHand color="white" />}
           disabled={!canSettle()}
           onPress={() => {
@@ -137,7 +137,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         />
 
         <BottomSheet.ActionOption
-          text="Settings"
+          text="Definições"
           onPress={async () => {
             await closeMatchScreen();
             router.push(`/matches/${match.id}/settings`);
@@ -146,7 +146,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
         />
         <BottomSheet.ActionOption
           disabled={hasEnded}
-          text="Add market"
+          text="Adicionar mercado"
           onPress={async () => {
             await closeMatchScreen();
             router.push(`/matches/${match.id}/create-criterion`);
@@ -156,7 +156,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
         <BottomSheet.ActionOption
           disabled={!canSuspendAllMarkets()}
-          text="Suspend all markets"
+          text="Suspender todos os mercados"
           icon={<LockClosed color="white" />}
           onPress={() => {
             pushSheet({ type: 'match-suspend-all-markets' });
@@ -165,7 +165,7 @@ export const MainActionSheet = ({ visible = false }: ISheet) => {
 
         {canEndMatch() && (
           <BottomSheet.ActionOption
-            text="End match"
+            text="Terminar evento"
             icon={<TimerOff color="white" />}
             onPress={() => {
               pushSheet({ type: 'match-end-match' });

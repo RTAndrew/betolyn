@@ -52,8 +52,8 @@ const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
       </ScreenWrapper>
     );
   }
-  if (isError) return <ThemedText>Error loading match</ThemedText>;
-  if (!result?.data) return <ThemedText>Match not found</ThemedText>;
+  if (isError) return <ThemedText>Erro ao carregar evento</ThemedText>;
+  if (!result?.data) return <ThemedText>Evento não encontrado</ThemedText>;
 
   const match = result.data;
   return (
@@ -84,12 +84,12 @@ const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
           <Settings.ItemGroup>
             <Settings.Item
               title="24 October - 19:45"
-              subtitle="Kick off"
+              subtitle="Início"
               suffixIcon={getMatchStatusTag(match.status, Boolean(match.settledAt))}
             />
             <Settings.Item
-              title="Cartões Amarelos"
-              subtitle="Main Market"
+              title={match.mainCriterion?.name}
+              subtitle="Mercado principal"
               description={getOddStatusTag(match.mainCriterion?.status)}
               onPress={() => router.push(`/criteria/${match.mainCriterion?.id}/settings`)}
             />
@@ -97,8 +97,8 @@ const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
 
           <Settings.Item
             onPress={() => setAutoEnd((prev) => !prev)}
-            title="Auto-end"
-            subtitle="Match will end automatically after the specified time."
+            title="Encerramento automático"
+            subtitle="O evento terminará automaticamente após o horário definido."
             suffixIcon={<Switch value={autoEnd} onChange={setAutoEnd} />}
           />
 

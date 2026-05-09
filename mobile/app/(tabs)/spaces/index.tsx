@@ -31,7 +31,7 @@ export default function Spaces() {
   if (error || !data) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        <EmptyState title="We could not process your request" />
+        <EmptyState title="Não foi possível processar o pedido" />
       </View>
     );
   }

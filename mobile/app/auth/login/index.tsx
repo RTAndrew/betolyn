@@ -56,10 +56,10 @@ const LoginPage = () => {
 
     // Validate password
     if (!formData.password.value) {
-      errors.password.error = 'A senha é obrigatória';
+      errors.password.error = 'A palavra-passe é obrigatória';
       hasErrors = true;
     } else if (formData.password.value.length < 6) {
-      errors.password.error = 'A senha deve ter pelo menos 6 caracteres';
+      errors.password.error = 'A palavra-passe deve ter pelo menos 6 caracteres';
       hasErrors = true;
     }
 
@@ -116,8 +116,8 @@ const LoginPage = () => {
         />
         <TextInput
           secureTextEntry
-          label="Senha"
-          placeholder="Senha"
+          label="Palavra-passe"
+          placeholder="Palavra-passe"
           keyboardType="visible-password"
           value={formData.password.value}
           errorMessage={formData.password.error}

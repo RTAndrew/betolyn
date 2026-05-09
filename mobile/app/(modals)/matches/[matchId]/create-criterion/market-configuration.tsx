@@ -34,11 +34,11 @@ const MarketConfiguration = forwardRef<
     const newErrors: FormErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.marketName = 'Market name is required';
+      newErrors.marketName = 'O nome do mercado é obrigatório';
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors.description = 'A descrição é obrigatória';
     }
 
     setErrors(newErrors);
@@ -70,24 +70,24 @@ const MarketConfiguration = forwardRef<
     <View style={{ flex: 1, backgroundColor: colors.greyLight }}>
       <View style={styles.formContainer}>
         <View style={{ marginBottom: 16 }}>
-          <ThemedText type="title">Market Configuration</ThemedText>
+          <ThemedText type="title">Configuração do mercado</ThemedText>
           <ThemedText style={{ color: colors.greyLighter }} type="default">
-            If this criterion is intended to be used as a main criterion, create short names (e.g.
-            W, L, D, Home, Away) for higher visibility.
+            Se este mercado for usado como mercado principal, use nomes curtos (ex.: 1x2, resultado
+            do jogo, total de golos, cartões amarelos) para melhor visibilidade.
           </ThemedText>
         </View>
 
         <TextInput
-          label="Market name"
-          placeholder="e.g. Winner, loser, draw"
+          label="Nome do mercado"
+          placeholder="ex.: Vencedor, empate, derrota"
           value={formData.name}
           onChangeText={(text) => updateFormData('name', text)}
           errorMessage={errors.marketName}
         />
 
         <TextInput
-          label="Description"
-          placeholder="Explain what this market is for, and avoid confusion when managing."
+          label="Descrição"
+          placeholder="Explique para que serve este mercado e evite dúvidas na gestão e quando os vencedores forem anunciados."
           value={formData.description}
           errorMessage={errors.description}
           multiline
@@ -98,8 +98,8 @@ const MarketConfiguration = forwardRef<
         />
 
         <Switch
-          label="Create as a draft?"
-          description="Draft outcomes are not visible to users until they are published."
+          label="Criar como rascunho?"
+          description="Odds em rascunho não ficam visíveis até serem publicadas."
           value={formData.isDraft}
           onChange={(value) => updateFormData('isDraft', value)}
         />

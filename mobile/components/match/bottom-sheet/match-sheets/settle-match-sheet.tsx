@@ -7,16 +7,17 @@ import { useSettleMatch } from '@/services/matches/match-mutation';
 import { useGetMatchCriteria } from '@/services/matches/match-query';
 import { CriterionStatusEnum, MatchStatusEnum } from '@/types';
 import { ApiError } from '@/utils/http/api-error';
+import { formatKwanzaAmount } from '@/utils/number-formatters';
 
 import { useMatchBottomSheet } from '../context';
 import { ISheet } from '../index';
 
 const MESSAGE_NOT_ENDED =
-  'Match must be ended before you can settle. End the match first, then settle.';
+  'O evento tem de estar terminado antes de anunciar vencedores. Termine o evento primeiro.';
 const MESSAGE_NOT_ENDED_DERIVED =
-  'Match must be ended before you can settle. This event follows the official fixture; when that match ends, this event will show as ended, then you can settle.';
+  'O evento tem de estar terminado antes de anunciar vencedores. Este evento segue o oficial; quando terminar, poderá anunciar vencedores.';
 const MESSAGE_CRITERIA_NOT_READY =
-  'Market is stil active or has not a winner yet. Suspend the market and set a winner before settling.';
+  'O mercado ainda está ativo ou sem vencedor. Suspenda o mercado e defina um vencedor antes de anunciar.';
 
 const formatSettleSummary = (
   criteria: { totalBetsCount?: number; reservedLiability?: number }[]
@@ -24,16 +25,11 @@ const formatSettleSummary = (
   const totalBets = criteria.reduce((sum, c) => sum + (c.totalBetsCount ?? 0), 0);
   const totalPayout = criteria.reduce((sum, c) => sum + (c.reservedLiability ?? 0), 0);
   if (totalBets <= 0 && totalPayout <= 0) {
-    return 'This will settle all markets and pay out winning bets. Confirm?';
+    return 'Isto vai anunciar vencedores em todos os mercados e pagar apostas vencedoras. Confirmar?';
   }
-  const betLabel = totalBets === 1 ? '1 bet' : `${Math.round(totalBets)} bets`;
-  const amount = totalPayout.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  });
-  return `This will process ${betLabel} (${amount}). Confirm?`;
+  const betLabel = totalBets === 1 ? '1 aposta' : `${Math.round(totalBets)} apostas`;
+
+  return `Isto vai processar ${betLabel} (${formatKwanzaAmount(totalPayout)}). Confirmar?`;
 };
 
 export const SettleMatchSheet = ({ visible = false }: ISheet) => {
@@ -69,11 +65,11 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
   if (match.settledAt) {
     return (
       <BottomSheet.ModalConfirmation
-        title="Settle match"
+        title="Anunciar vencedores"
         visible={visible}
         onClose={closeAll}
-        description="This match is already settled."
-        onCancelText="Close"
+        description="Este evento já foi anunciado."
+        onCancelText="Fechar"
       />
     );
   }
@@ -81,11 +77,11 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
   if (match.status !== MatchStatusEnum.ENDED) {
     return (
       <BottomSheet.ModalConfirmation
-        title="Settle match"
+        title="Anunciar vencedores"
         visible={visible}
         onClose={closeAll}
         description={match.type === 'DERIVED' ? MESSAGE_NOT_ENDED_DERIVED : MESSAGE_NOT_ENDED}
-        onCancelText="Close"
+        onCancelText="Fechar"
       />
     );
   }
@@ -93,11 +89,11 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
   if (criteriaLoading) {
     return (
       <BottomSheet.ModalConfirmation
-        title="Settle match"
+        title="Anunciar vencedores"
         visible={visible}
         onClose={closeAll}
-        description="Loading..."
-        onCancelText="Close"
+        description="A carregar..."
+        onCancelText="Fechar"
       >
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="white" />
@@ -109,13 +105,13 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
   if (!isReadyToSettle) {
     return (
       <BottomSheet.ModalConfirmation
-        title="Settle match"
+        title="Anunciar vencedores"
         visible={visible}
         onClose={closeAll}
         description={MESSAGE_CRITERIA_NOT_READY}
         onConfirm={handleSeeCriteria}
-        onConfirmText="See criteria"
-        onCancelText="Close"
+        onConfirmText="Ver mercados"
+        onCancelText="Fechar"
       />
     );
   }
@@ -127,19 +123,20 @@ export const SettleMatchSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet.ModalConfirmation
-      title="Settle match"
+      title="Anunciar vencedores"
       visible={visible}
       onClose={closeAll}
       description={
         settleError
           ? ApiError.isApiError(settleError)
             ? settleError.message
-            : ((settleError as Error)?.message ?? 'Settlement failed. Try again or close.')
+            : ((settleError as Error)?.message ??
+              'Falha ao anunciar vencedores. Tente novamente ou feche.')
           : settleSummary
       }
       onConfirm={handleConfirmSettle}
-      onConfirmText={isSettling ? 'Settling…' : 'Confirm'}
-      onCancelText="Cancel"
+      onConfirmText={isSettling ? 'A anunciar...' : 'Confirmar'}
+      onCancelText="Cancelar"
     />
   );
 };

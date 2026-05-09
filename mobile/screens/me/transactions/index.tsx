@@ -2,8 +2,11 @@ import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import EmptyState from '@/components/empty-state';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
+import ScreenWrapper from '@/components/screen-wrapper';
+import { Spinner } from '@/components/spinner';
 import { colors } from '@/constants/colors';
 import { useGetMyTransactions } from '@/services';
 
@@ -13,16 +16,53 @@ import { formatTransactionDetail } from './utils';
 const TransactionsScreen = () => {
   const { data, isPending, error } = useGetMyTransactions({});
 
+  if (isPending) {
+    return (
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyLight}>
+        <ScreenHeader
+          title="Transações"
+          iconContainerColor={colors.greyMedium}
+          onClose={() => router.back()}
+        />
+        <Spinner fullScreen size="large" color={colors.white} />
+      </ScreenWrapper>
+    );
+  }
+
+  if (error || !data?.data) {
+    return (
+      <ScreenWrapper safeArea={false} backgroundColor={colors.greyLight}>
+        <ScreenHeader
+          title="Transações"
+          iconContainerColor={colors.greyMedium}
+          onClose={() => router.back()}
+        />
+        <EmptyState
+          center
+          title="Sem transações"
+          description="Transações serão exibidas quando houver movimentações na sua conta."
+        />
+      </ScreenWrapper>
+    );
+  }
+
   return (
     <View style={styles.root}>
       <ScreenHeader
-        title="Transactions"
+        title="Transações"
         iconContainerColor={colors.greyMedium}
         onClose={() => router.back()}
       />
 
       <FlatList
         data={data?.data ?? []}
+        ListEmptyComponent={
+          <EmptyState
+            center
+            title="Sem transações"
+            description="Transações serão exibidas quando houver movimentações na sua conta."
+          />
+        }
         renderItem={({ item }) => {
           const { title, amount, icon } = formatTransactionDetail(item.type, item.totalAmount);
           return (

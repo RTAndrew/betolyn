@@ -105,7 +105,7 @@ const ChannelCreateOdds = ({ match, onSave }: { match: IMatch; onSave: () => voi
 
         <ThemedView style={styles.footer}>
           <Button.Root disabled={odds.length === 0} onPress={() => setIsConfirmationVisible(true)}>
-            Seguinte
+            Próximo
           </Button.Root>
         </ThemedView>
       </ThemedView>

@@ -23,7 +23,7 @@ export const RiskManagementStep = ({ data, onChange, setNext, goNext }: RiskProp
 
   const handleNextPress = useCallback(() => {
     if (liability <= 0) {
-      setError('Max reserved liability must be greater than 0');
+      setError('O limite de risco deve ser maior que 0');
       return;
     }
 
@@ -35,7 +35,7 @@ export const RiskManagementStep = ({ data, onChange, setNext, goNext }: RiskProp
 
   useEffect(() => {
     setNext?.({
-      label: 'Next',
+      label: 'Próximo',
       variant: 'solid',
     });
   }, [setNext]);
@@ -50,13 +50,13 @@ export const RiskManagementStep = ({ data, onChange, setNext, goNext }: RiskProp
       <SafeHorizontalView>
         <View style={styles.intro}>
           <ThemedText style={{ color: colors.greyLighter }} type="default">
-            Prevent losses by setting the maximum liability you are willing to reserve for this
-            event. If incoming bets exceed this amount, the event will be suspended automatically.
+            Previna perdas definindo o limite de risco que pretende reservar para este evento. Se as
+            apostas ultrapassarem este valor, o evento será suspenso automaticamente.
           </ThemedText>
         </View>
 
         <NumberInput
-          label="Maximum Reserved Liability"
+          label="Limite de risco"
           value={Number(liability)}
           onChange={handleChange}
           errorMessage={error}

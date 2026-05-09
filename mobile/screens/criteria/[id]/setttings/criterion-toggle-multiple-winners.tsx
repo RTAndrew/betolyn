@@ -25,8 +25,7 @@ const canToggleMultipleWinners = (criterion: ICriterion) => {
 const CriterionToggleMultipleWinners = ({ criterion }: CriterionToggleMultipleOddsProps) => {
   const [state, setState] = useState(criterion.allowMultipleWinners);
 
-  const { mutateAsync: setAllowMultipleWinners, isPending: isUpdatingAllowMultipleWinners } =
-    useSetAllowMultipleWinners();
+  const { mutateAsync: setAllowMultipleWinners } = useSetAllowMultipleWinners();
 
   const handleToggle = async () => {
     setState(!state);
@@ -45,8 +44,8 @@ const CriterionToggleMultipleWinners = ({ criterion }: CriterionToggleMultipleOd
   return (
     <Settings.Item
       onPress={handleToggle}
-      title="Allow multiple winners"
-      subtitle="Multiple outcomes will be chosen as winners."
+      title="Permitir múltiplos vencedores"
+      subtitle="Múltiplas odds serão definidas como vencedoras."
       suffixIcon={
         <Switch
           disabled={!canToggleMultipleWinners(criterion)}

@@ -12,17 +12,17 @@ const AllocateFundsScreen = () => {
   const steps: IWizardStep<ISpaceAllocateState>[] = [
     {
       id: 'allocation',
-      title: 'Allocate Funds',
+      title: 'Alocar fundos',
       defaultData: { amount: 0, memo: '' },
       component: AllocateAmountStep,
       defaultPreviousButtonProps: { visible: false },
     },
     {
       id: 'review',
-      title: 'Review',
+      title: 'Revisão',
       component: AllocateReviewStep,
       defaultData: {},
-      defaultNextButtonProps: { label: 'Finish' },
+      defaultNextButtonProps: { label: 'Concluir' },
     },
   ];
 

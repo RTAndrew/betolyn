@@ -32,25 +32,25 @@ interface ICancelRefundSheetData {
 }
 
 const SUCCESS_TITLE: Record<TEntityType, string> = {
-  criterion: 'The market was cancelled',
-  odd: 'The outcome was cancelled',
-  match: 'The match was cancelled',
+  criterion: 'O mercado foi cancelado',
+  odd: 'A odd foi cancelada',
+  match: 'O evento foi cancelado',
 };
 
 const MAPPED_ENTITY_TYPE: Record<TEntityType, IEntityType> = {
   criterion: {
-    name: 'Market',
-    description: 'This will cancel the market and refund all related bets.',
+    name: 'Mercado',
+    description: 'Isto vai cancelar o mercado e reembolsar todas as apostas relacionadas.',
     showNote: false,
   },
   odd: {
-    name: 'Outcome',
-    description: 'This will cancel the selected outcome and refund all related bets.',
+    name: 'Odd',
+    description: 'Isto vai cancelar a odd selecionada e reembolsar todas as apostas relacionadas.',
     showNote: true,
   },
   match: {
-    name: 'Event',
-    description: 'This will cancel the match and refund all bets placed on it.',
+    name: 'Evento',
+    description: 'Isto vai cancelar o evento e reembolsar todas as apostas feitas nele.',
     showNote: true,
   },
 };
@@ -90,8 +90,8 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
       SheetManager.show('asyncProcessing', {
         payload: {
           successTitle: SUCCESS_TITLE[entityType],
-          loadingTitle: 'Loading',
-          errorTitle: 'Something unexpected happened',
+          loadingTitle: 'A carregar',
+          errorTitle: 'Aconteceu algo inesperado',
           successMessage: '',
           fnPromise: async () => handleVoid(),
           onSuccessClose: () => {
@@ -105,7 +105,7 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
   return (
     <BottomSheet id={`cancelAndRefund-${sheetData?.id}`} onClose={closeAll} visible={visible}>
       <BottomSheet.Header
-        title={`Cancel & Refund - ${data.name}`}
+        title={`Cancelar e reembolsar - ${data.name}`}
         description={sheetData?.name}
         onClose={closeAll}
         onPrevious={goBack}
@@ -124,8 +124,8 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
         {showNote && (
           <AlertMessage.Warning
             style={{ alignSelf: 'stretch', flexGrow: 1 }}
-            title="Risk will be recalculated!"
-            description="You may need to add funds or adjust risk exposure limits."
+            title="O risco será recalculado!"
+            description="Pode ser necessário adicionar fundos ou ajustar os limites de risco para concluir a operação."
           />
         )}
 
@@ -133,14 +133,14 @@ const CancelAndRefundSheet = ({ visible = false }: ISheet) => {
           multiline
           style={{ backgroundColor: colors.greyLight }}
           numberOfLines={4}
-          label="Reason for cancelation (it will be visible to users)"
-          placeholder="Incorrect outcomes, event canceled, data error, etc."
+          label="Motivo do cancelamento (será visível para os utilizadores)"
+          placeholder="Odds incorretas, evento cancelado, erro de dados, etc."
           value={reason}
           onChangeText={setReason}
         />
 
         <Button.Root disabled={!canSubmit} onPress={onSubmit} style={styles.updateScoreButton}>
-          Confirm and refund
+          Confirmar e reembolsar
         </Button.Root>
       </BottomSheet.SafeHorizontalView>
     </BottomSheet>

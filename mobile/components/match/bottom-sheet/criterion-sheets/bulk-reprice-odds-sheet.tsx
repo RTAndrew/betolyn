@@ -26,7 +26,7 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
   };
 
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
-  if (!criterion) throw new Error('Criterion not found');
+  if (!criterion) throw new Error('Mercado não encontrado');
 
   const handleSave = async () => {
     const oddsDTO = criterion.odds.map((odd) => ({
@@ -56,7 +56,7 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
         onClose={closeAll}
         onPrevious={() => goBack()}
         title={criterion.name}
-        description={'Criterion'}
+        description={'Mercado'}
       />
 
       <SafeHorizontalView style={{ flexDirection: 'column', gap: 24 }}>
@@ -81,7 +81,7 @@ export const CriterionBulkRepriceOddsSheet = ({ visible = false }: ISheet) => {
 
       <SafeHorizontalView style={{ marginTop: 32 }}>
         <Button.Root loading={isPending} onPress={handleSave}>
-          Save
+          Salvar
         </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>

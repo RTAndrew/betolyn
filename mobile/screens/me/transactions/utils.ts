@@ -36,15 +36,15 @@ interface ITransactionDetail {
 }
 
 const TRANSACTION_TYPE_TITLES: Partial<Record<TTransactionType, string>> = {
-  BET_PLACEMENT: 'Bet Placed',
-  MATCH_SETTLEMENT: 'Settlement',
-  PLATFORM_FEE_COLLECTION: 'Platform Fee',
-  CHANNEL_WITHDRAW: 'Withdraw',
-  CHANNEL_FUNDING: 'Space Funding',
-  MINT_CREDITS: 'Mint Credits',
-  OUTCOME_VOID: 'Outcome Refund',
-  MARKET_VOID: 'Market Refund',
-  MATCH_VOID: 'Match Refund',
+  BET_PLACEMENT: 'Aposta',
+  MATCH_SETTLEMENT: 'Liquidação',
+  PLATFORM_FEE_COLLECTION: 'Taxa da plataforma',
+  CHANNEL_WITHDRAW: 'Levantamento',
+  CHANNEL_FUNDING: 'Financiamento do espaço',
+  MINT_CREDITS: 'Créditos emitidos',
+  OUTCOME_VOID: 'Reembolso da odd',
+  MARKET_VOID: 'Reembolso do mercado',
+  MATCH_VOID: 'Reembolso do evento',
 };
 
 export const formatTransactionDetail = (
@@ -60,14 +60,16 @@ export const formatTransactionDetail = (
   return { title, icon, amount };
 };
 
-const TRANSACTION_ITEM_TYPE_TITLES: Partial<Record<TTransactionItemType, string>> = {
-  STAKE_ESCROW_LOCK: 'Stake on hold',
-  STAKE_ESCROW_REFUND: 'Stake Refunded',
-  LIABILITY_RESERVE: 'Liability Reserve',
-  WIN_PAYOUT_STAKE: 'Stake Return',
-  WIN_PAYOUT_PROFIT: 'Profit Payout',
-  LOSS_COLLECTION: 'Loss Collection',
-  RESERVE_RELEASE: 'Reserve Release',
+const TRANSACTION_ITEM_TYPE_TITLES: Partial<
+  Record<TTransactionItemType | 'RESERVE_RELEASE', string>
+> = {
+  STAKE_ESCROW_LOCK: 'Stake retida',
+  STAKE_ESCROW_REFUND: 'Stake reembolsada',
+  LIABILITY_RESERVE: 'Reserva de risco',
+  WIN_PAYOUT_STAKE: 'Devolução da stake',
+  WIN_PAYOUT_PROFIT: 'Pagamento do lucro',
+  LOSS_COLLECTION: 'Cobrança da perda',
+  RESERVE_RELEASE: 'Liberação do risco',
 };
 
 export const formatTransactionItemDetail = (
@@ -85,7 +87,7 @@ export const formatTransactionItemDetail = (
   } else if (context === 'user' && transaction.fromAccountType === 'USER_WALLET') {
     isFromViewerAccount = true;
   } else if (!title) {
-    title = 'From balance';
+    title = 'Do saldo';
   }
 
   return {

@@ -19,20 +19,20 @@ const TransactionDetailsTab = ({ transaction }: TransactionDetailsTabProps) => {
   }, [transaction]);
   return (
     <View style={styles.root}>
-      <Settings.ItemGroup title="Details">
-        <Settings.Item title="Type" description={transactionDetail.title} />
+      <Settings.ItemGroup title="Detalhes">
+        <Settings.Item title="Tipo" description={transactionDetail.title} />
         {transaction.referenceName && (
-          <Settings.Item title="Reference" description={transaction.referenceName} />
+          <Settings.Item title="Referência" description={transaction.referenceName} />
         )}
-        <Settings.Item title="Date" description={transaction.createdAt} />
+        <Settings.Item title="Data" description={transaction.createdAt} />
 
         {transaction.type === 'TRANSFER' && (
-          <Settings.Item title="Sender" description={transaction.createdBy?.username} />
+          <Settings.Item title="Remetente" description={transaction.createdBy?.username} />
         )}
       </Settings.ItemGroup>
 
       {transaction.memo && (
-        <Settings.ItemGroup title="Memo">
+        <Settings.ItemGroup title="Observação">
           <Settings.Item title={<ThemedText> {transaction.memo} </ThemedText>} />
         </Settings.ItemGroup>
       )}

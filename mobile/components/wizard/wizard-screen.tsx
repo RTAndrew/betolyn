@@ -28,14 +28,14 @@ interface WizardScreenProps<TState extends object = object> {
 }
 
 const DEFAULT_NEXT_BUTTON_PROPS: IWizardButtonProps = {
-  label: 'Next',
+  label: 'Próximo',
   visible: true,
 };
 
 const DEFAULT_PREVIOUS_BUTTON_PROPS: IWizardButtonProps = {
   visible: true,
   variant: 'text',
-  label: 'Previous',
+  label: 'Anterior',
 };
 
 export const WizardScreen = <TState extends object>({
@@ -67,12 +67,12 @@ export const WizardScreen = <TState extends object>({
 
   usePreventRemove(isDirty, function preventAccidentalLeave({ data }) {
     Alert.alert(
-      'Discard changes?',
-      'You have unsaved changes. If you leave now, they will be lost.',
+      'Descartar alterações?',
+      'Tem alterações por salvar. Se sair agora, serão perdidas.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Cancelar', style: 'cancel' },
         {
-          text: 'Discard',
+          text: 'Descartar',
           style: 'destructive',
           onPress: () => navigation.dispatch(data.action),
         },
@@ -191,7 +191,7 @@ export const WizardScreen = <TState extends object>({
         <View style={styles.body}>
           <SafeHorizontalView>
             <ThemedText style={styles.stepDescription}>
-              Step {activeStepNumber} of {steps.length}
+              Passo {activeStepNumber} de {steps.length}
             </ThemedText>
             <ThemedText style={styles.title} type="title">
               {activeStep.title}

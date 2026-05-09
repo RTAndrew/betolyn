@@ -82,28 +82,28 @@ const PlaceBet = () => {
         {isProcessing && (
           <View style={styles.processingContainer}>
             <ActivityIndicator size="large" color="white" />
-            <ThemedText type="title">Processing bets</ThemedText>
+            <ThemedText type="title">A processar apostas</ThemedText>
             {message && <ThemedText>{message}</ThemedText>}
           </View>
         )}
 
         {isSuccess && (
           <View style={styles.successContainer}>
-            <ThemedText type="title">Bet placed successfully</ThemedText>
-            <ThemedText>Happy betting!</ThemedText>
+            <ThemedText type="title">Aposta submetida com sucesso</ThemedText>
+            <ThemedText>Boas apostas!</ThemedText>
 
             <Button.Root style={styles.closeButton} onPress={() => router.back()}>
-              Close
+              Fechar
             </Button.Root>
           </View>
         )}
 
         {ApiError.isApiError(error) && (
           <View style={styles.successContainer}>
-            <ThemedText type="title">Not Possible to Place Bet</ThemedText>
-            <ThemedText>See the bet slip for more details</ThemedText>
+            <ThemedText type="title">Não foi possível fazer a aposta</ThemedText>
+            <ThemedText>Consulte o boletim para mais detalhes</ThemedText>
             <Button.Root style={styles.closeButton} onPress={() => router.back()}>
-              Close
+              Fechar
             </Button.Root>
           </View>
         )}

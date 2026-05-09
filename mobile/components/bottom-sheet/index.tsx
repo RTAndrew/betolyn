@@ -94,8 +94,8 @@ interface ModalConfirmationProps extends BottomSheetProps {
 }
 
 const ModalConfirmation = ({
-  onConfirmText = 'Confirm',
-  onCancelText = 'Cancel',
+  onConfirmText = 'Confirmar',
+  onCancelText = 'Cancelar',
   destructive = false,
   visible = true,
   description,

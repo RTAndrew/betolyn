@@ -15,7 +15,7 @@ interface AuthWrapperProps {
 const SignUpDescription = () => {
   return (
     <TouchableWithoutFeedback onPress={() => router.push('/auth/login')}>
-      <ThemedText style={styles.descriptionText}>Possui uma conta? Faça login.</ThemedText>
+      <ThemedText style={styles.descriptionText}>Já tem conta? Inicie sessão.</ThemedText>
     </TouchableWithoutFeedback>
   );
 };
@@ -24,11 +24,11 @@ const LoginDescription = () => {
   return (
     <>
       <TouchableWithoutFeedback onPress={() => router.push('/auth/signup')}>
-        <ThemedText style={styles.descriptionText}>Não possui uma conta? Cadastre-se.</ThemedText>
+        <ThemedText style={styles.descriptionText}>Ainda não tem conta? Registe-se.</ThemedText>
       </TouchableWithoutFeedback>
 
       {/* <TouchableOpacity onPress={() => router.push('/auth/recover-password')}>
-        <ThemedText style={styles.descriptionText}>Recuperar senha</ThemedText>
+        <ThemedText style={styles.descriptionText}>Recuperar palavra-passe</ThemedText>
       </TouchableOpacity> */}
     </>
   );
@@ -49,7 +49,9 @@ const AuthWrapper = ({ children, type = 'signup' }: PropsWithChildren<AuthWrappe
             </View>
 
             <View style={styles.titleWrapper}>
-              <ThemedText type="title">{type === 'signup' ? 'Criar conta' : 'Login'}</ThemedText>
+              <ThemedText type="title">
+                {type === 'signup' ? 'Criar conta' : 'Iniciar sessão'}
+              </ThemedText>
             </View>
             {type === 'signup' ? <SignUpDescription /> : <LoginDescription />}
 

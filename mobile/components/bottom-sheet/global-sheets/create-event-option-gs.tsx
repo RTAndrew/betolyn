@@ -16,14 +16,14 @@ import BottomSheet from '..';
 const options: { type: `${ESpaceCreateEventType}`; label: string; description: string }[] = [
   {
     type: 'auto',
-    label: 'Use an existing event',
+    label: 'Usar um evento existente',
     description:
-      'Choose a real event and set the rules on top it. The platform will handle teams, scores, and updates automatically.',
+      'Escolha um evento real e defina as regras por cima. A plataforma trata das equipas, resultados e atualizações automaticamente.',
   },
   {
     type: 'manual',
-    label: 'Create a custom event',
-    description: 'Set your own teams, scores, and rules. You control when and how it runs.',
+    label: 'Criar um evento personalizado',
+    description: 'Defina as suas equipas, resultados e regras. Controla quando e como decorre.',
   },
 ];
 
@@ -49,7 +49,7 @@ const CreateEventOptionGS = ({ payload }: SheetProps<'createEventOptionSelection
   return (
     <BottomSheet>
       <SafeHorizontalView>
-        <ThemedText type="title">How do you want to create this event?</ThemedText>
+        <ThemedText type="title">Como pretende criar este evento?</ThemedText>
 
         <View style={styles.optionList}>
           {options.map((option) => (
@@ -78,7 +78,7 @@ const CreateEventOptionGS = ({ payload }: SheetProps<'createEventOptionSelection
         </View>
 
         <Button.Root onPress={() => handleCreateEvent()} style={styles.button}>
-          Create Match
+          Criar evento
         </Button.Root>
       </SafeHorizontalView>
     </BottomSheet>

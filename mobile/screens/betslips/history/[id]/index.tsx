@@ -53,18 +53,18 @@ const TransactionDetailsTab = ({
   return (
     <View style={styles.transactionBody}>
       <Settings.ItemGroup>
-        <Settings.Item title="Type" suffixIcon={false} description={type.toUpperCase()} />
-        <Settings.Item title="Created At" suffixIcon={false} description={bet.createdAt} />
+        <Settings.Item title="Tipo" suffixIcon={false} description={type.toUpperCase()} />
+        <Settings.Item title="Criado em" suffixIcon={false} description={bet.createdAt} />
       </Settings.ItemGroup>
 
-      <Settings.ItemGroup title="Bet">
+      <Settings.ItemGroup title="Aposta">
         <Settings.Item
-          title="Outcome Price"
+          title="Preço da odd"
           suffixIcon={false}
           description={formatOddValue(bet.oddValueAtPlacement)}
         />
         <Settings.Item
-          title="Stake"
+          title="Valor apostado"
           suffixIcon={false}
           description={formatKwanzaAmount(bet.stake)}
         />
@@ -75,21 +75,21 @@ const TransactionDetailsTab = ({
               ? formatKwanzaAmount(bet.potentialPayout - bet.stake)
               : formatKwanzaAmount(bet.potentialPayout)
           }
-          title={bet.status == 'WON' ? 'Payout' : 'Potential Payout'}
+          title={bet.status == 'WON' ? 'Pagamento' : 'Pagamento potencial'}
         />
       </Settings.ItemGroup>
 
       <BetSlipItemOddReference oddId={bet.oddId} />
 
       {bet.match && (
-        <Settings.ItemGroup title="Linked Reference" innerStyle={styles.linkedReference}>
+        <Settings.ItemGroup title="Referência" innerStyle={styles.linkedReference}>
           <SafeHorizontalView>
             <BetCard match={bet.match} disableControls />
           </SafeHorizontalView>
         </Settings.ItemGroup>
       )}
 
-      <TransactionScreenGeneric.TransactionId title="Bet ID" id={bet.id} />
+      <TransactionScreenGeneric.TransactionId title="ID da aposta" id={bet.id} />
     </View>
   );
 };
@@ -101,7 +101,7 @@ const BetSlipIdScreen = ({ id, type }: BetSlipIdScreenProps) => {
   const statusTag = useMemo(() => {
     if (bet?.status === 'WON') {
       const profit = (bet?.stake / bet?.potentialPayout) * 100;
-      return <Tag.Active title={`Won +${profit.toFixed(0)}%`} />;
+      return <Tag.Active title={`Ganhou +${profit.toFixed(0)}%`} />;
     }
 
     return getBetSlipItemStatusTag(bet?.status ?? 'PENDING');
@@ -114,7 +114,7 @@ const BetSlipIdScreen = ({ id, type }: BetSlipIdScreenProps) => {
   if (error || !bet) {
     return (
       <Root backgroundColor={colors.greyLight}>
-        <EmptyState.NoSearch center title="Bet not found" description="" />
+        <EmptyState.NoSearch center title="Aposta não encontrada" />
       </Root>
     );
   }
@@ -132,7 +132,7 @@ const BetSlipIdScreen = ({ id, type }: BetSlipIdScreenProps) => {
         tabs={[
           {
             id: 'details',
-            title: 'Details',
+            title: 'Detalhes',
             content: <TransactionDetailsTab bet={bet!} type={type} />,
           },
         ]}

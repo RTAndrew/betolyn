@@ -20,16 +20,16 @@ export const SuspendAllMarketsSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet.ModalConfirmation
-      title="Suspend all markets?"
+      title="Suspender todos os mercados?"
       visible={visible}
       onClose={closeAll}
       onConfirm={handleConfirm}
-      onConfirmText={isPending ? 'Suspending…' : 'Suspend all'}
+      onConfirmText={isPending ? 'A suspender...' : 'Suspender tudo'}
     >
       <View style={styles.container}>
         <ThemedText style={styles.description}>
-          This suspends every active or draft market on this match. Users will not be able to place
-          new bets on those markets until you take further action.
+          Isto suspende todos os mercados ativos ou em rascunho deste evento. Os utilizadores não
+          poderão fazer novas apostas nesses mercados até nova ação.
         </ThemedText>
       </View>
     </BottomSheet.ModalConfirmation>

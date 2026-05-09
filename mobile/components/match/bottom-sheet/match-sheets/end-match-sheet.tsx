@@ -33,18 +33,17 @@ export const EndMatchSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet.ModalConfirmation
-      title="Are you sure you want to end this match?"
+      title="Tem a certeza de que deseja terminar este evento?"
       visible={visible}
       onClose={closeAll}
       onConfirm={handleConfirm}
-      onConfirmText={isPending ? 'Ending match...' : 'End match'}
+      onConfirmText={isPending ? 'A terminar evento...' : 'Terminar evento'}
       // description="If you end the match, other users will no longer be able to bet on it."
     >
       <View style={styles.container}>
         <Switch
-          label="Suspend all criteria for this match"
-          description="All markets for this match will be suspended immediately, preventing any
-      new bets."
+          label="Suspender todos os mercados deste evento?"
+          description="Todos os mercados deste evento serão suspensos imediatamente, impedindo novas apostas."
           value={suspendAllCriteria}
           onChange={(value) => setSuspendAllCriteria(value)}
         />

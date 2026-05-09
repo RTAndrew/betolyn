@@ -48,11 +48,11 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
     const newErrors: FormErrors = {};
 
     if (!name?.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = 'Nome obrigatório';
     }
 
     if (!value || value <= 0) {
-      newErrors.value = 'Outcome value must be greater than 0';
+      newErrors.value = 'O preço da odd deve ser maior que 0';
     }
 
     setErrors(newErrors);
@@ -95,19 +95,19 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
   };
 
   return (
-    <BottomSheet gestureEnabled visible={visible} onClose={onClose} title="Add outcome">
+    <BottomSheet gestureEnabled visible={visible} onClose={onClose} title="Adicionar odd">
       <SafeHorizontalView style={styles.formSheet}>
         <TextInput
-          label="Name"
+          label="Nome"
           value={name}
           onChangeText={updateName}
           errorMessage={errors.name}
-          placeholder="e.g. Home, Draw, Away"
+          placeholder="ex.: Casa, Empate, Fora"
           style={{ backgroundColor: colors.greyMedium }}
         />
 
         <NumberInput
-          label="Outcome value"
+          label="Preço da odd"
           value={Number(value)}
           onChange={updateValue}
           errorMessage={errors.value}
@@ -116,14 +116,14 @@ const FormSheet = ({ onSubmit, visible = true, onClose, outcome, onRemove }: For
         <Switch
           value={isDraft}
           onChange={setIsDraft}
-          label="Create as a draft?"
-          description="Draft outcomes are not visible to users until they are published."
+          label="Criar como rascunho?"
+          description="Odds em rascunho não ficam visíveis até serem publicadas."
         />
 
-        <Button.Root onPress={handleCreateOdd}>{outcome ? 'Update' : 'Add'}</Button.Root>
+        <Button.Root onPress={handleCreateOdd}>{outcome ? 'Atualizar' : 'Adicionar'}</Button.Root>
         {outcome && (
           <Button.Root variant="text" onPress={handleRemoveOdd}>
-            Remove
+            Remover
           </Button.Root>
         )}
       </SafeHorizontalView>
@@ -138,7 +138,7 @@ export const AddOutcomeStep = ({ data, onChange, setNext, goNext }: OutcomesProp
 
   useWizardPrimaryAction(() => {
     if (Object.keys(outcomes).length === 0) {
-      setListError('Add at least one outcome');
+      setListError('Adicione pelo menos uma odd');
       return;
     }
     setListError(undefined);
@@ -148,7 +148,7 @@ export const AddOutcomeStep = ({ data, onChange, setNext, goNext }: OutcomesProp
 
   useEffect(() => {
     setNext?.({
-      label: 'Next',
+      label: 'Próximo',
       variant: 'solid',
     });
   }, [setNext]);

@@ -30,18 +30,18 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
 
   if (isPending) return <CriteriaListSkeleton />;
 
-  if (error || !data) return <ThemedText>Error loading criteria</ThemedText>;
+  if (error || !data) return <ThemedText>Erro ao carregar mercados</ThemedText>;
 
   const criteria = data.data;
   if (criteria.length === 0) return <></>;
 
   return (
-    <Settings.ItemGroup title="Markets">
+    <Settings.ItemGroup title="Mercados">
       {criteria.map((criterion) => (
         <Settings.Item
           key={criterion.id}
           title={criterion.name}
-          subtitle={'No winner'}
+          subtitle={'Sem vencedor'}
           description={criterion.odds.length.toString()}
           onPress={() => router.push(`/criteria/${criterion.id}/settings`)}
         />

@@ -29,7 +29,11 @@ export default function HomeScreen() {
   if (error || !data) {
     return (
       <ScreenWrapper backgroundColor={colors.greyLight}>
-        <EmptyState.NoSearch center title="No matches found" description="Please try again later" />
+        <EmptyState.NoSearch
+          center
+          title="Nenhum evento encontrado"
+          description="Tente novamente mais tarde"
+        />
       </ScreenWrapper>
     );
   }

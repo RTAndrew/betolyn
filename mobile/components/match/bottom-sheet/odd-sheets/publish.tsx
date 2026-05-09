@@ -1,6 +1,7 @@
 import React from 'react';
 
 import BottomSheet from '@/components/bottom-sheet';
+import { ThemedText } from '@/components/ThemedText';
 import { usePublishOdd } from '@/services/odds/odd-mutation';
 import { CriterionStatusEnum } from '@/types';
 
@@ -15,7 +16,7 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
   const { mutateAsync: publishOdd } = usePublishOdd();
 
   if (!currentSheet?.data) {
-    return <> Error: No odd data found </>;
+    return <ThemedText> Nenhuma odd encontrada </ThemedText>;
   }
 
   const odd = currentSheet?.data as IOddSheetData;
@@ -34,14 +35,14 @@ export const PublishOddSheet = ({ visible = false }: ISheet) => {
     <BottomSheet.ModalConfirmation
       visible={visible}
       onClose={closeAll}
-      onConfirmText={'Publish'}
+      onConfirmText={'Publicar'}
       onConfirm={criterionActive ? handleConfirm : undefined}
-      onCancelText="Cancel"
-      title="Publish this odd?"
+      onCancelText="Cancelar"
+      title="Publicar esta odd?"
       description={
         criterionActive
-          ? 'Users will be able to see and bet on it.'
-          : 'The criterion must be ACTIVE before this odd can be published.'
+          ? 'Os utilizadores poderão vê-la e apostar nela.'
+          : 'O mercado tem de estar ATIVO antes de esta odd poder ser publicada.'
       }
     />
   );

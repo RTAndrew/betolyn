@@ -97,7 +97,7 @@ export const GenericSelectWinningOddsSheet = ({
       <SafeHorizontalView style={styles.root}>
         {!criterion.allowMultipleWinners && (
           <ThemedText style={styles.warningText}>
-            *Only one winner is allowed for this criterion
+            *Apenas um vencedor é permitido para este mercado
           </ThemedText>
         )}
 

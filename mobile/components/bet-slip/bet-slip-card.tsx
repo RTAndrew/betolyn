@@ -1,6 +1,6 @@
-import { router } from 'expo-router';
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 import { MatchEventSmallCard } from '@/components/match-event-small-card';
 import { BetSlipCardSkeleton } from '@/components/skeleton/bet-slip-card-skeleton';
@@ -16,11 +16,7 @@ interface BetSlipCardProps {
   bets: IBet[];
 }
 
-const BetSlipCard = ({
-  matchId,
-  bets,
-  children: _children,
-}: PropsWithChildren<BetSlipCardProps>) => {
+const BetSlipCard = ({ matchId, bets }: BetSlipCardProps) => {
   const { data, isPending, error } = useGetMatch({ matchId });
   const match = data?.data;
 
@@ -29,12 +25,15 @@ const BetSlipCard = ({
   }
 
   if (!match || error) {
-    return <ThemedText>Error loading match</ThemedText>;
+    return <ThemedText>Erro ao carregar evento</ThemedText>;
   }
 
   return (
     <View>
-      <MatchEventSmallCard match={match} onPress={() => router.push(`/matches/${matchId}`)} />
+      <MatchEventSmallCard
+        match={match}
+        onPress={() => SheetManager.show('match', { payload: { matchId } })}
+      />
 
       <View style={styles.body}>
         {bets.map((bet, idx) => (

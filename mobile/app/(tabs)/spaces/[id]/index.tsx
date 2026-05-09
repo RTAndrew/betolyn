@@ -109,19 +109,19 @@ const SpaceId = () => {
       return (
         <EmptyState.NoSearch
           center
-          title="Could not load events."
-          description="Please try again later."
+          title="Não foi possível carregar eventos."
+          description="Tente novamente mais tarde."
         />
       );
     }
     return (
       <EmptyState.NoSearch
         center
-        title="No event was found"
+        title="Nenhum evento encontrado"
         description={
           canCreateEvents
-            ? 'Create the first event and turn your community more engaged'
-            : 'The events will appear here once the admin creates them'
+            ? 'Crie o primeiro evento e aumente o engajamento da sua comunidade'
+            : 'Os eventos aparecerão aqui quando o administrador os criar'
         }
       >
         {canCreateEvents && (
@@ -134,7 +134,7 @@ const SpaceId = () => {
               })
             }
           >
-            Create event
+            Criar evento
           </Button.Root>
         )}
       </EmptyState.NoSearch>

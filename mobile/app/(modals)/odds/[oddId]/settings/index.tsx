@@ -74,10 +74,11 @@ const OddSettings = () => {
     );
   }
 
-  if (metricsError || !metricsData || matchError) return <ThemedText>Error loading odd</ThemedText>;
+  if (metricsError || !metricsData || matchError)
+    return <ThemedText>Erro ao carregar odd</ThemedText>;
   const metrics = metricsData.data;
   const match = matchData?.data;
-  if (!metrics || !odd || !match) return <ThemedText>Odd not found</ThemedText>;
+  if (!metrics || !odd || !match) return <ThemedText>Odd não encontrada</ThemedText>;
 
   const marketSharePercentage = Math.round(metrics.marketShare);
 
@@ -108,7 +109,7 @@ const OddSettings = () => {
               }
               bottomLabel={
                 <ThemedText type="defaultSemiBold" style={{ color: colors.white }}>
-                  {marketSharePercentage}% Market Share
+                  {marketSharePercentage}% Quota do mercado
                 </ThemedText>
               }
             />
@@ -120,15 +121,15 @@ const OddSettings = () => {
                   ? [{ title: 'P/L', description: formatKNumber(metrics.profitAndLosses, true) }]
                   : []),
                 {
-                  title: 'Avg. Stake',
+                  title: 'Média de aposta',
                   description: formatKNumber(metrics.averageStake, true),
                 },
                 {
-                  title: 'Bets',
+                  title: 'Apostas',
                   description: String(metrics.totalBetsCount),
                 },
                 {
-                  title: 'Vol.',
+                  title: 'Volume',
                   description: formatKNumber(metrics.totalOddVolume, true),
                 },
               ]}
@@ -137,41 +138,40 @@ const OddSettings = () => {
 
           <Settings.ItemGroup>
             <Settings.Item
-              title={
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 0 }}>
-                  <ThemedText type="defaultSemiBold" style={{ color: colors.complementary }}>
-                    {' '}
-                    {odd.value}{' '}
-                  </ThemedText>
-                  <ThemedText>{'-'}</ThemedText>
-                  <ThemedText type="defaultSemiBold"> {odd.name} </ThemedText>
-                </View>
-              }
-              subtitle="Outcome"
-              description={getOddStatusTag(odd.status)}
-              suffixIcon={odd.isWinner && <Trophy />}
-            />
-
-            <Settings.Item
-              title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
-              subtitle="Event"
-              description={getMatchStatusTag(match.status, Boolean(match.settledAt))}
-              onPress={() => SheetManager.show('match', { payload: { matchId: match.id } })}
-            />
-
-            <Settings.Item
-              title={odd.criterion.name}
-              subtitle="Market"
-              description={getOddStatusTag(odd.criterion.status)}
-              onPress={() => router.push(`/criteria/${odd.criterion.id}/settings`)}
+              title="Odd vencedora"
+              description={odd.isWinner ? 'Sim' : 'Não'}
+              suffixIcon={null}
             />
           </Settings.ItemGroup>
 
           <Settings.ItemGroup>
             <Settings.Item
-              title="Winning Outcome"
-              description={odd.isWinner ? 'Yes' : 'No'}
-              suffixIcon={null}
+              title={
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 0 }}>
+                  <ThemedText type="defaultSemiBold" style={{ color: colors.complementary }}>
+                    {odd.value}
+                  </ThemedText>
+                  <ThemedText>{'-'}</ThemedText>
+                  <ThemedText type="defaultSemiBold"> {odd.name} </ThemedText>
+                </View>
+              }
+              subtitle="Odd"
+              description={getOddStatusTag(odd.status)}
+              suffixIcon={odd.isWinner && <Trophy />}
+            />
+
+            <Settings.Item
+              title={odd.criterion.name}
+              subtitle="Mercado"
+              description={getOddStatusTag(odd.criterion.status)}
+              onPress={() => router.push(`/criteria/${odd.criterion.id}/settings`)}
+            />
+
+            <Settings.Item
+              title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
+              subtitle="Evento"
+              description={getMatchStatusTag(match.status, Boolean(match.settledAt))}
+              onPress={() => SheetManager.show('match', { payload: { matchId: match.id } })}
             />
           </Settings.ItemGroup>
         </SafeHorizontalView>

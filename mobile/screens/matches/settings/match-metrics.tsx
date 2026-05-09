@@ -52,6 +52,7 @@ const MatchMetrics = ({ matchId, style }: MatchMetricsProps) => {
         strokeWidth={15}
         segments={[
           { value: riskPercent, color: riskColor },
+          // @ts-ignore
           { value: 100 - riskPercent, color: hexToRgba(riskColor, 0.5) },
         ]}
         label={
@@ -78,15 +79,15 @@ const MatchMetrics = ({ matchId, style }: MatchMetricsProps) => {
               ]
             : []),
           {
-            title: 'Criteria',
+            title: 'Mercados',
             description: String(totalCriteriaCount ?? 0),
           },
           {
-            title: 'Bets',
+            title: 'Apostas',
             description: formatKNumber(totalBetCount ?? 0),
           },
           {
-            title: 'Vol.',
+            title: 'Volume',
             description: formatKNumber(totalVolume, true),
           },
         ]}

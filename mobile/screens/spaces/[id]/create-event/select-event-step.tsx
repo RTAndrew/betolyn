@@ -34,7 +34,7 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
 
   const handleNextPress = useCallback(() => {
     if (!data?.id) {
-      setListError('Select a match to continue');
+      setListError('Selecione um evento para continuar');
       return;
     }
 
@@ -47,7 +47,7 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
 
   useEffect(() => {
     setNext?.({
-      label: 'Next',
+      label: 'Próximo',
       variant: 'solid',
       visible: Boolean(data?.id),
     });
@@ -63,7 +63,7 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
       <SafeHorizontalView style={styles.flex}>
         <TextInput
           editable={false}
-          placeholder="Search"
+          placeholder="Pesquisar"
           style={styles.searchInput}
           placeholderTextColor={colors.greyLighter50}
         />
@@ -80,8 +80,8 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
         <EmptyState.NoSearch
           center
           color={colors.greyLight}
-          title="Could not load events."
-          description="Please, try again later."
+          title="Não foi possível carregar eventos."
+          description="Tente novamente mais tarde."
         />
       </SafeHorizontalView>
     );
@@ -91,7 +91,7 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
     <View style={styles.flex}>
       <SafeHorizontalView>
         <TextInput
-          placeholder="e.g. Barcelona vs Real Madrid"
+          placeholder="ex.: Barcelona vs Real Madrid"
           value={searchQuery ?? ''}
           style={styles.searchInput}
           onChangeText={setSearchQuery}
@@ -114,8 +114,8 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
           <EmptyState.NoSearch
             center
             color={colors.greyLight}
-            title="No events found."
-            description="Please, try a different search."
+            title="Nenhum evento encontrado."
+            description="Tente uma pesquisa diferente."
           />
         }
         renderItem={({ item }) => {

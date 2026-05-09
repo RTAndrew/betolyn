@@ -16,7 +16,7 @@ const BetSlipItemOddReference = ({ oddId }: BetSlipItemOddReferenceProps) => {
 
   const odd = data?.data;
   return (
-    <Settings.ItemGroup title="Market & Outcome">
+    <Settings.ItemGroup title="Mercado e odd">
       <Settings.Item
         title={odd.criterion.name}
         description={odd.name}

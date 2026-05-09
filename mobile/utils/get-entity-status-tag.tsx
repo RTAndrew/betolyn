@@ -1,4 +1,3 @@
-import { TrophyLocked } from '@/components/icons';
 import Tag from '@/components/tags';
 import { colors } from '@/constants/colors';
 import { CriterionStatusEnum, EOddStatus, IBetSlipItemStatus, MatchStatusEnum } from '@/types';
@@ -7,22 +6,18 @@ import { firstLetterUppercase } from './first-letter-uppercase';
 import { hexToRgba } from './hex-rgba';
 
 export const getMatchStatusTag = (status?: `${MatchStatusEnum}`, settled = false) => {
-  if (settled)
-    return (
-      <Tag
-        icon={<TrophyLocked width={18} height={18} />}
-        color={colors.greyLighter}
-        title="Settled"
-      />
-    );
+  if (settled) return <Tag.Settled />;
 
   if (!status) return <></>;
 
   switch (status) {
     case 'LIVE':
+    case 'PAUSED': // it's intentional to be the same
       return <Tag.Live />;
     case 'ENDED':
-      return <Tag color={colors.greyLighter} title="Finished" />;
+      return <Tag color={colors.greyLighter} title="Terminado" />;
+    case 'SCHEDULED':
+      return <Tag color={colors.greyLighter} title="Agendado" />;
     default:
       return <Tag color={colors.greyLighter} title={firstLetterUppercase(status)} />;
   }
@@ -35,18 +30,18 @@ export const getOddStatusTag = (status?: `${EOddStatus}`) => {
     case 'ACTIVE':
       return <Tag.Active />;
     case 'SUSPENDED':
-      return <Tag.Pending title="Suspended" />;
+      return <Tag.Pending title="Suspenso" />;
     case 'VOID':
       return (
         <Tag
           textColor={colors.secondary}
           backgroundColor={hexToRgba(colors.secondary, 0.12)}
           borderColor={hexToRgba(colors.secondary, 0.3)}
-          title="Cancelled"
+          title="Cancelado"
         />
       );
     case 'DRAFT':
-      return <Tag color={colors.greyLighter} title="Draft" />;
+      return <Tag color={colors.greyLighter} title="Rascunho" />;
     default:
       return <Tag color={colors.greyLighter} title={firstLetterUppercase(status)} />;
   }
@@ -59,18 +54,18 @@ export const getCriterionStatusTag = (status?: `${CriterionStatusEnum}`) => {
     case 'ACTIVE':
       return <Tag.Active />;
     case 'SUSPENDED':
-      return <Tag.Pending title="Suspended" />;
+      return <Tag.Pending title="Suspenso" />;
     case 'VOID':
       return (
         <Tag
           textColor={colors.secondary}
           backgroundColor={hexToRgba(colors.secondary, 0.12)}
           borderColor={hexToRgba(colors.secondary, 0.3)}
-          title="Cancelled"
+          title="Cancelado"
         />
       );
     case 'DRAFT':
-      return <Tag color={colors.greyLighter} title="Draft" />;
+      return <Tag color={colors.greyLighter} title="Rascunho" />;
   }
 };
 
@@ -79,10 +74,10 @@ export const getBetSlipItemStatusTag = (status: `${IBetSlipItemStatus}`) => {
     case 'PENDING':
       return <Tag.Pending />;
     case 'WON':
-      return <Tag.Active title="Won" />;
+      return <Tag.Active title="Ganhou" />;
     case 'LOST':
-      return <Tag color={colors.secondary} title="Lost" />;
+      return <Tag color={colors.secondary} title="Perdeu" />;
     case 'VOIDED':
-      return <Tag color={colors.greyLighter} title="Voided" />;
+      return <Tag color={colors.greyLighter} title="Cancelado" />;
   }
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Button } from '@/components/button';
+import { ThemedText } from '@/components/ThemedText';
 import { IWinningOutcome, useSelectWinningOutcomes } from '@/services';
 import { IMatchCriteriaResponse } from '@/services/matches/matches-services';
 
@@ -14,7 +15,7 @@ export const CriterionSelectWinningOutcomeSheet = ({ visible = false }: ISheet) 
   const [outcomes, setOutcomes] = useState<IWinningOutcome[]>([]);
 
   if (!currentSheet?.data) {
-    return <> Error: No criterion data found </>;
+    return <ThemedText> Nenhum mercado encontrado </ThemedText>;
   }
 
   const criterion = currentSheet.data as IMatchCriteriaResponse;
@@ -33,12 +34,12 @@ export const CriterionSelectWinningOutcomeSheet = ({ visible = false }: ISheet) 
     <GenericSelectWinningOddsSheet
       visible={visible}
       onClose={closeAll}
-      title="Select Winner"
+      title="Selecionar vencedor"
       criterion={criterion}
       onChange={setOutcomes}
     >
       <Button.Root loading={isPending} onPress={handleSave}>
-        Save
+        Salvar
       </Button.Root>
     </GenericSelectWinningOddsSheet>
   );

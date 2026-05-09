@@ -49,7 +49,7 @@ export const CreateMarketStep = ({
     const newErrors: FormErrors = {};
 
     if (validateForm && !formData.name.trim()) {
-      newErrors.marketName = 'Market name is required';
+      newErrors.marketName = 'O nome do mercado é obrigatório';
     }
 
     setErrors(newErrors);
@@ -75,7 +75,7 @@ export const CreateMarketStep = ({
 
   useEffect(() => {
     setNext?.({
-      label: 'Next',
+      label: 'Próximo',
       variant: 'solid',
     });
   }, [setNext]);
@@ -91,38 +91,38 @@ export const CreateMarketStep = ({
         <View style={styles.formContainer}>
           <View style={{ marginBottom: 16 }}>
             <ThemedText style={{ color: colors.greyLighter }} type="default">
-              Opt for shorter market names that are easier to view and understand (e.g. W, L, D,
-              Home, Away).
+              Opte por nomes de mercado curtos, mais fáceis de ler e compreender (ex.: 1x2,
+              resultado do jogo, total de golos, cartões amarelos).
             </ThemedText>
           </View>
 
           <TextInput
-            label="Market name"
+            label="Nome do mercado"
             value={formData.name}
             style={styles.input}
             errorMessage={errors.marketName}
-            placeholder="e.g. Winner, loser, draw"
+            placeholder="ex.: Vencedor, empate, derrota"
             onChangeText={(text) => updateFormData('name', text)}
           />
 
           <TextInput
             multiline
             numberOfLines={4}
-            label="Description"
+            label="Descrição"
             textAlignVertical="top"
             value={formData.description}
             style={styles.descriptionInput}
             errorMessage={errors.description}
             onChangeText={(text) => updateFormData('description', text)}
-            placeholder="Explain what this market is for, and avoid confusion when managing."
+            placeholder="Explique para que serve este mercado e evite dúvidas na gestão e quando os vencedores forem anunciados."
           />
 
           {showDraft && (
             <Switch
               value={formData.isDraft}
-              label="Create as a draft?"
+              label="Criar como rascunho?"
               onChange={(value) => updateFormData('isDraft', value)}
-              description="Draft outcomes are not visible to users until they are published."
+              description="Odds em rascunho não ficam visíveis até serem publicadas."
             />
           )}
         </View>

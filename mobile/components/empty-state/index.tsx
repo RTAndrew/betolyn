@@ -70,16 +70,13 @@ const NoBetsEmptyState = ({
   return (
     <EmptyState
       {...props}
-      title={title ?? 'No bets found'}
-      description={
-        description ??
-        'You are missing out of the fun. Place a bet, compete with friends and start winning.'
-      }
+      title={title ?? 'Nenhuma aposta encontrada'}
+      description={description ?? 'Um homem sem ficha é um homem sem esperança.'}
       icon={
         <NoSlipsFound width={150} height={150} fill={colors.greyLight} color={colors.greyMedium} />
       }
     >
-      {showButton && <Button.Root onPress={() => router.push('/')}>See events</Button.Root>}
+      {showButton && <Button.Root onPress={() => router.push('/')}>Ver eventos</Button.Root>}
     </EmptyState>
   );
 };
@@ -100,12 +97,12 @@ const NoSearchResults = ({
   return (
     <EmptyState
       {...props}
-      title={title ?? 'No search results found'}
-      description={description ?? 'Try a different search or clear the filters.'}
+      title={title ?? 'Nenhum resultado encontrado'}
+      description={description ?? 'Tente uma pesquisa diferente ou limpe os filtros.'}
       icon={<NoSearchFoundIllustration width={150} height={150} color={color} />}
     >
       {onClearFilters && (
-        <Button.Root onPress={() => onClearFilters?.()}>Clear filters</Button.Root>
+        <Button.Root onPress={() => onClearFilters?.()}>Limpar filtros</Button.Root>
       )}
       {children}
     </EmptyState>

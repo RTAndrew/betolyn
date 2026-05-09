@@ -80,7 +80,7 @@ const Info = () => {
   }
 
   if (error || !data) {
-    return <Text>Error loading space</Text>;
+    return <Text>Erro ao carregar espaço</Text>;
   }
 
   const space = data?.data;
@@ -138,13 +138,13 @@ const Info = () => {
     >
       <SpaceGuard spaceId={id as string}>
         <SafeHorizontalView style={styles.actions}>
-          <Actions title="Withdraw" icon={<DollarEuro width={24} height={24} />} />
+          <Actions title="Levantar fundos" icon={<DollarEuro width={24} height={24} />} />
           <Actions
             onPress={() => router.push(`/(modals)/spaces/${id}/fund`)}
-            title="Allocate funds"
+            title="Alocar fundos"
             icon={<Add width={24} height={24} />}
           />
-          <Actions title="Invite" icon={<UserAdd width={24} height={24} />} />
+          <Actions title="Convidar" icon={<UserAdd width={24} height={24} />} />
         </SafeHorizontalView>
       </SpaceGuard>
 

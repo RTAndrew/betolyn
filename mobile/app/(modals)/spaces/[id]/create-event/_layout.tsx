@@ -10,8 +10,8 @@ const CreateEventLayout = () => {
   return (
     <SpaceGuard
       spaceId={spaceId}
-      title="Only admins can create events"
-      description="You do not have permission to create an event in this space."
+      title="Apenas administradores podem criar eventos"
+      description="Não tem permissão para criar um evento neste espaço."
     >
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import BottomSheet from '@/components/bottom-sheet';
+import { ThemedText } from '@/components/ThemedText';
 import { useSuspendOdd } from '@/services/odds/odd-mutation';
 
 import { useMatchBottomSheet } from '../context';
@@ -12,7 +13,7 @@ export const SuspendOddSheet = ({ visible = false }: ISheet) => {
   const { mutateAsync: suspendOdd, isPending } = useSuspendOdd();
 
   if (!currentSheet?.data) {
-    return <> Error: No odd data found </>;
+    return <ThemedText>Dados da odd não encontrados</ThemedText>;
   }
 
   const odd = currentSheet?.data as IOddSheetData;
@@ -31,10 +32,10 @@ export const SuspendOddSheet = ({ visible = false }: ISheet) => {
       visible={visible}
       onClose={closeAll}
       onConfirm={handleConfirm}
-      onCancelText="Cancel"
-      title="Are you sure you want to suspend this odd?"
-      description="Users will no longer be able to bet on it."
-      onConfirmText={isPending ? 'Suspending...' : 'Suspend'}
+      onCancelText="Cancelar"
+      title="Tem a certeza de que pretende suspender esta odd?"
+      description="Os utilizadores deixarão de poder apostar nela."
+      onConfirmText={isPending ? 'A suspender...' : 'Suspender'}
     />
   );
 };

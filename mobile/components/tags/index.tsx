@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useMemo, type ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
+import { TrophyLocked } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
 import { hexToRgba } from '@/utils/hex-rgba';
 
@@ -15,7 +16,7 @@ const LiveTag = () => (
     style={[styles.root, { borderWidth: 0 }]}
   >
     <PlayFilled width={12} height={12} />
-    <ThemedText style={styles.text}>Live</ThemedText>
+    <ThemedText style={styles.text}>Em direto</ThemedText>
   </LinearGradient>
 );
 
@@ -61,7 +62,7 @@ interface DerivedTagProps extends Pick<TagProps, 'icon'> {
   title?: string;
 }
 
-const ActiveTag = ({ title = 'Active', icon }: DerivedTagProps) => {
+const ActiveTag = ({ title = 'Ativo', icon }: DerivedTagProps) => {
   return (
     <Tag
       icon={icon}
@@ -73,7 +74,7 @@ const ActiveTag = ({ title = 'Active', icon }: DerivedTagProps) => {
   );
 };
 
-const PendingTag = ({ title = 'Pending', icon }: DerivedTagProps) => {
+const PendingTag = ({ title = 'Pendente', icon }: DerivedTagProps) => {
   return (
     <Tag
       icon={icon}
@@ -82,6 +83,12 @@ const PendingTag = ({ title = 'Pending', icon }: DerivedTagProps) => {
       borderColor={'#f3ca4180'}
       backgroundColor="#f3ca411f"
     />
+  );
+};
+
+const SettledTag = ({ title = 'Anunciado', icon }: DerivedTagProps) => {
+  return (
+    <Tag icon={icon ?? <TrophyLocked width={18} height={18} />} title={title} color="#D1D5DB" />
   );
 };
 
@@ -105,5 +112,6 @@ const styles = StyleSheet.create({
 Tag.Live = LiveTag;
 Tag.Active = ActiveTag;
 Tag.Pending = PendingTag;
+Tag.Settled = SettledTag;
 
 export default Tag;

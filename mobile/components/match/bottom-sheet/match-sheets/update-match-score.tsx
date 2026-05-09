@@ -127,23 +127,27 @@ const UpdateMatchScoreSheet = ({ visible = false }: ISheet) => {
 
   return (
     <BottomSheet onClose={closeAll} visible={visible}>
-      <BottomSheet.Header title="Update Match Score" onClose={closeAll} onPrevious={goBack} />
+      <BottomSheet.Header
+        title="Atualizar resultado do evento"
+        onClose={closeAll}
+        onPrevious={goBack}
+      />
       <BottomSheet.SafeHorizontalView style={styles.content}>
         <Team
           score={score.home}
-          name={'Home'}
+          name={'Casa'}
           imageUrl={match.homeTeam.badgeUrl}
           onScoreChange={(value) => handleScoreChange('home', value)}
         />
         <Team
           score={score.away}
-          name={'Away'}
+          name={'Fora'}
           imageUrl={match.awayTeam.badgeUrl}
           onScoreChange={(value) => handleScoreChange('away', value)}
         />
 
         <Button.Root loading={isPending} onPress={handleSubmit} style={styles.updateScoreButton}>
-          Update Score
+          Atualizar resultado
         </Button.Root>
       </BottomSheet.SafeHorizontalView>
     </BottomSheet>

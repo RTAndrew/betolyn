@@ -28,7 +28,7 @@ export const BetCard = ({ bet, border = true, match }: BetCardProps) => {
   }
 
   if (!data || error) {
-    return <ThemedText>Error loading odd</ThemedText>;
+    return <ThemedText>Erro ao carregar odd</ThemedText>;
   }
 
   const odd = data?.data;
@@ -53,12 +53,12 @@ export const BetCard = ({ bet, border = true, match }: BetCardProps) => {
           }
 
           Alert.alert(
-            'Outcome Locked',
-            'The outcome is no longer available. Remove it to continue placing bets.',
+            'Odd bloqueada',
+            'A odd já não está disponível. Remova-a para continuar a apostar.',
             [
-              { text: 'Cancel', style: 'cancel' },
+              { text: 'Cancelar', style: 'cancel' },
               {
-                text: 'Remove',
+                text: 'Remover',
                 style: 'destructive',
                 onPress: () => {
                   betSlipStore.removeOddSlip(match.id, bet.oddId);

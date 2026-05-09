@@ -68,7 +68,7 @@ export const InvitePeople = ({ setNext, onChange, allData, goNext }: InvitePeopl
     onChange(selectedMembers ?? []);
 
     setNext?.({
-      label: selectedMembers.length > 0 ? 'Next' : 'Skip',
+      label: selectedMembers.length > 0 ? 'Próximo' : 'Ignorar',
       variant: 'solid',
     });
   }, [selectedMembers, onChange, setNext]);
@@ -107,7 +107,7 @@ export const InvitePeople = ({ setNext, onChange, allData, goNext }: InvitePeopl
           onChangeText={setSearch}
           value={search ?? undefined}
           containerStyle={styles.searchField}
-          placeholder="Search for username or email"
+          placeholder="Pesquisar pelo nome de utilizador ou email"
           style={{ backgroundColor: colors.greyLight }}
         />
       </SafeHorizontalView>
@@ -144,7 +144,7 @@ export const InvitePeople = ({ setNext, onChange, allData, goNext }: InvitePeopl
         </View>
       ) : isError ? (
         <View style={styles.centered}>
-          <EmptyState title="Could not load users." />
+          <EmptyState title="Não foi possível carregar os utilizadores." />
         </View>
       ) : (
         <FlatList

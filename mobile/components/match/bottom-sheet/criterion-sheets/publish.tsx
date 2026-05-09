@@ -1,6 +1,7 @@
 import React from 'react';
 
 import BottomSheet from '@/components/bottom-sheet';
+import { ThemedText } from '@/components/ThemedText';
 import { IMatchCriteriaResponse } from '@/services';
 import { usePublishCriterion } from '@/services/criteria/criterion-mutation';
 
@@ -12,7 +13,7 @@ export const PublishCriterionSheet = ({ visible = false }: ISheet) => {
   const { mutateAsync: publishCriterion, isPending } = usePublishCriterion();
 
   if (!currentSheet?.data) {
-    return <> Error: No odd data found </>;
+    return <ThemedText> Nenhum mercado encontrado </ThemedText>;
   }
 
   const criterion = currentSheet?.data as IMatchCriteriaResponse;
@@ -27,10 +28,10 @@ export const PublishCriterionSheet = ({ visible = false }: ISheet) => {
       visible={visible}
       onClose={closeAll}
       onConfirm={handleConfirm}
-      onCancelText="Discard"
-      title="Publish the market"
-      description="The market will be published, and users will be able to bet on it."
-      onConfirmText={isPending ? 'Publishing...' : 'Publish'}
+      onCancelText="Descartar"
+      title="Publicar mercado"
+      description="O mercado será publicado e os utilizadores poderão apostar nele."
+      onConfirmText={isPending ? 'A publicar...' : 'Publicar'}
     />
   );
 };

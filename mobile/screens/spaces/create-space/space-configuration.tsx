@@ -53,7 +53,7 @@ export const SpaceConfiguration = ({
   const handleCreateSpace = useCallback(async () => {
     const newErrors: FormErrors = {};
     if (!formData.name.trim()) {
-      newErrors.name = 'Please, enter a name for your space';
+      newErrors.name = 'Introduza um nome para o seu espaço';
     }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -61,10 +61,10 @@ export const SpaceConfiguration = ({
     }
 
     runAsyncSubmit?.({
-      successTitle: 'Space Created',
-      loadingTitle: 'Creating Space',
-      errorTitle: 'Error Creating Space',
-      successMessage: 'You can now create events and invite more members to grow your community',
+      successTitle: 'Espaço criado',
+      loadingTitle: 'A criar espaço',
+      errorTitle: 'Erro ao criar espaço',
+      successMessage: 'Já pode criar eventos e convidar mais membros para aumentar a comunidade',
       onSuccessClose: (fnResult) => {
         const result = fnResult as ApiFnReturnType<typeof createSpace>;
         if (!result || !result.data) return;
@@ -88,7 +88,7 @@ export const SpaceConfiguration = ({
 
   useEffect(() => {
     setNext?.({
-      label: 'Create Space',
+      label: 'Criar espaço',
       variant: 'solid',
     });
   }, [setNext]);
@@ -103,26 +103,26 @@ export const SpaceConfiguration = ({
       <SafeHorizontalView>
         <View style={styles.sections}>
           <TextInput
-            label="Name"
+            label="Nome"
             style={styles.input}
             value={formData.name}
             errorMessage={errors.name}
-            placeholder="e.g. My Space"
+            placeholder="ex.: Amigos de futebol"
             onChangeText={(text) => handleFieldChange('name', text)}
           />
 
           <TextInput
-            label="Description"
+            label="Descrição"
             style={styles.input}
             value={formData.description}
             errorMessage={errors.description}
-            placeholder="e.g. Weeked football"
+            placeholder="ex.: Futebol de fim de semana"
             onChangeText={(text) => handleFieldChange('description', text)}
           />
 
           {members.length > 0 && (
             <Settings.ItemGroup
-              title={`${members.length} Member${members.length === 1 ? '' : 's'}`}
+              title={`${members.length} membro${members.length === 1 ? '' : 's'}`}
             >
               {members.map((m) => (
                 <Settings.Item

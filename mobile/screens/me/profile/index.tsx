@@ -33,32 +33,36 @@ const AuthenticatedUserProfile = () => {
 
       <SafeHorizontalView style={styles.content}>
         <Settings.ItemGroup
-          title="Balance"
+          title="Saldo"
           description={{
-            title: 'See transactions',
+            title: 'Ver transações',
             onPress: () => router.push('/(modals)/transactions'),
           }}
         >
           <Settings.Item
-            title="Available"
+            title="Disponível"
             suffixIcon={false}
             description={formatKwanzaAmount(balance?.available)}
           />
           <Settings.Item
-            title="Reserved"
+            title="Reservado"
             suffixIcon={false}
             description={formatKwanzaAmount(balance?.reserved)}
           />
         </Settings.ItemGroup>
 
-        <Settings.ItemGroup title="Account">
-          <Settings.Item title="Account ID" suffixIcon={false} description={user.id} />
-          <Settings.Item title="Username" suffixIcon={false} description={user.username} />
+        <Settings.ItemGroup title="Conta">
+          <Settings.Item title="ID da conta" suffixIcon={false} description={user.id} />
+          <Settings.Item
+            title="Nome de utilizador"
+            suffixIcon={false}
+            description={user.username}
+          />
           <Settings.Item title="Email" suffixIcon={false} description={user.email} />
         </Settings.ItemGroup>
 
         <Button.Root onPress={() => authStore.handleLogout()} style={styles.logoutButton}>
-          Logout
+          Terminar sessão
         </Button.Root>
       </SafeHorizontalView>
     </ScrollView>

@@ -50,23 +50,21 @@ export default function CreateCriterion() {
 
     const draftOdds = odds.filter((odd) => odd.status === 'DRAFT').length;
 
-    if (!criterion.isDraft) {
-      if (activeOdds === 0) {
-        Alert.alert(
-          'Unable to create market',
-          'Active market must have at least one active outcome. Please add an active outcome and try again.'
-        );
-        return;
-      }
+    if (!criterion.isDraft && activeOdds === 0) {
+      Alert.alert(
+        'Não foi possível criar o mercado',
+        'Um mercado ativo tem de ter pelo menos uma odd ativa. Adicione uma odd ativa e tente novamente.'
+      );
+      return;
     }
 
     let description = '';
     if (activeOdds > 0 && draftOdds === 0) {
-      description = `The criterion will be created with only the ${activeOdds} active outcomes.`;
+      description = `O mercado será criado apenas com ${activeOdds} odds ativas.`;
     } else if (draftOdds > 0 && activeOdds === 0) {
-      description = `The criterion will be created with only the ${draftOdds} draft outcomes.`;
+      description = `O mercado será criado apenas com ${draftOdds} odds em rascunho.`;
     } else {
-      description = `The criterion will be created with the ${activeOdds} active outcomes and ${draftOdds} draft outcomes.`;
+      description = `O mercado será criado com ${activeOdds} odds ativas e ${draftOdds} odds em rascunho.`;
     }
 
     setIsConfirmationVisible(description);
@@ -127,13 +125,13 @@ export default function CreateCriterion() {
   if (isPending) {
     return (
       <ScreenWrapper backgroundColor={colors.greyLight}>
-        <ThemedText>Loading...</ThemedText>;
+        <ThemedText>A carregar...</ThemedText>;
       </ScreenWrapper>
     );
   }
 
   if (error || !data) {
-    return <ThemedText>There was a problem loading the match</ThemedText>;
+    return <ThemedText>Ocorreu um problema ao carregar o evento</ThemedText>;
   }
 
   const subtitle = `${data.data.homeTeam.name} vs ${data.data.awayTeam.name}`;
@@ -156,7 +154,7 @@ export default function CreateCriterion() {
           >
             <ScreenHeader
               type="close"
-              title="New Market"
+              title="Novo mercado"
               iconColor="white"
               style={styles.header}
               description={subtitle}
@@ -164,10 +162,7 @@ export default function CreateCriterion() {
             />
 
             <SafeHorizontalView style={{ backgroundColor: colors.greyMedium, paddingTop: 22 }}>
-              <Wizard
-                activeIndex={activeStep}
-                steps={[{ label: 'Market' }, { label: 'Outcomes' }]}
-              />
+              <Wizard activeIndex={activeStep} steps={[{ label: 'Mercado' }, { label: 'Odds' }]} />
             </SafeHorizontalView>
 
             <SafeHorizontalView style={styles.body}>{activeScreen}</SafeHorizontalView>
@@ -180,22 +175,22 @@ export default function CreateCriterion() {
               style={styles.button}
               onPress={() => setActiveStep((prev) => prev - 1)}
             >
-              Previous
+              Anterior
             </Button.Root>
           )}
           <Button.Root disabled={isNextButtonDisabled} style={styles.button} onPress={handleNext}>
-            Next
+            Próximo
           </Button.Root>
         </SafeHorizontalView>
       </View>
 
       {isConfirmationVisible && (
         <BottomSheet.ModalConfirmation
-          title="Create Criterion"
+          title="Criar mercado"
           description={isConfirmationVisible}
           onConfirm={handleSubmit}
           onClose={() => setIsConfirmationVisible(null)}
-          onConfirmText="Create criterion"
+          onConfirmText="Criar mercado"
         />
       )}
     </>

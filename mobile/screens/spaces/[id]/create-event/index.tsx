@@ -18,18 +18,18 @@ const CreateEventScreen = ({ type }: CreateEventScreenProps) => {
     const manualOnly: IWizardStep<ICreateSpaceEventState>[] = [
       {
         id: 'configuration',
-        title: 'Event Configuration',
+        title: 'Configuração do evento',
         component: EventConfigurationStep,
         defaultPreviousButtonProps: { visible: false },
       },
       {
         id: 'risk',
-        title: 'Risk Management',
+        title: 'Gestão de risco',
         component: RiskManagementStep,
       },
       {
         id: 'review',
-        title: 'Create event',
+        title: 'Criar evento',
         component: CreateEventReviewStep,
       },
     ];
@@ -37,19 +37,19 @@ const CreateEventScreen = ({ type }: CreateEventScreenProps) => {
     const auto: IWizardStep<ICreateSpaceEventState>[] = [
       {
         id: 'selectEvent',
-        title: 'Select available events',
+        title: 'Selecionar eventos disponíveis',
         component: SelectEventStep,
         defaultPreviousButtonProps: { visible: false },
         defaultNextButtonProps: { visible: false },
       },
       {
         id: 'risk',
-        title: 'Risk Management',
+        title: 'Gestão de risco',
         component: RiskManagementStep,
       },
       {
         id: 'review',
-        title: 'Create event',
+        title: 'Criar evento',
         component: CreateEventReviewStep,
       },
     ];

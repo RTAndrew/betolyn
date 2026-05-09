@@ -22,8 +22,8 @@ const HomeHeader = () => {
   if (!isLoggedIn.value) {
     return (
       <View style={styles.root}>
-        <ThemedText onPress={() => router.push('/auth/login')}> Sign In </ThemedText>
-        <ThemedText onPress={() => handleLogout()}> Logout </ThemedText>
+        <ThemedText onPress={() => router.push('/auth/login')}> Iniciar sessão </ThemedText>
+        <ThemedText onPress={() => handleLogout()}> Terminar sessão </ThemedText>
       </View>
     );
   }

@@ -28,21 +28,21 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Home',
+            title: 'Início',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
           }}
         />
         <Tabs.Screen
           name="betslips"
           options={{
-            title: 'Betslips',
+            title: 'Boletim',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="dollarsign" color={color} />,
           }}
         />
         <Tabs.Screen
           name="spaces"
           options={{
-            title: 'Spaces',
+            title: 'Espaços',
             tabBarIcon: ({ color }) => (
               <IconSymbol size={28} name="paperplane.fill" color={color} />
             ),
