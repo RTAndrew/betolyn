@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { PropsWithChildren } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { TabController } from 'react-native-ui-lib';
 
@@ -14,12 +14,23 @@ import { colors } from '@/constants/colors';
 import { BetSlipIdScreenSkeleton } from '@/screens/betslips/history/[id]/skeleton';
 import { formatKwanzaAmount } from '@/utils/number-formatters';
 
-const Root = (props: { children: React.ReactNode; backgroundColor?: string }) => {
+const Root = (props: {
+  children: React.ReactNode;
+  backgroundColor?: string;
+  refreshControl?: React.ComponentProps<typeof RefreshControl>;
+}) => {
   return (
     <View style={{ flex: 1, backgroundColor: props.backgroundColor ?? colors.greyMedium }}>
       <StatusBar style="light" />
 
-      <ScrollView style={{ flex: 1 }} stickyHeaderIndices={[0]} contentContainerStyle={styles.root}>
+      <ScrollView
+        style={{ flex: 1 }}
+        stickyHeaderIndices={[0]}
+        contentContainerStyle={styles.root}
+        refreshControl={
+          props.refreshControl ? <RefreshControl {...props.refreshControl} /> : undefined
+        }
+      >
         <ScreenHeader
           style={{ backgroundColor: 'transparent' }}
           iconContainerColor={colors.greyMedium}
@@ -41,6 +52,7 @@ interface ITab {
 interface TransactionScreenGenericProps {
   isLoading: boolean;
   error: boolean;
+  refreshControl?: React.ComponentProps<typeof RefreshControl>;
   header: {
     icon?: React.ComponentType<SvgProps>;
     amount: number;
@@ -69,6 +81,7 @@ const TransactionId = ({ id, title = 'ID da transação' }: { id: string; title?
 const TransactionScreenGeneric = ({
   isLoading,
   error,
+  refreshControl,
   header,
   tabs,
 }: TransactionScreenGenericProps) => {
@@ -85,7 +98,7 @@ const TransactionScreenGeneric = ({
   }
 
   return (
-    <Root backgroundColor={colors.greyMedium}>
+    <Root backgroundColor={colors.greyMedium} refreshControl={refreshControl}>
       <View style={{ backgroundColor: colors.greyLight }}>
         <SafeHorizontalView style={styles.transaction}>
           <View style={styles.iconContainer}>

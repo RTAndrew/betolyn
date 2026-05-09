@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     gap: 18,
     paddingTop: 16,
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
 });
 

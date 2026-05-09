@@ -23,7 +23,7 @@ const TRANSACTION_TYPES_TO_HIDE_TRANSACTION_ITEMS_TAB = [
 ] as TTransactionType[];
 
 const TransactionItemScreen = ({ id }: TransactionItemScreenProps) => {
-  const { data, isPending, error } = useGetMyTransactionById({ id });
+  const { data, isPending, isFetching, refetch, error } = useGetMyTransactionById({ id });
   const transaction = data?.data;
 
   const transactionDetail = useMemo(() => {
@@ -40,6 +40,11 @@ const TransactionItemScreen = ({ id }: TransactionItemScreenProps) => {
     <TransactionScreenGeneric
       isLoading={isPending}
       error={Boolean(error || !data)}
+      refreshControl={{
+        refreshing: isFetching,
+        progressViewOffset: 20,
+        onRefresh: refetch,
+      }}
       header={{
         icon: transactionDetail?.icon,
         amount: transaction?.totalAmount ?? 0,

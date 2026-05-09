@@ -1,14 +1,16 @@
 import { useSignals } from '@preact/signals-react/runtime';
 import { router } from 'expo-router';
 import React from 'react';
-import { Image, ScrollView, StyleSheet } from 'react-native';
+import { Image, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 
 import { Button } from '@/components/button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
 import ScreenHeader from '@/components/screen-header';
 import { Settings } from '@/components/settings';
+import { Spinner } from '@/components/spinner';
 import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
+import { useGetMe } from '@/services';
 import { authStore } from '@/stores/auth.store';
 import { formatKwanzaAmount } from '@/utils/number-formatters';
 
@@ -16,14 +18,24 @@ const GENERIC_AVATAR = require('@/assets/images/generic-user-profile-image.png')
 
 const AuthenticatedUserProfile = () => {
   useSignals();
-  const { user: data } = authStore;
+  const { user: authUser } = authStore;
+  const { data: meResponse, isPending, isRefetching, refetch } = useGetMe({});
+  const hasMeResponse = Boolean(meResponse);
 
-  if (!data.value) return <></>;
-  const { balance, user } = data.value;
+  const me = meResponse?.data ?? authUser.value;
+  if (!me) return <></>;
+  const { balance, user } = me;
 
   return (
-    <ScrollView stickyHeaderIndices={[0]} style={styles.root}>
+    <ScrollView
+      stickyHeaderIndices={[0]}
+      style={styles.root}
+      refreshControl={
+        <RefreshControl refreshing={isRefetching} progressViewOffset={20} onRefresh={refetch} />
+      }
+    >
       <ScreenHeader onClose={() => router.back()} />
+      {isPending && !hasMeResponse ? <Spinner size="large" color={colors.white} /> : null}
 
       <SafeHorizontalView style={styles.userCard}>
         <Image source={GENERIC_AVATAR} style={styles.avatar} accessibilityIgnoresInvertColors />

@@ -11,10 +11,10 @@ const DEFAULT_MESSAGES: Record<number, string[]> = {
   1: [
     'Tá quase, tá quase, tá quase... 😗🎵',
     'Nosso tempo de resposta é mais rápido do que o Maria Pia',
-    'Sem stress, estamos a processar isso com estilo.',
+    'Que dá volta é cinto. Essa ficha vai entrar!',
   ],
   2: [
-    'Últimos ajustes e já sai no ponto',
+    'Últimos ajustes e tá no beijo',
     'Se piscaste, quase perdeste: estamos a finalizar',
     'Quase lá, família. Só a fechar a cena',
   ],
@@ -57,13 +57,13 @@ export function useTimeElapsed({
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const bp = breakpointsRef.current;
+      const breakpointReference = breakpointsRef.current;
       const msgs = messagesRef.current;
       const max = maxTimeRef.current;
 
       let matchedIndex: number | null = null;
-      for (let i = bp.length - 1; i >= 0; i--) {
-        if (elapsed >= bp[i]) {
+      for (let i = breakpointReference.length - 1; i >= 0; i--) {
+        if (elapsed >= breakpointReference[i]) {
           matchedIndex = i;
           break;
         }
