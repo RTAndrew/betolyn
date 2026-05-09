@@ -20,7 +20,7 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [listError, setListError] = useState<string | null>(null);
 
-  const { data: response, isPending, error } = useGetMatches({});
+  const { data: response, isPending, isRefetching, error, refetch } = useGetMatches({});
   const matches = response?.data ?? [];
 
   const filteredMatches = useMemo(() => {
@@ -108,6 +108,8 @@ export const SelectEventStep = ({ data, onChange, setNext, goNext }: SelectEvent
       <FlatList
         data={filteredMatches}
         keyExtractor={(item) => item.id}
+        onRefresh={refetch}
+        refreshing={isRefetching}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={

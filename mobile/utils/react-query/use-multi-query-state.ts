@@ -22,6 +22,7 @@ export type MultiQueryState = {
    */
   isFetchingAny: boolean;
   isErrorAny: boolean;
+  isRefetchingAny: boolean;
   errors: unknown[];
   /**
    * True when every requiredWhen=true query has succeeded.
@@ -52,6 +53,7 @@ export function useMultiQueryState(items: MultiQueryStateItem[]): MultiQueryStat
   const isErrorAny = requiredItems.some((i) => Boolean(i.query?.isError));
   const isInitialLoading = requiredItems.some((i) => Boolean(i.query?.isPending));
   const isFetchingAny = requiredItems.some((i) => Boolean(i.query?.isFetching)) === true;
+  const isRefetchingAny = requiredItems.some((i) => Boolean(i.query?.isRefetching)) === true;
 
   const errors = requiredItems
     .filter((i) => Boolean(i.query?.isError))
@@ -66,6 +68,7 @@ export function useMultiQueryState(items: MultiQueryStateItem[]): MultiQueryStat
     isInitialLoading,
     isFetchingAny,
     isErrorAny,
+    isRefetchingAny,
     errors,
     allRequiredReady,
   };

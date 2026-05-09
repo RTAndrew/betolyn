@@ -40,7 +40,7 @@ const OpenMatchBottomSheetIcon = ({ criterion }: { criterion: ICriterion }) => {
 };
 
 const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
-  const { data, isPending, error } = useGetCriterionById({ criterionId });
+  const { data, isPending, isRefetching, refetch, error } = useGetCriterionById({ criterionId });
 
   if (isPending) {
     return (
@@ -70,7 +70,15 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
 
   return (
     <MatchBottomSheetProvider match={m}>
-      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
+      <ScreenWrapper
+        refreshControl={{
+          refreshing: isRefetching,
+          progressViewOffset: 20,
+          onRefresh: refetch,
+        }}
+        safeArea={false}
+        backgroundColor={colors.greyMedium}
+      >
         <ScreenHeader
           iconColor={colors.white}
           title={criterion.name}
@@ -81,7 +89,11 @@ const CriterionSettingsScreen = ({ criterionId }: { criterionId: string }) => {
         </ScreenHeader>
 
         <SafeHorizontalView style={styles.root}>
-          <CriteriaMetrics criterionId={criterionId as string} criterionStatus={criterion.status} />
+          <CriteriaMetrics
+            criterionId={criterionId as string}
+            criterionStatus={criterion.status}
+            shouldRefetch={isRefetching}
+          />
 
           <Settings.Item
             title={criterion.name}

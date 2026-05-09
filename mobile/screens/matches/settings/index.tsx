@@ -35,7 +35,13 @@ const OpenMatchBottomSheetIcon = () => {
 };
 
 const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
-  const { data: result, isLoading, isError } = useGetMatch({ matchId: matchId as string });
+  const {
+    data: result,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+  } = useGetMatch({ matchId: matchId as string });
   const [autoEnd, setAutoEnd] = useState(false);
 
   if (isLoading) {
@@ -58,7 +64,15 @@ const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
   const match = result.data;
   return (
     <MatchBottomSheetProvider match={match}>
-      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
+      <ScreenWrapper
+        safeArea={false}
+        backgroundColor={colors.greyMedium}
+        refreshControl={{
+          refreshing: isRefetching,
+          progressViewOffset: 20,
+          onRefresh: refetch,
+        }}
+      >
         <ScreenHeader
           iconContainerColor={colors.greyLight}
           iconColor={colors.white}
@@ -78,7 +92,7 @@ const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
 
         <SafeHorizontalView style={styles.root}>
           <View style={styles.health}>
-            <MatchMetrics matchId={match.id} style={styles.stats} />
+            <MatchMetrics matchId={match.id} style={styles.stats} shouldRefetch={isRefetching} />
           </View>
 
           <Settings.ItemGroup>
@@ -102,7 +116,7 @@ const MatchSettingsScreen = ({ matchId }: { matchId: string }) => {
             suffixIcon={<Switch value={autoEnd} onChange={setAutoEnd} />}
           />
 
-          <MatchSettingsScreenCriteriaList matchId={match.id} />
+          <MatchSettingsScreenCriteriaList matchId={match.id} shouldRefetch={isRefetching} />
         </SafeHorizontalView>
       </ScreenWrapper>
     </MatchBottomSheetProvider>

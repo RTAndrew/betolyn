@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { SegmentedProgressBar } from '@/components/segmented-progress-bar';
@@ -15,12 +15,29 @@ import { getRiskLevelColor } from '@/utils/risk-level-color';
 export interface CriteriaMetricsProps {
   criterionId: string;
   criterionStatus: string;
+  shouldRefetch?: boolean;
 }
 
-const CriteriaMetrics = ({ criterionId, criterionStatus }: CriteriaMetricsProps) => {
-  const { data: metricsData, isPending: metricsPending } = useGetCriterionMetrics({
+const CriteriaMetrics = ({
+  criterionId,
+  criterionStatus,
+  shouldRefetch = false,
+}: CriteriaMetricsProps) => {
+  const {
+    data: metricsData,
+    isPending: metricsPending,
+    refetch,
+  } = useGetCriterionMetrics({
     criterionId,
   });
+
+  useEffect(
+    function refetchCriterionMetricsWhenTriggered() {
+      if (!shouldRefetch) return;
+      refetch();
+    },
+    [shouldRefetch, refetch]
+  );
 
   const metrics = metricsData?.data;
   const reservedLiability = metrics?.reservedLiability ?? 0;

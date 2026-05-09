@@ -14,7 +14,7 @@ import { useGetAllSpaces } from '@/services';
 export default function Spaces() {
   const insets = useSafeAreaInsets();
 
-  const { data, isPending, error } = useGetAllSpaces({});
+  const { data, isPending, isRefetching, error, refetch } = useGetAllSpaces({});
 
   if (isPending) {
     return (
@@ -41,6 +41,8 @@ export default function Spaces() {
       <FlatList
         keyExtractor={(item) => item.id}
         data={data?.data}
+        onRefresh={refetch}
+        refreshing={isRefetching}
         renderItem={({ item: space }) => (
           <SafeHorizontalView key={space.id}>
             <SpaceCard channel={space} />

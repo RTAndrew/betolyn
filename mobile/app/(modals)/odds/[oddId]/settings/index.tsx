@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
@@ -51,13 +51,22 @@ const OddSettings = () => {
   const { data: metricsData, error: metricsError } = metricsQuery;
   const odd = oddQuery.data?.data;
   const { data: matchData, error: matchError } = matchQuery;
+  const matchId = metricsQuery.data?.data?.odd?.matchId;
 
-  const { isInitialLoading: isPending } = useMultiQueryState([
+  const { isInitialLoading: isPending, isRefetchingAny } = useMultiQueryState([
     { query: metricsQuery },
     { query: oddQuery },
     // Only block rendering on match details after matchId becomes known.
-    { query: matchQuery, requiredWhen: Boolean(metricsQuery.data?.data?.odd?.matchId) },
+    { query: matchQuery, requiredWhen: Boolean(matchId) },
   ]);
+
+  const handleRefresh = useCallback(async () => {
+    await oddQuery.refetch();
+    await metricsQuery.refetch();
+    if (matchId) {
+      matchQuery.refetch();
+    }
+  }, [oddQuery, metricsQuery, matchQuery, matchId]);
 
   if (isPending) {
     return (
@@ -84,7 +93,15 @@ const OddSettings = () => {
 
   return (
     <MatchBottomSheetProvider match={match}>
-      <ScreenWrapper safeArea={false} backgroundColor={colors.greyMedium}>
+      <ScreenWrapper
+        refreshControl={{
+          refreshing: isRefetchingAny,
+          progressViewOffset: 20,
+          onRefresh: handleRefresh,
+        }}
+        safeArea={false}
+        backgroundColor={colors.greyMedium}
+      >
         <ScreenHeader
           iconColor={colors.white}
           title={odd.name}

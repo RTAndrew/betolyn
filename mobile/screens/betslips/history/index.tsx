@@ -32,7 +32,7 @@ const Header = ({ children }: PropsWithChildren) => {
 };
 
 const BetSlipHistoryScreen = () => {
-  const { data, error, isPending } = useGetMyBets({});
+  const { data, error, isPending, isRefetching, refetch } = useGetMyBets({});
 
   if (isPending) {
     return (
@@ -73,6 +73,8 @@ const BetSlipHistoryScreen = () => {
 
       <FlatList
         data={betSlips}
+        onRefresh={refetch}
+        refreshing={isRefetching}
         contentContainerStyle={{
           gap: 8,
           marginTop: 18,

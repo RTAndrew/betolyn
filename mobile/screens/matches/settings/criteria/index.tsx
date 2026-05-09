@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Settings } from '@/components/settings';
 import { CriteriaListSkeleton } from '@/components/skeleton/criteria-list-skeleton';
@@ -9,10 +9,14 @@ import { CriterionStatusEnum } from '@/types';
 
 interface MatchSettingsCriteriaListProps {
   matchId: string;
+  shouldRefetch?: boolean;
 }
 
-const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) => {
-  const { data, isPending, error } = useGetMatchCriteria({
+const MatchSettingsCriteriaList = ({
+  matchId,
+  shouldRefetch = false,
+}: MatchSettingsCriteriaListProps) => {
+  const { data, isPending, error, refetch } = useGetMatchCriteria({
     matchId,
     queryParams: {
       status: [
@@ -27,6 +31,14 @@ const MatchSettingsCriteriaList = ({ matchId }: MatchSettingsCriteriaListProps) 
       refetchOnMount: 'always',
     },
   });
+
+  useEffect(
+    function refetchMatchCriteriaWhenTriggered() {
+      if (!shouldRefetch) return;
+      refetch();
+    },
+    [shouldRefetch, refetch]
+  );
 
   if (isPending) return <CriteriaListSkeleton />;
 

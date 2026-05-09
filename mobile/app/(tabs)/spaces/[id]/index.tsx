@@ -27,6 +27,8 @@ const SpaceId = () => {
     data: matchesRes,
     error: matchesError,
     isPending: matchesPending,
+    refetch,
+    isRefetching,
   } = useGetSpaceMatches({ spaceId, queryOptions: { enabled: !!spaceId } });
 
   if (isPending) {
@@ -152,10 +154,13 @@ const SpaceId = () => {
   return (
     <FlatList
       data={matches}
+      onRefresh={refetch}
+      refreshing={isRefetching}
+      progressViewOffset={20}
+      renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={renderHeader}
       ListEmptyComponent={renderEmpty}
-      renderItem={renderItem}
       contentContainerStyle={styles.listContent}
       style={{ backgroundColor: colors.greyLight, flex: 1 }}
     />

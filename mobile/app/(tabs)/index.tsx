@@ -12,7 +12,7 @@ import { useGetMatches } from '@/services/matches/match-query';
 import HomeScreenHeader from '../../components/home-screen-header';
 
 export default function HomeScreen() {
-  const { data, isPending, error } = useGetMatches({});
+  const { data, isPending, isRefetching, error, refetch } = useGetMatches({});
 
   if (isPending) {
     return (
@@ -48,6 +48,8 @@ export default function HomeScreen() {
         <FlatList
           keyExtractor={(item) => item.id}
           data={Object.values(data.data ?? [])}
+          onRefresh={refetch}
+          refreshing={isRefetching}
           contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 240 : 120 }}
           renderItem={({ item }) => (
             <SafeHorizontalView>

@@ -1,4 +1,6 @@
-import React, { PropsWithChildren, useMemo } from 'react';
+import type { SvgProps } from 'react-native-svg';
+
+import React, { PropsWithChildren, useEffect, useMemo } from 'react';
 import {
   Pressable,
   PressableProps,
@@ -8,11 +10,19 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
+import Animated, {
+  Easing,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '@/constants/colors';
 
-import { Close, Down, Left } from '../icons';
+import { Close, Down, Left, Sync } from '../icons';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { ThemedText } from '../ThemedText';
 
@@ -28,6 +38,12 @@ interface ScreenHeaderProps extends HeaderProps {
 interface IconContainerProps extends PropsWithChildren<PressableProps> {
   onPress: () => void;
   color?: string;
+}
+
+interface RefreshProps extends PressableProps {
+  onPress: () => void;
+  loading?: boolean;
+  iconProps?: SvgProps;
 }
 
 const IconContainer = ({
@@ -57,6 +73,32 @@ const QuickActions = ({ children, style, ...props }: PropsWithChildren<ViewProps
     <View style={StyleSheet.flatten([styles.quickActions, style])} {...props}>
       {children}
     </View>
+  );
+};
+
+const RefreshIcon = ({ onPress, loading = false, iconProps, ...props }: RefreshProps) => {
+  const spin = useSharedValue(0);
+
+  useEffect(() => {
+    if (loading) {
+      spin.value = withRepeat(withTiming(360, { duration: 800, easing: Easing.linear }), -1, false);
+      return;
+    }
+
+    cancelAnimation(spin);
+    spin.value = withTiming(0, { duration: 200 });
+  }, [loading, spin]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${spin.value}deg` }],
+  }));
+
+  return (
+    <IconContainer onPress={onPress} disabled={loading} {...props}>
+      <Animated.View style={animatedStyle}>
+        <Sync color={loading ? colors.greyLighter : iconProps?.color} {...iconProps} />
+      </Animated.View>
+    </IconContainer>
   );
 };
 
@@ -174,5 +216,6 @@ const styles = StyleSheet.create({
 
 ScreenHeader.Icon = IconContainer;
 ScreenHeader.QuickActions = QuickActions;
+ScreenHeader.RefreshIcon = RefreshIcon;
 
 export default ScreenHeader;

@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 
 import { DonutChart } from '@/components/donut-chart';
 import { MetricsBlockSkeleton } from '@/components/skeleton/metrics-block-skeleton';
@@ -13,14 +13,23 @@ import { getRiskLevelColor } from '@/utils/risk-level-color';
 
 export interface MatchMetricsProps {
   matchId: string;
-  style?: object;
+  style?: ViewStyle;
+  shouldRefetch?: boolean;
 }
 
-const MatchMetrics = ({ matchId, style }: MatchMetricsProps) => {
-  const { data, isPending, error } = useGetMatchMetrics({
+const MatchMetrics = ({ matchId, style, shouldRefetch = false }: MatchMetricsProps) => {
+  const { data, isPending, error, refetch } = useGetMatchMetrics({
     matchId,
     queryOptions: { enabled: Boolean(matchId) },
   });
+
+  useEffect(
+    function refetchMatchMetricsWhenTriggered() {
+      if (!shouldRefetch) return;
+      refetch();
+    },
+    [shouldRefetch]
+  );
 
   if (isPending) {
     return (

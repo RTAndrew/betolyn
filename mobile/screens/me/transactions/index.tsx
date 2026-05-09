@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import EmptyState from '@/components/empty-state';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
@@ -14,7 +14,7 @@ import TransactionCard from './transaction-card';
 import { formatTransactionDetail } from './utils';
 
 const TransactionsScreen = () => {
-  const { data, isPending, error } = useGetMyTransactions({});
+  const { data, isPending, isRefetching, error, refetch } = useGetMyTransactions({});
 
   if (isPending) {
     return (
@@ -47,7 +47,7 @@ const TransactionsScreen = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <ScreenWrapper scrollable={false} safeArea={false} backgroundColor={colors.greyLight}>
       <ScreenHeader
         title="Transações"
         iconContainerColor={colors.greyMedium}
@@ -56,6 +56,8 @@ const TransactionsScreen = () => {
 
       <FlatList
         data={data?.data ?? []}
+        onRefresh={refetch}
+        refreshing={isRefetching}
         ListEmptyComponent={
           <EmptyState
             center
@@ -79,7 +81,7 @@ const TransactionsScreen = () => {
         }}
         contentContainerStyle={styles.contentContainer}
       />
-    </View>
+    </ScreenWrapper>
   );
 };
 

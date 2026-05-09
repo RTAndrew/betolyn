@@ -4,7 +4,7 @@ import { Image, Text, View, ViewProps } from 'react-native';
 import { ScrollView, SheetManager } from 'react-native-actions-sheet';
 
 import BottomSheet from '@/components/bottom-sheet';
-import { MoreVertical, Settings, Sync } from '@/components/icons';
+import { MoreVertical, Settings } from '@/components/icons';
 import { MatchBottomSheetProvider, useMatchBottomSheet } from '@/components/match/bottom-sheet';
 import { OddButton } from '@/components/odd-button';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
@@ -116,7 +116,13 @@ const BottomSheetWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 const MatchScreen = ({ matchId }: { matchId: string }) => {
-  const { data: result, refetch, isPending, isError } = useGetMatch({ matchId: matchId });
+  const {
+    data: result,
+    refetch,
+    isPending,
+    isRefetching,
+    isError,
+  } = useGetMatch({ matchId: matchId });
 
   const shouldShowMainCriterion = useMemo(() => {
     const match = result?.data;
@@ -171,9 +177,7 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
             }}
           >
             <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
-              <ScreenHeader.Icon onPress={() => refetch()}>
-                <Sync />
-              </ScreenHeader.Icon>
+              <ScreenHeader.RefreshIcon onPress={refetch} loading={isRefetching} />
 
               <SettingsIcon />
               <MoreIcon />
