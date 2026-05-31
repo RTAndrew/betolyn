@@ -1,13 +1,9 @@
 package com.betolyn.config.filters;
 
-import com.betolyn.features.auth.JwtTokenService;
-import com.betolyn.features.auth.config.AuthConstants;
-import com.betolyn.features.auth.exceptions.InvalidAuthTokenException;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,9 +12,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import com.betolyn.features.auth.JwtTokenService;
+import com.betolyn.features.auth.config.AuthConstants;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -48,14 +49,16 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Stale client tokens must not block public GET routes (e.g. /matches).
         if (!tokenService.isValid(token)) {
-            handlerExceptionResolver.resolveException(request, response, null, new InvalidAuthTokenException());
+            setContextToUnauthenticatedUser();
+            filterChain.doFilter(request, response);
             return;
         }
-
         var decodedToken = tokenService.decode(token);
         if (!validateSessionUC.execute(decodedToken)) {
-            handlerExceptionResolver.resolveException(request, response, null, new InvalidAuthTokenException());
+            setContextToUnauthenticatedUser();
+            filterChain.doFilter(request, response);
             return;
         }
 
