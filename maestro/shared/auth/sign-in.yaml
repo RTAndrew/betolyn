@@ -1,0 +1,68 @@
+appId: com.anonymous.betolyn
+---
+- launchApp
+
+- tapOn:
+    text: ".*Iniciar sessão.*"
+
+# Assert the fields
+- tapOn:
+    text: "Email"
+    index: 1
+- inputRandomText:
+    length: 8
+
+- tapOn: "return"
+- tapOn:
+    text: ".*Entrar.*"
+- assertVisible: "Por favor, introduza um email válido"
+- assertVisible: "A palavra-passe é obrigatória"
+
+
+
+# Fails with wrong credential
+- tapOn:
+    text: "Email"
+    index: 1
+- eraseText
+- inputRandomEmail
+
+- tapOn:
+    text: "Palavra-passe"
+    index: 1
+- inputRandomText:
+    length: 8
+
+- assertNotVisible: "Por favor, introduza um email válido"
+- assertNotVisible: "A palavra-passe é obrigatória"
+
+- tapOn: "return"
+- tapOn:
+    text: ".*Entrar.*"
+- assertVisible: "As credenciais fornecidas são inválidas"
+
+# Successfully logs in
+- tapOn:
+    text: "Email"
+    index: 1
+- eraseText
+- inputText: "anderson@gmail.com"
+
+- tapOn:
+    text: "Palavra-passe"
+    index: 1
+- eraseText
+- inputText: "123456"
+
+- tapOn: "return"
+
+- assertNotVisible: "As credenciais fornecidas são inválidas"
+- assertNotVisible: "Por favor, introduza um email válido"
+- assertNotVisible: "A palavra-passe é obrigatória"
+
+- tapOn:
+    text: ".*Entrar.*"
+
+# After login, it redirects to homepage
+- assertVisible:
+    text: "Abrir meu perfil"
