@@ -7,8 +7,14 @@ import {
   getAllSpacesQueryOptions,
   getSpaceByIdQueryOptions,
   getSpaceMatchesQueryOptions,
+  getSpaceMembersQueryOptions,
 } from './space-query';
-import { IAllocateSpaceFundingRequest, ICreateSpaceRequest, SpaceService } from './space-service';
+import {
+  IAddSpaceMembersRequest,
+  IAllocateSpaceFundingRequest,
+  ICreateSpaceRequest,
+  SpaceService,
+} from './space-service';
 
 interface ICreateSpaceVariables {
   variables: ICreateSpaceRequest;
@@ -22,6 +28,11 @@ interface IAllocateSpaceFundingVariables {
 interface ICreateSpaceMatchVariables {
   spaceId: string;
   variables: Parameters<typeof SpaceService.createSpaceMatch>[1];
+}
+
+interface IAddSpaceMembersVariables {
+  spaceId: string;
+  variables: IAddSpaceMembersRequest;
 }
 
 export const useCreateSpace = () => {
@@ -80,6 +91,23 @@ export const useCreateSpaceMatch = () => {
         }
         queryClient.invalidateQueries({
           queryKey: getMatchesQueryOptions().queryKey,
+        });
+      },
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useAddSpaceMembers = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IAddSpaceMembersVariables) =>
+        SpaceService.addMembers(data.spaceId, data.variables),
+      onSuccess: (_response, variables) => {
+        queryClient.invalidateQueries({
+          queryKey: getSpaceMembersQueryOptions({ spaceId: variables.spaceId }).queryKey,
         });
       },
     },

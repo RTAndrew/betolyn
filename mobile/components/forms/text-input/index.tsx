@@ -1,11 +1,16 @@
 import { useMemo, useState } from 'react';
-import { TextInput as _TextInput, StyleSheet, TextInputProps, TextStyle } from 'react-native';
+import {
+  TextInput as _TextInput,
+  TextInputProps as _TextInputProps,
+  StyleSheet,
+  TextStyle,
+} from 'react-native';
 
 import { colors } from '@/constants/colors';
 
 import BaseField, { BaseFieldProps } from '../base-field';
 
-interface InputProps extends TextInputProps, Omit<BaseFieldProps, 'children'> {
+export interface TextInputProps extends _TextInputProps, Omit<BaseFieldProps, 'children'> {
   style?: TextStyle;
 }
 
@@ -18,7 +23,7 @@ const TextInput = ({
   multiline,
   numberOfLines = 4,
   ...props
-}: InputProps) => {
+}: TextInputProps) => {
   const errorColor = useMemo(() => {
     if (status) return errorStyles[status];
     if (errorMessage) return errorStyles.error;

@@ -1,9 +1,13 @@
 import { IUser } from '@/types';
 import { getRequest } from '@/utils/http';
 
+import { IFindAllUsersQueryOptions } from './types';
+
 export class UserService {
-  public static async findAllUsers() {
-    return await getRequest<IUser[]>('/users');
+  public static async findAllUsers(params?: IFindAllUsersQueryOptions) {
+    return await getRequest<IUser[]>('/users', {
+      params,
+    });
   }
 
   public static async findUserById(userId: string) {

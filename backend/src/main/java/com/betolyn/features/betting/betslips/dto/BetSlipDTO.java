@@ -1,13 +1,13 @@
 package com.betolyn.features.betting.betslips.dto;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.betolyn.features.betting.betslips.enums.BetSlipStatusEnum;
 import com.betolyn.features.betting.betslips.enums.BetSlipTypeEnum;
 import com.betolyn.features.user.UserDTO;
-import lombok.Data;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Data;
 
 @Data
 public class BetSlipDTO {

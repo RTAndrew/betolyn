@@ -39,6 +39,8 @@ const SignupPage = () => {
   });
 
   const handleChange = (name: keyof FormData, value: string) => {
+    if (responseMessage) setResponseMessage(null);
+
     setFormData({ ...formData, [name]: { value, error: null } });
   };
 
@@ -120,7 +122,11 @@ const SignupPage = () => {
       router.push('/auth/login');
     } catch (error) {
       if (error instanceof ApiError) {
-        setResponseMessage(error.message);
+        console.log('error', error);
+        const { code } = error.error;
+        if (code === 'INVALID_CREDENTIALS') {
+          setResponseMessage('As credenciais fornecidas são inválidas');
+        }
       }
     } finally {
       setLoading(false);

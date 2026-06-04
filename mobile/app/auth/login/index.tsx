@@ -32,6 +32,8 @@ const LoginPage = () => {
   });
 
   const handleChange = (name: keyof FormData, value: string) => {
+    if (responseMessage) setResponseMessage(null);
+
     setFormData({ ...formData, [name]: { value, error: null } });
   };
 
@@ -95,7 +97,10 @@ const LoginPage = () => {
       router.push('/');
     } catch (error) {
       if (error instanceof ApiError) {
-        setResponseMessage(error.message);
+        const { code } = error.error;
+        if (code === 'INVALID_CREDENTIALS') {
+          setResponseMessage('As credenciais fornecidas são inválidas');
+        }
       }
     } finally {
       setLoading(false);

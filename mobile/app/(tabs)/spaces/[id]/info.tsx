@@ -23,6 +23,8 @@ import { colors } from '@/constants/colors';
 import { IChannelMember, mockData } from '@/mock/matches';
 import { useGetSpaceById } from '@/services';
 
+import SpaceMembers from '../../../../screens/spaces/[id]/components/space-members';
+
 const _ParticipantCard = ({ member }: { member: IChannelMember }) => {
   const handlePress = () => {
     Alert.alert(`Remover ${member.name}`, 'Tem certeza que deseja remover este participante?', [
@@ -55,12 +57,17 @@ const _ParticipantCard = ({ member }: { member: IChannelMember }) => {
 interface IActionsProps {
   title: string;
   onPress?: () => void;
+  disabled?: boolean;
   icon: React.ReactNode;
 }
 
-const Actions = ({ title, onPress, icon }: IActionsProps) => {
+const Actions = ({ title, onPress, icon, disabled = false }: IActionsProps) => {
   return (
-    <Pressable onPress={onPress} style={styles.action}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={StyleSheet.flatten([styles.action, disabled && styles.disabledAction])}
+    >
       <View style={styles.actionIcon}>{icon}</View>
       <ThemedText type="defaultSemiBold">{title}</ThemedText>
     </Pressable>
@@ -136,33 +143,38 @@ const Info = () => {
         </View>
       }
     >
-      <SpaceGuard spaceId={id as string}>
-        <SafeHorizontalView style={styles.actions}>
-          <Actions title="Levantar fundos" icon={<DollarEuro width={24} height={24} />} />
-          <Actions
-            onPress={() => router.push(`/(modals)/spaces/${id}/fund`)}
-            title="Alocar fundos"
-            icon={<Add width={24} height={24} />}
-          />
-          <Actions title="Convidar" icon={<UserAdd width={24} height={24} />} />
+      <View style={styles.infoContentWrapper}>
+        <SpaceGuard spaceId={id as string}>
+          <SafeHorizontalView style={styles.actions}>
+            <Actions
+              title="Levantar"
+              icon={<DollarEuro width={24} height={24} />}
+              disabled={true}
+            />
+            <Actions
+              onPress={() => router.push(`/(modals)/spaces/${id}/fund`)}
+              title="Depositar"
+              icon={<Add width={24} height={24} />}
+            />
+            <Actions
+              onPress={() => router.push(`/(modals)/spaces/${id}/add`)}
+              title="Adicionar"
+              icon={<UserAdd width={24} height={24} />}
+            />
+          </SafeHorizontalView>
+        </SpaceGuard>
+
+        <SafeHorizontalView style={styles.participants}>
+          <SpaceMembers spaceId={id as string} />
         </SafeHorizontalView>
-      </SpaceGuard>
 
-      {/* <ThemedView style={styles.participants}>
-        <Text style={styles.participantsNumber}>{spac.members.length} Participantes</Text>
-
-        <View style={{ flex: 1, gap: 5 }}>
-          {channel.members.map((member, index) => (
-            <ParticipantCard key={index} member={member} />
-          ))}
-        </View>
-      </ThemedView> */}
-      <ThemedView style={styles.channelInfo}>
-        <Text style={styles.channelInfoText}>
-          Criado por {space.createdBy.username}, {new Date().toLocaleDateString()}
-        </Text>
-        <Text style={styles.channelInfoText}>Chatroom ID: {space.id}</Text>
-      </ThemedView>
+        <ThemedView style={styles.channelInfo}>
+          <Text style={styles.channelInfoText}>
+            Criado por {space.createdBy.username}, {new Date().toLocaleDateString()}
+          </Text>
+          <Text style={styles.channelInfoText}>Chatroom ID: {space.id}</Text>
+        </ThemedView>
+      </View>
     </ParallaxScrollView>
   );
 };
@@ -193,6 +205,11 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 
+  infoContentWrapper: {
+    flexDirection: 'column',
+    gap: 16,
+    paddingVertical: 24,
+  },
   headerBodyWrapper: {
     backgroundColor: 'transparent',
     position: 'absolute',
@@ -260,8 +277,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexDirection: 'row',
     gap: 16,
-
-    marginVertical: 12,
+  },
+  disabledAction: {
+    opacity: 0.5,
   },
 });
 

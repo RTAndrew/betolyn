@@ -260,7 +260,7 @@ const MatchScreen = ({ matchId }: { matchId: string }) => {
               Match ended
             </ThemedText>
           ) : (
-            <MatchCriteriaList matchId={match.id} />
+            <MatchCriteriaList matchId={match.id} triggerRefetch={isRefetching} />
           )}
         </View>
       </MatchBottomSheetProvider>

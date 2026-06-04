@@ -1,0 +1,39 @@
+meta {
+  name: add members
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/spaces/{{spaceId}}/members
+  body: json
+  auth: inherit
+}
+
+params:query {
+  : 
+}
+
+headers {
+  : 
+}
+
+body:json {
+  {
+    "users": [
+      "u_01EVRApUylpm"
+    ]
+  }
+  
+  
+  
+}
+
+vars:pre-request {
+  spaceId: spa_WcjhqkU
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

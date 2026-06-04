@@ -101,7 +101,7 @@ const PlaceBet = () => {
         {ApiError.isApiError(error) && (
           <View style={styles.successContainer}>
             <ThemedText type="title">Não foi possível fazer a aposta</ThemedText>
-            <ThemedText>Consulte o boletim para mais detalhes</ThemedText>
+            <ThemedText>Consulte a ficha para mais detalhes</ThemedText>
             <Button.Root style={styles.closeButton} onPress={() => router.back()}>
               Fechar
             </Button.Root>

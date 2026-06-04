@@ -1,58 +1,53 @@
 import { router } from 'expo-router';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthenticationGuard from '@/components/auth-guard';
 import EmptyState from '@/components/empty-state';
 import { Add } from '@/components/icons';
 import SafeHorizontalView from '@/components/safe-horizontal-view';
+import ScreenWrapper from '@/components/screen-wrapper';
 import { Skeleton } from '@/components/skeleton';
 import SpaceCard from '@/components/space-card';
 import { colors } from '@/constants/colors';
 import { useGetAllSpaces } from '@/services';
 
 export default function Spaces() {
-  const insets = useSafeAreaInsets();
-
   const { data, isPending, isRefetching, error, refetch } = useGetAllSpaces({});
 
   if (isPending) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <ScreenWrapper backgroundColor={colors.greyLight}>
         <SafeHorizontalView>
           <Skeleton.Group count={7} gap={12}>
             <SpaceCard.Skeleton />
           </Skeleton.Group>
         </SafeHorizontalView>
-      </View>
+      </ScreenWrapper>
     );
   }
 
   if (error || !data) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <EmptyState title="Não foi possível processar o pedido" />
-      </View>
+      <ScreenWrapper backgroundColor={colors.greyLight}>
+        <EmptyState center title="Não foi possível processar o pedido" />
+      </ScreenWrapper>
     );
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <ScreenWrapper scrollable={false} backgroundColor={colors.greyLight}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={data?.data}
         onRefresh={refetch}
         refreshing={isRefetching}
+        contentContainerStyle={{ height: '100%' }}
         renderItem={({ item: space }) => (
           <SafeHorizontalView key={space.id}>
             <SpaceCard channel={space} />
           </SafeHorizontalView>
         )}
-        ListEmptyComponent={
-          <SafeHorizontalView style={styles.centered}>
-            <EmptyState.NoSearch />
-          </SafeHorizontalView>
-        }
+        ListEmptyComponent={<EmptyState.NoSearch center={{ includeTabBar: true }} />}
       />
 
       <AuthenticationGuard>
@@ -67,7 +62,7 @@ export default function Spaces() {
           </SafeHorizontalView>
         </View>
       </AuthenticationGuard>
-    </View>
+    </ScreenWrapper>
   );
 }
 
@@ -89,7 +84,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   centered: {
+    height: '100%',
+    backgroundColor: 'red',
     flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

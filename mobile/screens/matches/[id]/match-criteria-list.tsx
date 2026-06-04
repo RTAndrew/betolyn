@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // import { Collapsible } from '@/components/Collapsible';
 import Collapsible from '@/components/collapsible/';
@@ -12,12 +12,24 @@ import { useGetMatchCriteria } from '@/services';
 
 import { Section } from '.';
 
-const MatchCriteriaList = ({ matchId }: { matchId: string }) => {
-  const { data, isLoading, isError } = useGetMatchCriteria({ matchId });
+const MatchCriteriaList = ({
+  matchId,
+  triggerRefetch,
+}: {
+  matchId: string;
+  triggerRefetch: boolean;
+}) => {
+  const { data, isLoading, isError, refetch } = useGetMatchCriteria({ matchId });
+
   const { pushSheet, canMutateMatchActions, isMatchActionPermissionPending } =
     useMatchBottomSheet();
   const allowMutations = canMutateMatchActions && !isMatchActionPermissionPending;
   const criteria = data?.data;
+
+  useEffect(() => {
+    if (!triggerRefetch) return;
+    refetch();
+  }, [triggerRefetch, refetch]);
 
   if (isLoading)
     return (

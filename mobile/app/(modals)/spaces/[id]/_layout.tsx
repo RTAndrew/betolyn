@@ -6,6 +6,7 @@ const MatchModalLayout = () => {
     <Stack>
       <Stack.Screen name="create-event" options={{ headerShown: false }} />
       <Stack.Screen name="fund" options={{ headerShown: false }} />
+      <Stack.Screen name="add" options={{ headerShown: false }} />
     </Stack>
   );
 };

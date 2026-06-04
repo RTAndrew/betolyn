@@ -1,10 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { IMatch, ISpace } from '@/types';
+import { IMatch, ISpace, IUser } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
 
-import { ISpaceMembership, SpaceService } from './space-service';
+import { ISpaceMember, ISpaceMembership, SpaceService } from './space-service';
 
 /** `staleTime` for space membership: data is fresh for 20 minutes, then may refetch on the next trigger. */
 const SPACE_MEMBERSHIP_STALE_MS = 20 * 60 * 1000;
@@ -37,6 +37,38 @@ export const getMySpaceMembershipQueryOptions = ({ spaceId }: { spaceId: string 
     queryKey: ['space', spaceId, 'membership'],
     queryFn: async () => await SpaceService.getMySpaceMembership(spaceId),
     staleTime: SPACE_MEMBERSHIP_STALE_MS,
+  });
+};
+
+export const getSpaceMembersQueryOptions = ({
+  spaceId,
+  username,
+}: {
+  spaceId: string;
+  username?: string | null;
+}) => {
+  const normalizedUsername = username?.trim() || null;
+
+  return queryOptions<IApiResponse<ISpaceMember[]>, IApiResponse>({
+    queryKey: ['space', spaceId, 'members', normalizedUsername],
+    queryFn: async () =>
+      await SpaceService.findSpaceMembers(spaceId, { username: normalizedUsername }),
+  });
+};
+
+export const getSpaceCandidateMembersQueryOptions = ({
+  spaceId,
+  username,
+}: {
+  spaceId: string;
+  username?: string | null;
+}) => {
+  const normalizedUsername = username?.trim() || null;
+
+  return queryOptions<IApiResponse<IUser[]>, IApiResponse>({
+    queryKey: ['space', spaceId, 'members', 'candidates', normalizedUsername],
+    queryFn: async () =>
+      await SpaceService.findSpaceCandidateMembers(spaceId, { username: normalizedUsername }),
   });
 };
 
@@ -76,5 +108,29 @@ export const useGetMySpaceMembership = ({
   spaceId: string;
 } & IQueryOptions<typeof getMySpaceMembershipQueryOptions>) => {
   const query = getMySpaceMembershipQueryOptions({ spaceId });
+  return useQuery({ ...query, ...queryOptions });
+};
+
+export const useGetSpaceMembers = ({
+  spaceId,
+  username,
+  queryOptions,
+}: {
+  spaceId: string;
+  username?: string | null;
+} & IQueryOptions<typeof getSpaceMembersQueryOptions>) => {
+  const query = getSpaceMembersQueryOptions({ spaceId, username });
+  return useQuery({ ...query, ...queryOptions });
+};
+
+export const useGetSpaceCandidateMembers = ({
+  spaceId,
+  username,
+  queryOptions,
+}: {
+  spaceId: string;
+  username?: string | null;
+} & IQueryOptions<typeof getSpaceCandidateMembersQueryOptions>) => {
+  const query = getSpaceCandidateMembersQueryOptions({ spaceId, username });
   return useQuery({ ...query, ...queryOptions });
 };

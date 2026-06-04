@@ -1,4 +1,11 @@
-import { ESpaceCreateEventType, IMatch, ISpace, TSpaceCreateEventType } from '@/types';
+import {
+  ESpaceCreateEventType,
+  IMatch,
+  ISpace,
+  IUser,
+  IUserPublic,
+  TSpaceCreateEventType,
+} from '@/types';
 import { getRequest, postRequest } from '@/utils/http';
 
 export interface ICreateSpaceRequest {
@@ -21,8 +28,28 @@ export interface IAllocateSpaceFundingRequest {
   amount: number;
 }
 
+export interface IAddSpaceMembersRequest {
+  users: string[];
+}
+
 export interface ISpaceMembership {
   isSpaceAdmin: boolean;
+}
+
+export interface ISpaceMember {
+  id: string;
+  spaceId: string;
+  user: IUserPublic;
+  isAdmin: boolean;
+  createdAt: string;
+}
+
+export interface IFindSpaceMembersParams {
+  username?: string | null;
+}
+
+export interface IFindSpaceCandidateMembersParams {
+  username?: string | null;
 }
 
 /**
@@ -91,6 +118,24 @@ export class SpaceService {
     return await getRequest<ISpaceMembership>(`/spaces/${spaceId}/membership`);
   }
 
+  public static async findSpaceMembers(spaceId: string, params?: IFindSpaceMembersParams) {
+    const username = params?.username?.trim();
+    return await getRequest<ISpaceMember[]>(`/spaces/${spaceId}/members`, {
+      params: username ? { username } : undefined,
+    });
+  }
+
+  /** Users matching the search who are not already members of the space. */
+  public static async findSpaceCandidateMembers(
+    spaceId: string,
+    params?: IFindSpaceCandidateMembersParams
+  ) {
+    const username = params?.username?.trim();
+    return await getRequest<IUser[]>(`/spaces/${spaceId}/members/candidates`, {
+      params: username ? { username } : undefined,
+    });
+  }
+
   public static async findSpaceMatches(spaceId: string) {
     return await getRequest<IMatch[]>(`/spaces/${spaceId}/matches`);
   }
@@ -105,5 +150,9 @@ export class SpaceService {
 
   public static async allocateFunding(spaceId: string, data: IAllocateSpaceFundingRequest) {
     return await postRequest<void, IAllocateSpaceFundingRequest>(`/spaces/${spaceId}/fund`, data);
+  }
+
+  public static async addMembers(spaceId: string, data: IAddSpaceMembersRequest) {
+    return await postRequest<void, IAddSpaceMembersRequest>(`/spaces/${spaceId}/members`, data);
   }
 }

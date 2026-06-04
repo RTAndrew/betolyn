@@ -40,11 +40,11 @@ const TRANSACTION_TYPE_TITLES: Partial<Record<TTransactionType, string>> = {
   MATCH_SETTLEMENT: 'Liquidação',
   PLATFORM_FEE_COLLECTION: 'Taxa da plataforma',
   CHANNEL_WITHDRAW: 'Levantamento',
-  CHANNEL_FUNDING: 'Financiamento do espaço',
+  CHANNEL_FUNDING: 'Financiamento do canal',
   MINT_CREDITS: 'Créditos emitidos',
-  OUTCOME_VOID: 'Reembolso da odd',
-  MARKET_VOID: 'Reembolso do mercado',
-  MATCH_VOID: 'Reembolso do evento',
+  OUTCOME_VOID: 'Reembolso (Odd)',
+  MARKET_VOID: 'Reembolso (Mercado)',
+  MATCH_VOID: 'Reembolso (Evento)',
 };
 
 export const formatTransactionDetail = (
@@ -63,10 +63,10 @@ export const formatTransactionDetail = (
 const TRANSACTION_ITEM_TYPE_TITLES: Partial<
   Record<TTransactionItemType | 'RESERVE_RELEASE', string>
 > = {
-  STAKE_ESCROW_LOCK: 'Stake retida',
-  STAKE_ESCROW_REFUND: 'Stake reembolsada',
+  STAKE_ESCROW_LOCK: 'Montante retido',
+  STAKE_ESCROW_REFUND: 'Montante reembolsado',
   LIABILITY_RESERVE: 'Reserva de risco',
-  WIN_PAYOUT_STAKE: 'Devolução da stake',
+  WIN_PAYOUT_STAKE: 'Montante retornado',
   WIN_PAYOUT_PROFIT: 'Pagamento do lucro',
   LOSS_COLLECTION: 'Cobrança da perda',
   RESERVE_RELEASE: 'Liberação do risco',

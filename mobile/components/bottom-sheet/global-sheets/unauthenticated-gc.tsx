@@ -38,7 +38,7 @@ const UnauthenticatedGC = () => {
               });
             }}
           >
-            Iniciar sessao
+            Iniciar sessão
           </Button.Root>
         </EmptyState>
       </SafeHorizontalView>

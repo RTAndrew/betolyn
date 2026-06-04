@@ -4,14 +4,15 @@ import { IUser } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
 
+import { IFindAllUsersQueryOptions } from './types';
 import { UserService } from './user-service';
 
 // QUERIES OPTIONS
 
-export const getAllUsersQueryOptions = () => {
+export const getAllUsersQueryOptions = (params?: IFindAllUsersQueryOptions) => {
   return queryOptions<IApiResponse<IUser[]>, IApiResponse>({
-    queryKey: ['users'],
-    queryFn: async () => await UserService.findAllUsers(),
+    queryKey: ['users', params],
+    queryFn: async () => await UserService.findAllUsers(params),
   });
 };
 
@@ -31,8 +32,11 @@ export const getUserByUsernameQueryOptions = ({ username }: { username: string }
 
 // QUERIES
 
-export const useGetAllUsers = ({ queryOptions }: IQueryOptions<typeof getAllUsersQueryOptions>) => {
-  const query = getAllUsersQueryOptions();
+export const useGetAllUsers = ({
+  queryOptions,
+  params,
+}: IQueryOptions<typeof getAllUsersQueryOptions> & { params?: IFindAllUsersQueryOptions }) => {
+  const query = getAllUsersQueryOptions(params);
   return useQuery({ ...query, ...queryOptions });
 };
 

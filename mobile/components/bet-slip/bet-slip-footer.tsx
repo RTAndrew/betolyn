@@ -63,7 +63,7 @@ const BetSlipFooter = () => {
           onPress={handlePlaceBet}
           disabled={totalPotentialPayout.value === 0}
         >
-          Place Bet
+          Apostar
         </Button.Root>
       </SafeHorizontalView>
     </ScrollView>

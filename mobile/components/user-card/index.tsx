@@ -107,13 +107,13 @@ const styles = StyleSheet.create({
   row: {
     flex: 1,
     alignItems: 'stretch',
-    minHeight: 52,
   },
   rowAvatarWrap: {
     justifyContent: 'center',
   },
   rowTextColumn: {
     flex: 1,
+    marginLeft: 4,
     borderBottomWidth: 1,
     borderBottomColor: colors.greyLight,
   },

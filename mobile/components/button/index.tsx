@@ -12,10 +12,13 @@ import {
 
 import { colors } from '@/constants/colors';
 
-import { ThemedText } from '../ThemedText';
+import { ThemedText, ThemedTextProps } from '../ThemedText';
 
 export interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
   variant?: 'solid' | 'outline' | 'text';
+  typographyStyle?: ThemedTextProps['style'];
+  shape?: 'rounded' | 'square';
+  size?: 'small' | 'large';
   destructive?: boolean;
   disabled?: boolean;
   style?: ViewStyle;
@@ -58,6 +61,9 @@ export const GradientButton = ({
 
 const NormalButton = ({
   variant = 'solid',
+  shape = 'square',
+  size = 'large',
+  typographyStyle,
   destructive,
   children,
   disabled,
@@ -68,12 +74,14 @@ const NormalButton = ({
 }: ButtonProps) => {
   return (
     <TouchableOpacity
-      disabled={loading || disabled}
+      disabled={disabled || loading}
       style={[
         styles.root,
-        disabled && styles.disabled,
+        shape === 'rounded' && styles.shapeRounded,
+        size === 'large' && styles.sizeLarge,
         variant === 'solid' && styles.solid,
         variant === 'outline' && styles.outline,
+        disabled && styles.disabled,
         style,
       ]}
       {...props}
@@ -84,6 +92,7 @@ const NormalButton = ({
           color && { color },
           destructive && styles.destructive,
           variant === 'text' && styles.variantText,
+          typographyStyle,
         ]}
       >
         {loading ? <Loading color={color} /> : children}
@@ -99,12 +108,20 @@ export const Button = {
 
 const styles = StyleSheet.create({
   root: {
-    padding: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 18,
     borderRadius: 5,
     width: '100%',
   },
+  shapeRounded: {
+    borderRadius: 100,
+  },
+  sizeLarge: {
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+  },
   disabled: {
-    opacity: 0.5,
+    backgroundColor: colors.greyLighter50,
   },
   solid: {
     backgroundColor: colors.terciary,

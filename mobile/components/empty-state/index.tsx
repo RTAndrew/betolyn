@@ -5,17 +5,18 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors } from '@/constants/colors';
 
 import { Button } from '../button';
-import FullScreenCentered from '../full-screen-centered';
+import FullScreenCentered, { FullScreenCenteredProps } from '../full-screen-centered';
 import { NoSearchFound as NoSearchFoundIllustration, NoSlipsFound } from '../illustrations';
 import SafeHorizontalView from '../safe-horizontal-view';
 import { ThemedText } from '../ThemedText';
 
 interface EmptyStateProps extends PropsWithChildren {
-  icon?: React.ReactNode;
   title: string;
   description?: string;
+  icon?: React.ReactNode;
+  size?: 'small' | 'large';
   style?: StyleProp<ViewStyle>;
-  center?: boolean;
+  center?: boolean | Pick<FullScreenCenteredProps, 'includeTabBar'>;
 }
 
 interface ExtendableEmptyStateProps extends Omit<EmptyStateProps, 'icon'> {}
@@ -26,6 +27,7 @@ const EmptyState = ({
   description,
   style,
   children,
+  size = 'large',
   center = false,
 }: EmptyStateProps) => {
   const Component = () => {
@@ -33,11 +35,11 @@ const EmptyState = ({
       <SafeHorizontalView style={[styles.root, style]}>
         {icon}
 
-        <ThemedText type="subtitle" style={styles.title}>
+        <ThemedText type="subtitle" style={[styles.title, size === 'small' && styles.smallTitle]}>
           {title}
         </ThemedText>
 
-        <ThemedText style={styles.description}>{description}</ThemedText>
+        {description && <ThemedText style={styles.description}>{description}</ThemedText>}
 
         <View style={styles.footer}>{children}</View>
       </SafeHorizontalView>
@@ -46,7 +48,9 @@ const EmptyState = ({
 
   if (center) {
     return (
-      <FullScreenCentered>
+      <FullScreenCentered
+        includeTabBar={typeof center === 'boolean' ? center : center.includeTabBar}
+      >
         <Component />
       </FullScreenCentered>
     );
@@ -119,7 +123,11 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 12,
+    textAlign: 'center',
     color: colors.white,
+  },
+  smallTitle: {
+    fontSize: 16,
   },
   description: {
     textAlign: 'center',

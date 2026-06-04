@@ -1,5 +1,3 @@
-import { hexToRgba } from '@/utils/hex-rgba';
-
 export const colors = {
   // Brand Colors
   terciary: '#7e87f1',
@@ -16,7 +14,7 @@ export const colors = {
   white: '#ffffff',
 
   // Variations & Gradients
-  greyLighter50: hexToRgba('#c7d1e7', 0.5), // Includes the 0.5 alpha as hex
+  greyLighter50: '#8891A6',
   // gradient01: '#ee9ae5',
   // gradient02: '#7e87f1',
 } as const;

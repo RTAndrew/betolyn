@@ -24,7 +24,7 @@ const BetSlips = () => {
   return (
     <View style={styles.root}>
       <Pressable>
-        <ScreenHeader safeArea title="Boletim">
+        <ScreenHeader safeArea title="Ficha">
           <ScreenHeader.QuickActions style={{ backgroundColor: colors.greyMedium }}>
             <ScreenHeader.Icon
               color="white"
