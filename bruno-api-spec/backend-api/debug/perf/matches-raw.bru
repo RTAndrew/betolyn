@@ -1,0 +1,16 @@
+meta {
+  name: matches raw entities
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/debug/perf/matches/raw
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

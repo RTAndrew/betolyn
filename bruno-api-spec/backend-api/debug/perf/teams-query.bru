@@ -1,0 +1,16 @@
+meta {
+  name: teams query only
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/debug/perf/teams/query
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

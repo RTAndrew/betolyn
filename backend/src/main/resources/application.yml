@@ -11,7 +11,7 @@ decorator:
       format-sql: true
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/betolyn}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgres://RTAndrew:npg_SWUn6hoApfd8@ep-tight-wood-558009.eu-central-1.aws.neon.tech/betolyn}
     username: ${SPRING_DATASOURCE_USERNAME:}
     password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: org.postgresql.Driver

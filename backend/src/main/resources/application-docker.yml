@@ -6,6 +6,23 @@ spring:
     hibernate:
       ddl-auto: validate
 
+logging:
+  level:
+    net.ttddyy.dsproxy.listener: warn
+
+decorator:
+  datasource:
+    datasource-proxy:
+      enabled: true
+      format-sql: false
+      query:
+        enable-logging: false
+
+app:
+  observability:
+    sql-count:
+      enabled: true
+
 management:
   endpoints:
     web:

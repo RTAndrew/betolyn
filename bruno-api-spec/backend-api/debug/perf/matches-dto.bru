@@ -1,0 +1,16 @@
+meta {
+  name: matches full dto
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/debug/perf/matches/dto
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
