@@ -21,4 +21,15 @@ public interface OddRepository extends JpaRepository<OddEntity, String> {
             WHERE m.id IN :matchIds
             """)
     List<OddEntity> findAllByMatchIdIn(@Param("matchIds") Collection<String> matchIds);
+
+    @Query("""
+            SELECT DISTINCT o FROM OddEntity o
+            JOIN FETCH o.criterion c
+            WHERE c.id IN :criterionIds
+            AND o.status IN :statuses
+            ORDER BY o.name
+            """)
+    List<OddEntity> findAllByCriterionIdInAndStatusIn(
+            @Param("criterionIds") Collection<String> criterionIds,
+            @Param("statuses") Collection<OddStatusEnum> statuses);
 }

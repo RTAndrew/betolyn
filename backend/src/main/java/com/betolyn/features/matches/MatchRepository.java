@@ -4,32 +4,30 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.betolyn.features.betting.criterion.CriterionStatusEnum;
-import com.betolyn.features.betting.odds.OddStatusEnum;
 
 public interface MatchRepository extends JpaRepository<MatchEntity, String> {
         /**
-         * Use left joins so official feed matches without betting markets are still
-         * returned by the public match list.
+         * Official match list: {@link MatchEntity#GRAPH_OFFICIAL_LIST} eager-fetches teams,
+         * highlight criterion, and auditors in one round-trip. Odds are batch-loaded separately
+         * in {@link com.betolyn.features.matches.findallmatches.FindAllMatchesUC}.
          */
+        @EntityGraph(value = MatchEntity.GRAPH_OFFICIAL_LIST, type = EntityGraphType.FETCH)
         @Query("""
-                        SELECT DISTINCT m
+                        SELECT m
                         FROM MatchEntity m
-                        LEFT JOIN FETCH m.homeTeam
-                        LEFT JOIN FETCH m.awayTeam
-                        LEFT JOIN FETCH m.mainCriterion mc
-                        LEFT JOIN FETCH mc.odds o
+                        LEFT JOIN m.mainCriterion mc
                         WHERE m.type = :matchType
                         AND (mc IS NULL OR mc.status IN :criteriaStatuses)
-                        AND (o IS NULL OR o.status IN :oddStatuses)
                         """)
         List<MatchEntity> findAllByMatchType(@Param("matchType") MatchTypeEnum matchType,
-                        @Param("criteriaStatuses") Collection<CriterionStatusEnum> criteriaStatuses,
-                        @Param("oddStatuses") Collection<OddStatusEnum> oddStatuses);
+                        @Param("criteriaStatuses") Collection<CriterionStatusEnum> criteriaStatuses);
 
     Optional<MatchEntity> findByEspnId(String espnId);
 

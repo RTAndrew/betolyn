@@ -23,6 +23,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -39,7 +41,23 @@ import lombok.Setter;
 @Table(name = "matches", uniqueConstraints = {
         @UniqueConstraint(name = "unique_space_official_derived", columnNames = { "space_id", "official_match_id" })
 })
+@NamedEntityGraph(
+        name = MatchEntity.GRAPH_OFFICIAL_LIST,
+        attributeNodes = {
+                @NamedAttributeNode("homeTeam"),
+                @NamedAttributeNode("awayTeam"),
+                @NamedAttributeNode("mainCriterion"),
+                @NamedAttributeNode("createdBy"),
+                @NamedAttributeNode("updatedBy")
+        }
+)
 public class MatchEntity extends AuditableEntity {
+
+    /**
+     * Fetch graph for {@code GET /matches}: fixture + highlight criterion + auditors.
+     * Odds are loaded in a second query to avoid a cartesian product from joining a collection here.
+     */
+    public static final String GRAPH_OFFICIAL_LIST = "MatchEntity.officialList";
 
     private static String titleFromTeams(TeamEntity home, TeamEntity away) {
         if (home != null && away != null) {
