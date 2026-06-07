@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { colors } from '@/constants/colors';
 
 import SafeHorizontalView from '../safe-horizontal-view';
-import { Settings } from '../settings';
-import { Skeleton } from './index';
+import { Skeleton } from '../skeleton';
 
 const ITEM_PADDING_V = 12;
+const BORDER_RADIUS = 12;
 
-function CriteriaListSkeletonRow() {
+function SettingsGroupSkeletonRow() {
   return (
     <SafeHorizontalView style={styles.item}>
       <Skeleton type="default" borderRadius={4} style={styles.titleLine} />
@@ -16,19 +18,22 @@ function CriteriaListSkeletonRow() {
   );
 }
 
-export function CriteriaListSkeleton({ count = 4 }: { count?: number }) {
+export function SettingsGroupSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <Settings.ItemGroup style={styles.group}>
+    <View style={styles.group}>
       {Array.from({ length: count }).map((_, index) => (
-        <CriteriaListSkeletonRow key={index} />
+        <SettingsGroupSkeletonRow key={index} />
       ))}
-    </Settings.ItemGroup>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   group: {
     gap: 12,
+    overflow: 'hidden',
+    borderRadius: BORDER_RADIUS,
+    backgroundColor: colors.greyLight,
   },
   item: {
     gap: 4,
@@ -46,18 +51,5 @@ const styles = StyleSheet.create({
     width: 100,
     marginTop: 4,
     flexGrow: 0,
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  descriptionLine: {
-    width: 32,
-    height: 18,
-  },
-  arrow: {
-    width: 10,
-    height: 10,
   },
 });

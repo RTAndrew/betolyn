@@ -10,6 +10,7 @@ import lombok.Data;
 public class SpaceDTO {
     private String id;
     private String name;
+    private UserDTO owner;
     private String description;
     private UserDTO createdBy;
     private LocalDateTime createdAt;

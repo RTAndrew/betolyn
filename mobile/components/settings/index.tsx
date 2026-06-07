@@ -6,6 +6,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { colors } from '@/constants/colors';
 import { hexToRgba } from '@/utils/hex-rgba';
 
+import { SettingsGroupSkeleton } from './settings-group-skeleton';
+
 const BACKGROUND_COLOR = colors.greyLight;
 const BORDER_COLOR = colors.greyMedium;
 const MUTED_TEXT_COLOR = hexToRgba(colors.greyLighter, 0.8);
@@ -229,4 +231,5 @@ const styles = StyleSheet.create({
 export const Settings = {
   Item: SettingsItem,
   ItemGroup: SettingsItemGroup,
+  Skeleton: SettingsGroupSkeleton,
 };

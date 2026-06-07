@@ -1,0 +1,21 @@
+meta {
+  name: findById
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/spaces/{{spaceId}}/members/{{memberId}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  spaceId: spa_WcjhqkU
+  memberId: spaus_r5c60qj
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

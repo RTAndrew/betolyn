@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View, ViewProps } from 'react-native';
 import ActionSheet, { ActionSheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 
 import { colors } from '@/constants/colors';
@@ -18,6 +18,18 @@ export interface BottomSheetProps extends ActionSheetProps {
 }
 
 export const BOTTOM_SHEET_ANIMATION_DURATION = 250;
+
+export const BottomSheetOptionList = ({
+  children,
+  style,
+  ...props
+}: PropsWithChildren<ViewProps>) => {
+  return (
+    <View style={StyleSheet.flatten([{ flexDirection: 'column', gap: 24 }, style])} {...props}>
+      {children}
+    </View>
+  );
+};
 
 const BottomSheet = ({
   containerStyle,
@@ -82,6 +94,21 @@ const styles = StyleSheet.create({
   },
 });
 
+interface EmptyStateWrapperProps extends PropsWithChildren<ViewProps> {
+  size?: 'small' | 'large';
+}
+
+const EmptyStateWrapper = ({ children, size = 'large', ...props }: EmptyStateWrapperProps) => {
+  return (
+    <View
+      {...props}
+      style={StyleSheet.flatten([{ paddingVertical: size === 'small' ? 20 : 40 }, props.style])}
+    >
+      {children}
+    </View>
+  );
+};
+
 interface ModalConfirmationProps extends BottomSheetProps {
   title: string;
   visible?: boolean;
@@ -107,6 +134,10 @@ const ModalConfirmation = ({
 }: ModalConfirmationProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
+  // TODO: move this to the bottom itself
+  // then add an animation after it has finished loading to show "checked filled" icon
+  // for 300ms, then here closes the bottom
+  // if an error, setLoading to false immediately
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
@@ -170,7 +201,8 @@ const modalConfirmationStyles = StyleSheet.create({
 BottomSheet.SafeHorizontalView = BottomSheetSafeHorizontalView;
 BottomSheet.Header = BottomSheetHeader;
 BottomSheet.ActionOption = BottomSheetActionOption;
+BottomSheet.OptionList = BottomSheetOptionList;
+BottomSheet.EmptyStateWrapper = EmptyStateWrapper;
 
 BottomSheet.ModalConfirmation = ModalConfirmation;
-
 export default BottomSheet;

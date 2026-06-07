@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { CriteriaListSkeleton } from './criteria-list-skeleton';
+import { Settings } from '@/components/settings';
+
 import { MetricsBlockSkeleton, MetricsBlockSkeletonProps } from './metrics-block-skeleton';
 
 export function SettingsScreenSkeleton({ variant = 'match' }: MetricsBlockSkeletonProps) {
@@ -11,7 +12,7 @@ export function SettingsScreenSkeleton({ variant = 'match' }: MetricsBlockSkelet
         <MetricsBlockSkeleton variant={variant} />
       </View>
 
-      <CriteriaListSkeleton count={3} />
+      <Settings.Skeleton count={3} />
     </View>
   );
 }

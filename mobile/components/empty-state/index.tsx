@@ -103,7 +103,13 @@ const NoSearchResults = ({
       {...props}
       title={title ?? 'Nenhum resultado encontrado'}
       description={description ?? 'Tente uma pesquisa diferente ou limpe os filtros.'}
-      icon={<NoSearchFoundIllustration width={150} height={150} color={color} />}
+      icon={
+        <NoSearchFoundIllustration
+          width={props.size === 'small' ? 75 : 150}
+          height={props.size === 'small' ? 75 : 150}
+          color={color}
+        />
+      }
     >
       {onClearFilters && (
         <Button.Root onPress={() => onClearFilters?.()}>Limpar filtros</Button.Root>
@@ -118,8 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     gap: 6,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingVertical: 20,
   },
   title: {
     marginTop: 12,

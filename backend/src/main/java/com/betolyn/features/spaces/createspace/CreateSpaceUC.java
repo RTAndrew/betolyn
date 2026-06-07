@@ -44,6 +44,7 @@ public class CreateSpaceUC implements IUseCase<CreateSpaceRequestDTO, SpaceEntit
         List<String> uniqueMemberIds = memberIds.stream().distinct().toList();
 
         space = spaceRepository.save(space);
+        space.setOwner(authenticatedUser.user());
         createAccountForSpaceUC.execute(space);
 
         List<SpaceUsersEntity> spaceMembers = new ArrayList<>();

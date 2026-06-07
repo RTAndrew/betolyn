@@ -23,10 +23,19 @@ export interface ITeam {
 export interface ISpace {
   id: string;
   name: string;
-  description?: string | null;
-  createdAt: string;
+  owner: IUserPublic;
   updatedAt: string;
+  createdAt: string;
   createdBy: IUserPublic;
+  description?: string | null;
+}
+
+export interface ISpaceMember {
+  id: string;
+  space: ISpace;
+  isAdmin: boolean;
+  createdAt: string;
+  user: IUserPublic;
 }
 
 export type TMatchType = 'OFFICIAL' | 'CUSTOM' | 'DERIVED';

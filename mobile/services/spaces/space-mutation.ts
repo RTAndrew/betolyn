@@ -7,9 +7,11 @@ import {
   getAllSpacesQueryOptions,
   getSpaceByIdQueryOptions,
   getSpaceMatchesQueryOptions,
+  getSpaceMemberByIdQueryOptions,
   getSpaceMembersQueryOptions,
 } from './space-query';
 import {
+  IAddOrRemoveMemberAsAdminRequest,
   IAddSpaceMembersRequest,
   IAllocateSpaceFundingRequest,
   ICreateSpaceRequest,
@@ -33,6 +35,12 @@ interface ICreateSpaceMatchVariables {
 interface IAddSpaceMembersVariables {
   spaceId: string;
   variables: IAddSpaceMembersRequest;
+}
+
+interface IAddOrRemoveMemberAsAdminVariables {
+  spaceId: string;
+  memberId: string;
+  variables: IAddOrRemoveMemberAsAdminRequest;
 }
 
 export const useCreateSpace = () => {
@@ -106,6 +114,29 @@ export const useAddSpaceMembers = () => {
       mutationFn: (data: IAddSpaceMembersVariables) =>
         SpaceService.addMembers(data.spaceId, data.variables),
       onSuccess: (_response, variables) => {
+        queryClient.invalidateQueries({
+          queryKey: getSpaceMembersQueryOptions({ spaceId: variables.spaceId }).queryKey,
+        });
+      },
+    },
+    queryClient
+  );
+
+  return mutation;
+};
+
+export const useAddOrRemoveMemberAsAdmin = () => {
+  const mutation = useMutation(
+    {
+      mutationFn: (data: IAddOrRemoveMemberAsAdminVariables) =>
+        SpaceService.addOrRemoveMemberAsAdmin(data.spaceId, data.memberId, data.variables),
+      onSuccess: (_response, variables) => {
+        queryClient.invalidateQueries({
+          queryKey: getSpaceMemberByIdQueryOptions({
+            spaceId: variables.spaceId,
+            memberId: variables.memberId,
+          }).queryKey,
+        });
         queryClient.invalidateQueries({
           queryKey: getSpaceMembersQueryOptions({ spaceId: variables.spaceId }).queryKey,
         });

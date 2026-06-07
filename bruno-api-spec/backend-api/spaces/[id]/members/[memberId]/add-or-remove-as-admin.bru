@@ -1,0 +1,27 @@
+meta {
+  name: add or remove as admin
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/spaces/{{spaceId}}/members/{{memberId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "value": true
+  }
+}
+
+vars:pre-request {
+  spaceId: spa_WcjhqkU
+  memberId: replaceWithSpaceMemberId
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 
 import { Settings } from '@/components/settings';
-import { CriteriaListSkeleton } from '@/components/skeleton/criteria-list-skeleton';
 import { ThemedText } from '@/components/ThemedText';
 import { useGetMatchCriteria } from '@/services';
 import { CriterionStatusEnum } from '@/types';
@@ -40,7 +39,7 @@ const MatchSettingsCriteriaList = ({
     [shouldRefetch, refetch]
   );
 
-  if (isPending) return <CriteriaListSkeleton />;
+  if (isPending) return <Settings.Skeleton />;
 
   if (error || !data) return <ThemedText>Erro ao carregar mercados</ThemedText>;
 

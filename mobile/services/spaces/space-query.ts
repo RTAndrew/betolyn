@@ -1,10 +1,10 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { IMatch, ISpace, IUser } from '@/types';
+import { IMatch, ISpace, ISpaceMember, IUser } from '@/types';
 import { IApiResponse } from '@/utils/http/types';
 import { IQueryOptions } from '@/utils/react-query';
 
-import { ISpaceMember, ISpaceMembership, SpaceService } from './space-service';
+import { ISpaceMembership, SpaceService } from './space-service';
 
 /** `staleTime` for space membership: data is fresh for 20 minutes, then may refetch on the next trigger. */
 const SPACE_MEMBERSHIP_STALE_MS = 20 * 60 * 1000;
@@ -53,6 +53,19 @@ export const getSpaceMembersQueryOptions = ({
     queryKey: ['space', spaceId, 'members', normalizedUsername],
     queryFn: async () =>
       await SpaceService.findSpaceMembers(spaceId, { username: normalizedUsername }),
+  });
+};
+
+export const getSpaceMemberByIdQueryOptions = ({
+  spaceId,
+  memberId,
+}: {
+  spaceId: string;
+  memberId: string;
+}) => {
+  return queryOptions<IApiResponse<ISpaceMember>, IApiResponse>({
+    queryKey: ['space', spaceId, 'member', memberId],
+    queryFn: async () => await SpaceService.findSpaceMemberById(spaceId, memberId),
   });
 };
 
@@ -120,6 +133,18 @@ export const useGetSpaceMembers = ({
   username?: string | null;
 } & IQueryOptions<typeof getSpaceMembersQueryOptions>) => {
   const query = getSpaceMembersQueryOptions({ spaceId, username });
+  return useQuery({ ...query, ...queryOptions });
+};
+
+export const useGetSpaceMemberById = ({
+  spaceId,
+  memberId,
+  queryOptions,
+}: {
+  spaceId: string;
+  memberId: string;
+} & IQueryOptions<typeof getSpaceMemberByIdQueryOptions>) => {
+  const query = getSpaceMemberByIdQueryOptions({ spaceId, memberId });
   return useQuery({ ...query, ...queryOptions });
 };
 

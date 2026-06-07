@@ -24,10 +24,10 @@ public class FindSpaceMembers {
     private final SpaceMemberMapper spaceMemberMapper;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<SpaceMemberDTO>>> findMembers(
+    public ResponseEntity<ApiResponse<List<SpaceMemberDTO>>> findSpaceMembers(
             @PathVariable("id") String spaceId,
-            @RequestParam(required = false) String username) {
-        var members = findSpaceMembersUC.execute(new FindSpaceMembersParams(spaceId, username));
+            @RequestParam(required = false) String memberId) {
+        var members = findSpaceMembersUC.execute(new FindSpaceMembersParams(spaceId, memberId));
         return ResponseEntity.ok(ApiResponse.success("Space members found", spaceMemberMapper.toDTO(members)));
     }
 }

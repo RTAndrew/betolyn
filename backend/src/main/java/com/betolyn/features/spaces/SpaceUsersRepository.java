@@ -44,5 +44,4 @@ public interface SpaceUsersRepository extends JpaRepository<SpaceUsersEntity, St
             @Param("spaceId") String spaceId,
             @Param("query") String query,
             @Nullable @Param("email") String email);
-
 }

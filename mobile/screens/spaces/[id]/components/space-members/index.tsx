@@ -6,25 +6,17 @@ import { Button } from '@/components/button';
 import EmptyState from '@/components/empty-state';
 import { ErrorFilled } from '@/components/icons';
 import { Settings } from '@/components/settings';
-import { Spinner } from '@/components/spinner';
 import Tag from '@/components/tags';
-import { UserCard } from '@/components/user-card';
 import { colors } from '@/constants/colors';
 import { useGetSpaceMembers } from '@/services';
+
+import SpaceMemberCard from './space-member-card';
 
 interface SpaceMembersProps {
   spaceId: string;
 }
 
 const MAX_MEMBERS_COUNT = 10;
-
-const AdminBadge = ({ isAdmin }: { isAdmin: boolean }) => {
-  if (!isAdmin) return <></>;
-
-  return (
-    <Tag color={colors.complementary2} backgroundColor={colors.complementary2} title="Admin" />
-  );
-};
 
 const SpaceMembers = ({ spaceId }: SpaceMembersProps) => {
   const { data, isPending, isError } = useGetSpaceMembers({ spaceId });
@@ -40,13 +32,13 @@ const SpaceMembers = ({ spaceId }: SpaceMembersProps) => {
   }, [membersCount]);
 
   if (isPending) {
-    return <Spinner fullScreen size="large" />;
+    return <Settings.Skeleton />;
   }
 
   if (isError || !data) {
     return (
       <Settings.ItemGroup title={membersTitle}>
-        <EmptyState title="Ocorreu um erro ao processar o seu pedido" />
+        <EmptyState size="small" title="Ocorreu um erro ao processar o seu pedido" />
       </Settings.ItemGroup>
     );
   }
@@ -95,8 +87,8 @@ const SpaceMembers = ({ spaceId }: SpaceMembersProps) => {
           <Settings.Item
             key={member.id}
             style={{ paddingVertical: 0 }}
-            suffixIcon={<AdminBadge isAdmin={member.isAdmin} />}
-            title={<UserCard style={{ padding: 0 }} avatarSize={24} title={member.user.username} />}
+            suffixIcon={<Tag.Admin isAdmin={member.isAdmin} />}
+            title={<SpaceMemberCard space={member.space} member={member} />}
           />
         ))}
       </Settings.ItemGroup>

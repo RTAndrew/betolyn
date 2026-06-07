@@ -1,7 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { PropsWithChildren } from 'react';
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import {
 
 import { colors } from '@/constants/colors';
 
+import { Spinner } from '../spinner';
 import { ThemedText, ThemedTextProps } from '../ThemedText';
 
 export interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
@@ -29,7 +29,7 @@ export interface ButtonProps extends PropsWithChildren<TouchableOpacityProps> {
 const Loading = ({ color }: { color?: string }) => {
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="small" color={color ?? 'white'} />
+      <Spinner size="small" color={color ?? 'white'} />
     </View>
   );
 };
@@ -95,7 +95,13 @@ const NormalButton = ({
           typographyStyle,
         ]}
       >
-        {loading ? <Loading color={color} /> : children}
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <Spinner size="small" color={color} />
+          </View>
+        ) : (
+          children
+        )}
       </ThemedText>
     </TouchableOpacity>
   );

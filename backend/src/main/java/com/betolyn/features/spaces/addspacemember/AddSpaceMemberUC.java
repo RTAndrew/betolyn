@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.betolyn.features.spaces.authorization.SpaceAuthorization;
 import org.springframework.stereotype.Service;
 
 import com.betolyn.features.IUseCase;
@@ -45,10 +46,7 @@ public class AddSpaceMemberUC implements IUseCase<AddSpaceMembersParam, Void> {
                     Collections.singletonList(alreadyMembers));
         }
 
-        var canAddMembers = space.canAddMembers(authenticatedUser.user());
-        if (Boolean.FALSE.equals(canAddMembers)) {
-            throw new BusinessRuleException("ONLY_ADMIN_CAN_ADD_MEMBERS", "Only administrators can add members");
-        }
+        SpaceAuthorization.canManageOrThrow(space, authenticatedUser.user());
 
         // TODO: add invitedBy or addedBy
         var foundUsers = findAllUsersUC.execute(Optional.of(param.users()));

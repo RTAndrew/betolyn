@@ -4,9 +4,18 @@ import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { TrophyLocked } from '@/components/icons';
 import { ThemedText } from '@/components/ThemedText';
+import { colors } from '@/constants/colors';
 import { hexToRgba } from '@/utils/hex-rgba';
 
 import PlayFilled from '../icons/play-filled';
+
+const AdminTag = ({ isAdmin }: { isAdmin: boolean }) => {
+  if (!isAdmin) return <></>;
+
+  return (
+    <Tag color={colors.complementary2} backgroundColor={colors.complementary2} title="Admin" />
+  );
+};
 
 const LiveTag = () => (
   <LinearGradient
@@ -113,5 +122,6 @@ Tag.Live = LiveTag;
 Tag.Active = ActiveTag;
 Tag.Pending = PendingTag;
 Tag.Settled = SettledTag;
+Tag.Admin = AdminTag;
 
 export default Tag;

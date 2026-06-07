@@ -1,4 +1,4 @@
-package com.betolyn.features.user.findallusersbyquerystrings;
+package com.betolyn.features.user.searchusers;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class FindAllUsersByQueryStringsUC implements IUseCase<FindAllUsersByQueryStringsParams, List<UserEntity>> {
+public class SearchUsersUC implements IUseCase<SearchUsersParams, List<UserEntity>> {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserEntity> execute(FindAllUsersByQueryStringsParams param) {
+    public List<UserEntity> execute(SearchUsersParams param) {
         String formattedEmail = null;
 
         var isValidEmail = EmailValidator.getInstance().isValid(param.email());

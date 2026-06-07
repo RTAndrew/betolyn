@@ -2,8 +2,8 @@ import {
   ESpaceCreateEventType,
   IMatch,
   ISpace,
+  ISpaceMember,
   IUser,
-  IUserPublic,
   TSpaceCreateEventType,
 } from '@/types';
 import { getRequest, postRequest } from '@/utils/http';
@@ -32,16 +32,12 @@ export interface IAddSpaceMembersRequest {
   users: string[];
 }
 
-export interface ISpaceMembership {
-  isSpaceAdmin: boolean;
+export interface IAddOrRemoveMemberAsAdminRequest {
+  value: boolean;
 }
 
-export interface ISpaceMember {
-  id: string;
-  spaceId: string;
-  user: IUserPublic;
-  isAdmin: boolean;
-  createdAt: string;
+export interface ISpaceMembership {
+  isSpaceAdmin: boolean;
 }
 
 export interface IFindSpaceMembersParams {
@@ -125,6 +121,10 @@ export class SpaceService {
     });
   }
 
+  public static async findSpaceMemberById(spaceId: string, memberId: string) {
+    return await getRequest<ISpaceMember>(`/spaces/${spaceId}/members/${memberId}`);
+  }
+
   /** Users matching the search who are not already members of the space. */
   public static async findSpaceCandidateMembers(
     spaceId: string,
@@ -154,5 +154,16 @@ export class SpaceService {
 
   public static async addMembers(spaceId: string, data: IAddSpaceMembersRequest) {
     return await postRequest<void, IAddSpaceMembersRequest>(`/spaces/${spaceId}/members`, data);
+  }
+
+  public static async addOrRemoveMemberAsAdmin(
+    spaceId: string,
+    memberId: string,
+    data: IAddOrRemoveMemberAsAdminRequest
+  ) {
+    return await postRequest<ISpaceMember, IAddOrRemoveMemberAsAdminRequest>(
+      `/spaces/${spaceId}/members/${memberId}`,
+      data
+    );
   }
 }
