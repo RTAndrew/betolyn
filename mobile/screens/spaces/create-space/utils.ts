@@ -12,7 +12,7 @@ export interface SpaceConfigurationFormData {
 }
 
 export interface ICreateSpaceState {
-  invitation?: IUserPublic[];
+  invitation?: Pick<IUserPublic, 'id' | 'username'>[];
   configuration?: SpaceConfigurationFormData;
 }
 
