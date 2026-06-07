@@ -35,7 +35,7 @@ export default function Spaces() {
   }
 
   return (
-    <ScreenWrapper scrollable={false} backgroundColor={colors.greyLight}>
+    <ScreenWrapper style={styles.container} scrollable={false} backgroundColor={colors.greyLight}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={data?.data}
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   container: { backgroundColor: colors.greyLight, flex: 1 },
   floatingButton: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 120 : 80,
+    bottom: Platform.OS === 'ios' ? 120 : 40,
     right: 0,
   },
   createSpaceButton: {
