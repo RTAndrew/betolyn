@@ -17,7 +17,7 @@ The app reads Render’s **DATABASE_URL** and **REDIS_URL** and maps them to Spr
 4. When prompted, set **APP_CORS_ALLOWEDORIGINS** (e.g. `https://your-frontend.onrender.com` or your production origin).
 5. **First deploy with empty DB:** add an env var **SPRING_JPA_HIBERNATE_DDL_AUTO** = `create-only`, deploy once, then remove that env var (or set it to `validate`) for future deploys.
 
-Your backend URL will be something like `https://betolyn-backend.onrender.com`.
+Your backend URL will be something like `https://betolyn.onrender.com`.
 
 ---
 
@@ -46,7 +46,7 @@ Your backend URL will be something like `https://betolyn-backend.onrender.com`.
      - **SPRING_PROFILES_ACTIVE** = `docker` (optional; uses production-style settings).
    - **Health check path:** `/actuator/health` (if you use Actuator).
 
-5. **First deploy (empty DB)**  
+5. **First deploy (empty DB)**
    Add **SPRING_JPA_HIBERNATE_DDL_AUTO** = `create-only`, deploy once, then remove it or set to `validate`.
 
 ---
