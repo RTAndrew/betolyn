@@ -7,6 +7,7 @@ import { Spinner } from '@/components/spinner';
 import { colors } from '@/constants/colors';
 import { useGetSpaceMemberById } from '@/services';
 import { ISpaceMember } from '@/types';
+import { ApiError } from '@/utils/http/api-error';
 
 import { AddRemoveSpaceMemberAsAdminBottomSheet } from './add-remove-space-member-as-admin-bs';
 import { SpaceMemberMainBottomSheet } from './main';
@@ -30,7 +31,7 @@ const SpaceMembersBottomSheetRoutes = ({
 }: SpaceMembersBottomSheetRoutesProps) => {
   const router = useSpaceMemberBottomSheetRouter();
 
-  const { data, isError, isPending } = useGetSpaceMemberById({
+  const { data, isError, isPending, error } = useGetSpaceMemberById({
     spaceId: member.space.id,
     memberId: member.id,
   });
@@ -89,6 +90,9 @@ const SpaceMembersBottomSheetRoutes = ({
   }
 
   if (isError && !data) {
+    const isPermissionError =
+      ApiError.isApiError(error) && error.error.code === 'USER_IS_NOT_A_MEMBER';
+
     return (
       <BottomSheet
         {...sheetProps}
@@ -101,8 +105,12 @@ const SpaceMembersBottomSheetRoutes = ({
                 <EmptyState.NoSearch
                   color={colors.greyLighter50}
                   size="small"
-                  title="Membro não encontrado"
-                  description="Membro não existente ou pode ter sido removido"
+                  title={isPermissionError ? 'Permissão Negada' : 'Membro não encontrado'}
+                  description={
+                    isPermissionError
+                      ? 'Sem permissões suficientes para acessar certas informações deste canal.'
+                      : 'Não foi possível encontrar o membro no espaço'
+                  }
                 />
               </BottomSheet.EmptyStateWrapper>
             ),

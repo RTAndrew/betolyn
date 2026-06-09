@@ -35,14 +35,16 @@ interface TSpaceGuardWithFallback extends FullScreenProps {
 type SpaceGuardProps = TSpaceGuardWithEmptyState | TSpaceGuardWithFallback;
 
 // TODO: do the check based on space users table
+// Create a proper check at the backend level:
+// checkSpacePermission = isSpaceAdmin, isSpaceOwner, isSpaceMember
 export const useIsSpaceAdmin = (spaceId: string) => {
   const enabled = Boolean(spaceId);
   const meQuery = useGetMe({ queryOptions: { enabled } });
   const spaceQuery = useGetSpaceById({ spaceId, queryOptions: { enabled } });
 
   const meId = meQuery.data?.data?.user?.id;
-  const createdById = spaceQuery.data?.data?.createdBy?.id;
-  const isAdmin = Boolean(meId && createdById && meId === createdById);
+  const ownerId = spaceQuery.data?.data?.owner?.id;
+  const isAdmin = Boolean(meId && ownerId && meId === ownerId);
   const isPending = meQuery.isPending || spaceQuery.isPending;
 
   return { isAdmin, isPending };
