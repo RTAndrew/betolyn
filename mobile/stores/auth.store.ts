@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 
 import { constants } from '@/constants';
 import { IMe, MeService } from '@/services';
+import { queryClient } from '@/utils/react-query';
 import { SafeStorage } from '@/utils/safe-storage';
 
 const user = signal<IMe | null>(null);
@@ -12,7 +13,9 @@ const isLoggedIn = computed(() => user.value !== null);
 const handleLogout = async () => {
   await SecureStore.deleteItemAsync(constants.session.tokenStorageKey);
   await SecureStore.deleteItemAsync(constants.session.userStorageKey);
+
   authStore.user.value = null;
+  queryClient.clear();
   router.dismissAll();
 };
 
