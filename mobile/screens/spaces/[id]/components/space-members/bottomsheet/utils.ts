@@ -55,10 +55,6 @@ export const useSpaceMemberBottomSheetRouter = (): SpaceMemberBottomSheetRouter 
       const [params, snap] = args;
       router.navigate(route, params, snap);
     },
-    goBack: (name, snap) => router.goBack(name, snap),
-    close: () => router.close(),
-    popToTop: () => router.popToTop(),
-    canGoBack: () => router.canGoBack(),
   };
 };
 

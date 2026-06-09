@@ -1,4 +1,4 @@
-.PHONY: help dev-mobile dev-backend dev-seed install-mobile install-backend clean reset-db db-reset
+.PHONY: help dev-mobile dev-backend dev-web dev-seed install-mobile install-backend clean reset-db db-reset
 
 help: ## Show this help message
 	@echo "Available commands:"
@@ -7,6 +7,10 @@ help: ## Show this help message
 dev-mobile: ## Start the Expo development server
 	@echo "Starting Expo development server..."
 	cd mobile && npm start
+
+dev-web: ## Serve the static download site (http://localhost:8088)
+	@echo "Serving web/ at http://localhost:8088"
+	cd web && python3 -m http.server 8088
 
 dev-backend: ## Start the Spring Boot development server (ESPN ingestion API default: http://localhost:8010)
 	@echo "Starting Spring Boot development server..."

@@ -35,6 +35,7 @@ export const SpaceMemberMainBottomSheet = ({
         />
 
         <BottomSheet.ActionOption
+          disabled
           text={'Remover do canal'}
           icon={<Trash color="white" />}
           onPress={() => router.navigate('remove-member-from-space', { member })}

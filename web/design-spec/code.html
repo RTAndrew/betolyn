@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bet Olyn | Predict. Compete. Win.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --bg-color: #0A0A0A;
+            --electric-blue: #2e5bff;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: #e2e1ef;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, #171717 0%, #111111 100%);
+            border: 1px solid #1F1F1F;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 20px rgba(46, 91, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#ffb59b",
+                      "tertiary-fixed-dim": "#ffb59b",
+                      "on-error": "#690005",
+                      "on-tertiary-container": "#ffece6",
+                      "surface-container-low": "#191b24",
+                      "surface-container-high": "#282933",
+                      "on-surface": "#e2e1ef",
+                      "surface-dim": "#11131c",
+                      "primary-fixed": "#dde1ff",
+                      "tertiary-container": "#c24100",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "inverse-primary": "#124af0",
+                      "background": "#0A0A0A",
+                      "surface-container": "#1d1f29",
+                      "inverse-surface": "#e2e1ef",
+                      "error": "#ffb4ab",
+                      "secondary-container": "#3a4a5f",
+                      "on-secondary-fixed": "#0b1c30",
+                      "on-tertiary-fixed": "#380d00",
+                      "on-surface-variant": "#c4c5d9",
+                      "surface-container-lowest": "#0c0e17",
+                      "surface-bright": "#373943",
+                      "error-container": "#93000a",
+                      "secondary-fixed": "#d3e4fe",
+                      "on-tertiary": "#5b1a00",
+                      "tertiary-fixed": "#ffdbcf",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "on-tertiary-fixed-variant": "#812800",
+                      "primary-fixed-dim": "#b8c3ff",
+                      "on-secondary-container": "#a9bad3",
+                      "surface": "#11131c",
+                      "outline": "#8e90a2",
+                      "on-secondary": "#213145",
+                      "inverse-on-surface": "#2e303a",
+                      "surface-container-highest": "#33343e",
+                      "surface-tint": "#b8c3ff",
+                      "on-primary-fixed-variant": "#0035be",
+                      "surface-variant": "#33343e",
+                      "on-primary-container": "#efefff",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#2e5bff",
+                      "on-primary": "#002388",
+                      "primary": "#b8c3ff",
+                      "on-primary-fixed": "#001356",
+                      "outline-variant": "#434656",
+                      "secondary": "#b7c8e1",
+                      "on-background": "#e2e1ef"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "container-max-width": "640px",
+                      "stack-lg": "32px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "margin-mobile": "20px",
+                      "section-gap": "80px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="overflow-x-hidden">
+<!-- Top Navigation Anchor (Manual Filter: Hidden as per splash/onboarding rule) -->
+<main class="min-h-screen flex flex-col items-center justify-center px-margin-mobile md:px-gutter max-w-container-max-width mx-auto">
+<!-- Centered Header Section -->
+<header class="flex flex-col items-center text-center space-y-stack-md mb-section-gap pt-stack-lg">
+<div class="w-24 h-24 mb-stack-md animate-pulse">
+<img alt="Bet Olyn Logo" class="w-full h-full object-contain" src="data:image/png;base64,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"/>
+</div>
+<h1 class="font-headline-lg text-headline-lg md:font-display-lg md:text-display-lg tracking-[0.3em] text-on-surface uppercase">
+                Bet Olyn
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant font-light tracking-wide">
+                Predict. Compete. Win.
+            </p>
+</header>
+<!-- Platform Section -->
+<section class="w-full grid grid-cols-1 md:grid-cols-2 gap-stack-md mb-section-gap">
+<!-- Android Card -->
+<div class="glass-card p-stack-lg flex flex-col items-center text-center rounded-xl transition-all duration-300 transform hover:-translate-y-1">
+<div class="w-12 h-12 flex items-center justify-center mb-stack-md">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant">android</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-lg">Android</h3>
+<button class="w-full py-4 bg-primary-container text-on-primary-container font-label-md text-label-md rounded-lg active:scale-95 transition-transform hover:brightness-110 shadow-lg shadow-primary-container/20">
+                    Download APK
+                </button>
+</div>
+<!-- iOS Card -->
+<div class="glass-card p-stack-lg flex flex-col items-center text-center rounded-xl opacity-80">
+<div class="w-12 h-12 flex items-center justify-center mb-stack-md">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant">apps</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-lg">iOS</h3>
+<span class="px-4 py-2 bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm rounded-full tracking-wider uppercase border border-outline-variant">
+                    Coming Soon
+                </span>
+</div>
+</section>
+<!-- Visual Anchor: Atmospheric Glow (CSS Only) -->
+<div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[800px] h-[800px] bg-primary-container/5 rounded-full blur-[120px] pointer-events-none"></div>
+</main>
+<!-- Footer Content -->
+<footer class="w-full py-stack-lg mt-auto">
+<div class="max-w-container-max-width mx-auto flex flex-col items-center gap-stack-sm px-margin-mobile">
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">
+                Version 0.8.14 • June 2026
+            </p>
+<div class="flex gap-4 mt-stack-sm">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-40 mt-stack-sm">
+                © 2024 Bet Olyn. Predict. Compete. Win.
+            </p>
+</div>
+</footer>
+<script>
+        // Micro-interaction for smooth load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200 + (index * 150));
+            });
+        });
+    </script>
+</body></html>

@@ -16,14 +16,13 @@ interface SpaceMembersProps {
   spaceId: string;
 }
 
-const MAX_MEMBERS_COUNT = 10;
+// const MAX_MEMBERS_COUNT = 10;
 
 const SpaceMembers = ({ spaceId }: SpaceMembersProps) => {
   const { data, isPending, isError } = useGetSpaceMembers({ spaceId });
 
+  const members = data?.data ?? [];
   const membersCount = data?.data?.length ?? 0;
-  const _members = data?.data ?? [];
-  const members = membersCount > 10 ? _members.slice(0, 8) : _members;
 
   const membersTitle = useMemo(() => {
     if (membersCount === 0) return 'Membros';
@@ -74,14 +73,14 @@ const SpaceMembers = ({ spaceId }: SpaceMembersProps) => {
     <View>
       <Settings.ItemGroup
         title={membersTitle}
-        description={
-          membersCount > MAX_MEMBERS_COUNT
-            ? {
-                title: 'Ver todos',
-                onPress: () => router.push(`/spaces/${spaceId}`),
-              }
-            : undefined
-        }
+        // description={
+        //   membersCount > MAX_MEMBERS_COUNT
+        //     ? {
+        //         title: 'Ver todos',
+        //         onPress: () => router.push(`/spaces/${spaceId}`),
+        //       }
+        //     : undefined
+        // }
       >
         {members?.map((member) => (
           <Settings.Item
