@@ -16,7 +16,7 @@ public class FeedSyncScheduler {
 
     @Scheduled(cron = "${app.ingestion.cron:0 */5 * * * *}")
     public void runFeedSync() {
-        log.debug("feed_sync_scheduled_tick");
+        log.info("feed_sync_scheduled_tick");
         feedSyncService.runScheduledSync();
     }
 }
