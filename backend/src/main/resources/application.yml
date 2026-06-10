@@ -17,7 +17,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: "create-only"
+      ddl-auto: "validate"
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
@@ -33,6 +33,9 @@ app:
     jwtSecret: "jS7I27ggI1XJMvxIPdylTRcB2g1zeeNY9jaBo0QeaQT"
     # Used by POST /dev/seed-platform-user-roles and local startup runner; aligns with seed/user-seed.json
     seed-platform-usernames: "anderson,bruno,joao,maria"
+  bankroll:
+    # initial mint credits on registration
+    initialSignUpCredit: ${APP_BANKROLL_INITIALSIGNUPCREDIT:${BANKROLL_INITIAL_SIGN_UP_CREDIT:0}}
   cors:
     allowedOrigins: "*"
   ingestion:

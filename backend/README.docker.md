@@ -41,6 +41,13 @@ Copy `.env.example` to `.env` in the project root, then edit as needed:
 | `APP_AUTH_SESSIONEXPIRATIONINDAYS` | 7 | Session expiry in days |
 | `APP_AUTH_COOKIESTOKENNAMEKEY` | token | Cookie name for auth token |
 | `APP_CORS_ALLOWEDORIGINS` | http://localhost:8001 | Allowed CORS origins |
+| `BANKROLL_INITIAL_SIGN_UP_CREDIT` | 0 | Credits minted to new users on sign-up (mapped to `APP_BANKROLL_INITIALSIGNUPCREDIT` in the container) |
+
+After changing `.env` or backend code, rebuild and recreate the backend:
+
+```bash
+docker compose up -d --build --force-recreate backend
+```
 
 **Production:** set `POSTGRES_PASSWORD` and `APP_AUTH_JWTSECRET` to secure values.
 
